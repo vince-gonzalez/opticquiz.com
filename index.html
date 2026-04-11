@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ===== WORKFLOW STACK =====
+  File:         opticquiz_v1.0.0.html
+  Brand:        OpticQuiz / Zengine™
+  Author:       Vince Gonzalez
+  Version:      v1.0.0
+  Boot Order:   1. CONFIG  2. PLATES  3. BAYES  4. ENGINE  5. RENDER  6. INIT
+  Section Map:
+    [10-110]    HEAD / meta / fonts / AdSense
+    [111-420]   CSS / design system
+    [421-530]   HTML structure
+    [531-680]   PLATES data
+    [681-790]   BAYES engine
+    [791-900]   TEST engine
+    [901-1000]  RENDER layer
+    [1001-1060] INIT
+  Dependencies: Google Fonts (Bebas Neue, Share Tech Mono, DM Sans)
+  Layout:       Single-page, mobile-first, max-width 540px
+  Browser:      Chrome/Safari/Firefox modern
+===== END WORKFLOW STACK ===== -->
+
+<!-- ===== ASSET MANIFEST =====
+  Fonts:
+    - Bebas Neue (display headers) — Google Fonts
+    - Share Tech Mono (data/stats) — Google Fonts
+    - DM Sans (body) — Google Fonts
+  Images:
+    - /plates/plate_12.png       MISSING: Ishihara #12 (red-green deutan primary)
+    - /plates/plate_8.png        MISSING: Ishihara #8  (red-green deutan)
+    - /plates/plate_29.png       MISSING: Ishihara #29 (red-green deutan/protan)
+    - /plates/plate_5.png        MISSING: Ishihara #5  (protan primary)
+    - /plates/plate_3.png        MISSING: Ishihara #3  (protan)
+    - /plates/plate_15.png       MISSING: Ishihara #15 (deutan/protan)
+    - /plates/plate_tritan_1.png MISSING: Tritan plate (blue-yellow #1)
+    - /plates/plate_tritan_2.png MISSING: Tritan plate (blue-yellow #2)
+    - /plates/plate_achromat.png MISSING: Achromat control (visible all types)
+    - /plates/plate_control.png  MISSING: Universal control (everyone sees it)
+  Audio: none
+  Third-party: none (fully self-contained)
+===== END ASSET MANIFEST ===== -->
+
+<!-- ===== LAST STABLE: v1.0.0 — 2025-04-11 — Initial release, browser-only Bayesian SPA ===== -->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="description" content="OpticQuiz — a free, science-backed color vision screening tool. Estimate your likelihood of deuteranopia, protanopia, tritanopia, and more in under 3 minutes.">
+<meta property="og:title" content="OpticQuiz — Color Vision Test">
+<meta property="og:description" content="Probabilistic color blindness screening powered by Bayesian inference. Free. No signup. Results in 3 minutes.">
+<meta property="og:url" content="https://opticquiz.com">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://opticquiz.com">
+<title>OpticQuiz — Color Vision Test | Zengine™</title>
+
+<!-- AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+
+<style>
+/* ===== CONFIG BLOCK =====
+  Color palette:
+    --ink:       #0a0a0f  (near-black background)
+    --ink-2:     #12121a  (card surface)
+    --ink-3:     #1e1e2a  (elevated surface)
+    --border:    #2a2a3a  (default border)
+    --border-hi: #3d3d55  (hover border)
+    --muted:     #5a5a7a  (secondary text)
+    --mid:       #8888aa  (tertiary text)
+    --bright:    #e0e0f0  (primary text)
+    --white:     #f5f5ff  (headings)
+    --cyan:      #00d4ff  (accent primary)
+    --cyan-dim:  #00a8cc  (accent hover)
+    --cyan-glow: rgba(0,212,255,0.12) (ambient glow)
+    --red:       #ff4466  (danger / protan)
+    --green:     #00e87a  (deutan)
+    --blue:      #4488ff  (tritan)
+    --amber:     #ffaa00  (warning)
+    --gray-bar:  #888899  (normal / achromatopsia)
+
+  Type stack:
+    Display:    "Bebas Neue", Impact, fantasy
+    Mono:       "Share Tech Mono", "Courier New", monospace
+    Body:       "DM Sans", system-ui, sans-serif
+
+  Spacing scale:
+    4 / 8 / 12 / 16 / 24 / 32 / 48 / 64px
+===== END CONFIG BLOCK ===== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #0a0a0f;
+  --ink-2: #12121a;
+  --ink-3: #1e1e2a;
+  --border: #2a2a3a;
+  --border-hi: #3d3d55;
+  --muted: #5a5a7a;
+  --mid: #8888aa;
+  --bright: #e0e0f0;
+  --white: #f5f5ff;
+  --cyan: #00d4ff;
+  --cyan-dim: #00a8cc;
+  --cyan-glow: rgba(0,212,255,0.10);
+  --red: #ff4466;
+  --green: #00e87a;
+  --blue: #4488ff;
+  --amber: #ffaa00;
+  --gray-bar: #888899;
+  --font-display: "Bebas Neue", Impact, fantasy;
+  --font-mono: "Share Tech Mono", "Courier New", monospace;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --r: 8px;
+  --r-lg: 14px;
+}
+
+html { background: var(--ink); scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--ink);
+  color: var(--bright);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── LAYOUT ─────────────────────────────────────── */
+#app {
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 0 16px 80px;
+  position: relative;
+}
+
+.screen { display: none; }
+.screen.active { display: block; animation: fadein 0.25s ease; }
+@keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── GLOBAL COMPONENTS ───────────────────────────── */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 14vw, 80px);
+  color: var(--white);
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 9vw, 52px);
+  color: var(--white);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--mid);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+p {
+  font-size: 15px;
+  color: var(--mid);
+  line-height: 1.7;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 16px 20px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--bright);
+  background: var(--ink-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  min-height: 56px;
+  letter-spacing: 0.01em;
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:hover { border-color: var(--border-hi); background: #252535; }
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--cyan);
+  color: var(--ink);
+  border-color: transparent;
+  font-weight: 500;
+}
+.btn-primary:hover { background: var(--cyan-dim); }
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--mid);
+  font-size: 14px;
+  padding: 12px 20px;
+  min-height: 44px;
+}
+
+/* ── HEADER BAR ─────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0 0;
+  margin-bottom: 40px;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--white);
+  letter-spacing: 0.04em;
+}
+
+.logo span { color: var(--cyan); }
+
+.version-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* ── HERO SECTION ──────────────────────────────── */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin: 32px 0;
+}
+
+.hero-stat {
+  background: var(--ink-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 12px;
+  text-align: center;
+}
+
+.hero-stat .val {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--cyan);
+  display: block;
+  line-height: 1;
+}
+
+.hero-stat .lbl {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: block;
+  margin-top: 4px;
+}
+
+/* ── CALIBRATION ───────────────────────────────── */
+.cal-list { margin: 24px 0; }
+
+.cal-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cal-item:last-child { border-bottom: none; }
+
+.cal-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-hi);
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  background: transparent;
+}
+
+.cal-check.on {
+  background: var(--cyan);
+  border-color: var(--cyan);
+}
+
+.cal-check.on::after {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 10px;
+  border: 2px solid var(--ink);
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.cal-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--bright);
+  margin-bottom: 2px;
+}
+
+.cal-sub {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ── PROGRESS ──────────────────────────────────── */
+.prog-wrap { margin-bottom: 28px; }
+
+.prog-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.prog-meta span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+
+.prog-track {
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.prog-fill {
+  height: 100%;
+  background: var(--cyan);
+  border-radius: 1px;
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+}
+
+.prog-fill::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -2px;
+  width: 6px;
+  height: 6px;
+  background: var(--cyan);
+  border-radius: 50%;
+}
+
+/* ── PLATE ─────────────────────────────────────── */
+.plate-area {
+  margin: 24px 0 20px;
+  text-align: center;
+}
+
+.plate-frame {
+  display: inline-block;
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--border);
+  box-shadow: 0 0 40px var(--cyan-glow);
+  background: var(--ink-2);
+}
+
+.plate-frame img {
+  display: block;
+  width: min(80vw, 320px);
+  height: min(80vw, 320px);
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.plate-placeholder {
+  width: min(80vw, 320px);
+  height: min(80vw, 320px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  background: radial-gradient(circle at 40% 40%, #1e2040, #0d0d18);
+}
+
+.plate-num {
+  font-family: var(--font-display);
+  font-size: 72px;
+  color: rgba(255,255,255,0.06);
+  line-height: 1;
+}
+
+.plate-filename {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+
+.plate-prompt {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--mid);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+/* ── OPTIONS ───────────────────────────────────── */
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.options.three { grid-template-columns: 1fr 1fr 1fr; }
+.options.two { grid-template-columns: 1fr 1fr; }
+
+.opt-btn {
+  padding: 18px 12px;
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--bright);
+  background: var(--ink-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.12s, background 0.12s, transform 0.1s;
+  min-height: 64px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.opt-btn:hover { border-color: var(--cyan); background: rgba(0,212,255,0.05); }
+.opt-btn:active { transform: scale(0.95); }
+.opt-btn.nothing { font-size: 13px; color: var(--muted); letter-spacing: 0.04em; font-family: var(--font-mono); }
+
+/* ── RESULTS ───────────────────────────────────── */
+.verdict-block {
+  background: var(--ink-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.verdict-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--cyan);
+}
+
+.verdict-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--cyan);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.verdict-main {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 6vw, 32px);
+  color: var(--white);
+  line-height: 1.0;
+  margin-bottom: 4px;
+}
+
+.verdict-sub {
+  font-size: 13px;
+  color: var(--mid);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.conf-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.conf-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  min-width: 72px;
+}
+
+.conf-track {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.conf-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+
+.conf-pct {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--mid);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* Result bars */
+.result-row {
+  margin-bottom: 12px;
+}
+
+.result-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 5px;
+}
+
+.result-type-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--bright);
+}
+
+.result-pct-val {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--mid);
+}
+
+.result-track {
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.result-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Interpretation card */
+.interp-card {
+  background: var(--ink-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+
+.interp-text {
+  font-size: 14px;
+  color: var(--mid);
+  line-height: 1.75;
+}
+
+/* Disclaimer */
+.disclaimer {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+
+/* Footer */
+.footer {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: 24px 0 8px;
+  border-top: 1px solid var(--border);
+  margin-top: 32px;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 24px 0;
+}
+
+/* Animate bars in */
+@keyframes barIn {
+  from { width: 0 !important; }
+}
+
+.result-fill { animation: barIn 0.9s cubic-bezier(0.4,0,0.2,1) both; }
+
+/* Pulse for loading state */
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ══ SCREEN: HOME ════════════════════════════════════════ -->
+  <div id="screen-home" class="screen active">
+    <div class="header">
+      <div class="logo">OPTIC<span>QUIZ</span></div>
+      <div class="version-tag">v1.0.0</div>
+    </div>
+
+    <span class="eyebrow">Color Vision Screening</span>
+    <h1>SEE THE<br>DIFF<br>ERENCE</h1>
+
+    <p>A probabilistic color blindness estimator. 10 plates. Under 3 minutes. No account. No data collected.</p>
+
+    <div class="hero-grid">
+      <div class="hero-stat">
+        <span class="val">8%</span>
+        <span class="lbl">Men affected</span>
+      </div>
+      <div class="hero-stat">
+        <span class="val">8</span>
+        <span class="lbl">Types tested</span>
+      </div>
+      <div class="hero-stat">
+        <span class="val">3<span style="font-size:16px;color:var(--mid)">min</span></span>
+        <span class="lbl">To complete</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>Before you begin</h3>
+
+    <div class="cal-list" id="cal-list">
+      <div class="cal-item" onclick="toggleCal(0)">
+        <div class="cal-check" id="cal-0"></div>
+        <div>
+          <div class="cal-title">Maximize screen brightness</div>
+          <div class="cal-sub">Low brightness shifts perceived hue and affects accuracy significantly.</div>
+        </div>
+      </div>
+      <div class="cal-item" onclick="toggleCal(1)">
+        <div class="cal-check" id="cal-1"></div>
+        <div>
+          <div class="cal-title">Normal indoor or diffuse light only</div>
+          <div class="cal-sub">Direct sunlight on the screen or strong ambient color will skew results.</div>
+        </div>
+      </div>
+      <div class="cal-item" onclick="toggleCal(2)">
+        <div class="cal-check" id="cal-2"></div>
+        <div>
+          <div class="cal-title">Remove tinted lenses or glasses</div>
+          <div class="cal-sub">Any color filter will compromise the test. Remove before starting.</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startTest()" style="margin-bottom: 10px;">Start Test</button>
+
+    <div class="disclaimer">This tool is for screening purposes only and does not constitute a medical diagnosis. For clinical color vision evaluation, consult a licensed optometrist or ophthalmologist. Accuracy depends on display calibration and ambient lighting conditions.</div>
+
+    <div class="footer">www.zengine.site &nbsp;|&nbsp; © 2025 Zengine™ &nbsp;|&nbsp; OpticQuiz</div>
+  </div>
+
+  <!-- ══ SCREEN: TEST ════════════════════════════════════════ -->
+  <div id="screen-test" class="screen">
+    <div class="header">
+      <div class="logo">OPTIC<span>QUIZ</span></div>
+      <div class="version-tag">v1.0.0</div>
+    </div>
+
+    <div class="prog-wrap">
+      <div class="prog-meta">
+        <span id="prog-label">QUESTION 1 / 10</span>
+        <span id="prog-confidence">—</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="plate-area">
+      <div class="plate-frame" id="plate-frame">
+        <div class="plate-placeholder" id="plate-placeholder">
+          <div class="plate-num" id="plate-num">1</div>
+          <div class="plate-filename" id="plate-filename">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="plate-prompt">What number do you see?</div>
+
+    <div class="options" id="options-wrap"></div>
+  </div>
+
+  <!-- ══ SCREEN: RESULTS ════════════════════════════════════ -->
+  <div id="screen-results" class="screen">
+    <div class="header">
+      <div class="logo">OPTIC<span>QUIZ</span></div>
+      <div class="version-tag">v1.0.0</div>
+    </div>
+
+    <span class="eyebrow">Your Results</span>
+    <h2>VISION<br>PROFILE</h2>
+
+    <div class="verdict-block" id="verdict-block">
+      <div class="verdict-eyebrow">Primary finding</div>
+      <div class="verdict-main" id="verdict-main">—</div>
+      <div class="verdict-sub" id="verdict-sub"></div>
+      <div class="conf-row">
+        <span class="conf-label">Confidence</span>
+        <div class="conf-track">
+          <div class="conf-fill" id="conf-fill" style="width:0%"></div>
+        </div>
+        <span class="conf-pct" id="conf-pct">0%</span>
+      </div>
+    </div>
+
+    <h3>Probability breakdown</h3>
+    <div id="result-bars" style="margin-bottom: 24px;"></div>
+
+    <h3>What this means</h3>
+    <div class="interp-card">
+      <div class="interp-text" id="interp-text">—</div>
+    </div>
+
+    <button class="btn btn-primary" onclick="restartTest()" style="margin-bottom: 10px;">Retake Test</button>
+    <button class="btn btn-ghost" onclick="shareResults()">Share Results</button>
+
+    <div class="disclaimer">Not a clinical diagnosis. Screening accuracy depends on display calibration, ambient lighting, and plate image quality. For definitive evaluation see a vision specialist. Ishihara-style plates estimate likelihood — they do not confirm deficiency. Data is processed locally and never transmitted.</div>
+
+    <div class="footer">www.zengine.site &nbsp;|&nbsp; © 2025 Zengine™ &nbsp;|&nbsp; OpticQuiz</div>
+  </div>
+
+</div><!-- #app -->
+
+<script>
+// ===== BOOT ORDER =====
+// 1. CONFIG
+// 2. PLATES
+// 3. BAYES
+// 4. ENGINE
+// 5. RENDER
+// 6. INIT
+// ======================
+
+// ── 1. CONFIG ──────────────────────────────────────────────
+
+var DEV_MODE = false; // DECISION: set true to show filename labels on plates during dev
+
+var TYPE_LABELS = {
+  normal:       "Normal Vision",
+  deuteranomaly:"Deuteranomaly",
+  protanomaly:  "Protanomaly",
+  tritanomaly:  "Tritanomaly",
+  deuteranopia: "Deuteranopia",
+  protanopia:   "Protanopia",
+  tritanopia:   "Tritanopia",
+  achromatopsia:"Achromatopsia"
+};
+
+var TYPE_SUBLABELS = {
+  normal:       "Typical trichromatic color vision",
+  deuteranomaly:"Mild green sensitivity reduction",
+  protanomaly:  "Mild red sensitivity reduction",
+  tritanomaly:  "Mild blue sensitivity reduction",
+  deuteranopia: "Green channel deficiency",
+  protanopia:   "Red channel deficiency",
+  tritanopia:   "Blue channel deficiency",
+  achromatopsia:"Monochromatic vision (rare)"
+};
+
+var TYPE_COLORS = {
+  normal:       "#888899",
+  deuteranomaly:"#cc4422",
+  protanomaly:  "#cc2244",
+  tritanomaly:  "#2266cc",
+  deuteranopia: "#ff4422",
+  protanopia:   "#ff2244",
+  tritanopia:   "#4488ff",
+  achromatopsia:"#666677"
+};
+
+var INTERPRETATIONS = {
+  normal: "Your responses are consistent with typical trichromatic color vision. No significant deficiency pattern was detected across the test plates. Color differentiation appears intact across red-green and blue-yellow axes.",
+  deuteranomaly: "Mild green sensitivity reduction detected. This is the most prevalent form of color vision deficiency, present in approximately 5% of men. You may have difficulty distinguishing mid-reds from mid-greens, bright greens from yellows, pale pinks from light gray, and certain blue-purple combinations.",
+  protanomaly: "Mild red sensitivity reduction detected. Affects roughly 1% of men. Common confusions include black with certain shades of red, dark brown with dark green or dark red, and some blues with reds or purples. Red light sources appear dimmer than normal.",
+  tritanomaly: "Mild blue sensitivity reduction detected. This is rare, occurring in approximately 0.01% of the population. You may struggle with blue-yellow distinctions, violet versus red, and blue versus green comparisons.",
+  deuteranopia: "Strong green channel deficiency pattern. Mid-reds and mid-greens may appear indistinguishable. Blue-greens can be confused with gray and mid-pinks. Bright greens may look yellow. Light blues and lilac may appear similar.",
+  protanopia: "Red channel deficiency pattern. Red, orange, and brown may be difficult to distinguish. Some blues may resemble reds or purples. Red light sources appear significantly dimmer — an important safety consideration for traffic signals.",
+  tritanopia: "Blue channel deficiency detected. This is quite rare. Light blues may appear as gray, dark purples like black, mid-greens like blues, and oranges like reds. The world appears predominantly in reds, pinks, and greens.",
+  achromatopsia: "Very low color discrimination across all channels detected. Achromatopsia is extremely rare — approximately 1 in 33,000 people. This result warrants a specialist evaluation, as a formal diagnosis involves additional testing beyond color plate screening."
+};
+
+// ── 2. PLATES ──────────────────────────────────────────────
+// READS: nothing
+// WRITES: nothing (static data)
+
+var PLATES = [
+  // ── Plates 1–6: Red-green discriminators (deutan / protan primary) ──
+  {
+    id: 1,
+    image: "/plates/plate_12.png",
+    correct: "12",
+    options: ["12", "8", "Nothing"],
+    likelihoods: {
+      "12":      { normal:0.90, deuteranomaly:0.55, protanomaly:0.55, tritanomaly:0.82, deuteranopia:0.25, protanopia:0.25, tritanopia:0.80, achromatopsia:0.10 },
+      "8":       { normal:0.05, deuteranomaly:0.72, protanomaly:0.42, tritanomaly:0.10, deuteranopia:0.82, protanopia:0.52, tritanopia:0.10, achromatopsia:0.20 },
+      "Nothing": { normal:0.05, deuteranomaly:0.12, protanomaly:0.12, tritanomaly:0.38, deuteranopia:0.28, protanopia:0.28, tritanopia:0.48, achromatopsia:0.90 }
+    }
+  },
+  {
+    id: 2,
+    image: "/plates/plate_8.png",
+    correct: "8",
+    options: ["8", "3", "Nothing"],
+    likelihoods: {
+      "8":       { normal:0.92, deuteranomaly:0.52, protanomaly:0.52, tritanomaly:0.85, deuteranopia:0.22, protanopia:0.22, tritanopia:0.82, achromatopsia:0.08 },
+      "3":       { normal:0.04, deuteranomaly:0.68, protanomaly:0.55, tritanomaly:0.08, deuteranopia:0.78, protanopia:0.65, tritanopia:0.10, achromatopsia:0.22 },
+      "Nothing": { normal:0.04, deuteranomaly:0.10, protanomaly:0.10, tritanomaly:0.42, deuteranopia:0.30, protanopia:0.30, tritanopia:0.52, achromatopsia:0.88 }
+    }
+  },
+  {
+    id: 3,
+    image: "/plates/plate_29.png",
+    correct: "29",
+    options: ["29", "70", "Nothing"],
+    likelihoods: {
+      "29":      { normal:0.90, deuteranomaly:0.60, protanomaly:0.60, tritanomaly:0.80, deuteranopia:0.20, protanopia:0.20, tritanopia:0.80, achromatopsia:0.10 },
+      "70":      { normal:0.05, deuteranomaly:0.72, protanomaly:0.45, tritanomaly:0.10, deuteranopia:0.80, protanopia:0.52, tritanopia:0.10, achromatopsia:0.20 },
+      "Nothing": { normal:0.05, deuteranomaly:0.10, protanomaly:0.10, tritanomaly:0.40, deuteranopia:0.30, protanopia:0.30, tritanopia:0.48, achromatopsia:0.90 }
+    }
+  },
+  {
+    id: 4,
+    image: "/plates/plate_5.png",
+    correct: "5",
+    options: ["5", "2", "Nothing"],
+    likelihoods: {
+      "5":       { normal:0.91, deuteranomaly:0.50, protanomaly:0.62, tritanomaly:0.83, deuteranopia:0.18, protanopia:0.30, tritanopia:0.82, achromatopsia:0.09 },
+      "2":       { normal:0.05, deuteranomaly:0.45, protanomaly:0.70, tritanomaly:0.08, deuteranopia:0.60, protanopia:0.80, tritanopia:0.08, achromatopsia:0.18 },
+      "Nothing": { normal:0.04, deuteranomaly:0.10, protanomaly:0.10, tritanomaly:0.42, deuteranopia:0.28, protanopia:0.28, tritanopia:0.50, achromatopsia:0.88 }
+    }
+  },
+  {
+    id: 5,
+    image: "/plates/plate_3.png",
+    correct: "3",
+    options: ["3", "5", "Nothing"],
+    likelihoods: {
+      "3":       { normal:0.90, deuteranomaly:0.52, protanomaly:0.65, tritanomaly:0.84, deuteranopia:0.20, protanopia:0.32, tritanopia:0.83, achromatopsia:0.09 },
+      "5":       { normal:0.05, deuteranomaly:0.48, protanomaly:0.72, tritanomaly:0.09, deuteranopia:0.62, protanopia:0.82, tritanopia:0.09, achromatopsia:0.20 },
+      "Nothing": { normal:0.05, deuteranomaly:0.10, protanomaly:0.10, tritanomaly:0.40, deuteranopia:0.28, protanopia:0.28, tritanopia:0.50, achromatopsia:0.88 }
+    }
+  },
+  {
+    id: 6,
+    image: "/plates/plate_15.png",
+    correct: "15",
+    options: ["15", "17", "Nothing"],
+    likelihoods: {
+      "15":      { normal:0.91, deuteranomaly:0.58, protanomaly:0.58, tritanomaly:0.82, deuteranopia:0.24, protanopia:0.24, tritanopia:0.81, achromatopsia:0.10 },
+      "17":      { normal:0.05, deuteranomaly:0.66, protanomaly:0.50, tritanomaly:0.10, deuteranopia:0.78, protanopia:0.60, tritanopia:0.10, achromatopsia:0.22 },
+      "Nothing": { normal:0.04, deuteranomaly:0.10, protanomaly:0.10, tritanomaly:0.40, deuteranopia:0.28, protanopia:0.28, tritanopia:0.48, achromatopsia:0.88 }
+    }
+  },
+  // ── Plates 7–8: Tritan-specific discriminators (blue-yellow) ──
+  {
+    id: 7,
+    image: "/plates/plate_tritan_1.png",
+    correct: "6",
+    options: ["6", "8", "Nothing"],
+    likelihoods: {
+      "6":       { normal:0.91, deuteranomaly:0.80, protanomaly:0.82, tritanomaly:0.42, deuteranopia:0.72, protanopia:0.74, tritanopia:0.20, achromatopsia:0.10 },
+      "8":       { normal:0.05, deuteranomaly:0.12, protanomaly:0.10, tritanomaly:0.78, deuteranopia:0.18, protanopia:0.16, tritanopia:0.85, achromatopsia:0.25 },
+      "Nothing": { normal:0.04, deuteranomaly:0.08, protanomaly:0.08, tritanomaly:0.42, deuteranopia:0.10, protanopia:0.10, tritanopia:0.55, achromatopsia:0.88 }
+    }
+  },
+  {
+    id: 8,
+    image: "/plates/plate_tritan_2.png",
+    correct: "2",
+    options: ["2", "4", "Nothing"],
+    likelihoods: {
+      "2":       { normal:0.91, deuteranomaly:0.80, protanomaly:0.80, tritanomaly:0.38, deuteranopia:0.72, protanopia:0.72, tritanopia:0.18, achromatopsia:0.10 },
+      "4":       { normal:0.05, deuteranomaly:0.12, protanomaly:0.12, tritanomaly:0.80, deuteranopia:0.18, protanopia:0.18, tritanopia:0.88, achromatopsia:0.28 },
+      "Nothing": { normal:0.04, deuteranomaly:0.08, protanomaly:0.08, tritanomaly:0.42, deuteranopia:0.10, protanopia:0.10, tritanopia:0.52, achromatopsia:0.88 }
+    }
+  },
+  // ── Plate 9: Achromat trap (invisible to achromatopsia) ──
+  {
+    id: 9,
+    image: "/plates/plate_achromat.png",
+    correct: "45",
+    options: ["45", "Nothing"],
+    likelihoods: {
+      "45":      { normal:0.92, deuteranomaly:0.88, protanomaly:0.88, tritanomaly:0.90, deuteranopia:0.82, protanopia:0.82, tritanopia:0.88, achromatopsia:0.20 },
+      "Nothing": { normal:0.08, deuteranomaly:0.12, protanomaly:0.12, tritanomaly:0.10, deuteranopia:0.18, protanopia:0.18, tritanopia:0.12, achromatopsia:0.90 }
+    }
+  },
+  // ── Plate 10: Universal control (everyone should see this) ──
+  {
+    id: 10,
+    image: "/plates/plate_control.png",
+    correct: "7",
+    options: ["7", "1", "Nothing"],
+    likelihoods: {
+      "7":       { normal:0.94, deuteranomaly:0.92, protanomaly:0.92, tritanomaly:0.94, deuteranopia:0.90, protanopia:0.90, tritanopia:0.92, achromatopsia:0.30 },
+      "1":       { normal:0.03, deuteranomaly:0.04, protanomaly:0.04, tritanomaly:0.03, deuteranopia:0.06, protanopia:0.06, tritanopia:0.04, achromatopsia:0.40 },
+      "Nothing": { normal:0.03, deuteranomaly:0.04, protanomaly:0.04, tritanomaly:0.03, deuteranopia:0.04, protanopia:0.04, tritanopia:0.04, achromatopsia:0.70 }
+    }
+  }
+];
+
+// ── 3. BAYES ENGINE ────────────────────────────────────────
+// READS: PLATES, STATE.answers
+// WRITES: nothing (pure function)
+
+var PRIORS = {
+  normal:       0.90,
+  deuteranomaly:0.05,
+  protanomaly:  0.01,
+  tritanomaly:  0.0005,
+  deuteranopia: 0.01,
+  protanopia:   0.01,
+  tritanopia:   0.0005,
+  achromatopsia:0.00003
+};
+
+// DEPENDS ON: PRIORS, PLATES
+function computePosterior(answers, plates) {
+  // READS: answers[], plates[]
+  // WRITES: returns normalized posterior object
+  var logProb = {};
+  for (var t in PRIORS) logProb[t] = Math.log(PRIORS[t]);
+
+  for (var i = 0; i < answers.length; i++) {
+    var a = answers[i];
+    var plate = null;
+    for (var j = 0; j < plates.length; j++) {
+      if (plates[j].id === a.plateId) { plate = plates[j]; break; }
+    }
+    if (!plate) continue;
+
+    var lh = plate.likelihoods[a.answer];
+    if (!lh) continue;
+
+    var w = timeWeight(a.time);
+
+    for (var t in lh) {
+      logProb[t] += Math.log(Math.max(lh[t] * w, 1e-9));
+    }
+  }
+
+  var maxLog = -Infinity;
+  for (var t in logProb) if (logProb[t] > maxLog) maxLog = logProb[t];
+
+  var expVals = {}, sum = 0;
+  for (var t in logProb) {
+    expVals[t] = Math.exp(logProb[t] - maxLog);
+    sum += expVals[t];
+  }
+
+  var result = {};
+  for (var t in expVals) result[t] = expVals[t] / sum;
+
+  return result;
+}
+
+function timeWeight(ms) {
+  // READS: ms (integer)
+  // Fast response → stronger signal, slow → weaker
+  if (ms < 1500) return 1.2;
+  if (ms > 4000) return 0.8;
+  return 1.0;
+}
+
+function computeConfidence(post) {
+  // READS: post (posterior object)
+  // Returns 0–1 confidence based on entropy reduction
+  var entropy = 0;
+  var vals = Object.values(post);
+  for (var i = 0; i < vals.length; i++) {
+    if (vals[i] > 0) entropy -= vals[i] * Math.log2(vals[i]);
+  }
+  return 1 - entropy / Math.log2(vals.length);
+}
+
+function shannonEntropy(post) {
+  // READS: post
+  var e = 0;
+  for (var t in post) {
+    if (post[t] > 0) e -= post[t] * Math.log2(post[t]);
+  }
+  return e;
+}
+
+// ── 4. ADAPTIVE ENGINE ────────────────────────────────────
+// READS: STATE.posterior, STATE.plateQueue
+// WRITES: nothing (returns best plate)
+
+// DEPENDS ON: shannonEntropy
+function informationGain(posterior, plate) {
+  // READS: posterior object, plate model
+  var baseEnt = shannonEntropy(posterior);
+  var answerKeys = Object.keys(plate.likelihoods);
+  var expectedEnt = 0;
+
+  for (var ai = 0; ai < answerKeys.length; ai++) {
+    var ans = answerKeys[ai];
+    var lh = plate.likelihoods[ans];
+    var simPost = {}, simSum = 0;
+
+    for (var t in posterior) {
+      simPost[t] = posterior[t] * (lh[t] || 1e-9);
+      simSum += simPost[t];
+    }
+    if (simSum === 0) continue;
+    for (var t in simPost) simPost[t] /= simSum;
+
+    var ansProb = 0;
+    for (var t in lh) ansProb += (lh[t] || 0);
+    ansProb /= Object.keys(lh).length;
+
+    expectedEnt += ansProb * shannonEntropy(simPost);
+  }
+
+  return baseEnt - expectedEnt;
+}
+
+// DEPENDS ON: informationGain
+function selectNextPlate(posterior, remaining) {
+  // READS: posterior, remaining plates[]
+  // WRITES: nothing — returns highest-IG plate
+  var best = null, bestGain = -Infinity;
+  for (var i = 0; i < remaining.length; i++) {
+    var gain = informationGain(posterior, remaining[i]);
+    if (gain > bestGain) { bestGain = gain; best = remaining[i]; }
+  }
+  return best;
+}
+
+// ── 5. STATE + ENGINE ─────────────────────────────────────
+// Centralized state object
+
+var STATE = {
+  answers: [],
+  plateQueue: [],
+  currentPlate: null,
+  currentIdx: 0,
+  questionStart: 0,
+  posterior: {},
+  calChecks: [false, false, false]
+};
+
+function startTest() {
+  // WRITES: STATE (full reset)
+  STATE.answers = [];
+  STATE.currentIdx = 0;
+  STATE.posterior = {};
+  for (var t in PRIORS) STATE.posterior[t] = PRIORS[t];
+  STATE.plateQueue = PLATES.slice();
+  showScreen("screen-test");
+  advanceQuestion();
+}
+
+function advanceQuestion() {
+  // READS: STATE.plateQueue, STATE.posterior, STATE.currentIdx
+  // WRITES: STATE.currentPlate, STATE.currentIdx, STATE.questionStart
+  if (STATE.plateQueue.length === 0) {
+    showResults();
+    return;
+  }
+
+  var plate = selectNextPlate(STATE.posterior, STATE.plateQueue);
+  STATE.plateQueue = STATE.plateQueue.filter(function(p) { return p.id !== plate.id; });
+  STATE.currentPlate = plate;
+  STATE.questionStart = Date.now();
+
+  renderQuestion(plate, STATE.currentIdx, PLATES.length);
+  STATE.currentIdx++;
+}
+
+function submitAnswer(answer) {
+  // READS: STATE.currentPlate, STATE.questionStart
+  // WRITES: STATE.answers, STATE.posterior
+  var elapsed = Date.now() - STATE.questionStart;
+  STATE.answers.push({
+    plateId: STATE.currentPlate.id,
+    answer: answer,
+    time: elapsed
+  });
+
+  STATE.posterior = computePosterior(STATE.answers, PLATES);
+  advanceQuestion();
+}
+
+function restartTest() {
+  showScreen("screen-home");
+}
+
+function shareResults() {
+  var sorted = Object.entries(STATE.posterior).sort(function(a,b){ return b[1]-a[1]; });
+  var top = sorted[0];
+  var text = "My OpticQuiz color vision result: " + TYPE_LABELS[top[0]] + " (" + (top[1]*100).toFixed(1) + "% probability). Test yours at opticquiz.com";
+  if (navigator.share) {
+    navigator.share({ title: "OpticQuiz Results", text: text, url: "https://opticquiz.com" });
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function(){ alert("Result copied to clipboard."); });
+  }
+}
+
+// ── 6. RENDER LAYER ───────────────────────────────────────
+// DEPENDS ON: STATE, TYPE_LABELS, INTERPRETATIONS
+
+function renderQuestion(plate, idx, total) {
+  // READS: plate, idx, total, DEV_MODE
+  // WRITES: DOM
+  var pct = Math.round((idx / total) * 100);
+  document.getElementById("prog-fill").style.width = pct + "%";
+  document.getElementById("prog-label").textContent = "QUESTION " + (idx + 1) + " / " + total;
+
+  var conf = computeConfidence(STATE.posterior);
+  document.getElementById("prog-confidence").textContent = conf > 0.1 ? "CONF " + Math.round(conf * 100) + "%" : "—";
+
+  // Plate display — swap img in when image loads
+  var frame = document.getElementById("plate-frame");
+  var existingImg = frame.querySelector("img");
+  var placeholder = document.getElementById("plate-placeholder");
+
+  if (existingImg) existingImg.remove();
+
+  if (placeholder) {
+    placeholder.style.display = "flex";
+    document.getElementById("plate-num").textContent = idx + 1;
+    document.getElementById("plate-filename").textContent = DEV_MODE ? plate.image : "";
+  }
+
+  var img = new Image();
+  img.style.cssText = "display:block;width:min(80vw,320px);height:min(80vw,320px);object-fit:cover;border-radius:50%;";
+  img.onload = function() {
+    if (STATE.currentPlate && STATE.currentPlate.id === plate.id) {
+      if (placeholder) placeholder.style.display = "none";
+      frame.appendChild(img);
+    }
+  };
+  img.onerror = function() {
+    if (DEV_MODE) {
+      document.getElementById("plate-filename").textContent = "MISSING: " + plate.image;
+    }
+  };
+  img.src = plate.image;
+
+  // Options
+  var wrap = document.getElementById("options-wrap");
+  wrap.innerHTML = "";
+  wrap.className = "options";
+  if (plate.options.length === 3) wrap.classList.add("three");
+  else if (plate.options.length === 2) wrap.classList.add("two");
+
+  for (var i = 0; i < plate.options.length; i++) {
+    (function(ans) {
+      var btn = document.createElement("button");
+      btn.className = "opt-btn" + (ans === "Nothing" ? " nothing" : "");
+      btn.textContent = ans === "Nothing" ? "I see nothing" : ans;
+      btn.setAttribute("aria-label", "Answer: " + ans);
+      btn.onclick = function() { submitAnswer(ans); };
+      wrap.appendChild(btn);
+    })(plate.options[i]);
+  }
+}
+
+function showResults() {
+  // READS: STATE.posterior
+  // WRITES: DOM, shows result screen
+  var post = STATE.posterior;
+  var conf = computeConfidence(post);
+
+  var sorted = Object.entries(post).sort(function(a,b){ return b[1]-a[1]; });
+  var topType = sorted[0][0];
+  var topProb = sorted[0][1];
+
+  // Verdict
+  document.getElementById("verdict-main").textContent = TYPE_LABELS[topType];
+  document.getElementById("verdict-sub").textContent = TYPE_SUBLABELS[topType];
+
+  var confPct = Math.round(conf * 100);
+  var confFill = document.getElementById("conf-fill");
+  confFill.style.width = "0%";
+  confFill.style.background = conf > 0.7 ? "var(--cyan)" : conf > 0.4 ? "var(--amber)" : "var(--muted)";
+  document.getElementById("conf-pct").textContent = confPct + "%";
+
+  showScreen("screen-results");
+
+  // Animate confidence bar after paint
+  setTimeout(function() {
+    confFill.style.transition = "width 0.9s cubic-bezier(0.4,0,0.2,1)";
+    confFill.style.width = confPct + "%";
+  }, 100);
+
+  // Result bars
+  var barsEl = document.getElementById("result-bars");
+  barsEl.innerHTML = "";
+
+  for (var i = 0; i < sorted.length; i++) {
+    var t = sorted[i][0], p = sorted[i][1];
+    if (p < 0.001 && t !== topType) continue;
+
+    var row = document.createElement("div");
+    row.className = "result-row";
+    var pctVal = (p * 100).toFixed(1);
+    var barW = Math.max(Math.round(p * 100), p > 0 ? 1 : 0);
+
+    row.innerHTML =
+      '<div class="result-meta">' +
+        '<span class="result-type-name">' + TYPE_LABELS[t] + '</span>' +
+        '<span class="result-pct-val">' + pctVal + '%</span>' +
+      '</div>' +
+      '<div class="result-track">' +
+        '<div class="result-fill" style="width:0%;background:' + TYPE_COLORS[t] + ';animation-delay:' + (i * 0.08) + 's;" data-target="' + barW + '"></div>' +
+      '</div>';
+
+    barsEl.appendChild(row);
+  }
+
+  // Animate bars
+  setTimeout(function() {
+    var fills = barsEl.querySelectorAll(".result-fill");
+    for (var i = 0; i < fills.length; i++) {
+      (function(el) {
+        el.style.transition = "width 0.9s cubic-bezier(0.4,0,0.2,1)";
+        el.style.width = el.getAttribute("data-target") + "%";
+      })(fills[i]);
+    }
+  }, 150);
+
+  // Interpretation
+  document.getElementById("interp-text").textContent = INTERPRETATIONS[topType] || "";
+}
+
+function showScreen(id) {
+  // READS: id
+  // WRITES: DOM screen visibility
+  var screens = document.querySelectorAll(".screen");
+  for (var i = 0; i < screens.length; i++) screens[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+function toggleCal(n) {
+  // READS: n (index)
+  // WRITES: STATE.calChecks, DOM
+  STATE.calChecks[n] = !STATE.calChecks[n];
+  var el = document.getElementById("cal-" + n);
+  el.classList.toggle("on", STATE.calChecks[n]);
+}
+
+// ── INIT ─────────────────────────────────────────────────
+// nothing to init beyond DOM ready — state is reset on startTest()
+</script>
+</body>
+</html>
