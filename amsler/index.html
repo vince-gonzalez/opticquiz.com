@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ===== WORKFLOW STACK =====
+  File:         amsler/index.html
+  Site:         OpticQuiz — Amsler Grid Test
+  Domain:       opticquiz.com/amsler/
+  Repo:         zengineco/opticquiz.com  /amsler/index.html
+  Author:       Vince Gonzalez / Zengine™
+  Version:      v1.2.0
+  Boot Order:   1.CONFIG  2.ENGINE  3.RENDER  4.INIT
+  Features:
+    - SVG Amsler grid generated inline (no images needed)
+    - Per-eye bilateral testing (right then left)
+    - 4 questions per eye covering all key Amsler observations
+    - Scored + interpreted: normal / mild / moderate irregularity
+    - Response recorded as tap/click on grid quadrant (interactive)
+    - Share results via Web Share API → clipboard → prompt fallback
+    - WCAG 2.1 AA: skip link, aria-live, role attrs, focus rings,
+      min 44px targets, color never sole conveyor, reduced-motion
+  Palette: white/#F8F6F2/#E8431A/#4A8C3F/#1A1A1A (logo-derived)
+  Fonts: Bebas Neue (display) + Source Serif 4 (body) + Courier New (mono)
+  No external images. No base64. No backend.
+===== END WORKFLOW STACK ===== -->
+
+<!-- ===== ASSET MANIFEST =====
+  /opticquiz_icon.png   live on GitHub repo root
+  Google Fonts: Bebas Neue, Source Serif 4
+  All grids: SVG generated inline at runtime
+===== END ASSET MANIFEST ===== -->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz Amsler Grid — free central vision screening for wavy lines, missing areas, and distortion. Educational use only, not a medical diagnostic.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Amsler Grid Test">
+<meta property="og:description" content="Interactive Amsler grid. Screen each eye for central vision distortion. Free, no account, results on-device only.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/amsler/">
+<link rel="canonical" href="https://opticquiz.com/amsler/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Amsler Grid Test — OpticQuiz</title>
+
+<!-- AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+
+<style>
+/* ===== DESIGN SYSTEM =====
+  Palette from opticquiz_icon.png:
+    --white  #FFFFFF
+    --bg     #F8F6F2   warm off-white
+    --cream  #F0EDE6   card bg
+    --lgray  #D4D0C8   borders
+    --gray   #6B6B6B   secondary text (AA on white)
+    --black  #1A1A1A   primary text (AAA on white)
+    --red    #E8431A   orange-red accent
+    --redd   #C23410   red hover
+    --green  #4A8C3F   forest green
+    --greend #38692F   green hover
+    --redbg  #FDF1EE   red tint bg
+    --gbg    #EEF5ED   green tint bg
+    --amber  #D4820A   caution
+===== END DESIGN SYSTEM ===== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #FFFFFF;
+  --bg: #F8F6F2;
+  --cream: #F0EDE6;
+  --lgray: #D4D0C8;
+  --gray: #6B6B6B;
+  --black: #1A1A1A;
+  --red: #E8431A;
+  --redd: #C23410;
+  --green: #4A8C3F;
+  --greend: #38692F;
+  --redbg: #FDF1EE;
+  --gbg: #EEF5ED;
+  --amber: #D4820A;
+  --fd: "Bebas Neue", Impact, fantasy;
+  --fs: "Source Serif 4", Georgia, serif;
+  --fm: "Courier New", monospace;
+  --r: 4px;
+  --rc: 8px;
+}
+
+html { background: var(--bg); }
+body {
+  font-family: var(--fs);
+  background: var(--bg);
+  color: var(--black);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── A11Y ────────────────────────────────────────── */
+.skip-link {
+  position: absolute; top: -48px; left: 16px; z-index: 9999;
+  background: var(--red); color: var(--white);
+  padding: 10px 18px; border-radius: var(--r);
+  font-family: var(--fs); font-size: 14px; font-weight: 600;
+  text-decoration: none; transition: top 0.15s;
+}
+.skip-link:focus { top: 12px; }
+*:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; border-radius: var(--r); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* ── LAYOUT ──────────────────────────────────────── */
+.wrap { max-width: 560px; margin: 0 auto; padding: 0 20px 80px; }
+
+/* ── HEADER ──────────────────────────────────────── */
+.site-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 20px 0; max-width: 560px; margin: 0 auto;
+}
+.logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-wrap img { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--lgray); }
+.logo-name { font-family: var(--fd); font-size: 22px; color: var(--black); letter-spacing: 0.03em; }
+.logo-name span { color: var(--red); }
+.ver-badge { font-family: var(--fm); font-size: 10px; color: var(--gray); border: 1px solid var(--lgray); padding: 3px 8px; border-radius: 20px; letter-spacing: 0.1em; }
+
+/* ── SCREENS ─────────────────────────────────────── */
+.screen { display: none; }
+.screen.active { display: block; animation: fadein 0.2s ease; }
+@keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+/* ── TYPOGRAPHY ──────────────────────────────────── */
+.eyebrow { font-family: var(--fm); font-size: 11px; letter-spacing: 0.14em; color: var(--red); text-transform: uppercase; display: block; margin-bottom: 10px; }
+h1 { font-family: var(--fd); font-size: clamp(48px, 12vw, 72px); color: var(--black); line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 16px; }
+h2 { font-family: var(--fd); font-size: clamp(32px, 8vw, 48px); color: var(--black); line-height: 0.94; letter-spacing: 0.02em; margin-bottom: 16px; }
+h3 { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+p { font-size: 15px; color: var(--gray); line-height: 1.7; }
+
+/* ── BUTTONS ─────────────────────────────────────── */
+.btn {
+  display: block; width: 100%; padding: 16px 20px;
+  font-family: var(--fs); font-size: 16px; font-weight: 600;
+  color: var(--black); background: var(--white);
+  border: 1.5px solid var(--lgray); border-radius: var(--r);
+  cursor: pointer; text-align: center;
+  transition: border-color 0.12s, background 0.12s, transform 0.08s;
+  min-height: 52px; -webkit-tap-highlight-color: transparent;
+}
+.btn:hover { border-color: var(--black); background: var(--cream); }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--red); color: var(--white); border-color: transparent; }
+.btn-primary:hover { background: var(--redd); }
+.btn-secondary { background: var(--green); color: var(--white); border-color: transparent; }
+.btn-secondary:hover { background: var(--greend); }
+.btn + .btn { margin-top: 10px; }
+
+/* ── DIVIDER ─────────────────────────────────────── */
+.divider { height: 1px; background: var(--lgray); margin: 24px 0; }
+
+/* ── INSTRUCTIONS LIST ───────────────────────────── */
+.instr-list { margin: 20px 0; }
+.instr-item { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--lgray); }
+.instr-item:last-child { border-bottom: none; }
+.instr-num { font-family: var(--fd); font-size: 28px; color: var(--red); min-width: 28px; line-height: 1; margin-top: 2px; }
+.instr-text { font-size: 14px; color: var(--black); line-height: 1.6; }
+.instr-sub { font-size: 13px; color: var(--gray); margin-top: 2px; }
+
+/* ── PROGRESS ────────────────────────────────────── */
+.prog-wrap { margin-bottom: 24px; }
+.prog-meta { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.prog-meta span { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.06em; }
+.prog-track { height: 3px; background: var(--lgray); border-radius: 2px; }
+.prog-fill { height: 100%; background: var(--red); border-radius: 2px; transition: width 0.35s cubic-bezier(0.4,0,0.2,1); }
+
+/* ── GRID AREA ───────────────────────────────────── */
+.grid-area { display: flex; justify-content: center; margin: 20px 0 16px; }
+
+.grid-container {
+  position: relative;
+  display: inline-block;
+  cursor: crosshair;
+  border: 2px solid var(--lgray);
+  border-radius: var(--r);
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.grid-container svg { display: block; }
+
+/* Tap markers overlay */
+.tap-marker {
+  position: absolute;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: rgba(232,67,26,0.7);
+  border: 2px solid var(--red);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: markerIn 0.15s ease;
+}
+@keyframes markerIn { from { transform: translate(-50%,-50%) scale(0); } to { transform: translate(-50%,-50%) scale(1); } }
+
+/* Eye cover reminder */
+.eye-cover-banner {
+  background: var(--redbg);
+  border: 1.5px solid var(--red);
+  border-radius: var(--rc);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ecb-icon { font-family: var(--fd); font-size: 22px; color: var(--red); flex-shrink: 0; }
+.ecb-text { font-size: 14px; font-weight: 600; color: var(--black); }
+.ecb-sub { font-size: 12px; color: var(--gray); margin-top: 1px; }
+
+/* Question text */
+.q-text { font-size: 16px; font-weight: 600; color: var(--black); line-height: 1.5; text-align: center; margin-bottom: 14px; }
+.q-sub { font-size: 13px; color: var(--gray); text-align: center; margin-bottom: 18px; line-height: 1.6; }
+
+/* Options */
+.options { display: grid; gap: 10px; }
+.options.g2 { grid-template-columns: 1fr 1fr; }
+.opt-btn {
+  padding: 16px 12px; font-family: var(--fs); font-size: 15px; font-weight: 600;
+  color: var(--black); background: var(--white);
+  border: 1.5px solid var(--lgray); border-radius: var(--r);
+  cursor: pointer; text-align: center;
+  transition: border-color 0.12s, background 0.1s, transform 0.08s;
+  min-height: 56px; line-height: 1.3;
+  -webkit-tap-highlight-color: transparent;
+}
+.opt-btn:hover { border-color: var(--red); background: var(--redbg); }
+.opt-btn:active { transform: scale(0.97); }
+.opt-btn.opt-yes { border-color: var(--red); }
+.opt-btn.opt-no { border-color: var(--green); }
+
+/* ── SWITCH SCREEN ───────────────────────────────── */
+.switch-content { padding-top: 40px; text-align: center; }
+.big-eye-label {
+  font-family: var(--fd); font-size: clamp(64px, 18vw, 100px);
+  line-height: 0.9; letter-spacing: 0.02em; margin-bottom: 12px;
+}
+.big-eye-label.eye-left { color: var(--green); }
+.big-eye-label.eye-right { color: var(--red); }
+
+/* ── RESULTS ─────────────────────────────────────── */
+.eye-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.eye-tab {
+  padding: 12px; border-radius: var(--r);
+  border: 1.5px solid var(--lgray); background: var(--white);
+  cursor: pointer; text-align: center;
+  transition: border-color 0.12s, background 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.eye-tab.active { border-color: var(--red); background: var(--redbg); }
+.eye-tab-lbl { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px; }
+.eye-tab-val { font-family: var(--fd); font-size: 20px; color: var(--black); letter-spacing: 0.02em; }
+
+.verdict-block {
+  background: var(--white); border: 1.5px solid var(--lgray);
+  border-top: 4px solid var(--red); border-radius: var(--rc);
+  padding: 20px; margin-bottom: 20px;
+}
+.verdict-block.ok { border-top-color: var(--green); }
+.verdict-block.warn { border-top-color: var(--amber); }
+.v-eyebrow { font-family: var(--fm); font-size: 10px; color: var(--red); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
+.verdict-block.ok .v-eyebrow { color: var(--green); }
+.verdict-block.warn .v-eyebrow { color: var(--amber); }
+.v-main { font-family: var(--fd); font-size: clamp(22px, 5.5vw, 32px); color: var(--black); line-height: 1; margin-bottom: 6px; }
+.v-body { font-size: 14px; color: var(--gray); line-height: 1.75; }
+
+/* Answer review grid */
+.answer-review { margin-bottom: 20px; }
+.ar-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--lgray);
+}
+.ar-row:last-child { border-bottom: none; }
+.ar-indicator {
+  width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fm); font-size: 11px; font-weight: 700;
+}
+.ar-indicator.ok { background: var(--gbg); color: var(--green); }
+.ar-indicator.flag { background: var(--redbg); color: var(--red); }
+.ar-indicator.warn { background: #FFF8EE; color: var(--amber); }
+.ar-q { font-size: 13px; color: var(--black); line-height: 1.5; flex: 1; }
+.ar-ans { font-family: var(--fm); font-size: 11px; letter-spacing: 0.06em; margin-top: 2px; }
+.ar-ans.ok { color: var(--green); }
+.ar-ans.flag { color: var(--red); }
+
+/* Tap map */
+.tap-map-wrap { margin-bottom: 20px; }
+.tap-map-label { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+.tap-map-container { position: relative; display: inline-block; }
+.tap-map-container svg { display: block; }
+.tm-marker {
+  position: absolute; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--red); opacity: 0.7; transform: translate(-50%, -50%);
+}
+
+/* Interp card */
+.interp-card { background: var(--cream); border: 1px solid var(--lgray); border-radius: var(--rc); padding: 18px; margin-bottom: 20px; }
+.interp-text { font-size: 14px; color: var(--gray); line-height: 1.8; }
+.interp-text strong { color: var(--black); }
+
+/* Disclaimer */
+.disclaimer {
+  background: var(--cream); border: 1.5px solid var(--lgray);
+  border-left: 4px solid var(--red); border-radius: var(--rc);
+  padding: 18px 18px 18px 20px; margin-top: 24px;
+}
+.disclaimer-title { font-family: var(--fm); font-size: 11px; letter-spacing: 0.1em; color: var(--red); text-transform: uppercase; margin-bottom: 8px; }
+.disclaimer-body { font-size: 12px; color: var(--gray); line-height: 1.8; }
+.disclaimer-body strong { color: var(--black); font-weight: 600; }
+
+/* Share row */
+.share-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+
+/* Back link */
+.back-link { display: block; text-align: center; margin-top: 16px; font-family: var(--fm); font-size: 12px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+.back-link:hover { color: var(--black); }
+
+/* Footer */
+footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.06em; text-align: center; padding: 24px 0 8px; border-top: 1px solid var(--lgray); margin-top: 32px; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home">
+    <img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38">
+    <div class="logo-name">OPTIC<span>QUIZ</span></div>
+  </a>
+  <div class="ver-badge">AMSLER GRID</div>
+</header>
+
+<main id="main" class="wrap" role="main">
+
+<!-- ══ SCREEN: INTRO ══════════════════════════════════════ -->
+<div id="screen-intro" class="screen active" role="region" aria-labelledby="intro-h1">
+  <div style="padding-top:32px">
+    <span class="eyebrow">Central Vision Screening</span>
+    <h1 id="intro-h1">AMSLER<br>GRID<br>TEST</h1>
+    <p>A 10×10 line grid with a center dot. You stare at the dot and report what you see. Each eye tested separately. Takes about 2 minutes total.</p>
+
+    <div class="divider"></div>
+
+    <h3>What this test screens for</h3>
+    <p style="margin-bottom:16px;">The Amsler grid detects distortions in your central 20 degrees of vision — the area served by the macula. Distortions can be associated with age-related macular degeneration, macular edema, epiretinal membrane, and other central retinal conditions. <strong style="color:var(--black)">This tool screens, it does not diagnose.</strong></p>
+
+    <div class="divider"></div>
+
+    <h3>How to take the test</h3>
+    <div class="instr-list" role="list">
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">1</div>
+        <div>
+          <div class="instr-text">If you wear reading glasses or progressive lenses, keep them on</div>
+          <div class="instr-sub">This test is meant to be taken at normal reading distance (~30–40cm / 12–16 inches)</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">2</div>
+        <div>
+          <div class="instr-text">Cover one eye with your palm — not a lens</div>
+          <div class="instr-sub">You will test right eye first, then left. A cover reminder appears before each eye.</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">3</div>
+        <div>
+          <div class="instr-text">Keep your open eye fixed on the center red dot — do not let it wander</div>
+          <div class="instr-sub">Use your peripheral vision to judge the grid. If you move your eye, the test is less accurate.</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">4</div>
+        <div>
+          <div class="instr-text">If you see distortion, tap the area on the grid where it appears</div>
+          <div class="instr-sub">Then answer the questions below the grid about what you observe.</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startTest()" style="margin-top:8px" aria-label="Start the Amsler grid test">Start Test — Right Eye</button>
+    <a href="/" class="back-link" aria-label="Back to all OpticQuiz tests">← All Tests</a>
+  </div>
+</div>
+
+<!-- ══ SCREEN: TEST ════════════════════════════════════════ -->
+<div id="screen-test" class="screen" role="region" aria-label="Amsler grid test">
+  <div style="padding-top:24px">
+    <div class="prog-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog-bar" aria-label="Test progress">
+      <div class="prog-meta">
+        <span id="prog-label">RIGHT EYE — Q 1 / 4</span>
+        <span id="prog-eye-label">Cover left eye</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+
+    <div id="eye-cover-banner" class="eye-cover-banner" role="note" aria-label="Eye cover reminder">
+      <div class="ecb-icon" aria-hidden="true">◑</div>
+      <div>
+        <div class="ecb-text" id="ecb-text">Cover your LEFT eye with your palm</div>
+        <div class="ecb-sub">Keep your RIGHT eye fixed on the center red dot</div>
+      </div>
+    </div>
+
+    <div class="grid-area">
+      <div class="grid-container" id="grid-container" role="img" aria-label="Amsler grid — stare at the center red dot">
+        <!-- SVG injected by renderGrid() -->
+      </div>
+    </div>
+
+    <div id="q-area"></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: SWITCH ══════════════════════════════════════ -->
+<div id="screen-switch" class="screen" role="region" aria-label="Switch eyes">
+  <div class="switch-content">
+    <span class="eyebrow">Eye complete</span>
+    <div class="big-eye-label eye-left" id="switch-eye-label" aria-label="Now testing left eye">LEFT</div>
+    <h2>EYE</h2>
+    <p id="switch-msg" style="margin-bottom:28px;"></p>
+    <button class="btn btn-primary" id="switch-btn" onclick="startSecondEye()" aria-label="Continue with left eye">Continue — Left Eye</button>
+    <a href="/" class="back-link" aria-label="Back to all tests">← All Tests</a>
+  </div>
+</div>
+
+<!-- ══ SCREEN: RESULTS ════════════════════════════════════ -->
+<div id="screen-results" class="screen" role="region" aria-label="Test results">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Results</span>
+    <h2>AMSLER<br>FINDINGS</h2>
+
+    <div class="eye-tabs" role="tablist" aria-label="Eye results">
+      <div class="eye-tab active" id="tab-right" role="tab" aria-selected="true" tabindex="0"
+           onclick="switchTab('right')" onkeydown="if(event.key==='Enter'||event.key===' ')switchTab('right')">
+        <div class="eye-tab-lbl">Right eye</div>
+        <div class="eye-tab-val" id="tab-right-val">—</div>
+      </div>
+      <div class="eye-tab" id="tab-left" role="tab" aria-selected="false" tabindex="0"
+           onclick="switchTab('left')" onkeydown="if(event.key==='Enter'||event.key===' ')switchTab('left')">
+        <div class="eye-tab-lbl">Left eye</div>
+        <div class="eye-tab-val" id="tab-left-val">—</div>
+      </div>
+    </div>
+
+    <div id="result-detail"></div>
+
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()" aria-label="Share your results">Share</button>
+      <button class="btn btn-secondary" onclick="retakeTest()" aria-label="Retake this test">Retake</button>
+    </div>
+    <a href="/" class="back-link" aria-label="Back to all OpticQuiz tests">← All Tests</a>
+
+    <div class="disclaimer" role="note" aria-label="Results disclaimer">
+      <div class="disclaimer-title">Results Disclaimer</div>
+      <div class="disclaimer-body">
+        These results are <strong>screening observations only</strong>, not a diagnosis. The Amsler grid is a simple self-administered tool. Many non-pathological factors including screen pixel structure, lighting, and normal optical variation can produce apparent distortions.
+        <strong>If you reported distortions — especially asymmetric distortions between eyes — consult a licensed optometrist or ophthalmologist promptly.</strong>
+        Results are processed locally and never transmitted.
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer role="contentinfo">
+  www.zengine.site &nbsp;|&nbsp; © 2025 Zengine™ &nbsp;|&nbsp; Educational use only — not a medical diagnostic
+</footer>
+
+<script>
+// ===== BOOT ORDER: CONFIG → ENGINE → RENDER → INIT =====
+
+// ── 1. CONFIG ─────────────────────────────────────────────
+// READS: nothing  WRITES: nothing (constants)
+
+var QUESTIONS = [
+  {
+    id: "allLines",
+    text: "Are all the grid lines straight?",
+    sub: "Look at the entire grid while keeping your eye on the center dot. Do any lines appear wavy, bent, or curved?",
+    opts: [
+      { label: "Yes — all lines look straight", val: "straight", cls: "opt-no" },
+      { label: "No — some lines look wavy or curved", val: "wavy", cls: "opt-yes" }
+    ],
+    flagOn: "wavy"
+  },
+  {
+    id: "missing",
+    text: "Is any part of the grid missing or hard to see?",
+    sub: "Look for areas where lines disappear, fade, or there is a blank or blurry patch anywhere in the grid.",
+    opts: [
+      { label: "No — I can see all of the grid", val: "complete", cls: "opt-no" },
+      { label: "Yes — part of the grid is missing or blurry", val: "missing", cls: "opt-yes" }
+    ],
+    flagOn: "missing"
+  },
+  {
+    id: "centerDot",
+    text: "Is the center red dot clearly visible?",
+    sub: "Keep your eye aimed at where the dot should be. Can you see it clearly, or does it appear blurry, faded, or absent?",
+    opts: [
+      { label: "Yes — dot is clear and visible", val: "clear", cls: "opt-no" },
+      { label: "No — dot is blurry, faded, or missing", val: "blurred", cls: "opt-yes" }
+    ],
+    flagOn: "blurred"
+  },
+  {
+    id: "distortion",
+    text: "Do any squares in the grid look unequal or distorted?",
+    sub: "Some squares may appear larger, smaller, or different shapes from the rest. Tap the area on the grid above where you notice this, then answer.",
+    opts: [
+      { label: "No — squares look uniform", val: "uniform", cls: "opt-no" },
+      { label: "Yes — some squares look distorted", val: "distorted", cls: "opt-yes" }
+    ],
+    flagOn: "distorted"
+  }
+];
+
+var SCORE_LABELS = ["Normal", "Mild irregularity", "Moderate irregularity", "Significant irregularity"];
+
+// ── 2. STATE ──────────────────────────────────────────────
+var STATE = {
+  currentEye: "right",
+  currentQ: 0,
+  answers: { right: [], left: [] },
+  taps: { right: [], left: [] },
+  results: { right: null, left: null },
+  activeTab: "right",
+  gridSize: 300
+};
+
+// ── 3. ENGINE ─────────────────────────────────────────────
+
+function startTest() {
+  // READS: nothing  WRITES: STATE (reset)
+  STATE.currentEye = "right";
+  STATE.currentQ = 0;
+  STATE.answers = { right: [], left: [] };
+  STATE.taps = { right: [], left: [] };
+  STATE.results = { right: null, left: null };
+  updateCoverBanner("right");
+  showScreen("screen-test");
+  renderQ();
+  announce("Amsler grid test started. Right eye. Question 1 of 4.");
+}
+
+function submitAnswer(val) {
+  // READS: STATE.currentQ, QUESTIONS, val
+  // WRITES: STATE.answers, STATE.currentQ
+  STATE.answers[STATE.currentEye].push({ qId: QUESTIONS[STATE.currentQ].id, val: val });
+  STATE.currentQ++;
+
+  if (STATE.currentQ >= QUESTIONS.length) {
+    finishEye();
+  } else {
+    renderQ();
+    announce("Question " + (STATE.currentQ + 1) + " of " + QUESTIONS.length);
+  }
+}
+
+function finishEye() {
+  // READS: STATE  WRITES: STATE.results
+  var answers = STATE.answers[STATE.currentEye];
+  var flags = 0;
+  for (var i = 0; i < answers.length; i++) {
+    if (answers[i].val === QUESTIONS[i].flagOn) flags++;
+  }
+
+  var score = flags;
+  var label = SCORE_LABELS[Math.min(score, SCORE_LABELS.length - 1)];
+  var note = buildNote(score, flags, answers, STATE.currentEye);
+
+  STATE.results[STATE.currentEye] = {
+    score: score,
+    label: label,
+    note: note,
+    answers: answers.slice(),
+    taps: STATE.taps[STATE.currentEye].slice()
+  };
+
+  var bothDone = STATE.results.right && STATE.results.left;
+  if (bothDone) {
+    renderResults();
+    return;
+  }
+
+  var nextEye = STATE.currentEye === "right" ? "left" : "right";
+  var nextLabel = nextEye.charAt(0).toUpperCase() + nextEye.slice(1);
+  document.getElementById("switch-eye-label").textContent = nextLabel.toUpperCase();
+  document.getElementById("switch-eye-label").className = "big-eye-label eye-" + nextEye;
+  document.getElementById("switch-eye-label").setAttribute("aria-label", "Now testing " + nextEye + " eye");
+  document.getElementById("switch-btn").textContent = "Continue — " + nextLabel + " Eye";
+  document.getElementById("switch-btn").setAttribute("aria-label", "Continue with " + nextEye + " eye");
+  document.getElementById("switch-msg").textContent = STATE.currentEye.charAt(0).toUpperCase() + STATE.currentEye.slice(1) + " eye done. Now cover your " + STATE.currentEye + " eye with your palm. Keep your " + nextEye + " eye fixed on the center red dot.";
+
+  showScreen("screen-switch");
+  announce(STATE.currentEye + " eye complete. Ready for " + nextEye + " eye.");
+}
+
+function buildNote(score, flags, answers, eye) {
+  // READS: score, flags, answers  WRITES: nothing — returns string
+  if (score === 0) {
+    return "No irregularities reported. The grid appeared complete and undistorted to this eye. This is consistent with normal central vision for the purposes of this screening.";
+  }
+  var parts = [];
+  for (var i = 0; i < answers.length; i++) {
+    if (answers[i].val === QUESTIONS[i].flagOn) {
+      if (answers[i].qId === "allLines") parts.push("wavy or curved lines");
+      if (answers[i].qId === "missing") parts.push("missing or blurry areas");
+      if (answers[i].qId === "centerDot") parts.push("center dot obscured");
+      if (answers[i].qId === "distortion") parts.push("unequal or distorted squares");
+    }
+  }
+  var flagList = parts.join(", ");
+  if (score === 1) {
+    return "One irregularity noted: " + flagList + ". A single observation may reflect normal optical variation, screen pixel structure, or mild visual irregularity. Consider retesting in different lighting. If the same observation repeats, consult an eye care professional.";
+  }
+  return "Multiple irregularities noted: " + flagList + ". This does not confirm any eye condition — screen-based grids are affected by display quality and ambient lighting. However, " + score + " or more observations warrant a professional Amsler grid evaluation with a licensed optometrist or ophthalmologist" + (score >= 3 ? " soon" : "") + ".";
+}
+
+function startSecondEye() {
+  // READS: STATE.currentEye  WRITES: STATE
+  STATE.currentEye = STATE.currentEye === "right" ? "left" : "right";
+  STATE.currentQ = 0;
+  updateCoverBanner(STATE.currentEye);
+  showScreen("screen-test");
+  renderQ();
+  announce(STATE.currentEye + " eye test starting. Question 1 of 4.");
+}
+
+function retakeTest() {
+  showScreen("screen-intro");
+}
+
+// ── 4. RENDER ─────────────────────────────────────────────
+
+function renderGrid(size) {
+  // READS: size  WRITES: nothing — returns SVG string
+  var s = size || 300;
+  var cells = 10;
+  var cell = s / cells;
+  var pad = 0;
+  var svg = '<svg width="' + s + '" height="' + s + '" viewBox="0 0 ' + s + ' ' + s + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Amsler grid">';
+  svg += '<rect width="' + s + '" height="' + s + '" fill="#ffffff"/>';
+
+  for (var i = 0; i <= cells; i++) {
+    var pos = i * cell;
+    svg += '<line x1="' + pos + '" y1="0" x2="' + pos + '" y2="' + s + '" stroke="#333333" stroke-width="0.8"/>';
+    svg += '<line x1="0" y1="' + pos + '" x2="' + s + '" y2="' + pos + '" stroke="#333333" stroke-width="0.8"/>';
+  }
+
+  // Center dot — large enough to fixate on, red for visibility
+  var cx = s / 2, cy = s / 2;
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="5" fill="#E8431A"/>';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="8" fill="none" stroke="#E8431A" stroke-width="0.8" opacity="0.3"/>';
+
+  svg += '</svg>';
+  return svg;
+}
+
+function renderQ() {
+  // READS: STATE.currentQ, QUESTIONS  WRITES: DOM
+  var q = QUESTIONS[STATE.currentQ];
+  var eye = STATE.currentEye;
+  var pct = Math.round((STATE.currentQ / QUESTIONS.length) * 100 + (eye === "left" ? 50 : 0));
+  var eyeLabel = eye.charAt(0).toUpperCase() + eye.slice(1);
+
+  document.getElementById("prog-fill").style.width = pct + "%";
+  document.getElementById("prog-bar").setAttribute("aria-valuenow", pct);
+  document.getElementById("prog-label").textContent = eyeLabel.toUpperCase() + " EYE — Q " + (STATE.currentQ + 1) + " / " + QUESTIONS.length;
+
+  var sz = Math.min(window.innerWidth - 56, 300);
+  STATE.gridSize = sz;
+
+  var container = document.getElementById("grid-container");
+  container.style.width = sz + "px";
+  container.style.height = sz + "px";
+  container.innerHTML = renderGrid(sz);
+
+  // Remove old tap markers
+  var oldMarkers = container.querySelectorAll(".tap-marker");
+  for (var i = 0; i < oldMarkers.length; i++) oldMarkers[i].remove();
+
+  // Re-render existing taps for this eye
+  var taps = STATE.taps[eye];
+  for (var i = 0; i < taps.length; i++) {
+    addTapMarker(container, taps[i].xPct, taps[i].yPct, sz);
+  }
+
+  // Wire tap listener (replace each render to avoid duplicates)
+  container.onclick = null;
+  container.onclick = function(e) { handleGridTap(e); };
+
+  // Question area
+  var opts = '';
+  for (var i = 0; i < q.opts.length; i++) {
+    var o = q.opts[i];
+    opts += '<button class="opt-btn ' + o.cls + '" onclick="submitAnswer(\'' + o.val + '\')" aria-label="' + o.label + '">' + o.label + '</button>';
+  }
+
+  document.getElementById("q-area").innerHTML =
+    '<div class="q-text" id="q-text">' + q.text + '</div>' +
+    '<div class="q-sub">' + q.sub + '</div>' +
+    '<div class="options" style="margin-top:4px;" role="group" aria-label="Answer options">' + opts + '</div>';
+
+  announce("Question " + (STATE.currentQ + 1) + ": " + q.text);
+}
+
+function handleGridTap(e) {
+  // READS: e (click event)  WRITES: STATE.taps, DOM
+  var container = document.getElementById("grid-container");
+  var rect = container.getBoundingClientRect();
+  var x = e.clientX - rect.left;
+  var y = e.clientY - rect.top;
+  var xPct = x / rect.width;
+  var yPct = y / rect.height;
+
+  // Only record if not on center dot area
+  var cx = 0.5, cy = 0.5;
+  var dist = Math.sqrt(Math.pow(xPct - cx, 2) + Math.pow(yPct - cy, 2));
+  if (dist < 0.1) return;
+
+  STATE.taps[STATE.currentEye].push({ xPct: xPct, yPct: yPct });
+  addTapMarker(container, xPct, yPct, STATE.gridSize);
+  announce("Distortion marked at position " + Math.round(xPct * 100) + "% across, " + Math.round(yPct * 100) + "% down");
+}
+
+function addTapMarker(container, xPct, yPct, size) {
+  // READS: xPct, yPct, size  WRITES: DOM
+  var marker = document.createElement("div");
+  marker.className = "tap-marker";
+  marker.style.left = (xPct * size) + "px";
+  marker.style.top = (yPct * size) + "px";
+  marker.setAttribute("aria-hidden", "true");
+  container.appendChild(marker);
+}
+
+function updateCoverBanner(eye) {
+  // READS: eye  WRITES: DOM
+  var cover = eye === "right" ? "LEFT" : "RIGHT";
+  var keep = eye === "right" ? "RIGHT" : "LEFT";
+  document.getElementById("ecb-text").textContent = "Cover your " + cover + " eye with your palm";
+  document.getElementById("eye-cover-banner").querySelector(".ecb-sub").textContent = "Keep your " + keep + " eye fixed on the center red dot";
+}
+
+function renderResults() {
+  // READS: STATE.results  WRITES: DOM
+  var r = STATE.results;
+
+  if (r.right) document.getElementById("tab-right-val").textContent = r.right.score === 0 ? "Normal" : r.right.score === 1 ? "Mild" : "Flagged";
+  if (r.left)  document.getElementById("tab-left-val").textContent  = r.left.score  === 0 ? "Normal" : r.left.score  === 1 ? "Mild" : "Flagged";
+
+  STATE.activeTab = "right";
+  renderResultDetail("right");
+  showScreen("screen-results");
+  announce("Results ready. Right eye: " + (r.right ? r.right.label : "not tested") + ". Left eye: " + (r.left ? r.left.label : "not tested") + ".");
+}
+
+function renderResultDetail(eye) {
+  // READS: STATE.results[eye]  WRITES: DOM
+  var r = STATE.results[eye];
+  if (!r) {
+    document.getElementById("result-detail").innerHTML = '<p style="padding:16px 0;color:var(--gray)">No data for this eye.</p>';
+    return;
+  }
+
+  var verdictClass = r.score === 0 ? "ok" : r.score === 1 ? "warn" : "";
+  var eyerowColor = r.score === 0 ? "ok" : r.score === 1 ? "warn" : "";
+
+  var html = '<div class="verdict-block ' + verdictClass + '" role="region" aria-label="' + eye + ' eye finding">' +
+    '<div class="v-eyebrow">' + eye + ' eye finding</div>' +
+    '<div class="v-main">' + r.label + '</div>' +
+    '<div class="v-body">' + r.note + '</div>' +
+    '</div>';
+
+  // Answer review
+  html += '<h3 style="margin-bottom:8px">Your answers</h3><div class="answer-review" role="list">';
+  for (var i = 0; i < r.answers.length; i++) {
+    var a = r.answers[i];
+    var q = QUESTIONS[i];
+    var isFlagged = a.val === q.flagOn;
+    var indClass = isFlagged ? "flag" : "ok";
+    var indSymbol = isFlagged ? "!" : "✓";
+    html += '<div class="ar-row" role="listitem">' +
+      '<div class="ar-indicator ' + indClass + '" aria-hidden="true">' + indSymbol + '</div>' +
+      '<div>' +
+        '<div class="ar-q">' + q.text + '</div>' +
+        '<div class="ar-ans ' + indClass + '">' + q.opts.find(function(o){ return o.val === a.val; }).label + '</div>' +
+      '</div></div>';
+  }
+  html += '</div>';
+
+  // Tap map (if any taps)
+  if (r.taps && r.taps.length > 0) {
+    var tmSz = Math.min(window.innerWidth - 56, 200);
+    html += '<h3>Tapped distortion areas</h3><div class="tap-map-wrap">' +
+      '<div class="tap-map-label">' + r.taps.length + ' area' + (r.taps.length > 1 ? 's' : '') + ' marked</div>' +
+      '<div class="tap-map-container" id="tap-map-' + eye + '" style="width:' + tmSz + 'px;height:' + tmSz + 'px;">' +
+      renderGrid(tmSz).replace('role="img"', 'role="img" aria-label="Amsler grid showing tapped distortion areas"') +
+      '</div></div>';
+  }
+
+  // Interpretation card
+  var interpText = r.score === 0
+    ? "A normal Amsler grid result means your central vision reported no detectable distortion during this screening. The Amsler grid is most useful as a monitoring tool over time — if you have any risk factors for macular disease (age over 50, family history, diabetes, high myopia), consider testing regularly and tracking changes."
+    : r.score === 1
+    ? "One observation was flagged. This may reflect a true visual irregularity or a normal response to screen-based testing. Factors like screen brightness, room lighting, and whether you moved your eye during the test all affect results. If the same observation repeats on retest, or worsens over time, consult an eye care professional."
+    : "Multiple observations were flagged. While screen-based Amsler testing has known limitations, " + r.score + " flagged observations — particularly if they differ between your two eyes — is worth discussing with a licensed optometrist or ophthalmologist. Do not delay if you have additional symptoms such as sudden visual distortion, a new blind spot, or changes in central vision.";
+
+  html += '<h3>What this means</h3><div class="interp-card"><div class="interp-text">' + interpText + '</div></div>';
+
+  document.getElementById("result-detail").innerHTML = html;
+
+  // Render tap markers on the mini map
+  if (r.taps && r.taps.length > 0) {
+    var tmSz = Math.min(window.innerWidth - 56, 200);
+    var tmContainer = document.getElementById("tap-map-" + eye);
+    if (tmContainer) {
+      for (var i = 0; i < r.taps.length; i++) {
+        var marker = document.createElement("div");
+        marker.className = "tm-marker";
+        marker.style.left = (r.taps[i].xPct * tmSz) + "px";
+        marker.style.top = (r.taps[i].yPct * tmSz) + "px";
+        marker.setAttribute("aria-hidden", "true");
+        tmContainer.appendChild(marker);
+      }
+    }
+  }
+}
+
+function switchTab(eye) {
+  // READS: eye  WRITES: STATE.activeTab, DOM
+  STATE.activeTab = eye;
+  document.getElementById("tab-right").classList.toggle("active", eye === "right");
+  document.getElementById("tab-right").setAttribute("aria-selected", eye === "right" ? "true" : "false");
+  document.getElementById("tab-left").classList.toggle("active", eye === "left");
+  document.getElementById("tab-left").setAttribute("aria-selected", eye === "left" ? "true" : "false");
+  renderResultDetail(eye);
+  announce(eye + " eye results displayed");
+}
+
+// ── UTILITY ───────────────────────────────────────────────
+
+function showScreen(id) {
+  // READS: id  WRITES: DOM
+  var screens = document.querySelectorAll(".screen");
+  for (var i = 0; i < screens.length; i++) screens[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+function announce(msg) {
+  // READS: msg  WRITES: aria-live region
+  var el = document.getElementById("a11y-live");
+  if (!el) return;
+  el.textContent = "";
+  setTimeout(function() { el.textContent = msg; }, 60);
+}
+
+function shareResults() {
+  // READS: STATE.results  WRITES: clipboard / share sheet
+  var r = STATE.results;
+  var parts = [];
+  if (r.right) parts.push("R: " + r.right.label);
+  if (r.left)  parts.push("L: " + r.left.label);
+  var text = "My OpticQuiz Amsler Grid result — " + parts.join(" | ") + ". Educational screening only, not a diagnosis. opticquiz.com/amsler/";
+
+  try {
+    if (navigator.share) {
+      navigator.share({ title: "OpticQuiz Amsler Grid", text: text, url: "https://opticquiz.com/amsler/" });
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function() { announce("Result copied to clipboard"); });
+    } else {
+      prompt("Copy your result:", text);
+    }
+  } catch(e) {
+    try { if (navigator.clipboard) navigator.clipboard.writeText(text); } catch(e2) {}
+  }
+}
+</script>
+</body>
+</html>
