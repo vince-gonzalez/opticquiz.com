@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ===== WORKFLOW STACK =====
+  File:         index.html
+  Site:         OpticQuiz Hub
+  Domain:       opticquiz.com
+  Repo:         zengineco/opticquiz.com
+  Author:       Vince Gonzalez / Zengine™
+  Version:      v1.3.0
+  Change:       Unlocked D-15, Saturation Threshold, Hue Neighbor
+                Added /hue/ as 6th test card
+  Sub-pages:
+    /color/   Color Vision (Ishihara + Bayesian, 8 CVD types)
+    /amsler/  Amsler Grid (macular, per-eye, tappable)
+    /astig/   Astigmatism Fan (axis detection, SVG)
+    /d15/     Farnsworth D-15 (drag-sort, confusion vectors)
+    /sat/     Saturation Threshold (adaptive staircase, 4 axes)
+    /hue/     Hue Neighbor JND (blue/purple + 6 pairs, staircase)
+  Palette: white/#F8F6F2/#E8431A/#4A8C3F/#1A1A1A (logo-derived)
+  Fonts: Bebas Neue (display) + Source Serif 4 (body) + Courier New (mono)
+  A11y: WCAG 2.1 AA
+===== END WORKFLOW STACK ===== -->
+
+<!-- ===== ASSET MANIFEST =====
+  /opticquiz_icon.png   live on GitHub repo root
+  Google Fonts: Bebas Neue, Source Serif 4
+===== END ASSET MANIFEST ===== -->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz — free eye wellness screening tools. Color vision, Amsler grid, astigmatism fan, Farnsworth D-15, saturation threshold, and blue/purple hue neighbor test. Educational use only.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Eye Wellness Screening">
+<meta property="og:description" content="6 free browser-based eye screening tools. Color blindness, Amsler grid, astigmatism, D-15 hue sort, saturation threshold, blue/purple test. No account. Results stay on your device.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://opticquiz.com">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>OpticQuiz — Eye Wellness Screening</title>
+
+<!-- GA4 — replace G-XXXXXXXXXX with your Measurement ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX');
+</script>
+
+<!-- AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+
+<style>
+/* ===== DESIGN SYSTEM =====
+  Palette from opticquiz_icon.png:
+    --white  #FFFFFF
+    --bg     #F8F6F2   warm off-white
+    --cream  #F0EDE6   card bg
+    --lgray  #D4D0C8   borders
+    --gray   #6B6B6B   secondary text (5.74:1 on white — AA)
+    --black  #1A1A1A   primary text (16.2:1 on white — AAA)
+    --red    #E8431A   orange-red accent (logo dot figures)
+    --redd   #C23410   red hover
+    --green  #4A8C3F   forest green (logo bg dots)
+    --greend #38692F   green hover
+    --redbg  #FDF1EE   red tint
+    --gbg    #EEF5ED   green tint
+===== END DESIGN SYSTEM ===== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #FFFFFF;
+  --bg: #F8F6F2;
+  --cream: #F0EDE6;
+  --lgray: #D4D0C8;
+  --gray: #6B6B6B;
+  --black: #1A1A1A;
+  --red: #E8431A;
+  --redd: #C23410;
+  --green: #4A8C3F;
+  --greend: #38692F;
+  --redbg: #FDF1EE;
+  --gbg: #EEF5ED;
+  --fd: "Bebas Neue", Impact, fantasy;
+  --fs: "Source Serif 4", Georgia, serif;
+  --fm: "Courier New", monospace;
+  --r: 4px;
+  --rc: 8px;
+}
+
+html { background: var(--bg); }
+body {
+  font-family: var(--fs);
+  background: var(--bg);
+  color: var(--black);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── A11Y ────────────────────────────────────────── */
+.skip-link {
+  position: absolute; top: -48px; left: 16px; z-index: 9999;
+  background: var(--red); color: var(--white);
+  padding: 10px 18px; border-radius: var(--r);
+  font-family: var(--fs); font-size: 14px; font-weight: 600;
+  text-decoration: none; transition: top 0.15s;
+}
+.skip-link:focus { top: 12px; }
+*:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; border-radius: var(--r); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* ── LAYOUT ──────────────────────────────────────── */
+.wrap { max-width: 580px; margin: 0 auto; padding: 0 20px 80px; }
+
+/* ── HEADER ──────────────────────────────────────── */
+.site-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 20px 0; max-width: 580px; margin: 0 auto;
+}
+.logo-wrap { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo-wrap img { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--lgray); }
+.logo-name { font-family: var(--fd); font-size: 26px; color: var(--black); letter-spacing: 0.03em; line-height: 1; }
+.logo-name span { color: var(--red); }
+.ver-badge { font-family: var(--fm); font-size: 10px; color: var(--gray); border: 1px solid var(--lgray); padding: 3px 8px; border-radius: 20px; letter-spacing: 0.1em; }
+
+/* ── HERO ────────────────────────────────────────── */
+.hero { padding: 40px 0 24px; }
+.eyebrow { font-family: var(--fm); font-size: 11px; letter-spacing: 0.14em; color: var(--red); text-transform: uppercase; display: block; margin-bottom: 10px; }
+h1 { font-family: var(--fd); font-size: clamp(56px, 14vw, 88px); color: var(--black); line-height: 0.9; letter-spacing: 0.02em; margin-bottom: 20px; }
+h1 em { color: var(--green); font-style: normal; }
+.hero-body { font-size: 16px; color: var(--gray); line-height: 1.7; max-width: 440px; }
+
+/* ── DIVIDER ─────────────────────────────────────── */
+.divider { height: 1px; background: var(--lgray); margin: 28px 0; }
+
+/* ── STATS STRIP ─────────────────────────────────── */
+.stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--lgray);
+  border: 1px solid var(--lgray); border-radius: var(--rc); overflow: hidden;
+  margin: 24px 0;
+}
+.stat { background: var(--white); padding: 16px 12px; text-align: center; }
+.stat-val { font-family: var(--fd); font-size: 32px; color: var(--red); display: block; line-height: 1; }
+.stat-lbl { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-top: 4px; }
+
+/* ── SECTION HEADING ─────────────────────────────── */
+h3 { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+
+/* ── TEST CARDS ──────────────────────────────────── */
+.test-grid { display: grid; gap: 10px; margin-bottom: 8px; }
+
+.test-card {
+  background: var(--white); border: 1.5px solid var(--lgray);
+  border-radius: var(--rc); padding: 18px 48px 18px 18px;
+  display: flex; align-items: flex-start; gap: 16px;
+  text-decoration: none; color: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+  position: relative; min-height: 44px;
+}
+.test-card:hover { border-color: var(--red); box-shadow: 0 2px 12px rgba(232,67,26,0.10); transform: translateY(-1px); }
+.test-card:active { transform: scale(0.99); }
+.test-card:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+
+.card-icon {
+  width: 44px; height: 44px; border-radius: var(--r);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fd); font-size: 15px; flex-shrink: 0;
+  letter-spacing: 0.02em; line-height: 1; text-align: center;
+}
+.icon-red   { background: var(--redbg);  color: var(--red); }
+.icon-green { background: var(--gbg);    color: var(--green); }
+.icon-blue  { background: #EEF2FD;       color: #3A6ED4; }
+.icon-amber { background: #FFF8EE;       color: #B86A00; }
+.icon-purple{ background: #F3EEFF;       color: #7044CC; }
+
+.card-body { flex: 1; min-width: 0; }
+.card-title { font-family: var(--fd); font-size: 20px; color: var(--black); letter-spacing: 0.02em; line-height: 1; margin-bottom: 4px; }
+.card-desc { font-size: 13px; color: var(--gray); line-height: 1.6; margin-bottom: 6px; }
+.card-meta { font-family: var(--fm); font-size: 10px; color: var(--green); letter-spacing: 0.07em; text-transform: uppercase; }
+
+.card-arrow {
+  position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+  font-size: 18px; color: var(--lgray); font-family: var(--fm);
+  transition: color 0.12s, right 0.12s;
+}
+.test-card:hover .card-arrow { color: var(--red); right: 14px; }
+
+/* ── ORIGIN BADGE ────────────────────────────────── */
+.origin-badge {
+  display: inline-block; font-family: var(--fm); font-size: 9px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  background: var(--redbg); color: var(--red);
+  border: 1px solid rgba(232,67,26,0.25);
+  padding: 2px 7px; border-radius: 20px; margin-left: 6px;
+  vertical-align: middle; white-space: nowrap;
+}
+
+/* ── DISCLAIMER ──────────────────────────────────── */
+.disclaimer {
+  background: var(--cream); border: 1.5px solid var(--lgray);
+  border-left: 4px solid var(--red); border-radius: var(--rc);
+  padding: 20px 20px 20px 22px; margin-top: 28px;
+}
+.disclaimer-title { font-family: var(--fm); font-size: 11px; letter-spacing: 0.1em; color: var(--red); text-transform: uppercase; margin-bottom: 10px; }
+.disclaimer-body { font-size: 13px; color: var(--gray); line-height: 1.8; }
+.disclaimer-body strong { color: var(--black); font-weight: 600; }
+
+/* ── FOOTER ──────────────────────────────────────── */
+footer {
+  font-family: var(--fm); font-size: 10px; color: var(--gray);
+  letter-spacing: 0.06em; text-align: center;
+  padding: 24px 20px 12px; border-top: 1px solid var(--lgray);
+  margin-top: 40px; max-width: 580px; margin-left: auto; margin-right: auto;
+}
+
+/* ── REDUCED MOTION ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home">
+    <img src="/opticquiz_icon.png" alt="OpticQuiz — Ishihara-style dot logo" width="44" height="44">
+    <div class="logo-name">OPTIC<span>QUIZ</span></div>
+  </a>
+  <div class="ver-badge" aria-label="Version 1.3.0">v1.3.0</div>
+</header>
+
+<main id="main" class="wrap" role="main">
+
+  <section class="hero" aria-labelledby="hero-heading">
+    <span class="eyebrow" aria-hidden="true">Eye Wellness Screening</span>
+    <h1 id="hero-heading">CAN<br>YOU<br><em>SEE</em><br>THIS?</h1>
+    <p class="hero-body">Six free browser-based eye wellness tools. No account. No data collected. Results never leave your device. Educational use only — not a medical diagnostic.</p>
+  </section>
+
+  <div class="stats" role="list" aria-label="Quick stats">
+    <div class="stat" role="listitem"><span class="stat-val">6</span><span class="stat-lbl">Screening tools</span></div>
+    <div class="stat" role="listitem"><span class="stat-val">8</span><span class="stat-lbl">CVD types</span></div>
+    <div class="stat" role="listitem"><span class="stat-val">&lt;5<span style="font-size:18px"> min</span></span><span class="stat-lbl">Per test</span></div>
+  </div>
+
+  <div class="divider" role="separator"></div>
+
+  <h3 id="tests-label">Choose a screening</h3>
+
+  <nav class="test-grid" aria-labelledby="tests-label" role="navigation">
+
+    <a href="/hue/" class="test-card"
+       aria-label="Blue/Purple and Hue Neighbor Test — can you tell blue from purple? Just-noticeable difference across 7 hue pairs. About 5 minutes.">
+      <div class="card-icon icon-purple" aria-hidden="true">HN</div>
+      <div class="card-body">
+        <div class="card-title">Blue / Purple<span class="origin-badge">Origin</span></div>
+        <div class="card-desc">Can you tell blue from purple? Finds your just-noticeable hue difference across 7 color pairs including red/orange, green/yellow, pink/gray, and more.</div>
+        <div class="card-meta">7 hue pairs · Both eyes · Adaptive staircase · JND threshold</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
+    <a href="/color/" class="test-card"
+       aria-label="Color Vision Test — 10 Ishihara-style plates, Bayesian scoring, 8 CVD types, about 3 minutes.">
+      <div class="card-icon icon-red" aria-hidden="true">CV</div>
+      <div class="card-body">
+        <div class="card-title">Color Vision</div>
+        <div class="card-desc">10 Ishihara-style dot plates. Estimates likelihood of deuteranopia, protanopia, tritanopia, and five other types using Bayesian inference.</div>
+        <div class="card-meta">10 plates · Both eyes · ~3 min · 8 CVD types</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
+    <a href="/d15/" class="test-card"
+       aria-label="Farnsworth D-15 Hue Sort — drag 15 color caps into order. Richer than plate tests. About 5 minutes.">
+      <div class="card-icon icon-amber" aria-hidden="true">D15</div>
+      <div class="card-body">
+        <div class="card-title">Farnsworth D-15</div>
+        <div class="card-desc">Drag 15 color caps into hue order. Richer data than plate recognition — catches mild anomalous trichromacy that Ishihara plates miss.</div>
+        <div class="card-meta">Drag-sort · Both eyes · Confusion axis scoring</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
+    <a href="/sat/" class="test-card"
+       aria-label="Saturation Threshold Test — finds your color detection threshold across 4 hue axes. About 4 minutes.">
+      <div class="card-icon icon-green" aria-hidden="true">ST</div>
+      <div class="card-body">
+        <div class="card-title">Saturation Threshold</div>
+        <div class="card-desc">How faded is too faded? Finds the minimum saturation you can detect across red, green, blue, and yellow axes. Catches mild CVD that plates miss.</div>
+        <div class="card-meta">4 axes · Both eyes · Adaptive staircase · Per-axis JND</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
+    <a href="/amsler/" class="test-card"
+       aria-label="Amsler Grid — central vision and macular screening, each eye separately, about 2 minutes.">
+      <div class="card-icon icon-green" aria-hidden="true">AG</div>
+      <div class="card-body">
+        <div class="card-title">Amsler Grid</div>
+        <div class="card-desc">Screens for wavy, missing, or distorted areas in central vision. Associated with macular changes including age-related macular degeneration.</div>
+        <div class="card-meta">Both eyes · ~2 min · Tappable grid · Central vision</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
+    <a href="/astig/" class="test-card"
+       aria-label="Astigmatism Fan — radial line clarity test, each eye separately, about 2 minutes.">
+      <div class="card-icon icon-red" aria-hidden="true">AF</div>
+      <div class="card-body">
+        <div class="card-title">Astigmatism Fan</div>
+        <div class="card-desc">Radial line wheel. Reports which directions appear blurrier or darker, suggesting a possible astigmatic axis. SVG-generated — no images needed.</div>
+        <div class="card-meta">Both eyes · ~2 min · Axis detection · SVG inline</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
+  </nav>
+
+  <div class="divider" role="separator"></div>
+
+  <div class="disclaimer" role="note" aria-label="Important legal and medical disclaimer">
+    <div class="disclaimer-title">Important — Read Before Using</div>
+    <div class="disclaimer-body">
+      <strong>OpticQuiz is an educational wellness screening tool, not a medical device, diagnostic instrument, or licensed healthcare service.</strong>
+      Results are probabilistic estimates based on population-level statistical models intended for personal informational and educational purposes only.
+      <br><br>
+      OpticQuiz <strong>does not diagnose</strong> any medical condition.
+      OpticQuiz <strong>does not provide medical advice</strong>, clinical guidance, or treatment recommendations.
+      OpticQuiz <strong>is not a substitute</strong> for examination by a licensed optometrist or ophthalmologist.
+      Screen-based tests are fundamentally limited by display calibration, color profile, ambient lighting, and viewing distance.
+      <br><br>
+      <strong>If you are concerned about your vision or eye health, consult a licensed eye care professional.</strong>
+      Use of this tool constitutes acceptance that results are for personal educational reference only and carry no clinical weight.
+    </div>
+  </div>
+
+</main>
+
+<footer role="contentinfo">
+  www.zengine.site &nbsp;|&nbsp; © 2025 Zengine™ &nbsp;|&nbsp; OpticQuiz — educational use only, not a medical diagnostic
+</footer>
+
+</body>
+</html>
