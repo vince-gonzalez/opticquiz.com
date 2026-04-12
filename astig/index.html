@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ===== WORKFLOW STACK =====
+  File:         astig/index.html
+  Site:         OpticQuiz — Astigmatism Fan Test
+  Domain:       opticquiz.com/astig/
+  Repo:         zengineco/opticquiz.com  /astig/index.html
+  Author:       Vince Gonzalez / Zengine™
+  Version:      v1.2.0
+  Boot Order:   1.CONFIG  2.ENGINE  3.RENDER  4.INIT
+  Features:
+    - SVG clock-dial fan chart (24 spokes, 0–165° labeled) generated inline
+    - Per-eye bilateral testing (right then left)
+    - Phase 1: User taps spokes that appear darker/blurrier than rest
+    - Phase 2: 2 confirmation questions per eye
+    - Axis detection — maps spoke selections to probable astigmatic axis
+    - Scored: no blur / single axis / oblique / complex
+    - Share results via Web Share API → clipboard → prompt fallback
+    - WCAG 2.1 AA throughout — same accessibility standard as other pages
+  Palette: white/#F8F6F2/#E8431A/#4A8C3F/#1A1A1A (logo-derived)
+  Fonts: Bebas Neue (display) + Source Serif 4 (body) + Courier New (mono)
+  No external images. No base64. No backend.
+===== END WORKFLOW STACK ===== -->
+
+<!-- ===== ASSET MANIFEST =====
+  /opticquiz_icon.png   live on GitHub repo root
+  Google Fonts: Bebas Neue, Source Serif 4
+  All charts: SVG generated inline at runtime
+===== END ASSET MANIFEST ===== -->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz Astigmatism Fan — free browser-based astigmatism screening. Identify blurry or dark line directions per eye. Educational use only.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Astigmatism Fan Test">
+<meta property="og:description" content="Radial line fan chart. Screen each eye for directional blur or darkness suggesting astigmatism. Free, no account, results on-device.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/astig/">
+<link rel="canonical" href="https://opticquiz.com/astig/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Astigmatism Fan Test — OpticQuiz</title>
+
+<!-- AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+
+<style>
+/* ===== DESIGN SYSTEM =====
+  Same palette as hub and color test — pulled from opticquiz_icon.png
+    --white  #FFFFFF
+    --bg     #F8F6F2
+    --cream  #F0EDE6
+    --lgray  #D4D0C8
+    --gray   #6B6B6B   (5.74:1 on white — AA)
+    --black  #1A1A1A   (16.2:1 on white — AAA)
+    --red    #E8431A
+    --redd   #C23410
+    --green  #4A8C3F
+    --greend #38692F
+    --redbg  #FDF1EE
+    --gbg    #EEF5ED
+    --amber  #D4820A
+===== END DESIGN SYSTEM ===== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #FFFFFF;
+  --bg: #F8F6F2;
+  --cream: #F0EDE6;
+  --lgray: #D4D0C8;
+  --gray: #6B6B6B;
+  --black: #1A1A1A;
+  --red: #E8431A;
+  --redd: #C23410;
+  --green: #4A8C3F;
+  --greend: #38692F;
+  --redbg: #FDF1EE;
+  --gbg: #EEF5ED;
+  --amber: #D4820A;
+  --fd: "Bebas Neue", Impact, fantasy;
+  --fs: "Source Serif 4", Georgia, serif;
+  --fm: "Courier New", monospace;
+  --r: 4px;
+  --rc: 8px;
+}
+
+html { background: var(--bg); }
+body {
+  font-family: var(--fs);
+  background: var(--bg);
+  color: var(--black);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── A11Y ────────────────────────────────────────── */
+.skip-link {
+  position: absolute; top: -48px; left: 16px; z-index: 9999;
+  background: var(--red); color: var(--white);
+  padding: 10px 18px; border-radius: var(--r);
+  font-family: var(--fs); font-size: 14px; font-weight: 600;
+  text-decoration: none; transition: top 0.15s;
+}
+.skip-link:focus { top: 12px; }
+*:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; border-radius: var(--r); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* ── LAYOUT ──────────────────────────────────────── */
+.wrap { max-width: 560px; margin: 0 auto; padding: 0 20px 80px; }
+
+/* ── HEADER ──────────────────────────────────────── */
+.site-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 20px 0; max-width: 560px; margin: 0 auto;
+}
+.logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-wrap img { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--lgray); }
+.logo-name { font-family: var(--fd); font-size: 22px; color: var(--black); letter-spacing: 0.03em; }
+.logo-name span { color: var(--red); }
+.ver-badge { font-family: var(--fm); font-size: 10px; color: var(--gray); border: 1px solid var(--lgray); padding: 3px 8px; border-radius: 20px; letter-spacing: 0.1em; }
+
+/* ── SCREENS ─────────────────────────────────────── */
+.screen { display: none; }
+.screen.active { display: block; animation: fadein 0.2s ease; }
+@keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+/* ── TYPE ────────────────────────────────────────── */
+.eyebrow { font-family: var(--fm); font-size: 11px; letter-spacing: 0.14em; color: var(--red); text-transform: uppercase; display: block; margin-bottom: 10px; }
+h1 { font-family: var(--fd); font-size: clamp(48px, 12vw, 72px); color: var(--black); line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 16px; }
+h2 { font-family: var(--fd); font-size: clamp(32px, 8vw, 48px); color: var(--black); line-height: 0.94; letter-spacing: 0.02em; margin-bottom: 16px; }
+h3 { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+p { font-size: 15px; color: var(--gray); line-height: 1.7; }
+
+/* ── BUTTONS ─────────────────────────────────────── */
+.btn {
+  display: block; width: 100%; padding: 16px 20px;
+  font-family: var(--fs); font-size: 16px; font-weight: 600;
+  color: var(--black); background: var(--white);
+  border: 1.5px solid var(--lgray); border-radius: var(--r);
+  cursor: pointer; text-align: center;
+  transition: border-color 0.12s, background 0.12s, transform 0.08s;
+  min-height: 52px; -webkit-tap-highlight-color: transparent;
+}
+.btn:hover { border-color: var(--black); background: var(--cream); }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--red); color: var(--white); border-color: transparent; }
+.btn-primary:hover { background: var(--redd); }
+.btn-secondary { background: var(--green); color: var(--white); border-color: transparent; }
+.btn-secondary:hover { background: var(--greend); }
+.btn + .btn { margin-top: 10px; }
+
+/* ── DIVIDER ─────────────────────────────────────── */
+.divider { height: 1px; background: var(--lgray); margin: 24px 0; }
+
+/* ── INSTRUCTIONS ────────────────────────────────── */
+.instr-list { margin: 20px 0; }
+.instr-item { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--lgray); }
+.instr-item:last-child { border-bottom: none; }
+.instr-num { font-family: var(--fd); font-size: 28px; color: var(--red); min-width: 28px; line-height: 1; margin-top: 2px; }
+.instr-text { font-size: 14px; color: var(--black); line-height: 1.6; }
+.instr-sub { font-size: 13px; color: var(--gray); margin-top: 2px; }
+
+/* ── PROGRESS ────────────────────────────────────── */
+.prog-wrap { margin-bottom: 20px; }
+.prog-meta { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.prog-meta span { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.06em; }
+.prog-track { height: 3px; background: var(--lgray); border-radius: 2px; }
+.prog-fill { height: 100%; background: var(--red); border-radius: 2px; transition: width 0.35s cubic-bezier(0.4,0,0.2,1); }
+
+/* ── EYE BANNER ──────────────────────────────────── */
+.eye-banner {
+  background: var(--redbg); border: 1.5px solid var(--red);
+  border-radius: var(--rc); padding: 12px 16px;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+}
+.eb-icon { font-family: var(--fd); font-size: 22px; color: var(--red); flex-shrink: 0; }
+.eb-main { font-size: 14px; font-weight: 600; color: var(--black); }
+.eb-sub { font-size: 12px; color: var(--gray); margin-top: 1px; }
+
+/* ── FAN CHART AREA ──────────────────────────────── */
+.fan-area { display: flex; flex-direction: column; align-items: center; margin: 16px 0; }
+
+.fan-wrapper {
+  position: relative;
+  display: inline-block;
+  border-radius: 50%;
+  border: 2px solid var(--lgray);
+  background: var(--white);
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.fan-wrapper svg { display: block; }
+
+/* Spoke hit zones — invisible enlarged tap areas */
+.spoke-hit {
+  position: absolute;
+  transform-origin: center center;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Selected spoke overlay highlight */
+.spoke-highlight {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+}
+
+/* Legend below fan */
+.fan-legend {
+  display: flex; gap: 20px; margin-top: 12px;
+  justify-content: center; flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.06em; }
+.legend-swatch { width: 20px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+
+/* Spoke selection count badge */
+.spoke-count {
+  font-family: var(--fm); font-size: 11px; color: var(--gray);
+  letter-spacing: 0.08em; text-align: center; margin-top: 8px;
+  min-height: 20px;
+}
+
+/* Confirm / next button below fan */
+.fan-cta { margin-top: 16px; }
+
+/* Question phase */
+.q-phase { margin-top: 8px; }
+.q-text { font-size: 16px; font-weight: 600; color: var(--black); line-height: 1.5; margin-bottom: 8px; }
+.q-sub { font-size: 13px; color: var(--gray); margin-bottom: 16px; line-height: 1.6; }
+.options { display: grid; gap: 10px; }
+.options.g2 { grid-template-columns: 1fr 1fr; }
+.opt-btn {
+  padding: 14px 12px; font-family: var(--fs); font-size: 14px; font-weight: 600;
+  color: var(--black); background: var(--white);
+  border: 1.5px solid var(--lgray); border-radius: var(--r);
+  cursor: pointer; text-align: center;
+  transition: border-color 0.12s, background 0.1s, transform 0.08s;
+  min-height: 52px; line-height: 1.4;
+  -webkit-tap-highlight-color: transparent;
+}
+.opt-btn:hover { border-color: var(--red); background: var(--redbg); }
+.opt-btn:active { transform: scale(0.97); }
+
+/* ── SWITCH ──────────────────────────────────────── */
+.switch-content { padding-top: 40px; text-align: center; }
+.big-eye-label {
+  font-family: var(--fd); font-size: clamp(64px, 18vw, 100px);
+  line-height: 0.9; letter-spacing: 0.02em; margin-bottom: 12px;
+}
+.big-eye-label.eye-left { color: var(--green); }
+.big-eye-label.eye-right { color: var(--red); }
+
+/* ── RESULTS ─────────────────────────────────────── */
+.eye-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.eye-tab {
+  padding: 12px; border-radius: var(--r);
+  border: 1.5px solid var(--lgray); background: var(--white);
+  cursor: pointer; text-align: center;
+  transition: border-color 0.12s, background 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.eye-tab.active { border-color: var(--red); background: var(--redbg); }
+.eye-tab-lbl { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px; }
+.eye-tab-val { font-family: var(--fd); font-size: 20px; color: var(--black); letter-spacing: 0.02em; }
+
+.verdict-block {
+  background: var(--white); border: 1.5px solid var(--lgray);
+  border-top: 4px solid var(--red); border-radius: var(--rc);
+  padding: 20px; margin-bottom: 20px;
+}
+.verdict-block.ok { border-top-color: var(--green); }
+.verdict-block.warn { border-top-color: var(--amber); }
+.v-eyebrow { font-family: var(--fm); font-size: 10px; color: var(--red); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
+.verdict-block.ok .v-eyebrow { color: var(--green); }
+.verdict-block.warn .v-eyebrow { color: var(--amber); }
+.v-main { font-family: var(--fd); font-size: clamp(22px, 5.5vw, 32px); color: var(--black); line-height: 1; margin-bottom: 6px; }
+.v-body { font-size: 14px; color: var(--gray); line-height: 1.75; }
+
+/* Spoke result chart */
+.result-fan-wrap { margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; }
+
+/* Answer review */
+.answer-review { margin-bottom: 20px; }
+.ar-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--lgray); }
+.ar-row:last-child { border-bottom: none; }
+.ar-q { font-size: 13px; color: var(--black); line-height: 1.5; flex: 1; }
+.ar-ans { font-family: var(--fm); font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+/* Interp */
+.interp-card { background: var(--cream); border: 1px solid var(--lgray); border-radius: var(--rc); padding: 18px; margin-bottom: 20px; }
+.interp-text { font-size: 14px; color: var(--gray); line-height: 1.8; }
+.interp-text strong { color: var(--black); }
+
+/* Disclaimer */
+.disclaimer {
+  background: var(--cream); border: 1.5px solid var(--lgray);
+  border-left: 4px solid var(--red); border-radius: var(--rc);
+  padding: 18px 18px 18px 20px; margin-top: 24px;
+}
+.disclaimer-title { font-family: var(--fm); font-size: 11px; letter-spacing: 0.1em; color: var(--red); text-transform: uppercase; margin-bottom: 8px; }
+.disclaimer-body { font-size: 12px; color: var(--gray); line-height: 1.8; }
+.disclaimer-body strong { color: var(--black); font-weight: 600; }
+
+/* Share row */
+.share-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+
+/* Back link */
+.back-link { display: block; text-align: center; margin-top: 16px; font-family: var(--fm); font-size: 12px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+.back-link:hover { color: var(--black); }
+
+/* Footer */
+footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.06em; text-align: center; padding: 24px 0 8px; border-top: 1px solid var(--lgray); margin-top: 32px; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home">
+    <img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38">
+    <div class="logo-name">OPTIC<span>QUIZ</span></div>
+  </a>
+  <div class="ver-badge">ASTIG FAN</div>
+</header>
+
+<main id="main" class="wrap" role="main">
+
+<!-- ══ SCREEN: INTRO ══════════════════════════════════════ -->
+<div id="screen-intro" class="screen active" role="region" aria-labelledby="intro-h1">
+  <div style="padding-top:32px">
+    <span class="eyebrow">Astigmatism Screening</span>
+    <h1 id="intro-h1">ASTIG<br>MATISM<br>FAN</h1>
+    <p>A radial wheel of lines. You stare at the center and tap lines that look darker, blurrier, or thicker than the rest. Each eye tested separately. Takes about 2 minutes.</p>
+
+    <div class="divider"></div>
+
+    <h3>What this test screens for</h3>
+    <p style="margin-bottom:16px;">Astigmatism is caused by an irregularly shaped cornea or lens. The eye focuses light unevenly, causing blur in specific directions. The fan chart reveals which meridian (axis) your eye struggles with most. <strong style="color:var(--black)">This tool screens, it does not diagnose or measure prescription.</strong></p>
+
+    <div class="divider"></div>
+
+    <h3>How to take the test</h3>
+    <div class="instr-list" role="list">
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">1</div>
+        <div>
+          <div class="instr-text">Remove any glasses except reading glasses — test without distance correction first</div>
+          <div class="instr-sub">If you wear contacts for astigmatism, you can test both with and without for comparison</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">2</div>
+        <div>
+          <div class="instr-text">Cover one eye with your palm and hold the screen at arm's length (~50–60cm / 20–24 inches)</div>
+          <div class="instr-sub">Normal reading distance is too close for this test. Arm's length gives a cleaner result.</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">3</div>
+        <div>
+          <div class="instr-text">Stare at the center dot — do not let your eye wander</div>
+          <div class="instr-sub">Use your peripheral vision to compare the spokes. Moving your eye defeats the test.</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">4</div>
+        <div>
+          <div class="instr-text">Tap any spokes that appear noticeably darker, thicker, blurrier, or more crisp than the others</div>
+          <div class="instr-sub">If all spokes look equally clear — that's a valid answer. Don't force a selection.</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startTest()" style="margin-top:8px" aria-label="Start the astigmatism fan test">Start Test — Right Eye</button>
+    <a href="/" class="back-link" aria-label="Back to all OpticQuiz tests">← All Tests</a>
+  </div>
+</div>
+
+<!-- ══ SCREEN: TEST ════════════════════════════════════════ -->
+<div id="screen-test" class="screen" role="region" aria-label="Astigmatism fan test">
+  <div style="padding-top:24px">
+    <div class="prog-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog-bar" aria-label="Test progress">
+      <div class="prog-meta">
+        <span id="prog-label">RIGHT EYE — STEP 1</span>
+        <span id="prog-step">Tap darker lines</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="eye-banner" id="eye-banner" role="note" aria-label="Eye cover reminder">
+      <div class="eb-icon" aria-hidden="true">◑</div>
+      <div>
+        <div class="eb-main" id="eb-main">Cover your LEFT eye with your palm</div>
+        <div class="eb-sub" id="eb-sub">Hold screen at arm's length. Keep RIGHT eye on the center dot.</div>
+      </div>
+    </div>
+
+    <div id="test-area"></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: SWITCH ══════════════════════════════════════ -->
+<div id="screen-switch" class="screen" role="region" aria-label="Switch eyes">
+  <div class="switch-content">
+    <span class="eyebrow">Eye complete</span>
+    <div class="big-eye-label eye-left" id="switch-label" aria-label="Now testing left eye">LEFT</div>
+    <h2>EYE</h2>
+    <p id="switch-msg" style="margin-bottom:28px;"></p>
+    <button class="btn btn-primary" id="switch-btn" onclick="startSecondEye()" aria-label="Continue with left eye">Continue — Left Eye</button>
+    <a href="/" class="back-link">← All Tests</a>
+  </div>
+</div>
+
+<!-- ══ SCREEN: RESULTS ════════════════════════════════════ -->
+<div id="screen-results" class="screen" role="region" aria-label="Test results">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Results</span>
+    <h2>ASTIG<br>PROFILE</h2>
+
+    <div class="eye-tabs" role="tablist" aria-label="Eye results">
+      <div class="eye-tab active" id="tab-right" role="tab" aria-selected="true" tabindex="0"
+           onclick="switchTab('right')" onkeydown="if(event.key==='Enter'||event.key===' ')switchTab('right')">
+        <div class="eye-tab-lbl">Right eye</div>
+        <div class="eye-tab-val" id="tab-right-val">—</div>
+      </div>
+      <div class="eye-tab" id="tab-left" role="tab" aria-selected="false" tabindex="0"
+           onclick="switchTab('left')" onkeydown="if(event.key==='Enter'||event.key===' ')switchTab('left')">
+        <div class="eye-tab-lbl">Left eye</div>
+        <div class="eye-tab-val" id="tab-left-val">—</div>
+      </div>
+    </div>
+
+    <div id="result-detail"></div>
+
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()" aria-label="Share your results">Share</button>
+      <button class="btn btn-secondary" onclick="retakeTest()" aria-label="Retake this test">Retake</button>
+    </div>
+    <a href="/" class="back-link" aria-label="Back to all OpticQuiz tests">← All Tests</a>
+
+    <div class="disclaimer" role="note" aria-label="Results disclaimer">
+      <div class="disclaimer-title">Results Disclaimer</div>
+      <div class="disclaimer-body">
+        These results are <strong>screening observations only</strong>, not a measurement or diagnosis. Screen-based astigmatism testing is heavily affected by viewing distance, display resolution, head angle, and accommodation. A precise astigmatic axis and power measurement requires a clinical refraction by a licensed optometrist or ophthalmologist.
+        <strong>Do not use these results to order glasses, contacts, or to make any medical decision.</strong>
+        Results are processed locally and never transmitted.
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer role="contentinfo">
+  www.zengine.site &nbsp;|&nbsp; © 2025 Zengine™ &nbsp;|&nbsp; Educational use only — not a medical diagnostic
+</footer>
+
+<script>
+// ===== BOOT ORDER: CONFIG → ENGINE → RENDER → INIT =====
+
+// ── 1. CONFIG ─────────────────────────────────────────────
+// READS: nothing  WRITES: nothing (constants)
+
+// DECISION: 12 spokes at 15° intervals gives clean coverage of all astigmatic axes
+// without being visually overwhelming on mobile. Each spoke covers a 15° arc.
+var SPOKE_ANGLES = [0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165];
+var SPOKE_NAMES = ["Horizontal (0°)", "15°", "30°", "Diagonal (45°)", "60°", "75°", "Vertical (90°)", "105°", "120°", "Diagonal (135°)", "150°", "165°"];
+
+// Clinical axis groupings for interpretation
+// DECISION: group adjacent spokes into clinical axis bands (standard axes are 0/90/45/135)
+var AXIS_GROUPS = {
+  horizontal: [0, 165],        // ~0° / 180° axis (with-the-rule astigmatism common)
+  vertical:   [90, 75, 105],   // ~90° axis (against-the-rule)
+  oblique45:  [45, 30, 60],    // ~45° oblique
+  oblique135: [135, 120, 150]  // ~135° oblique
+};
+
+var Q2_QUESTIONS = [
+  {
+    id: "uniformity",
+    text: "Did all lines look equally clear before you tapped any?",
+    opts: [
+      { label: "Yes — all lines looked equally sharp", val: "uniform" },
+      { label: "No — some lines clearly looked different", val: "different" }
+    ]
+  },
+  {
+    id: "confidence",
+    text: "How confident are you in your selection?",
+    opts: [
+      { label: "Very confident — obvious difference", val: "high" },
+      { label: "Somewhat sure — subtle difference", val: "medium" },
+      { label: "Uncertain — hard to tell", val: "low" }
+    ]
+  }
+];
+
+// ── 2. STATE ──────────────────────────────────────────────
+var STATE = {
+  currentEye: "right",
+  phase: "fan",          // "fan" | "questions"
+  selectedSpokes: { right: [], left: [] },
+  q2Answers: { right: [], left: [] },
+  q2Step: 0,
+  results: { right: null, left: null },
+  activeTab: "right",
+  fanSize: 300
+};
+
+// ── 3. ENGINE ─────────────────────────────────────────────
+
+function startTest() {
+  // READS: nothing  WRITES: STATE (reset)
+  STATE.currentEye = "right";
+  STATE.phase = "fan";
+  STATE.selectedSpokes = { right: [], left: [] };
+  STATE.q2Answers = { right: [], left: [] };
+  STATE.q2Step = 0;
+  STATE.results = { right: null, left: null };
+  updateEyeBanner("right");
+  showScreen("screen-test");
+  renderFanPhase();
+  announce("Astigmatism fan test. Right eye. Tap any spokes that appear darker or blurrier.");
+}
+
+function confirmSpokeSelection() {
+  // READS: STATE.selectedSpokes  WRITES: STATE.phase
+  STATE.phase = "questions";
+  STATE.q2Step = 0;
+  renderQ2Phase();
+  announce("Spokes confirmed. Now answer " + Q2_QUESTIONS.length + " follow-up questions.");
+}
+
+function submitQ2(val) {
+  // READS: val, STATE.q2Step  WRITES: STATE.q2Answers
+  STATE.q2Answers[STATE.currentEye].push({
+    qId: Q2_QUESTIONS[STATE.q2Step].id,
+    val: val
+  });
+  STATE.q2Step++;
+
+  if (STATE.q2Step >= Q2_QUESTIONS.length) {
+    finishEye();
+  } else {
+    renderQ2Phase();
+    announce("Question " + (STATE.q2Step + 1) + " of " + Q2_QUESTIONS.length);
+  }
+}
+
+function toggleSpoke(idx) {
+  // READS: idx  WRITES: STATE.selectedSpokes, DOM
+  var arr = STATE.selectedSpokes[STATE.currentEye];
+  var pos = arr.indexOf(idx);
+  if (pos === -1) {
+    arr.push(idx);
+  } else {
+    arr.splice(pos, 1);
+  }
+  updateFanHighlights();
+  var count = arr.length;
+  var countEl = document.getElementById("spoke-count");
+  if (countEl) {
+    countEl.textContent = count === 0 ? "No spokes selected — tap any that look darker or blurrier" : count + " spoke" + (count > 1 ? "s" : "") + " selected";
+  }
+  announce(SPOKE_NAMES[idx] + (arr.indexOf(idx) === -1 ? " deselected" : " selected") + ". " + arr.length + " total selected.");
+}
+
+function updateFanHighlights() {
+  // READS: STATE.selectedSpokes  WRITES: DOM spoke buttons
+  var selected = STATE.selectedSpokes[STATE.currentEye];
+  var btns = document.querySelectorAll(".spoke-btn");
+  for (var i = 0; i < btns.length; i++) {
+    var idx = parseInt(btns[i].getAttribute("data-idx"));
+    btns[i].setAttribute("aria-pressed", selected.indexOf(idx) !== -1 ? "true" : "false");
+  }
+  // Redraw SVG highlights
+  var svg = document.getElementById("fan-svg");
+  if (svg) {
+    var highlights = svg.querySelectorAll(".spoke-sel");
+    for (var i = 0; i < highlights.length; i++) highlights[i].remove();
+
+    var s = STATE.fanSize, cx = s / 2, cy = s / 2, r = s * 0.44;
+    for (var si = 0; si < selected.length; si++) {
+      var deg = SPOKE_ANGLES[selected[si]];
+      var rad = deg * Math.PI / 180;
+      var x1 = cx + r * Math.cos(rad), y1 = cy + r * Math.sin(rad);
+      var x2 = cx - r * Math.cos(rad), y2 = cy - r * Math.sin(rad);
+      var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", x1.toFixed(1));
+      line.setAttribute("y1", y1.toFixed(1));
+      line.setAttribute("x2", x2.toFixed(1));
+      line.setAttribute("y2", y2.toFixed(1));
+      line.setAttribute("stroke", "#E8431A");
+      line.setAttribute("stroke-width", "3");
+      line.setAttribute("class", "spoke-sel");
+      line.setAttribute("opacity", "0.8");
+      svg.appendChild(line);
+    }
+  }
+}
+
+function finishEye() {
+  // READS: STATE  WRITES: STATE.results
+  var spokes = STATE.selectedSpokes[STATE.currentEye];
+  var q2 = STATE.q2Answers[STATE.currentEye];
+  var result = analyzeResult(spokes, q2, STATE.currentEye);
+  STATE.results[STATE.currentEye] = result;
+
+  var bothDone = STATE.results.right && STATE.results.left;
+  if (bothDone) {
+    renderResults();
+    return;
+  }
+
+  var nextEye = STATE.currentEye === "right" ? "left" : "right";
+  var nextLabel = nextEye.charAt(0).toUpperCase() + nextEye.slice(1);
+  document.getElementById("switch-label").textContent = nextLabel.toUpperCase();
+  document.getElementById("switch-label").className = "big-eye-label eye-" + nextEye;
+  document.getElementById("switch-label").setAttribute("aria-label", "Now testing " + nextEye + " eye");
+  document.getElementById("switch-btn").textContent = "Continue — " + nextLabel + " Eye";
+  document.getElementById("switch-btn").setAttribute("aria-label", "Continue with " + nextEye + " eye");
+  document.getElementById("switch-msg").textContent = STATE.currentEye.charAt(0).toUpperCase() + STATE.currentEye.slice(1) + " eye done. Cover your " + STATE.currentEye + " eye with your palm. Hold the screen at arm's length, keep your " + nextEye + " eye on the center dot.";
+
+  showScreen("screen-switch");
+  announce(STATE.currentEye + " eye complete. Ready for " + nextEye + " eye.");
+}
+
+function analyzeResult(spokes, q2, eye) {
+  // READS: spokes[], q2[]  WRITES: nothing — returns result object
+  var confidence = "medium";
+  for (var i = 0; i < q2.length; i++) {
+    if (q2[i].qId === "confidence") confidence = q2[i].val;
+  }
+  var allUniform = false;
+  for (var i = 0; i < q2.length; i++) {
+    if (q2[i].qId === "uniformity" && q2[i].val === "uniform") allUniform = true;
+  }
+
+  if (spokes.length === 0 || allUniform) {
+    return {
+      label: "No blur detected",
+      axis: null,
+      axisLabel: "—",
+      spokeCount: 0,
+      confidence: confidence,
+      spokes: spokes,
+      note: "No line direction appeared darker or blurrier than the others. This is consistent with no significant screen-detectable astigmatism for this eye. Note that corrected astigmatism (from glasses or contacts) and low-magnitude astigmatism may not be detectable on this test."
+    };
+  }
+
+  // Map selected spokes to axis groups
+  var groupCounts = { horizontal: 0, vertical: 0, oblique45: 0, oblique135: 0 };
+  for (var si = 0; si < spokes.length; si++) {
+    var idx = spokes[si];
+    for (var g in AXIS_GROUPS) {
+      if (AXIS_GROUPS[g].indexOf(idx) !== -1) groupCounts[g]++;
+    }
+  }
+
+  // Find dominant group
+  var maxG = null, maxCount = 0;
+  for (var g in groupCounts) {
+    if (groupCounts[g] > maxCount) { maxCount = groupCounts[g]; maxG = g; }
+  }
+
+  var axisLabels = {
+    horizontal: "Horizontal axis (~0°/180°) — with-the-rule pattern",
+    vertical:   "Vertical axis (~90°) — against-the-rule pattern",
+    oblique45:  "Oblique axis (~45°)",
+    oblique135: "Oblique axis (~135°)"
+  };
+
+  var isSingleAxis = maxCount >= 1 && spokes.length <= 3;
+  var isComplex = spokes.length > 4;
+
+  var label = isComplex ? "Complex or irregular blur" : "Possible " + (maxG === "horizontal" ? "horizontal" : maxG === "vertical" ? "vertical" : "oblique") + " axis";
+  var axisLabel = maxG ? axisLabels[maxG] : "Multiple axes";
+
+  var noteText = "";
+  if (confidence === "low") {
+    noteText = "You indicated low confidence in your selection. Results from uncertain observations should be interpreted cautiously. Consider retaking the test in a well-lit environment at true arm's length distance.";
+  } else if (isComplex) {
+    noteText = "Multiple non-adjacent spokes were selected, suggesting irregular or complex blur patterns. This can indicate higher-order astigmatism, irregular corneal surface, or test artifacts from screen resolution or viewing angle. A clinical refraction is the only reliable way to measure this.";
+  } else if (maxG) {
+    noteText = axisLabels[maxG] + " was the dominant blur direction. In clinical astigmatism, the axis perpendicular to the blurry lines is typically the axis of the prescription. This is a directional indicator only — not a measurement. A refraction by an eye care professional is required for an accurate prescription.";
+  }
+
+  return {
+    label: label,
+    axis: maxG,
+    axisLabel: axisLabel,
+    spokeCount: spokes.length,
+    confidence: confidence,
+    spokes: spokes.slice(),
+    note: noteText
+  };
+}
+
+function startSecondEye() {
+  // READS: STATE.currentEye  WRITES: STATE
+  STATE.currentEye = STATE.currentEye === "right" ? "left" : "right";
+  STATE.phase = "fan";
+  STATE.q2Step = 0;
+  updateEyeBanner(STATE.currentEye);
+  showScreen("screen-test");
+  renderFanPhase();
+  announce(STATE.currentEye + " eye test starting.");
+}
+
+function retakeTest() {
+  showScreen("screen-intro");
+}
+
+// ── 4. RENDER ─────────────────────────────────────────────
+
+function buildFanSVG(size) {
+  // READS: size  WRITES: nothing — returns SVG string
+  var s = size, cx = s / 2, cy = s / 2;
+  var rSpoke = s * 0.44;
+  var rLabel = s * 0.48;
+
+  var svg = '<svg id="fan-svg" width="' + s + '" height="' + s + '" viewBox="0 0 ' + s + ' ' + s + '" xmlns="http://www.w3.org/2000/svg">';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (s/2 - 1) + '" fill="#ffffff"/>';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (s/2 - 1) + '" fill="none" stroke="#D4D0C8" stroke-width="1"/>';
+
+  // Light concentric rings for reference
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (rSpoke * 0.5) + '" fill="none" stroke="#EBEBEB" stroke-width="0.5"/>';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (rSpoke * 0.25) + '" fill="none" stroke="#EBEBEB" stroke-width="0.5"/>';
+
+  // Spokes
+  for (var i = 0; i < SPOKE_ANGLES.length; i++) {
+    var deg = SPOKE_ANGLES[i];
+    var rad = deg * Math.PI / 180;
+    var x1 = cx + rSpoke * Math.cos(rad), y1 = cy + rSpoke * Math.sin(rad);
+    var x2 = cx - rSpoke * Math.cos(rad), y2 = cy - rSpoke * Math.sin(rad);
+    svg += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="#1A1A1A" stroke-width="1.2" data-spoke="' + i + '"/>';
+  }
+
+  // Degree labels — only cardinal/diagonal to avoid clutter
+  var labelAngles = [0, 45, 90, 135];
+  var labelNames  = ["0°","45°","90°","135°"];
+  for (var i = 0; i < labelAngles.length; i++) {
+    var deg = labelAngles[i];
+    var rad = deg * Math.PI / 180;
+    var lx = cx + rLabel * Math.cos(rad);
+    var ly = cy + rLabel * Math.sin(rad);
+    svg += '<text x="' + lx.toFixed(1) + '" y="' + (ly + 3.5).toFixed(1) + '" text-anchor="middle" font-size="' + Math.round(s * 0.038) + '" fill="#9B9B9B" font-family="Courier New,monospace">' + labelNames[i] + '</text>';
+  }
+
+  // Center dot
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="5" fill="#E8431A"/>';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="9" fill="none" stroke="#E8431A" stroke-width="0.7" opacity="0.3"/>';
+
+  svg += '</svg>';
+  return svg;
+}
+
+function buildResultFanSVG(size, selectedSpokes) {
+  // READS: size, selectedSpokes[]  WRITES: nothing — returns SVG string with highlights
+  var s = size, cx = s / 2, cy = s / 2;
+  var rSpoke = s * 0.44;
+
+  var svg = '<svg width="' + s + '" height="' + s + '" viewBox="0 0 ' + s + ' ' + s + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fan chart showing selected spokes">';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (s/2 - 1) + '" fill="#ffffff"/>';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (s/2 - 1) + '" fill="none" stroke="#D4D0C8" stroke-width="1"/>';
+
+  // Draw all spokes faint
+  for (var i = 0; i < SPOKE_ANGLES.length; i++) {
+    var deg = SPOKE_ANGLES[i];
+    var rad = deg * Math.PI / 180;
+    var x1 = cx + rSpoke * Math.cos(rad), y1 = cy + rSpoke * Math.sin(rad);
+    var x2 = cx - rSpoke * Math.cos(rad), y2 = cy - rSpoke * Math.sin(rad);
+    var isSelected = selectedSpokes.indexOf(i) !== -1;
+    svg += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="' + (isSelected ? "#E8431A" : "#DDDDDD") + '" stroke-width="' + (isSelected ? "3" : "1") + '" opacity="' + (isSelected ? "0.85" : "1") + '"/>';
+  }
+
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="4" fill="#E8431A"/>';
+  svg += '</svg>';
+  return svg;
+}
+
+function renderFanPhase() {
+  // READS: STATE  WRITES: DOM
+  var eye = STATE.currentEye;
+  var eyeLabel = eye.charAt(0).toUpperCase() + eye.slice(1);
+  var pct = eye === "left" ? 50 : 0;
+
+  document.getElementById("prog-fill").style.width = pct + "%";
+  document.getElementById("prog-bar").setAttribute("aria-valuenow", pct);
+  document.getElementById("prog-label").textContent = eyeLabel.toUpperCase() + " EYE — STEP 1 / 2";
+  document.getElementById("prog-step").textContent = "Select darker spokes";
+
+  var sz = Math.min(window.innerWidth - 56, 300);
+  STATE.fanSize = sz;
+
+  // Build spoke hit buttons array (overlaid on SVG)
+  var s = sz, cx = s / 2, cy = s / 2, r = s * 0.38;
+  var spokeButtons = '';
+  for (var i = 0; i < SPOKE_ANGLES.length; i++) {
+    var deg = SPOKE_ANGLES[i];
+    var rad = deg * Math.PI / 180;
+    // Midpoint of spoke for button center
+    var bx = cx + (r * 0.65) * Math.cos(rad);
+    var by = cy + (r * 0.65) * Math.sin(rad);
+    var bx2 = cx - (r * 0.65) * Math.cos(rad);
+    var by2 = cy - (r * 0.65) * Math.sin(rad);
+    var btnW = 44, btnH = 44;
+    // Button at positive end
+    spokeButtons += '<button class="spoke-btn" data-idx="' + i + '" ' +
+      'style="position:absolute;left:' + (bx - btnW/2).toFixed(0) + 'px;top:' + (by - btnH/2).toFixed(0) + 'px;width:' + btnW + 'px;height:' + btnH + 'px;background:transparent;border:none;cursor:pointer;border-radius:50%;-webkit-tap-highlight-color:transparent;" ' +
+      'onclick="toggleSpoke(' + i + ')" ' +
+      'onkeydown="if(event.key===\'Enter\'||event.key===\' \')toggleSpoke(' + i + ')" ' +
+      'aria-pressed="false" aria-label="Toggle ' + SPOKE_NAMES[i] + ' spoke" ' +
+      'tabindex="0">' +
+      '</button>';
+    // Button at opposite end
+    spokeButtons += '<button class="spoke-btn" data-idx="' + i + '" ' +
+      'style="position:absolute;left:' + (bx2 - btnW/2).toFixed(0) + 'px;top:' + (by2 - btnH/2).toFixed(0) + 'px;width:' + btnW + 'px;height:' + btnH + 'px;background:transparent;border:none;cursor:pointer;border-radius:50%;-webkit-tap-highlight-color:transparent;" ' +
+      'onclick="toggleSpoke(' + i + ')" ' +
+      'onkeydown="if(event.key===\'Enter\'||event.key===\' \')toggleSpoke(' + i + ')" ' +
+      'aria-pressed="false" aria-label="Toggle ' + SPOKE_NAMES[i] + '" ' +
+      'tabindex="-1" aria-hidden="true">' +
+      '</button>';
+  }
+
+  document.getElementById("test-area").innerHTML =
+    '<div style="font-size:14px;color:var(--gray);text-align:center;margin-bottom:12px;line-height:1.6;">Stare at the red center dot. Tap any spokes that look <strong style="color:var(--black)">darker, blurrier, or thicker</strong> than the rest. Tap again to deselect.</div>' +
+    '<div class="fan-area">' +
+      '<div class="fan-wrapper" id="fan-wrapper" style="width:' + sz + 'px;height:' + sz + 'px;" role="group" aria-label="Fan chart — tap spokes that appear darker or blurrier">' +
+        buildFanSVG(sz) +
+        spokeButtons +
+      '</div>' +
+      '<div class="fan-legend" aria-hidden="true">' +
+        '<div class="legend-item"><div class="legend-swatch" style="background:#1A1A1A"></div>Normal spoke</div>' +
+        '<div class="legend-item"><div class="legend-swatch" style="background:#E8431A"></div>Selected (darker/blurry)</div>' +
+      '</div>' +
+      '<div class="spoke-count" id="spoke-count" role="status" aria-live="polite">No spokes selected — tap any that look darker or blurrier</div>' +
+    '</div>' +
+    '<div class="fan-cta">' +
+      '<button class="btn btn-primary" onclick="confirmSpokeSelection()" aria-label="Confirm spoke selection and continue">Confirm Selection →</button>' +
+      '<div style="font-size:12px;color:var(--gray);text-align:center;margin-top:8px;font-family:var(--fm);letter-spacing:0.04em;">Select 0 spokes if all lines look equally clear</div>' +
+    '</div>';
+}
+
+function renderQ2Phase() {
+  // READS: STATE.q2Step, Q2_QUESTIONS  WRITES: DOM
+  var q = Q2_QUESTIONS[STATE.q2Step];
+  var eye = STATE.currentEye;
+  var eyeLabel = eye.charAt(0).toUpperCase() + eye.slice(1);
+  var pct = (eye === "left" ? 50 : 0) + Math.round((STATE.q2Step / Q2_QUESTIONS.length) * 45) + 5;
+
+  document.getElementById("prog-fill").style.width = pct + "%";
+  document.getElementById("prog-bar").setAttribute("aria-valuenow", pct);
+  document.getElementById("prog-label").textContent = eyeLabel.toUpperCase() + " EYE — STEP 2 / 2";
+  document.getElementById("prog-step").textContent = "Q " + (STATE.q2Step + 1) + " / " + Q2_QUESTIONS.length;
+
+  var opts = '';
+  for (var i = 0; i < q.opts.length; i++) {
+    opts += '<button class="opt-btn" onclick="submitQ2(\'' + q.opts[i].val + '\')" aria-label="' + q.opts[i].label + '">' + q.opts[i].label + '</button>';
+  }
+
+  var sz = Math.min(window.innerWidth - 56, 180);
+  var previewHtml = '<div style="display:flex;justify-content:center;margin-bottom:16px;">' + buildResultFanSVG(sz, STATE.selectedSpokes[STATE.currentEye]) + '</div>';
+
+  document.getElementById("test-area").innerHTML =
+    previewHtml +
+    '<div class="q-phase">' +
+      '<div class="q-text">' + q.text + '</div>' +
+      '<div class="options" role="group" aria-label="Answer options">' + opts + '</div>' +
+    '</div>';
+
+  announce("Question " + (STATE.q2Step + 1) + ": " + q.text);
+}
+
+function updateEyeBanner(eye) {
+  // READS: eye  WRITES: DOM
+  var cover = eye === "right" ? "LEFT" : "RIGHT";
+  var keep = eye === "right" ? "RIGHT" : "LEFT";
+  document.getElementById("eb-main").textContent = "Cover your " + cover + " eye with your palm";
+  document.getElementById("eb-sub").textContent = "Hold screen at arm's length. Keep " + keep + " eye on the center dot.";
+}
+
+function renderResults() {
+  // READS: STATE.results  WRITES: DOM
+  var r = STATE.results;
+
+  if (r.right) document.getElementById("tab-right-val").textContent = r.right.spokeCount === 0 ? "Clear" : "Flagged";
+  if (r.left)  document.getElementById("tab-left-val").textContent  = r.left.spokeCount  === 0 ? "Clear" : "Flagged";
+
+  STATE.activeTab = "right";
+  renderResultDetail("right");
+  showScreen("screen-results");
+  announce("Results ready. Right eye: " + (r.right ? r.right.label : "not tested") + ". Left eye: " + (r.left ? r.left.label : "not tested") + ".");
+}
+
+function renderResultDetail(eye) {
+  // READS: STATE.results[eye]  WRITES: DOM
+  var r = STATE.results[eye];
+  if (!r) {
+    document.getElementById("result-detail").innerHTML = '<p style="padding:16px 0;color:var(--gray)">No data for this eye.</p>';
+    return;
+  }
+
+  var verdictClass = r.spokeCount === 0 ? "ok" : r.confidence === "low" ? "warn" : "";
+
+  var html = '<div class="verdict-block ' + verdictClass + '" role="region" aria-label="' + eye + ' eye finding">' +
+    '<div class="v-eyebrow">' + eye + ' eye finding</div>' +
+    '<div class="v-main">' + r.label + '</div>' +
+    '<div class="v-body">' + r.note + '</div>' +
+    '</div>';
+
+  // Result fan with selections shown
+  var sz = Math.min(window.innerWidth - 56, 220);
+  html += '<div class="result-fan-wrap">' +
+    '<h3 style="margin-bottom:10px;">Spokes you selected (' + r.spokeCount + ')</h3>' +
+    buildResultFanSVG(sz, r.spokes) +
+    '</div>';
+
+  // Answer review
+  if (STATE.q2Answers[eye] && STATE.q2Answers[eye].length > 0) {
+    html += '<h3 style="margin-bottom:8px;">Follow-up answers</h3><div class="answer-review" role="list">';
+    var q2a = STATE.q2Answers[eye];
+    for (var i = 0; i < q2a.length; i++) {
+      var q = Q2_QUESTIONS[i];
+      var ans = q2a[i];
+      var opt = null;
+      for (var j = 0; j < q.opts.length; j++) { if (q.opts[j].val === ans.val) { opt = q.opts[j]; break; } }
+      html += '<div class="ar-row" role="listitem">' +
+        '<div><div class="ar-q">' + q.text + '</div>' +
+        '<div class="ar-ans">' + (opt ? opt.label : ans.val) + '</div></div></div>';
+    }
+    html += '</div>';
+  }
+
+  // Interpretation
+  var interpText = r.spokeCount === 0
+    ? "No directional blur was detected. This is consistent with no significant screen-detectable astigmatism for this eye, or suggests that any existing astigmatism is fully corrected by your current lenses. Remember: low-magnitude astigmatism (under 0.5 diopters) is common and often not noticed in daily life."
+    : r.confidence === "low"
+    ? "You reported low confidence in your observation. Uncertain or borderline results are common on screen-based tests, particularly at non-ideal viewing distances or with mild astigmatism. Consider retesting under brighter light at true arm's length. If concern persists, a clinical refraction is the definitive answer."
+    : r.axis
+    ? "A " + r.axisLabel.split("—")[0].trim() + " blur pattern was suggested. In astigmatism, the blurry direction of the fan chart typically corresponds to the steepest corneal meridian. The clinical axis in a glasses prescription is usually perpendicular to the blurry lines. This screening cannot measure diopters or provide a prescription — only a licensed optometrist or ophthalmologist can do that."
+    : "Complex or multi-directional blur was noted. This may reflect irregular astigmatism, accommodation fluctuation, or test artifacts. A thorough clinical refraction will clarify whether astigmatism is present and measure its magnitude and axis precisely.";
+
+  html += '<h3>What this means</h3><div class="interp-card"><div class="interp-text">' + interpText + '</div></div>';
+
+  document.getElementById("result-detail").innerHTML = html;
+}
+
+function switchTab(eye) {
+  // READS: eye  WRITES: STATE.activeTab, DOM
+  STATE.activeTab = eye;
+  document.getElementById("tab-right").classList.toggle("active", eye === "right");
+  document.getElementById("tab-right").setAttribute("aria-selected", eye === "right" ? "true" : "false");
+  document.getElementById("tab-left").classList.toggle("active", eye === "left");
+  document.getElementById("tab-left").setAttribute("aria-selected", eye === "left" ? "true" : "false");
+  renderResultDetail(eye);
+  announce(eye + " eye results displayed");
+}
+
+// ── UTILITY ───────────────────────────────────────────────
+
+function showScreen(id) {
+  // READS: id  WRITES: DOM
+  var screens = document.querySelectorAll(".screen");
+  for (var i = 0; i < screens.length; i++) screens[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+function announce(msg) {
+  // READS: msg  WRITES: aria-live region
+  var el = document.getElementById("a11y-live");
+  if (!el) return;
+  el.textContent = "";
+  setTimeout(function() { el.textContent = msg; }, 60);
+}
+
+function shareResults() {
+  // READS: STATE.results  WRITES: clipboard / share sheet
+  var r = STATE.results;
+  var parts = [];
+  if (r.right) parts.push("R: " + r.right.label);
+  if (r.left)  parts.push("L: " + r.left.label);
+  var text = "My OpticQuiz Astigmatism Fan result — " + parts.join(" | ") + ". Educational screening only, not a diagnosis. opticquiz.com/astig/";
+
+  try {
+    if (navigator.share) {
+      navigator.share({ title: "OpticQuiz Astigmatism Fan", text: text, url: "https://opticquiz.com/astig/" });
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function() { announce("Result copied to clipboard"); });
+    } else {
+      prompt("Copy your result:", text);
+    }
+  } catch(e) {
+    try { if (navigator.clipboard) navigator.clipboard.writeText(text); } catch(e2) {}
+  }
+}
+</script>
+</body>
+</html>
