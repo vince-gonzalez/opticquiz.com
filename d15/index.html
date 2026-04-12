@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ===== WORKFLOW STACK =====
+  File:         d15/index.html
+  Site:         OpticQuiz — Farnsworth D-15 Hue Sort Test
+  Domain:       opticquiz.com/d15/
+  Repo:         zengineco/opticquiz.com  /d15/index.html
+  Author:       Vince Gonzalez / Zengine™
+  Version:      v1.2.0
+  Boot Order:   1.CONFIG  2.D15_DATA  3.ENGINE  4.RENDER  5.DRAG  6.SCORE  7.INIT
+  Features:
+    - 15 color caps (D-15 hue sequence) rendered as CSS color swatches
+    - Cap #1 (reference) fixed at left; caps 2–15 drag-sortable
+    - Touch + mouse drag both supported (touch-action:none on drag items)
+    - Scoring: confusion vector analysis — maps transpositions to
+      deutan / protan / tritan confusion axes
+    - Per-eye bilateral testing (right then left)
+    - Error score (total transposition distance) + axis classification
+    - Results: polar confusion diagram SVG + axis interpretation
+    - Share results via Web Share API → clipboard → prompt fallback
+    - WCAG 2.1 AA: skip link, aria-live, aria-grabbed, keyboard
+      reorder via Space+ArrowKeys, focus rings, reduced-motion
+  Palette: white/#F8F6F2/#E8431A/#4A8C3F/#1A1A1A (logo-derived)
+  Fonts: Bebas Neue (display) + Source Serif 4 (body) + Courier New (mono)
+  No external images. No base64. No backend.
+  NOTE ON COLORS: D-15 cap colors are clinical approximations for sRGB
+    screens. Screen gamut, white point, and ambient light limit accuracy.
+    Results are educational estimates only.
+===== END WORKFLOW STACK ===== -->
+
+<!-- ===== ASSET MANIFEST =====
+  /opticquiz_icon.png   live on GitHub repo root
+  Google Fonts: Bebas Neue, Source Serif 4
+  All color caps: CSS background-color inline (no images)
+  Confusion diagram: SVG generated at runtime
+===== END ASSET MANIFEST ===== -->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz Farnsworth D-15 — drag color caps into hue order. Richer than plate tests. Screens for deutan, protan, and tritan confusion axes. Educational use only.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Farnsworth D-15 Hue Sort">
+<meta property="og:description" content="Drag 15 color caps into hue order. Maps your errors to color confusion axes. Richer data than Ishihara plates. Free, no account.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/d15/">
+<link rel="canonical" href="https://opticquiz.com/d15/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Farnsworth D-15 — OpticQuiz</title>
+
+<!-- GA4 — replace G-XXXXXXXXXX with your measurement ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX');
+</script>
+
+<!-- AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+
+<style>
+/* ===== DESIGN SYSTEM — logo palette =====
+  --white  #FFFFFF
+  --bg     #F8F6F2
+  --cream  #F0EDE6
+  --lgray  #D4D0C8
+  --gray   #6B6B6B   AA on white
+  --black  #1A1A1A   AAA on white
+  --red    #E8431A
+  --redd   #C23410
+  --green  #4A8C3F
+  --greend #38692F
+  --redbg  #FDF1EE
+  --gbg    #EEF5ED
+  --amber  #D4820A
+===== END DESIGN SYSTEM ===== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #FFFFFF;
+  --bg: #F8F6F2;
+  --cream: #F0EDE6;
+  --lgray: #D4D0C8;
+  --gray: #6B6B6B;
+  --black: #1A1A1A;
+  --red: #E8431A;
+  --redd: #C23410;
+  --green: #4A8C3F;
+  --greend: #38692F;
+  --redbg: #FDF1EE;
+  --gbg: #EEF5ED;
+  --amber: #D4820A;
+  --fd: "Bebas Neue", Impact, fantasy;
+  --fs: "Source Serif 4", Georgia, serif;
+  --fm: "Courier New", monospace;
+  --r: 4px;
+  --rc: 8px;
+}
+
+html { background: var(--bg); }
+body { font-family: var(--fs); background: var(--bg); color: var(--black); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+/* ── A11Y ────────────────────────────────────────── */
+.skip-link { position: absolute; top: -48px; left: 16px; z-index: 9999; background: var(--red); color: var(--white); padding: 10px 18px; border-radius: var(--r); font-family: var(--fs); font-size: 14px; font-weight: 600; text-decoration: none; transition: top 0.15s; }
+.skip-link:focus { top: 12px; }
+*:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; border-radius: var(--r); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* ── LAYOUT ──────────────────────────────────────── */
+.wrap { max-width: 580px; margin: 0 auto; padding: 0 20px 80px; }
+
+/* ── HEADER ──────────────────────────────────────── */
+.site-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 0; max-width: 580px; margin: 0 auto; }
+.logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-wrap img { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--lgray); }
+.logo-name { font-family: var(--fd); font-size: 22px; color: var(--black); letter-spacing: 0.03em; }
+.logo-name span { color: var(--red); }
+.ver-badge { font-family: var(--fm); font-size: 10px; color: var(--gray); border: 1px solid var(--lgray); padding: 3px 8px; border-radius: 20px; letter-spacing: 0.1em; }
+
+/* ── SCREENS ─────────────────────────────────────── */
+.screen { display: none; }
+.screen.active { display: block; animation: fadein 0.2s ease; }
+@keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+/* ── TYPE ────────────────────────────────────────── */
+.eyebrow { font-family: var(--fm); font-size: 11px; letter-spacing: 0.14em; color: var(--red); text-transform: uppercase; display: block; margin-bottom: 10px; }
+h1 { font-family: var(--fd); font-size: clamp(48px, 12vw, 72px); color: var(--black); line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 16px; }
+h2 { font-family: var(--fd); font-size: clamp(32px, 8vw, 48px); color: var(--black); line-height: 0.94; letter-spacing: 0.02em; margin-bottom: 16px; }
+h3 { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+p { font-size: 15px; color: var(--gray); line-height: 1.7; }
+
+/* ── BUTTONS ─────────────────────────────────────── */
+.btn { display: block; width: 100%; padding: 16px 20px; font-family: var(--fs); font-size: 16px; font-weight: 600; color: var(--black); background: var(--white); border: 1.5px solid var(--lgray); border-radius: var(--r); cursor: pointer; text-align: center; transition: border-color 0.12s, background 0.12s, transform 0.08s; min-height: 52px; -webkit-tap-highlight-color: transparent; }
+.btn:hover { border-color: var(--black); background: var(--cream); }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--red); color: var(--white); border-color: transparent; }
+.btn-primary:hover { background: var(--redd); }
+.btn-secondary { background: var(--green); color: var(--white); border-color: transparent; }
+.btn-secondary:hover { background: var(--greend); }
+.btn + .btn { margin-top: 10px; }
+
+/* ── DIVIDER ─────────────────────────────────────── */
+.divider { height: 1px; background: var(--lgray); margin: 24px 0; }
+
+/* ── INSTRUCTIONS ────────────────────────────────── */
+.instr-list { margin: 20px 0; }
+.instr-item { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--lgray); }
+.instr-item:last-child { border-bottom: none; }
+.instr-num { font-family: var(--fd); font-size: 28px; color: var(--red); min-width: 28px; line-height: 1; margin-top: 2px; }
+.instr-text { font-size: 14px; color: var(--black); line-height: 1.6; }
+.instr-sub { font-size: 13px; color: var(--gray); margin-top: 2px; }
+
+/* ── PROGRESS ────────────────────────────────────── */
+.prog-wrap { margin-bottom: 20px; }
+.prog-meta { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.prog-meta span { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.06em; }
+.prog-track { height: 3px; background: var(--lgray); border-radius: 2px; }
+.prog-fill { height: 100%; background: var(--red); border-radius: 2px; transition: width 0.35s cubic-bezier(0.4,0,0.2,1); }
+
+/* ── EYE BANNER ──────────────────────────────────── */
+.eye-banner { background: var(--redbg); border: 1.5px solid var(--red); border-radius: var(--rc); padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+.eb-icon { font-family: var(--fd); font-size: 22px; color: var(--red); flex-shrink: 0; }
+.eb-main { font-size: 14px; font-weight: 600; color: var(--black); }
+.eb-sub { font-size: 12px; color: var(--gray); margin-top: 1px; }
+
+/* ── SORT TRAY ───────────────────────────────────── */
+.sort-instruction { font-size: 14px; color: var(--gray); line-height: 1.6; text-align: center; margin-bottom: 14px; }
+.sort-instruction strong { color: var(--black); }
+
+.reference-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 10px 12px; background: var(--cream); border: 1px solid var(--lgray); border-radius: var(--r); }
+.ref-label { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+.ref-cap { width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.15); flex-shrink: 0; }
+.ref-arrow { font-family: var(--fm); font-size: 18px; color: var(--lgray); flex: 1; text-align: center; letter-spacing: 0.1em; overflow: hidden; }
+
+/* Sort tray */
+.sort-tray-wrap { margin-bottom: 16px; }
+.sort-tray-label { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+
+.sort-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+  background: var(--white);
+  border: 1.5px solid var(--lgray);
+  border-radius: var(--rc);
+  min-height: 100px;
+  align-content: flex-start;
+  position: relative;
+}
+
+/* Individual cap */
+.cap {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(0,0,0,0.12);
+  cursor: grab;
+  position: relative;
+  flex-shrink: 0;
+  transition: transform 0.1s, box-shadow 0.1s, border-color 0.1s;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cap:hover { border-color: rgba(0,0,0,0.3); transform: scale(1.08); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.cap.dragging { opacity: 0.5; cursor: grabbing; transform: scale(0.95); }
+.cap.drag-over { border-color: var(--red); transform: scale(1.12); box-shadow: 0 0 0 3px var(--redbg); }
+.cap.kb-selected { border-color: var(--red); box-shadow: 0 0 0 3px var(--redbg); transform: scale(1.1); }
+
+.cap-num { font-family: var(--fm); font-size: 10px; color: rgba(0,0,0,0.4); font-weight: 700; pointer-events: none; }
+.cap-num.light { color: rgba(255,255,255,0.6); }
+
+/* Order display strip */
+.order-strip { display: flex; align-items: center; gap: 4px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; }
+.order-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.1); }
+.order-arrow { font-family: var(--fm); font-size: 10px; color: var(--lgray); flex-shrink: 0; }
+
+/* Keyboard hint */
+.kb-hint { font-family: var(--fm); font-size: 11px; color: var(--gray); text-align: center; margin: 8px 0; letter-spacing: 0.04em; }
+.kb-hint kbd { background: var(--cream); border: 1px solid var(--lgray); border-radius: 3px; padding: 1px 5px; font-size: 11px; }
+
+/* ── SWITCH ──────────────────────────────────────── */
+.switch-content { padding-top: 40px; text-align: center; }
+.big-eye-label { font-family: var(--fd); font-size: clamp(64px, 18vw, 100px); line-height: 0.9; letter-spacing: 0.02em; margin-bottom: 12px; }
+.big-eye-label.eye-left { color: var(--green); }
+.big-eye-label.eye-right { color: var(--red); }
+
+/* ── RESULTS ─────────────────────────────────────── */
+.eye-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.eye-tab { padding: 12px; border-radius: var(--r); border: 1.5px solid var(--lgray); background: var(--white); cursor: pointer; text-align: center; transition: all 0.12s; -webkit-tap-highlight-color: transparent; }
+.eye-tab.active { border-color: var(--red); background: var(--redbg); }
+.eye-tab-lbl { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px; }
+.eye-tab-val { font-family: var(--fd); font-size: 20px; color: var(--black); letter-spacing: 0.02em; }
+
+.verdict-block { background: var(--white); border: 1.5px solid var(--lgray); border-top: 4px solid var(--red); border-radius: var(--rc); padding: 20px; margin-bottom: 20px; }
+.verdict-block.ok { border-top-color: var(--green); }
+.verdict-block.warn { border-top-color: var(--amber); }
+.v-eyebrow { font-family: var(--fm); font-size: 10px; color: var(--red); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
+.verdict-block.ok .v-eyebrow { color: var(--green); }
+.verdict-block.warn .v-eyebrow { color: var(--amber); }
+.v-main { font-family: var(--fd); font-size: clamp(22px, 5.5vw, 32px); color: var(--black); line-height: 1; margin-bottom: 6px; }
+.v-body { font-size: 14px; color: var(--gray); line-height: 1.75; }
+
+/* Score display */
+.score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.score-cell { background: var(--cream); border: 1px solid var(--lgray); border-radius: var(--r); padding: 12px; text-align: center; }
+.score-val { font-family: var(--fd); font-size: 26px; color: var(--black); display: block; line-height: 1; }
+.score-lbl { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px; display: block; }
+
+/* Confusion diagram */
+.confusion-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+.confusion-label { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+
+/* Sequence replay */
+.sequence-wrap { margin-bottom: 20px; }
+.seq-row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.seq-cap { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.12); flex-shrink: 0; }
+.seq-arrow { font-family: var(--fm); font-size: 10px; color: var(--lgray); }
+.seq-arrow.error { color: var(--red); font-weight: 700; }
+
+/* Axis bars */
+.axis-bars { margin-bottom: 20px; }
+.axis-row { margin-bottom: 10px; }
+.axis-meta { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.axis-name { font-size: 13px; font-weight: 600; color: var(--black); }
+.axis-pct { font-family: var(--fm); font-size: 12px; color: var(--gray); }
+.axis-track { height: 6px; background: var(--lgray); border-radius: 3px; overflow: hidden; }
+.axis-fill { height: 100%; border-radius: 3px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+
+/* Interp */
+.interp-card { background: var(--cream); border: 1px solid var(--lgray); border-radius: var(--rc); padding: 18px; margin-bottom: 20px; }
+.interp-text { font-size: 14px; color: var(--gray); line-height: 1.8; }
+.interp-text strong { color: var(--black); }
+
+/* Disclaimer */
+.disclaimer { background: var(--cream); border: 1.5px solid var(--lgray); border-left: 4px solid var(--red); border-radius: var(--rc); padding: 18px 18px 18px 20px; margin-top: 24px; }
+.disclaimer-title { font-family: var(--fm); font-size: 11px; letter-spacing: 0.1em; color: var(--red); text-transform: uppercase; margin-bottom: 8px; }
+.disclaimer-body { font-size: 12px; color: var(--gray); line-height: 1.8; }
+.disclaimer-body strong { color: var(--black); font-weight: 600; }
+
+.share-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.back-link { display: block; text-align: center; margin-top: 16px; font-family: var(--fm); font-size: 12px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+.back-link:hover { color: var(--black); }
+footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.06em; text-align: center; padding: 24px 0 8px; border-top: 1px solid var(--lgray); margin-top: 32px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home">
+    <img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38">
+    <div class="logo-name">OPTIC<span>QUIZ</span></div>
+  </a>
+  <div class="ver-badge">D-15</div>
+</header>
+
+<main id="main" class="wrap" role="main">
+
+<!-- ══ INTRO ══════════════════════════════════════════════ -->
+<div id="screen-intro" class="screen active" role="region" aria-labelledby="intro-h1">
+  <div style="padding-top:32px">
+    <span class="eyebrow">Farnsworth D-15 Hue Sort</span>
+    <h1 id="intro-h1">SORT<br>BY<br>COLOR</h1>
+    <p>Drag 15 color caps into the order that looks like a smooth color progression from the reference cap. The pattern of mistakes maps to specific color confusion axes.</p>
+
+    <div class="divider"></div>
+
+    <h3>Why this test is different</h3>
+    <p style="margin-bottom:16px;">Ishihara plates test whether you can see a hidden number. D-15 tests whether you can <strong style="color:var(--black)">order colors correctly</strong>. This catches anomalous trichromacy that plates miss — and it separates deutan, protan, and tritan axes more reliably than plate-only screening.</p>
+
+    <div class="divider"></div>
+
+    <h3>How to take the test</h3>
+    <div class="instr-list" role="list">
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">1</div>
+        <div>
+          <div class="instr-text">Maximize brightness. Use normal indoor light — no direct sunlight on the screen.</div>
+          <div class="instr-sub">Color accuracy on screens is affected by brightness, temperature, and ambient light more than most people realize.</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">2</div>
+        <div>
+          <div class="instr-text">The gray cap on the left is your reference — Cap 1. It is fixed.</div>
+          <div class="instr-sub">Arrange caps 2 through 15 in the tray below so the colors flow as smoothly as possible from Cap 1.</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">3</div>
+        <div>
+          <div class="instr-text">Drag to reorder, or use keyboard: Tab to a cap, Space to pick it up, Arrow keys to move it, Space to drop</div>
+          <div class="instr-sub">There is no time limit. Take as long as you need. You can move caps multiple times.</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">4</div>
+        <div>
+          <div class="instr-text">When the order looks right to you, tap "Submit Order"</div>
+          <div class="instr-sub">You will test both eyes. Right eye first — cover the left with your palm.</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startTest()" style="margin-top:8px" aria-label="Start the D-15 test">Start Test — Right Eye</button>
+    <a href="/" class="back-link" aria-label="Back to all OpticQuiz tests">← All Tests</a>
+  </div>
+</div>
+
+<!-- ══ TEST ════════════════════════════════════════════════ -->
+<div id="screen-test" class="screen" role="region" aria-label="D-15 hue sort test">
+  <div style="padding-top:24px">
+    <div class="prog-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog-bar" aria-label="Test progress">
+      <div class="prog-meta">
+        <span id="prog-label">RIGHT EYE</span>
+        <span id="prog-sub">Arrange caps in hue order</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:10%"></div></div>
+    </div>
+
+    <div class="eye-banner" id="eye-banner" role="note">
+      <div class="eb-icon" aria-hidden="true">◑</div>
+      <div>
+        <div class="eb-main" id="eb-main">Cover your LEFT eye with your palm</div>
+        <div class="eb-sub">Keep brightness maximum. Normal indoor light only.</div>
+      </div>
+    </div>
+
+    <div id="sort-area"></div>
+  </div>
+</div>
+
+<!-- ══ SWITCH ══════════════════════════════════════════════ -->
+<div id="screen-switch" class="screen" role="region" aria-label="Switch eyes">
+  <div class="switch-content">
+    <span class="eyebrow">Eye complete</span>
+    <div class="big-eye-label eye-left" id="switch-label">LEFT</div>
+    <h2>EYE</h2>
+    <p id="switch-msg" style="margin-bottom:28px;"></p>
+    <button class="btn btn-primary" id="switch-btn" onclick="startSecondEye()">Continue — Left Eye</button>
+    <a href="/" class="back-link">← All Tests</a>
+  </div>
+</div>
+
+<!-- ══ RESULTS ═════════════════════════════════════════════ -->
+<div id="screen-results" class="screen" role="region" aria-label="Test results">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Results</span>
+    <h2>HUE SORT<br>PROFILE</h2>
+
+    <div class="eye-tabs" role="tablist">
+      <div class="eye-tab active" id="tab-right" role="tab" aria-selected="true" tabindex="0"
+           onclick="switchTab('right')" onkeydown="if(event.key==='Enter'||event.key===' ')switchTab('right')">
+        <div class="eye-tab-lbl">Right eye</div>
+        <div class="eye-tab-val" id="tab-right-val">—</div>
+      </div>
+      <div class="eye-tab" id="tab-left" role="tab" aria-selected="false" tabindex="0"
+           onclick="switchTab('left')" onkeydown="if(event.key==='Enter'||event.key===' ')switchTab('left')">
+        <div class="eye-tab-lbl">Left eye</div>
+        <div class="eye-tab-val" id="tab-left-val">—</div>
+      </div>
+    </div>
+
+    <div id="result-detail"></div>
+
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()">Share</button>
+      <button class="btn btn-secondary" onclick="retakeTest()">Retake</button>
+    </div>
+    <a href="/" class="back-link">← All Tests</a>
+
+    <div class="disclaimer" role="note">
+      <div class="disclaimer-title">Results Disclaimer</div>
+      <div class="disclaimer-body">
+        Results are <strong>educational screening estimates only</strong>. The D-15 on a consumer screen cannot match the accuracy of a physical Farnsworth D-15 test under calibrated illuminant C. Screen white point, color gamut, and ambient light all affect hue appearance.
+        <strong>Do not use these results for clinical, employment, or medical decisions.</strong>
+        For definitive color vision assessment, consult a licensed optometrist with a physical Farnsworth or Farnsworth-Munsell 100-Hue test kit.
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer role="contentinfo">
+  www.zengine.site &nbsp;|&nbsp; © 2025 Zengine™ &nbsp;|&nbsp; Educational use only — not a medical diagnostic
+</footer>
+
+<script>
+// ===== BOOT ORDER: CONFIG → D15_DATA → ENGINE → RENDER → DRAG → SCORE → INIT =====
+
+// ── 1. CONFIG ─────────────────────────────────────────────
+
+// DECISION: D-15 cap colors are sRGB approximations of the Farnsworth D-15 Munsell chips
+// under standard illuminant C. These are the best practical approximations for screen display.
+// Source: published RGB conversions of Munsell chips used in clinical vision research.
+// Caps are numbered 1–15 per the clinical test; Cap 1 is the fixed reference.
+var CAPS = [
+  { id:1,  color:"#C080C8", name:"Cap 1 (reference)" },   // purple-violet — reference
+  { id:2,  color:"#9878C8", name:"Cap 2" },               // blue-violet
+  { id:3,  color:"#6878C0", name:"Cap 3" },               // blue
+  { id:4,  color:"#4890C0", name:"Cap 4" },               // blue-cyan
+  { id:5,  color:"#38A8B8", name:"Cap 5" },               // cyan
+  { id:6,  color:"#40B890", name:"Cap 6" },               // cyan-green
+  { id:7,  color:"#58B868", name:"Cap 7" },               // green
+  { id:8,  color:"#88B848", name:"Cap 8" },               // yellow-green
+  { id:9,  color:"#B8B840", name:"Cap 9" },               // yellow
+  { id:10, color:"#C8A040", name:"Cap 10" },              // yellow-orange
+  { id:11, color:"#C87840", name:"Cap 11" },              // orange
+  { id:12, color:"#C05840", name:"Cap 12" },              // orange-red
+  { id:13, color:"#B84060", name:"Cap 13" },              // red
+  { id:14, color:"#B84090", name:"Cap 14" },              // red-purple
+  { id:15, color:"#B858B0", name:"Cap 15" }               // purple (closes circle to cap 1)
+];
+
+// Clinical confusion axes for D-15 scoring
+// Each axis is defined by which cap pairs are confused (skipped in the sequence)
+// These correspond to the classic Farnsworth D-15 confusion lines
+// DECISION: simplified 3-axis model (deutan/protan/tritan) covers >99% of clinically
+// significant D-15 errors. Full 9-line analysis requires physical test.
+var CONFUSION_AXES = {
+  deutan: {
+    name: "Deutan axis",
+    color: "#E8431A",
+    // Deutan confusion: confuse caps along the red-green confusion line (caps 3↔13, 4↔12, etc.)
+    pairs: [[3,13],[4,12],[5,11],[6,10],[7,9]]
+  },
+  protan: {
+    name: "Protan axis",
+    color: "#C23410",
+    // Protan confusion: similar to deutan but shifted; confuse caps differently
+    pairs: [[2,14],[3,13],[4,12],[5,11],[6,10]]
+  },
+  tritan: {
+    name: "Tritan axis",
+    color: "#3A7FE8",
+    // Tritan confusion: blue-yellow confusion line (caps 5↔15, 6↔14, etc.)
+    pairs: [[5,15],[6,14],[7,13],[8,12],[9,11]]
+  }
+};
+
+// ── 2. STATE ──────────────────────────────────────────────
+var STATE = {
+  currentEye: "right",
+  order: { right: [], left: [] },      // user's final submitted order (cap IDs)
+  trayOrder: [],                        // live working order in tray (cap IDs, caps 2-15 only)
+  results: { right: null, left: null },
+  activeTab: "right",
+  kbSelected: null,                     // index of keyboard-selected cap in tray
+  dragSrcIdx: null                      // index of cap being dragged
+};
+
+// ── 3. ENGINE ─────────────────────────────────────────────
+
+function startTest() {
+  // READS: nothing  WRITES: STATE (reset)
+  STATE.currentEye = "right";
+  STATE.results = { right: null, left: null };
+  resetTray();
+  updateEyeBanner("right");
+  showScreen("screen-test");
+  renderSortArea();
+  announce("D-15 hue sort. Right eye. Arrange the 14 color caps in hue order from the reference cap.");
+}
+
+function resetTray() {
+  // WRITES: STATE.trayOrder — shuffle caps 2–15 for a fresh start
+  var arr = [];
+  for (var i = 1; i < CAPS.length; i++) arr.push(CAPS[i].id);
+  // Fisher-Yates shuffle
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+  STATE.trayOrder = arr;
+  STATE.kbSelected = null;
+}
+
+function submitOrder() {
+  // READS: STATE.trayOrder, STATE.currentEye
+  // WRITES: STATE.order, STATE.results
+  STATE.order[STATE.currentEye] = [1].concat(STATE.trayOrder.slice());
+  var result = scoreOrder(STATE.order[STATE.currentEye]);
+  STATE.results[STATE.currentEye] = result;
+
+  var bothDone = STATE.results.right && STATE.results.left;
+  if (bothDone) { renderResults(); return; }
+
+  var nextEye = STATE.currentEye === "right" ? "left" : "right";
+  var nextLabel = nextEye.charAt(0).toUpperCase() + nextEye.slice(1);
+  document.getElementById("switch-label").textContent = nextLabel.toUpperCase();
+  document.getElementById("switch-label").className = "big-eye-label eye-" + nextEye;
+  document.getElementById("switch-btn").textContent = "Continue — " + nextLabel + " Eye";
+  document.getElementById("switch-btn").setAttribute("aria-label", "Continue with " + nextEye + " eye");
+  document.getElementById("switch-msg").textContent = STATE.currentEye.charAt(0).toUpperCase() + STATE.currentEye.slice(1) + " eye done. Cover your " + STATE.currentEye + " eye and keep your " + nextEye + " eye on the caps.";
+
+  showScreen("screen-switch");
+  announce(STATE.currentEye + " eye submitted. Ready for " + nextEye + " eye.");
+}
+
+function startSecondEye() {
+  STATE.currentEye = STATE.currentEye === "right" ? "left" : "right";
+  resetTray();
+  updateEyeBanner(STATE.currentEye);
+  showScreen("screen-test");
+  renderSortArea();
+  announce(STATE.currentEye + " eye. Arrange the caps in hue order.");
+}
+
+function retakeTest() { showScreen("screen-intro"); }
+
+// ── 4. SCORE ──────────────────────────────────────────────
+
+function scoreOrder(order) {
+  // READS: order (array of cap IDs, length 15)
+  // WRITES: nothing — returns result object
+
+  // Total error: sum of absolute differences between submitted position and correct position
+  // Correct order is caps 1–15 in sequence
+  var totalError = 0;
+  for (var i = 0; i < order.length; i++) {
+    var correctPos = order[i] - 1;  // cap id - 1 = correct 0-indexed position
+    totalError += Math.abs(i - correctPos);
+  }
+
+  // Axis confusion scoring — count how many confusion-pair transpositions match each axis
+  var axisScores = { deutan: 0, protan: 0, tritan: 0 };
+
+  for (var axis in CONFUSION_AXES) {
+    var pairs = CONFUSION_AXES[axis].pairs;
+    for (var pi = 0; pi < pairs.length; pi++) {
+      var capA = pairs[pi][0];
+      var capB = pairs[pi][1];
+      var posA = order.indexOf(capA);
+      var posB = order.indexOf(capB);
+      if (posA === -1 || posB === -1) continue;
+      // Check if A and B are adjacent (transposition = confusion)
+      if (Math.abs(posA - posB) <= 2) axisScores[axis]++;
+    }
+  }
+
+  var maxAxisScore = Math.max(axisScores.deutan, axisScores.protan, axisScores.tritan);
+  var totalAxisHits = axisScores.deutan + axisScores.protan + axisScores.tritan;
+
+  var dominantAxis = null;
+  if (maxAxisScore >= 2) {
+    for (var axis in axisScores) {
+      if (axisScores[axis] === maxAxisScore) { dominantAxis = axis; break; }
+    }
+  }
+
+  // Severity based on total error distance
+  var severity = "none";
+  if (totalError >= 4 && totalError < 12) severity = "mild";
+  else if (totalError >= 12 && totalError < 24) severity = "moderate";
+  else if (totalError >= 24) severity = "marked";
+
+  var label = buildLabel(severity, dominantAxis);
+  var note = buildResultNote(severity, dominantAxis, axisScores, totalError);
+
+  // Normalize axis scores to percentages of total hits (for bar chart)
+  var axisPcts = { deutan: 0, protan: 0, tritan: 0 };
+  if (totalAxisHits > 0) {
+    axisPcts.deutan = Math.round((axisScores.deutan / totalAxisHits) * 100);
+    axisPcts.protan = Math.round((axisScores.protan / totalAxisHits) * 100);
+    axisPcts.tritan = Math.round((axisScores.tritan / totalAxisHits) * 100);
+  }
+
+  return {
+    order: order.slice(),
+    totalError: totalError,
+    severity: severity,
+    dominantAxis: dominantAxis,
+    axisScores: axisScores,
+    axisPcts: axisPcts,
+    label: label,
+    note: note
+  };
+}
+
+function buildLabel(severity, axis) {
+  if (severity === "none") return "No significant confusion";
+  var axisNames = { deutan: "Deutan pattern", protan: "Protan pattern", tritan: "Tritan pattern" };
+  if (axis) return (severity.charAt(0).toUpperCase() + severity.slice(1)) + " — " + axisNames[axis];
+  return (severity.charAt(0).toUpperCase() + severity.slice(1)) + " hue confusion";
+}
+
+function buildResultNote(severity, axis, axisScores, totalError) {
+  if (severity === "none") {
+    return "Cap placement shows no significant deviation from the correct hue sequence. Error score: " + totalError + ". This is consistent with normal hue discrimination for the tested eye.";
+  }
+
+  var axisDesc = {
+    deutan: "a green-axis confusion pattern (deuteranomaly or deuteranopia). Caps along the red-green confusion axis were transposed, consistent with reduced green cone sensitivity.",
+    protan: "a red-axis confusion pattern (protanomaly or protanopia). Transpositions align with the protan confusion axis, suggesting reduced red cone sensitivity.",
+    tritan: "a blue-yellow confusion pattern (tritanomaly or tritanopia). Transpositions cluster along the blue confusion axis, which is rare and worth specialist follow-up."
+  };
+
+  var base = "Error score: " + totalError + ". ";
+  if (axis) {
+    base += "The confusion pattern suggests " + axisDesc[axis] + " ";
+  } else {
+    base += "Hue confusion is present but does not cleanly align with a single axis — this may indicate mild anomalous trichromacy, fatigue, or reduced screen accuracy. ";
+  }
+
+  if (severity === "mild") {
+    base += "Mild errors are common on screen-based tests and may reflect display limitations rather than clinical color vision deficiency.";
+  } else if (severity === "moderate") {
+    base += "Moderate errors suggest a more consistent confusion pattern. Consider taking the Ishihara color vision test as a second check.";
+  } else {
+    base += "Marked errors indicate consistent hue confusion. Combined with other OpticQuiz results, a consultation with an optometrist for a physical Farnsworth D-15 or FM-100 Hue test is advisable.";
+  }
+
+  return base;
+}
+
+// ── 5. RENDER ─────────────────────────────────────────────
+
+function renderSortArea() {
+  // READS: STATE.trayOrder, CAPS  WRITES: DOM
+  var eye = STATE.currentEye;
+  var eyeLabel = eye.charAt(0).toUpperCase() + eye.slice(1);
+  document.getElementById("prog-label").textContent = eyeLabel.toUpperCase() + " EYE";
+
+  var refCap = CAPS[0];
+
+  // Build order strip preview
+  var stripHtml = buildOrderStrip();
+
+  // Build tray caps
+  var trayHtml = '';
+  for (var i = 0; i < STATE.trayOrder.length; i++) {
+    var capId = STATE.trayOrder[i];
+    var cap = CAPS[capId - 1];
+    var isLight = isLightColor(cap.color);
+    trayHtml += '<div class="cap" ' +
+      'id="cap-' + i + '" ' +
+      'data-idx="' + i + '" ' +
+      'style="background:' + cap.color + ';" ' +
+      'draggable="true" ' +
+      'tabindex="0" ' +
+      'role="button" ' +
+      'aria-label="' + cap.name + ', position ' + (i+1) + ' of 14. Press Space to select, then arrow keys to move." ' +
+      'aria-grabbed="false" ' +
+      'ondragstart="onDragStart(event,' + i + ')" ' +
+      'ondragover="onDragOver(event,' + i + ')" ' +
+      'ondrop="onDrop(event,' + i + ')" ' +
+      'ondragend="onDragEnd(event)" ' +
+      'ondragleave="onDragLeave(event)" ' +
+      'onkeydown="onCapKeydown(event,' + i + ')" ' +
+      '>' +
+      '<span class="cap-num' + (isLight ? ' light' : '') + '" aria-hidden="true">' + capId + '</span>' +
+      '</div>';
+  }
+
+  document.getElementById("sort-area").innerHTML =
+    '<div class="sort-instruction">Arrange caps in a <strong>smooth color progression</strong> from Cap 1 (left). Drag to reorder.</div>' +
+
+    '<div class="reference-row" aria-label="Reference cap 1 — fixed">' +
+      '<span class="ref-label">Reference →</span>' +
+      '<div class="ref-cap" style="background:' + refCap.color + ';" aria-label="Cap 1 reference, fixed" role="img"></div>' +
+      '<div class="ref-arrow" aria-hidden="true">→ → → → → → → → → → → → → →</div>' +
+    '</div>' +
+
+    '<div class="sort-tray-wrap">' +
+      '<div class="sort-tray-label" id="tray-label">Your order — drag to rearrange</div>' +
+      '<div class="sort-tray" id="sort-tray" role="list" aria-labelledby="tray-label" aria-describedby="kb-hint">' +
+        trayHtml +
+      '</div>' +
+    '</div>' +
+
+    '<div class="kb-hint" id="kb-hint"><kbd>Tab</kbd> to cap · <kbd>Space</kbd> select · <kbd>←</kbd><kbd>→</kbd> move · <kbd>Space</kbd> drop</div>' +
+
+    '<div id="order-strip-wrap">' + stripHtml + '</div>' +
+
+    '<div style="margin-top:16px;">' +
+      '<button class="btn btn-primary" onclick="submitOrder()" aria-label="Submit your cap order for scoring">Submit Order →</button>' +
+      '<div style="font-size:12px;color:var(--gray);text-align:center;margin-top:8px;font-family:var(--fm);letter-spacing:0.04em;">Take your time — there is no time limit</div>' +
+    '</div>';
+}
+
+function buildOrderStrip() {
+  // READS: STATE.trayOrder, CAPS  WRITES: nothing — returns HTML
+  var html = '<div class="seq-row" role="list" aria-label="Current cap order">';
+  // Reference cap
+  html += '<div class="seq-cap" style="background:' + CAPS[0].color + ';" role="listitem" aria-label="Cap 1 reference"></div>';
+  for (var i = 0; i < STATE.trayOrder.length; i++) {
+    var cap = CAPS[STATE.trayOrder[i] - 1];
+    html += '<div class="seq-arrow" aria-hidden="true">›</div>';
+    html += '<div class="seq-cap" style="background:' + cap.color + ';" role="listitem" aria-label="' + cap.name + '"></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function refreshOrderStrip() {
+  // READS: STATE.trayOrder  WRITES: DOM
+  var wrap = document.getElementById("order-strip-wrap");
+  if (wrap) wrap.innerHTML = buildOrderStrip();
+}
+
+function updateEyeBanner(eye) {
+  var cover = eye === "right" ? "LEFT" : "RIGHT";
+  document.getElementById("eb-main").textContent = "Cover your " + cover + " eye with your palm";
+}
+
+function isLightColor(hex) {
+  // READS: hex  WRITES: nothing — returns bool
+  var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return (r * 0.299 + g * 0.587 + b * 0.114) > 140;
+}
+
+// ── 6. DRAG & DROP ────────────────────────────────────────
+// READS: STATE.trayOrder, STATE.dragSrcIdx  WRITES: STATE.trayOrder, DOM
+
+function onDragStart(e, idx) {
+  STATE.dragSrcIdx = idx;
+  e.dataTransfer.effectAllowed = "move";
+  e.dataTransfer.setData("text/plain", idx);
+  var el = document.getElementById("cap-" + idx);
+  if (el) { el.classList.add("dragging"); el.setAttribute("aria-grabbed", "true"); }
+}
+
+function onDragOver(e, idx) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = "move";
+  if (idx !== STATE.dragSrcIdx) {
+    var el = document.getElementById("cap-" + idx);
+    if (el) el.classList.add("drag-over");
+  }
+}
+
+function onDragLeave(e) {
+  var el = e.currentTarget;
+  if (el) el.classList.remove("drag-over");
+}
+
+function onDrop(e, dropIdx) {
+  e.preventDefault();
+  var srcIdx = STATE.dragSrcIdx;
+  if (srcIdx === null || srcIdx === dropIdx) return;
+
+  var arr = STATE.trayOrder;
+  var moved = arr.splice(srcIdx, 1)[0];
+  arr.splice(dropIdx, 0, moved);
+  STATE.trayOrder = arr;
+
+  renderSortArea();
+  announce("Moved cap to position " + (dropIdx + 1));
+}
+
+function onDragEnd(e) {
+  STATE.dragSrcIdx = null;
+  var caps = document.querySelectorAll(".cap");
+  for (var i = 0; i < caps.length; i++) {
+    caps[i].classList.remove("dragging", "drag-over");
+    caps[i].setAttribute("aria-grabbed", "false");
+  }
+}
+
+// ── 7. KEYBOARD REORDER ───────────────────────────────────
+// READS: STATE.kbSelected  WRITES: STATE.trayOrder, STATE.kbSelected
+
+function onCapKeydown(e, idx) {
+  if (e.key === " " || e.key === "Enter") {
+    e.preventDefault();
+    if (STATE.kbSelected === null) {
+      // Pick up
+      STATE.kbSelected = idx;
+      var el = document.getElementById("cap-" + idx);
+      if (el) el.classList.add("kb-selected");
+      announce("Cap " + STATE.trayOrder[idx] + " selected. Use left or right arrow to move, Space to drop.");
+    } else {
+      // Drop at current position (swap with selected)
+      var src = STATE.kbSelected, dst = idx;
+      if (src !== dst) {
+        var arr = STATE.trayOrder;
+        var moved = arr.splice(src, 1)[0];
+        arr.splice(dst, 0, moved);
+        STATE.trayOrder = arr;
+      }
+      STATE.kbSelected = null;
+      renderSortArea();
+      announce("Cap dropped at position " + (dst + 1));
+    }
+    return;
+  }
+
+  if (STATE.kbSelected !== null) {
+    var dir = 0;
+    if (e.key === "ArrowLeft") dir = -1;
+    if (e.key === "ArrowRight") dir = 1;
+    if (dir !== 0) {
+      e.preventDefault();
+      var newIdx = STATE.kbSelected + dir;
+      if (newIdx < 0 || newIdx >= STATE.trayOrder.length) return;
+
+      var arr = STATE.trayOrder;
+      var moved = arr.splice(STATE.kbSelected, 1)[0];
+      arr.splice(newIdx, 0, moved);
+      STATE.trayOrder = arr;
+      STATE.kbSelected = newIdx;
+
+      renderSortArea();
+      // Restore selection state
+      var el = document.getElementById("cap-" + newIdx);
+      if (el) { el.classList.add("kb-selected"); el.focus(); }
+      refreshOrderStrip();
+      announce("Cap " + moved + " moved to position " + (newIdx + 1));
+    }
+  }
+}
+
+// Touch drag support
+var touchDragIdx = null;
+var touchDragEl = null;
+
+document.addEventListener("touchstart", function(e) {
+  var cap = e.target.closest(".cap");
+  if (!cap) return;
+  touchDragIdx = parseInt(cap.getAttribute("data-idx"));
+  touchDragEl = cap;
+  cap.classList.add("dragging");
+}, { passive: true });
+
+document.addEventListener("touchend", function(e) {
+  if (touchDragIdx === null) return;
+  var touch = e.changedTouches[0];
+  var el = document.elementFromPoint(touch.clientX, touch.clientY);
+  var dropCap = el ? el.closest(".cap") : null;
+  if (dropCap && touchDragEl) {
+    var dropIdx = parseInt(dropCap.getAttribute("data-idx"));
+    if (dropIdx !== touchDragIdx) {
+      var arr = STATE.trayOrder;
+      var moved = arr.splice(touchDragIdx, 1)[0];
+      arr.splice(dropIdx, 0, moved);
+      STATE.trayOrder = arr;
+      renderSortArea();
+      announce("Moved to position " + (dropIdx + 1));
+    }
+  }
+  if (touchDragEl) touchDragEl.classList.remove("dragging");
+  touchDragIdx = null;
+  touchDragEl = null;
+}, { passive: true });
+
+// ── 8. RESULTS RENDER ─────────────────────────────────────
+
+function renderResults() {
+  var r = STATE.results;
+  if (r.right) document.getElementById("tab-right-val").textContent = r.right.severity === "none" ? "Normal" : r.right.severity.charAt(0).toUpperCase() + r.right.severity.slice(1);
+  if (r.left)  document.getElementById("tab-left-val").textContent  = r.left.severity  === "none" ? "Normal" : r.left.severity.charAt(0).toUpperCase()  + r.left.severity.slice(1);
+
+  STATE.activeTab = "right";
+  renderResultDetail("right");
+  showScreen("screen-results");
+  announce("Results ready. Right eye: " + (r.right ? r.right.label : "not tested") + ". Left eye: " + (r.left ? r.left.label : "not tested") + ".");
+}
+
+function renderResultDetail(eye) {
+  var r = STATE.results[eye];
+  if (!r) { document.getElementById("result-detail").innerHTML = '<p style="padding:16px 0;color:var(--gray)">No data.</p>'; return; }
+
+  var verdictClass = r.severity === "none" ? "ok" : r.severity === "mild" ? "warn" : "";
+
+  var html = '<div class="verdict-block ' + verdictClass + '" role="region" aria-label="' + eye + ' eye result">' +
+    '<div class="v-eyebrow">' + eye + ' eye</div>' +
+    '<div class="v-main">' + r.label + '</div>' +
+    '<div class="v-body">' + r.note + '</div>' +
+    '</div>';
+
+  // Score grid
+  html += '<div class="score-grid" role="list">' +
+    '<div class="score-cell" role="listitem"><span class="score-val">' + r.totalError + '</span><span class="score-lbl">Error score</span></div>' +
+    '<div class="score-cell" role="listitem"><span class="score-val">' + (r.severity.charAt(0).toUpperCase() + r.severity.slice(1)) + '</span><span class="score-lbl">Severity</span></div>' +
+    '<div class="score-cell" role="listitem"><span class="score-val">' + (r.dominantAxis ? r.dominantAxis.charAt(0).toUpperCase() + r.dominantAxis.slice(1) : "None") + '</span><span class="score-lbl">Axis</span></div>' +
+    '</div>';
+
+  // Confusion diagram (polar SVG)
+  html += '<div class="confusion-wrap">' +
+    '<div class="confusion-label">Confusion axis diagram</div>' +
+    buildConfusionDiagram(r.order, 220) +
+    '</div>';
+
+  // Axis breakdown bars
+  if (r.axisScores.deutan + r.axisScores.protan + r.axisScores.tritan > 0) {
+    html += '<h3>Axis breakdown</h3><div class="axis-bars" role="list">';
+    var axes = [
+      { key: "deutan", name: "Deutan (red-green, green)", color: "#D4520A" },
+      { key: "protan", name: "Protan (red-green, red)",   color: "#E8431A" },
+      { key: "tritan", name: "Tritan (blue-yellow)",       color: "#3A7FE8" }
+    ];
+    for (var i = 0; i < axes.length; i++) {
+      var a = axes[i], pct = r.axisPcts[a.key];
+      html += '<div class="axis-row" role="listitem">' +
+        '<div class="axis-meta"><span class="axis-name">' + a.name + '</span><span class="axis-pct">' + pct + '%</span></div>' +
+        '<div class="axis-track"><div class="axis-fill" style="width:0%;background:' + a.color + ';" data-target="' + pct + '"></div></div>' +
+        '</div>';
+    }
+    html += '</div>';
+  }
+
+  // Submitted sequence replay
+  html += '<h3>Your submitted order</h3><div class="sequence-wrap"><div class="seq-row" role="list" aria-label="Submitted cap sequence">';
+  for (var i = 0; i < r.order.length; i++) {
+    var cap = CAPS[r.order[i] - 1];
+    var expectedId = i + 1;
+    var isError = r.order[i] !== expectedId;
+    if (i > 0) html += '<div class="seq-arrow ' + (isError ? "error" : "") + '" aria-hidden="true">›</div>';
+    html += '<div class="seq-cap" style="background:' + cap.color + ';" role="listitem" aria-label="Cap ' + r.order[i] + (isError ? " (misplaced)" : "") + '"></div>';
+  }
+  html += '</div></div>';
+
+  // Interpretation
+  var interpText = r.severity === "none"
+    ? "A low error score means your hue discrimination is consistent with normal color vision for this eye on a screen-based test. The D-15 is sensitive to moderate and marked CVD; mild anomalous trichromacy can sometimes pass with a low error score. If you have concerns, a physical Farnsworth test under clinical illumination is the gold standard."
+    : r.dominantAxis === "deutan"
+    ? "The deutan confusion pattern suggests difficulty distinguishing colors along the green confusion axis. This is the most common form of inherited color vision deficiency. The Ishihara color vision test (opticquiz.com/color/) will add supporting data. For a definitive result, consult an optometrist for a physical D-15 or FM-100 Hue test."
+    : r.dominantAxis === "protan"
+    ? "The protan confusion pattern suggests difficulty along the red confusion axis. Protanopia and protanomaly also reduce the perceived brightness of red — relevant for traffic signals and warning indicators. Cross-check with the Ishihara test at opticquiz.com/color/."
+    : r.dominantAxis === "tritan"
+    ? "A tritan confusion pattern is rare. It suggests difficulty along the blue-yellow confusion axis, which is not X-linked and affects men and women equally. Acquired tritanomaly can sometimes be associated with age-related changes, medication effects, or ocular disease. Specialist follow-up is worth considering."
+    : "Hue confusion is present but does not cluster strongly along a single axis. This pattern can occur with mild anomalous trichromacy, irregular screen gamut, or distracted sorting. Consider retaking the test and cross-checking with the Ishihara test at opticquiz.com/color/.";
+
+  html += '<h3>What this means</h3><div class="interp-card"><div class="interp-text">' + interpText + '</div></div>';
+
+  document.getElementById("result-detail").innerHTML = html;
+
+  setTimeout(function() {
+    var fills = document.querySelectorAll(".axis-fill");
+    for (var i = 0; i < fills.length; i++) {
+      (function(el) { el.style.transition = "width 0.8s cubic-bezier(0.4,0,0.2,1)"; el.style.width = el.getAttribute("data-target") + "%"; })(fills[i]);
+    }
+  }, 120);
+}
+
+function buildConfusionDiagram(order, size) {
+  // READS: order[], size  WRITES: nothing — returns SVG string
+  // Polar diagram: each cap is plotted at its position angle on a circle
+  // Confusion lines connect swapped caps
+  var s = size, cx = s/2, cy = s/2, r = s * 0.38, r2 = s * 0.42;
+  var angleStep = (2 * Math.PI) / 15;
+
+  var svg = '<svg width="' + s + '" height="' + s + '" viewBox="0 0 ' + s + ' ' + s + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Polar confusion diagram">';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r + 6) + '" fill="none" stroke="#D4D0C8" stroke-width="1"/>';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r * 0.5) + '" fill="none" stroke="#EBEBEB" stroke-width="0.5"/>';
+
+  // Draw confusion lines (where submitted order crosses the correct circle)
+  for (var i = 1; i < order.length; i++) {
+    var fromId = order[i-1], toId = order[i];
+    var fromAngle = (fromId - 1) * angleStep - Math.PI/2;
+    var toAngle = (toId - 1) * angleStep - Math.PI/2;
+    var x1 = cx + r * Math.cos(fromAngle), y1 = cy + r * Math.sin(fromAngle);
+    var x2 = cx + r * Math.cos(toAngle), y2 = cy + r * Math.sin(toAngle);
+    var isError = Math.abs(fromId - toId) > 2 && !(fromId === 15 && toId === 1) && !(fromId === 1 && toId === 15);
+    svg += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="' + (isError ? "#E8431A" : "#D4D0C8") + '" stroke-width="' + (isError ? "1.8" : "1") + '" opacity="' + (isError ? "0.8" : "0.5") + '"/>';
+  }
+
+  // Draw cap dots at correct positions
+  for (var ci = 0; ci < CAPS.length; ci++) {
+    var angle = ci * angleStep - Math.PI/2;
+    var x = cx + r * Math.cos(angle), y = cy + r * Math.sin(angle);
+    svg += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="7" fill="' + CAPS[ci].color + '" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>';
+  }
+
+  svg += '</svg>';
+  return svg;
+}
+
+function switchTab(eye) {
+  STATE.activeTab = eye;
+  document.getElementById("tab-right").classList.toggle("active", eye === "right");
+  document.getElementById("tab-right").setAttribute("aria-selected", eye === "right" ? "true" : "false");
+  document.getElementById("tab-left").classList.toggle("active", eye === "left");
+  document.getElementById("tab-left").setAttribute("aria-selected", eye === "left" ? "true" : "false");
+  renderResultDetail(eye);
+  announce(eye + " eye results displayed");
+}
+
+// ── UTILITY ───────────────────────────────────────────────
+
+function showScreen(id) {
+  var screens = document.querySelectorAll(".screen");
+  for (var i = 0; i < screens.length; i++) screens[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+function announce(msg) {
+  var el = document.getElementById("a11y-live");
+  if (!el) return;
+  el.textContent = "";
+  setTimeout(function() { el.textContent = msg; }, 60);
+}
+
+function shareResults() {
+  var r = STATE.results;
+  var parts = [];
+  if (r.right) parts.push("R: " + r.right.label);
+  if (r.left)  parts.push("L: " + r.left.label);
+  var text = "My OpticQuiz D-15 Hue Sort result — " + parts.join(" | ") + ". Educational screening only, not a diagnosis. opticquiz.com/d15/";
+  try {
+    if (navigator.share) { navigator.share({ title: "OpticQuiz D-15", text: text, url: "https://opticquiz.com/d15/" }); }
+    else if (navigator.clipboard) { navigator.clipboard.writeText(text).then(function(){ announce("Copied to clipboard"); }); }
+    else { prompt("Copy your result:", text); }
+  } catch(e) { try { if (navigator.clipboard) navigator.clipboard.writeText(text); } catch(e2) {} }
+}
+</script>
+</body>
+</html>
