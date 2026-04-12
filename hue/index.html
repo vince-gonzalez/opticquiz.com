@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ===== WORKFLOW STACK =====
+  File:         hue/index.html
+  Site:         OpticQuiz — Hue Neighbor Discrimination Test
+  Domain:       opticquiz.com/hue/
+  Repo:         zengineco/opticquiz.com  /hue/index.html
+  Author:       Vince Gonzalez / Zengine™
+  Version:      v1.2.0
+  Boot Order:   1.CONFIG  2.NEIGHBORHOODS  3.ENGINE  4.RENDER  5.INIT
+
+  What this test does:
+    Presents two color patches from the same hue neighborhood —
+    identical lightness and saturation, slightly different hue angles.
+    Separation starts wide (easy to distinguish) and narrows
+    via adaptive staircase until the user can no longer tell them apart.
+    That angle gap = their just-noticeable difference (JND) for that hue pair.
+
+    7 hue neighborhoods tested (blue/purple first — origin of this tool):
+      1. Blue vs Purple     (240°→300°) — Tritan primary, deutan secondary
+      2. Blue vs Blue-Green (240°→180°) — Tritan, cyan confusion
+      3. Red vs Orange      (0°→30°)   — Protan primary
+      4. Green vs Yellow    (120°→60°) — Deutan primary
+      5. Pink vs Gray       (330°→0°,low sat) — Deutan, pale confusion
+      6. Purple vs Pink     (280°→330°) — Protan + deutan
+      7. Brown vs Olive     (25°→80°,low L) — Deutan + protan overlap
+
+    Staircase: start 30° apart, step -5° correct, step +3° wrong,
+    min 1°, max 60°, terminate at 4 reversals or 14 trials.
+    JND threshold = mean of last 4 reversal points.
+
+  Clinical significance:
+    Normal trichromat JND on blue/purple at L=55%,S=65%: ~6–10°
+    Tritan deficiency threshold: ~18–30°
+    Deutan on green/yellow: normal ~5–8°, deficient ~15–25°
+    Values are screen-relative (sRGB) — not equivalent to clinical colorimetry.
+
+  Features:
+    - Blue/purple leads (emotional resonance, origin story)
+    - CSS hsl() for all colors — zero images
+    - Adaptive staircase identical architecture to /sat/
+    - Per-eye bilateral
+    - Results: JND chart per neighborhood + cross-axis interpretation
+    - "These patches look identical to me" option (= wrong)
+    - Share results with readable summary
+    - WCAG 2.1 AA throughout — same a11y standard as all OpticQuiz pages
+    - var-only JS, single STATE object, READS/WRITES annotated
+
+  Palette: white/#F8F6F2/#E8431A/#4A8C3F/#1A1A1A (logo-derived)
+  Fonts: Bebas Neue (display) + Source Serif 4 (body) + Courier New (mono)
+===== END WORKFLOW STACK ===== -->
+
+<!-- ===== ASSET MANIFEST =====
+  /opticquiz_icon.png   live on GitHub repo root
+  Google Fonts: Bebas Neue, Source Serif 4
+  All patches: CSS hsl() inline — zero images
+===== END ASSET MANIFEST ===== -->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz Hue Neighbor Test — can you tell blue from purple? Find your just-noticeable difference across 7 hue neighborhoods. Catches color confusion Ishihara plates miss.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Blue/Purple & Hue Neighbor Test">
+<meta property="og:description" content="Can you tell blue from purple? Find your hue discrimination threshold across 7 color neighborhoods. Free, no account, results on-device.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/hue/">
+<link rel="canonical" href="https://opticquiz.com/hue/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Blue/Purple &amp; Hue Neighbor Test — OpticQuiz</title>
+
+<!-- GA4 — replace G-XXXXXXXXXX with your Measurement ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX');
+</script>
+
+<!-- AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+
+<style>
+/* ===== DESIGN SYSTEM — logo palette =====
+  --white  #FFFFFF
+  --bg     #F8F6F2
+  --cream  #F0EDE6
+  --lgray  #D4D0C8
+  --gray   #6B6B6B   AA on white
+  --black  #1A1A1A   AAA on white
+  --red    #E8431A
+  --redd   #C23410
+  --green  #4A8C3F
+  --greend #38692F
+  --redbg  #FDF1EE
+  --gbg    #EEF5ED
+  --amber  #D4820A
+===== END DESIGN SYSTEM ===== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #FFFFFF;
+  --bg: #F8F6F2;
+  --cream: #F0EDE6;
+  --lgray: #D4D0C8;
+  --gray: #6B6B6B;
+  --black: #1A1A1A;
+  --red: #E8431A;
+  --redd: #C23410;
+  --green: #4A8C3F;
+  --greend: #38692F;
+  --redbg: #FDF1EE;
+  --gbg: #EEF5ED;
+  --amber: #D4820A;
+  --fd: "Bebas Neue", Impact, fantasy;
+  --fs: "Source Serif 4", Georgia, serif;
+  --fm: "Courier New", monospace;
+  --r: 4px;
+  --rc: 8px;
+}
+
+html { background: var(--bg); }
+body { font-family: var(--fs); background: var(--bg); color: var(--black); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+/* ── A11Y ────────────────────────────────────────── */
+.skip-link { position: absolute; top: -48px; left: 16px; z-index: 9999; background: var(--red); color: var(--white); padding: 10px 18px; border-radius: var(--r); font-family: var(--fs); font-size: 14px; font-weight: 600; text-decoration: none; transition: top 0.15s; }
+.skip-link:focus { top: 12px; }
+*:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; border-radius: var(--r); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* ── LAYOUT ──────────────────────────────────────── */
+.wrap { max-width: 560px; margin: 0 auto; padding: 0 20px 80px; }
+.site-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 0; max-width: 560px; margin: 0 auto; }
+.logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-wrap img { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--lgray); }
+.logo-name { font-family: var(--fd); font-size: 22px; color: var(--black); letter-spacing: 0.03em; }
+.logo-name span { color: var(--red); }
+.ver-badge { font-family: var(--fm); font-size: 10px; color: var(--gray); border: 1px solid var(--lgray); padding: 3px 8px; border-radius: 20px; letter-spacing: 0.1em; }
+
+/* ── SCREENS ─────────────────────────────────────── */
+.screen { display: none; }
+.screen.active { display: block; animation: fadein 0.2s ease; }
+@keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+/* ── TYPE ────────────────────────────────────────── */
+.eyebrow { font-family: var(--fm); font-size: 11px; letter-spacing: 0.14em; color: var(--red); text-transform: uppercase; display: block; margin-bottom: 10px; }
+h1 { font-family: var(--fd); font-size: clamp(48px, 12vw, 72px); color: var(--black); line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 16px; }
+h2 { font-family: var(--fd); font-size: clamp(32px, 8vw, 48px); color: var(--black); line-height: 0.94; letter-spacing: 0.02em; margin-bottom: 16px; }
+h3 { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+p { font-size: 15px; color: var(--gray); line-height: 1.7; }
+
+/* ── BUTTONS ─────────────────────────────────────── */
+.btn { display: block; width: 100%; padding: 16px 20px; font-family: var(--fs); font-size: 16px; font-weight: 600; color: var(--black); background: var(--white); border: 1.5px solid var(--lgray); border-radius: var(--r); cursor: pointer; text-align: center; transition: border-color 0.12s, background 0.12s, transform 0.08s; min-height: 52px; -webkit-tap-highlight-color: transparent; }
+.btn:hover { border-color: var(--black); background: var(--cream); }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--red); color: var(--white); border-color: transparent; }
+.btn-primary:hover { background: var(--redd); }
+.btn-secondary { background: var(--green); color: var(--white); border-color: transparent; }
+.btn-secondary:hover { background: var(--greend); }
+.btn + .btn { margin-top: 10px; }
+
+/* ── DIVIDER ─────────────────────────────────────── */
+.divider { height: 1px; background: var(--lgray); margin: 24px 0; }
+
+/* ── INSTR LIST ──────────────────────────────────── */
+.instr-list { margin: 20px 0; }
+.instr-item { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--lgray); }
+.instr-item:last-child { border-bottom: none; }
+.instr-num { font-family: var(--fd); font-size: 28px; color: var(--red); min-width: 28px; line-height: 1; margin-top: 2px; }
+.instr-text { font-size: 14px; color: var(--black); line-height: 1.6; }
+.instr-sub { font-size: 13px; color: var(--gray); margin-top: 2px; }
+
+/* ── NEIGHBORHOOD PREVIEW STRIP (intro) ──────────── */
+.nbhd-strip { display: flex; gap: 6px; flex-wrap: wrap; margin: 20px 0; }
+.nbhd-preview {
+  display: flex; border-radius: var(--r); overflow: hidden;
+  border: 1px solid var(--lgray); flex-shrink: 0;
+  height: 36px;
+}
+.nbhd-half { width: 32px; height: 36px; }
+.nbhd-label { font-family: var(--fm); font-size: 9px; color: var(--gray); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px; text-align: center; }
+
+/* ── PROGRESS ────────────────────────────────────── */
+.prog-wrap { margin-bottom: 20px; }
+.prog-meta { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.prog-meta span { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.06em; }
+.prog-track { height: 3px; background: var(--lgray); border-radius: 2px; }
+.prog-fill { height: 100%; background: var(--red); border-radius: 2px; transition: width 0.35s cubic-bezier(0.4,0,0.2,1); }
+
+/* ── EYE BANNER ──────────────────────────────────── */
+.eye-banner { background: var(--redbg); border: 1.5px solid var(--red); border-radius: var(--rc); padding: 12px 16px; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
+.eb-icon { font-family: var(--fd); font-size: 22px; color: var(--red); flex-shrink: 0; }
+.eb-main { font-size: 14px; font-weight: 600; color: var(--black); }
+.eb-sub { font-size: 12px; color: var(--gray); margin-top: 1px; }
+
+/* ── NEIGHBORHOOD BANNER ─────────────────────────── */
+.nbhd-banner {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--white); border: 1.5px solid var(--lgray);
+  border-radius: var(--rc); padding: 12px 16px; margin-bottom: 18px;
+}
+.nbhd-swatch-pair { display: flex; border-radius: var(--r); overflow: hidden; border: 1.5px solid var(--lgray); flex-shrink: 0; }
+.nbhd-sw { width: 28px; height: 28px; }
+.nbhd-name { font-family: var(--fd); font-size: 22px; color: var(--black); letter-spacing: 0.02em; flex: 1; line-height: 1; }
+.nbhd-clinical { font-family: var(--fm); font-size: 9px; color: var(--gray); letter-spacing: 0.07em; text-transform: uppercase; margin-top: 3px; }
+
+/* ── REFERENCE PATCH ─────────────────────────────── */
+.reference-wrap {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--cream); border: 1px solid var(--lgray);
+  border-radius: var(--r); padding: 10px 14px;
+  margin-bottom: 10px;
+}
+.reference-patch {
+  width: 52px; height: 52px; border-radius: var(--r);
+  border: 2px solid rgba(0,0,0,0.12); flex-shrink: 0;
+}
+.reference-text { flex: 1; }
+.reference-label {
+  font-family: var(--fm); font-size: 10px; color: var(--red);
+  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2px;
+}
+.reference-desc { font-size: 13px; color: var(--black); font-weight: 600; line-height: 1.4; }
+.reference-sub  { font-size: 12px; color: var(--gray); margin-top: 1px; }
+
+/* ── TRIAL AREA ──────────────────────────────────── */
+.trial-q { font-size: 16px; font-weight: 600; color: var(--black); text-align: center; margin-bottom: 16px; line-height: 1.4; }
+
+.patch-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+
+.patch-btn {
+  aspect-ratio: 1; border-radius: var(--rc);
+  border: 2.5px solid var(--lgray);
+  cursor: pointer;
+  transition: border-color 0.1s, transform 0.08s, box-shadow 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 120px; position: relative; overflow: hidden;
+}
+.patch-btn:hover { border-color: var(--black); transform: scale(1.02); box-shadow: 0 2px 12px rgba(0,0,0,0.10); }
+.patch-btn:active { transform: scale(0.97); }
+.patch-btn:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+
+.patch-lbl { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-family: var(--fm); font-size: 11px; letter-spacing: 0.06em; pointer-events: none; }
+
+/* DECISION: label color needs to work on any mid-lightness hue — semi-transparent
+   dark works on L=55% backgrounds; tested across all 7 neighborhoods */
+.patch-lbl-dark  { color: rgba(0,0,0,0.35); }
+.patch-lbl-light { color: rgba(255,255,255,0.55); }
+
+.same-btn {
+  display: block; width: 100%; padding: 14px 20px;
+  font-family: var(--fs); font-size: 14px; font-weight: 400;
+  color: var(--gray); background: var(--white);
+  border: 1px dashed var(--lgray); border-radius: var(--r);
+  cursor: pointer; text-align: center;
+  transition: border-color 0.12s, background 0.12s;
+  min-height: 48px; -webkit-tap-highlight-color: transparent;
+}
+.same-btn:hover { border-color: var(--gray); background: var(--cream); color: var(--black); }
+
+/* Gap meter — shows current hue separation */
+.gap-meter { margin: 16px 0 4px; }
+.gap-meta { display: flex; justify-content: space-between; font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.07em; margin-bottom: 6px; }
+.gap-track { height: 6px; background: var(--lgray); border-radius: 3px; overflow: hidden; position: relative; }
+.gap-fill { height: 100%; border-radius: 3px; transition: width 0.4s cubic-bezier(0.4,0,0.2,1); }
+.gap-hint { font-family: var(--fm); font-size: 10px; color: var(--lgray); text-align: center; margin-top: 5px; letter-spacing: 0.04em; }
+
+/* Trial history dots */
+.trial-dots { display: flex; gap: 5px; justify-content: center; margin-bottom: 14px; }
+.trial-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lgray); transition: background 0.15s; }
+.trial-dot.correct { background: var(--green); }
+.trial-dot.wrong   { background: var(--red); }
+.trial-dot.active  { background: var(--black); }
+
+/* ── SWITCH ──────────────────────────────────────── */
+.switch-content { padding-top: 40px; text-align: center; }
+.big-eye-label { font-family: var(--fd); font-size: clamp(64px, 18vw, 100px); line-height: 0.9; letter-spacing: 0.02em; margin-bottom: 12px; }
+.big-eye-label.eye-left  { color: var(--green); }
+.big-eye-label.eye-right { color: var(--red); }
+
+/* ── RESULTS ─────────────────────────────────────── */
+.eye-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.eye-tab { padding: 12px; border-radius: var(--r); border: 1.5px solid var(--lgray); background: var(--white); cursor: pointer; text-align: center; transition: all 0.12s; -webkit-tap-highlight-color: transparent; }
+.eye-tab.active { border-color: var(--red); background: var(--redbg); }
+.eye-tab-lbl { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px; }
+.eye-tab-val { font-family: var(--fd); font-size: 20px; color: var(--black); letter-spacing: 0.02em; }
+
+.verdict-block { background: var(--white); border: 1.5px solid var(--lgray); border-top: 4px solid var(--red); border-radius: var(--rc); padding: 20px; margin-bottom: 20px; }
+.verdict-block.ok   { border-top-color: var(--green); }
+.verdict-block.warn { border-top-color: var(--amber); }
+.v-eyebrow { font-family: var(--fm); font-size: 10px; color: var(--red); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
+.verdict-block.ok   .v-eyebrow { color: var(--green); }
+.verdict-block.warn .v-eyebrow { color: var(--amber); }
+.v-main { font-family: var(--fd); font-size: clamp(22px, 5.5vw, 32px); color: var(--black); line-height: 1; margin-bottom: 6px; }
+.v-body { font-size: 14px; color: var(--gray); line-height: 1.75; }
+
+/* JND chart */
+.jnd-chart { margin-bottom: 24px; }
+.jnd-row { margin-bottom: 14px; }
+.jnd-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+.jnd-swatches { display: flex; border-radius: 3px; overflow: hidden; border: 1px solid rgba(0,0,0,0.10); flex-shrink: 0; }
+.jnd-sw { width: 14px; height: 14px; }
+.jnd-name  { font-size: 13px; font-weight: 600; color: var(--black); flex: 1; }
+.jnd-val   { font-family: var(--fm); font-size: 12px; color: var(--gray); white-space: nowrap; }
+.jnd-track { height: 8px; background: var(--lgray); border-radius: 4px; overflow: hidden; position: relative; }
+.jnd-fill  { height: 100%; border-radius: 4px; transition: width 0.9s cubic-bezier(0.4,0,0.2,1); }
+.jnd-normal-line { position: absolute; top: -2px; bottom: -2px; width: 2px; border-radius: 1px; background: rgba(0,0,0,0.18); }
+.jnd-note  { font-size: 12px; color: var(--gray); margin-top: 3px; font-style: italic; }
+
+/* Score summary */
+.score-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 20px; }
+.score-cell { background: var(--cream); border: 1px solid var(--lgray); border-radius: var(--r); padding: 12px; text-align: center; }
+.score-val { font-family: var(--fd); font-size: 24px; color: var(--black); display: block; line-height: 1; }
+.score-lbl { font-family: var(--fm); font-size: 9px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px; display: block; }
+
+/* Highlight card for blue/purple result */
+.highlight-card {
+  border-radius: var(--rc); padding: 18px 20px; margin-bottom: 16px;
+  border: 1.5px solid var(--lgray);
+}
+.hc-label { font-family: var(--fm); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px; }
+.hc-val { font-family: var(--fd); font-size: 32px; line-height: 1; margin-bottom: 4px; color: var(--black); }
+.hc-desc { font-size: 13px; color: var(--gray); line-height: 1.6; }
+
+.interp-card { background: var(--cream); border: 1px solid var(--lgray); border-radius: var(--rc); padding: 18px; margin-bottom: 20px; }
+.interp-text { font-size: 14px; color: var(--gray); line-height: 1.8; }
+.interp-text strong { color: var(--black); }
+
+.disclaimer { background: var(--cream); border: 1.5px solid var(--lgray); border-left: 4px solid var(--red); border-radius: var(--rc); padding: 18px 18px 18px 20px; margin-top: 24px; }
+.disclaimer-title { font-family: var(--fm); font-size: 11px; letter-spacing: 0.1em; color: var(--red); text-transform: uppercase; margin-bottom: 8px; }
+.disclaimer-body { font-size: 12px; color: var(--gray); line-height: 1.8; }
+.disclaimer-body strong { color: var(--black); font-weight: 600; }
+
+.share-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.back-link { display: block; text-align: center; margin-top: 16px; font-family: var(--fm); font-size: 12px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+.back-link:hover { color: var(--black); }
+footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.06em; text-align: center; padding: 24px 0 8px; border-top: 1px solid var(--lgray); margin-top: 32px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home">
+    <img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38">
+    <div class="logo-name">OPTIC<span>QUIZ</span></div>
+  </a>
+  <div class="ver-badge">HUE NEIGHBOR</div>
+</header>
+
+<main id="main" class="wrap" role="main">
+
+<!-- ══ INTRO ══════════════════════════════════════════════ -->
+<div id="screen-intro" class="screen active" role="region" aria-labelledby="intro-h1">
+  <div style="padding-top:32px">
+    <span class="eyebrow">Hue Neighbor Discrimination</span>
+    <h1 id="intro-h1">BLUE<br>OR<br>PURPLE?</h1>
+    <p>A reference color is shown. Two test patches appear below it — one matches the reference, one is a slightly shifted hue. You pick which matches. As you answer correctly, the patches get closer together until you can no longer tell them apart. That gap is your threshold.</p>
+
+    <div class="divider"></div>
+
+    <h3>Why this test exists</h3>
+    <p style="margin-bottom:16px;">The most common way people first discover a color vision difference is the blue/purple confusion. Something that looks clearly blue to one person looks purple or gray-blue to another. This test finds your <strong style="color:var(--black)">just-noticeable difference</strong> across seven hue pairs — blue/purple first, then six others covering all three clinical color confusion axes.</p>
+
+    <div id="nbhd-strip-intro" style="margin:20px 0;"></div>
+
+    <div class="divider"></div>
+
+    <h3>How to take the test</h3>
+    <div class="instr-list" role="list">
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">1</div>
+        <div>
+          <div class="instr-text">Maximize brightness. Two patches will look very similar — brightness matters more here than in any other test on this site.</div>
+          <div class="instr-sub">Low brightness compresses hue contrast and produces falsely wide thresholds.</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">2</div>
+        <div>
+          <div class="instr-text">Cover one eye with your palm. Both eyes tested separately.</div>
+          <div class="instr-sub">Acquired color deficiencies are often asymmetric between eyes — this is the only test that catches that reliably.</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">3</div>
+        <div>
+          <div class="instr-text">A reference color is shown above two test patches. Tap the patch that matches the reference.</div>
+          <div class="instr-sub">One patch matches the reference exactly. The other is a slightly different hue (or saturation). The gap between them narrows as you answer correctly.</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">4</div>
+        <div>
+          <div class="instr-text">If both test patches look identical and you truly cannot match either one to the reference, tap "Both look the same."</div>
+          <div class="instr-sub">Don't tap this unless the patches look genuinely indistinguishable from each other. It is scored as a miss.</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startTest()" style="margin-top:8px" aria-label="Start the hue neighbor test">Start Test — Right Eye</button>
+    <a href="/" class="back-link" aria-label="Back to all OpticQuiz tests">← All Tests</a>
+  </div>
+</div>
+
+<!-- ══ TEST ════════════════════════════════════════════════ -->
+<div id="screen-test" class="screen" role="region" aria-label="Hue neighbor test">
+  <div style="padding-top:24px">
+    <div class="prog-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog-bar" aria-label="Test progress">
+      <div class="prog-meta">
+        <span id="prog-label">RIGHT EYE — BLUE / PURPLE</span>
+        <span id="prog-nbhd-num">Pair 1 / 7</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:3%"></div></div>
+    </div>
+
+    <div class="eye-banner" id="eye-banner" role="note">
+      <div class="eb-icon" aria-hidden="true">◑</div>
+      <div>
+        <div class="eb-main" id="eb-main">Cover your LEFT eye with your palm</div>
+        <div class="eb-sub" id="eb-sub">Maximum brightness. Keep your RIGHT eye on the patches.</div>
+      </div>
+    </div>
+
+    <div id="nbhd-banner-wrap"></div>
+    <div id="trial-area"></div>
+  </div>
+</div>
+
+<!-- ══ SWITCH ══════════════════════════════════════════════ -->
+<div id="screen-switch" class="screen" role="region" aria-label="Switch eyes">
+  <div class="switch-content">
+    <span class="eyebrow">Eye complete</span>
+    <div class="big-eye-label eye-left" id="switch-label">LEFT</div>
+    <h2>EYE</h2>
+    <p id="switch-msg" style="margin-bottom:28px;"></p>
+    <button class="btn btn-primary" id="switch-btn" onclick="startSecondEye()">Continue — Left Eye</button>
+    <a href="/" class="back-link">← All Tests</a>
+  </div>
+</div>
+
+<!-- ══ RESULTS ═════════════════════════════════════════════ -->
+<div id="screen-results" class="screen" role="region" aria-label="Test results">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Results</span>
+    <h2>HUE<br>THRESHOLD<br>PROFILE</h2>
+
+    <div class="eye-tabs" role="tablist" aria-label="Eye results">
+      <div class="eye-tab active" id="tab-right" role="tab" aria-selected="true" tabindex="0"
+           onclick="switchTab('right')" onkeydown="if(event.key==='Enter'||event.key===' ')switchTab('right')">
+        <div class="eye-tab-lbl">Right eye</div>
+        <div class="eye-tab-val" id="tab-right-val">—</div>
+      </div>
+      <div class="eye-tab" id="tab-left" role="tab" aria-selected="false" tabindex="0"
+           onclick="switchTab('left')" onkeydown="if(event.key==='Enter'||event.key===' ')switchTab('left')">
+        <div class="eye-tab-lbl">Left eye</div>
+        <div class="eye-tab-val" id="tab-left-val">—</div>
+      </div>
+    </div>
+
+    <div id="result-detail"></div>
+
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()">Share</button>
+      <button class="btn btn-secondary" onclick="retakeTest()">Retake</button>
+    </div>
+    <a href="/" class="back-link">← All Tests</a>
+
+    <div class="disclaimer" role="note">
+      <div class="disclaimer-title">Results Disclaimer</div>
+      <div class="disclaimer-body">
+        Results are <strong>educational screening estimates only</strong>. Hue discrimination on a consumer screen is constrained by sRGB gamut, display calibration, and ambient lighting. Thresholds measured here are screen-relative and differ from clinical colorimetric JND values. <strong>Do not use these results for clinical, employment, or medical decisions.</strong> Consult a licensed optometrist for definitive color vision assessment.
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer role="contentinfo">
+  www.zengine.site &nbsp;|&nbsp; © 2025 Zengine™ &nbsp;|&nbsp; Educational use only — not a medical diagnostic
+</footer>
+
+<script>
+// ===== BOOT ORDER: CONFIG → NEIGHBORHOODS → ENGINE → RENDER → INIT =====
+
+// ── 1. CONFIG ─────────────────────────────────────────────
+// READS: nothing  WRITES: nothing (constants)
+
+// Staircase parameters
+// DECISION: start 30° apart — clearly distinguishable for almost all users.
+// Step -5° correct (faster closing), +3° wrong (slower recovery = asymmetric = 3-down-1-up feel).
+// Min 1° = the floor of what sRGB can even render as distinct hues on screen.
+// 4 reversals or 14 trials per neighborhood — sufficient for stable threshold estimate.
+var STAIRCASE = {
+  startGap:     30,
+  stepDown:      5,
+  stepUp:        3,
+  minGap:        1,
+  maxGap:       60,
+  maxTrials:    14,
+  maxReversals:  4
+};
+
+// DECISION: Normal JND on screen for mid-lightness hues is approximately 8–12°
+// for typical trichromats. Using 10° as the normal reference line on results chart.
+// Above 18° = mildly elevated. Above 28° = significantly elevated.
+var NORMAL_JND     = 10;
+var MILD_JND       = 18;
+var ELEVATED_JND   = 28;
+
+// ── 2. NEIGHBORHOODS ──────────────────────────────────────
+// READS: nothing  WRITES: nothing (static data)
+
+// DECISION: Blue/purple is first — highest emotional resonance, origin of this tool.
+// Remaining neighborhoods ordered to give a full tour of CVD axes:
+//   Blue/purple + Blue/blue-green = tritan axis coverage
+//   Red/orange + Green/yellow     = protan + deutan axis coverage
+//   Pink/gray + Purple/pink       = pale-color confusion (high real-world relevance)
+//   Brown/olive                   = most common real-world confusion pair
+
+// Each neighborhood defines:
+//   key:        unique ID
+//   name:       display name
+//   anchorHue:  one hue (degrees in HSL)
+//   direction:  +1 or -1 — neighbor is anchorHue + direction * gap
+//   L:          lightness % (fixed per neighborhood)
+//   S:          saturation % (fixed per neighborhood)
+//   clinical:   axis label
+//   normalJND:  override normal reference if different from global (optional)
+//   leftIsAnchor: randomized each trial, but initial value here
+
+var NEIGHBORHOODS = [
+  {
+    key: "blue_purple",
+    name: "Blue / Purple",
+    anchorHue: 240,
+    direction: 1,        // neighbor = 240 + gap → toward purple (300°)
+    L: 55, S: 65,
+    clinical: "Tritan axis — primary",
+    barColor: "#5B5BCC",
+    swatchA: 240, swatchB: 300,
+    blurb: "Blue (240°) vs purple (300°). Tritan-type deficiencies cause these to merge first. The most common self-reported color confusion."
+  },
+  {
+    key: "blue_bluegreen",
+    name: "Blue / Blue-Green",
+    anchorHue: 200,
+    direction: -1,       // neighbor = 200 - gap → toward cyan (180°)
+    L: 55, S: 60,
+    clinical: "Tritan axis — secondary",
+    barColor: "#2288CC",
+    swatchA: 200, swatchB: 170,
+    blurb: "Blue-cyan (200°) vs cyan (170°). A second tritan confusion zone — blue-greens appear similar to pure blues."
+  },
+  {
+    key: "red_orange",
+    name: "Red / Orange",
+    anchorHue: 5,
+    direction: 1,        // neighbor = 5 + gap → toward orange (30°)
+    L: 50, S: 80,
+    clinical: "Protan axis",
+    barColor: "#CC3322",
+    swatchA: 5, swatchB: 30,
+    blurb: "Red (5°) vs orange (30°). Protan-type deficiencies reduce red cone sensitivity — reds and oranges merge along this axis."
+  },
+  {
+    key: "green_yellow",
+    name: "Green / Yellow",
+    anchorHue: 110,
+    direction: -1,       // neighbor = 110 - gap → toward yellow (60°)
+    L: 52, S: 68,
+    clinical: "Deutan axis — primary",
+    barColor: "#4A8C3F",
+    swatchA: 110, swatchB: 65,
+    blurb: "Green (110°) vs yellow-green (65°). The most common CVD type — deuteranomaly causes these to merge at smaller separations."
+  },
+  {
+    key: "pink_gray",
+    name: "Pink / Gray",
+    // DECISION: this neighborhood works differently from the others.
+    // The anchor is pink (hsl 340°, S=28%, L=72%).
+    // The "neighbor" is NOT a shifted hue — it is desaturated toward gray.
+    // So anchorHue=340, neighborHue=340 but neighborS decreases as gap increases.
+    // We implement this via the grayMode flag, handled in computePatchHues().
+    anchorHue: 340,
+    direction: 1,
+    L: 72, S: 28,
+    grayMode: true,      // DECISION: neighbor patch desaturates toward S=0, not hue shift
+    clinical: "Deutan axis — pale confusion",
+    barColor: "#CC7799",
+    swatchA: 340, swatchB: 340,
+    swatchBS: 0,         // swatch B uses S=0 (true gray) for the intro strip preview
+    blurb: "Pale pink vs light gray. At low saturation, deutan-type deficiencies cause pale pinks to merge with gray — a very common everyday confusion."
+  },
+  {
+    key: "purple_pink",
+    name: "Purple / Pink",
+    anchorHue: 290,
+    direction: 1,        // neighbor = 290 + gap → toward pink (340°)
+    L: 55, S: 60,
+    clinical: "Protan + deutan overlap",
+    barColor: "#9944BB",
+    swatchA: 290, swatchB: 340,
+    blurb: "Purple (290°) vs pink (340°). Both protan and deutan types lose the red component of purple differently — this pair catches both axes."
+  },
+  {
+    key: "brown_olive",
+    name: "Brown / Olive",
+    anchorHue: 28,
+    direction: 1,        // neighbor = 28 + gap → toward olive/yellow-brown (70°)
+    L: 38, S: 60,        // DECISION: dark L=38% = brown range; deutan + protan confuse these
+    clinical: "Deutan + protan — dark colors",
+    barColor: "#886622",
+    swatchA: 28, swatchB: 72,
+    blurb: "Brown (28°) vs olive (72°). In the dark color range, deutan and protan types both confuse these. One of the most common real-world confusion pairs."
+  }
+];
+
+// ── 3. STATE ──────────────────────────────────────────────
+var STATE = {
+  currentEye:     "right",
+  currentNbhdIdx: 0,
+  // Staircase tracking per neighborhood per eye
+  staircase: {
+    right: {},
+    left:  {}
+  },
+  // Final results per eye
+  results: { right: null, left: null },
+  activeTab:      "right",
+  // Live trial state
+  currentGap:     30,
+  lastDirection:  null,
+  reversals:      0,
+  trialCount:     0,
+  trialHistory:   [],
+  leftIsAnchor:   true   // which patch is the anchor hue
+};
+
+// ── 4. ENGINE ─────────────────────────────────────────────
+
+function startTest() {
+  // READS: nothing  WRITES: STATE (full reset)
+  STATE.currentEye     = "right";
+  STATE.currentNbhdIdx = 0;
+  STATE.results        = { right: null, left: null };
+  STATE.staircase      = { right: {}, left: {} };
+  updateEyeBanner("right");
+  showScreen("screen-test");
+  startNeighborhood();
+  announce("Hue neighbor test. Right eye. Blue and purple. Trial 1.");
+}
+
+function startNeighborhood() {
+  // READS: STATE.currentNbhdIdx  WRITES: STATE staircase fields
+  STATE.currentGap    = STAIRCASE.startGap;
+  STATE.lastDirection = null;
+  STATE.reversals     = 0;
+  STATE.trialCount    = 0;
+  STATE.trialHistory  = [];
+  randomizeSides();
+  renderNbhdBanner();
+  renderTrial();
+  updateProgress();
+}
+
+function randomizeSides() {
+  // WRITES: STATE.leftIsAnchor
+  // DECISION: randomize which side shows the anchor hue each trial
+  // prevents position bias — user cannot learn "left is always the different one"
+  STATE.leftIsAnchor = Math.random() < 0.5;
+}
+
+function computePatchHues() {
+  // READS: STATE.currentNbhdIdx, STATE.currentGap
+  // WRITES: nothing — returns { anchorHue, neighborHue, anchorS, neighborS }
+  var nbhd      = NEIGHBORHOODS[STATE.currentNbhdIdx];
+  var anchorHue = nbhd.anchorHue;
+  var anchorS   = nbhd.S;
+
+  if (nbhd.grayMode) {
+    // DECISION: pink/gray uses saturation gap, not hue angle gap.
+    // Anchor = pink (hue 340, full S). Neighbor = same hue, S reduced toward 0.
+    // gap=30 → neighborS = max(0, 28-30) = 0 = pure gray (easy)
+    // gap=5  → neighborS = max(0, 28-5)  = 23 = nearly same pink (hard)
+    var neighborS = Math.max(0, nbhd.S - STATE.currentGap);
+    return { anchorHue: anchorHue, neighborHue: anchorHue, anchorS: anchorS, neighborS: neighborS };
+  }
+
+  var neighborHue = nbhd.anchorHue + nbhd.direction * STATE.currentGap;
+  neighborHue = ((neighborHue % 360) + 360) % 360;
+  return { anchorHue: anchorHue, neighborHue: neighborHue, anchorS: anchorS, neighborS: anchorS };
+}
+
+function submitAnswer(userChoseLeft) {
+  // READS: userChoseLeft (bool), STATE  WRITES: STATE staircase
+  // DECISION: task is now "which patch matches the reference?"
+  // Correct = user chose the patch that IS the anchor (matches reference)
+  // If leftIsAnchor:  correct means userChoseLeft = true
+  // If !leftIsAnchor: correct means userChoseLeft = false
+  // Therefore: correct = (userChoseLeft === STATE.leftIsAnchor)
+  var correct = (userChoseLeft === STATE.leftIsAnchor);
+
+  STATE.trialHistory.push({ gap: STATE.currentGap, correct: correct });
+  STATE.trialCount++;
+
+  // Staircase step
+  var newDir = correct ? "down" : "up";
+  if (STATE.lastDirection !== null && newDir !== STATE.lastDirection) STATE.reversals++;
+  STATE.lastDirection = newDir;
+
+  if (correct) {
+    STATE.currentGap = Math.max(STAIRCASE.minGap, STATE.currentGap - STAIRCASE.stepDown);
+  } else {
+    STATE.currentGap = Math.min(STAIRCASE.maxGap, STATE.currentGap + STAIRCASE.stepUp);
+  }
+
+  var done = (STATE.reversals >= STAIRCASE.maxReversals) || (STATE.trialCount >= STAIRCASE.maxTrials);
+
+  if (done) {
+    var threshold = computeThreshold(STATE.trialHistory);
+    var nbhd = NEIGHBORHOODS[STATE.currentNbhdIdx];
+    STATE.staircase[STATE.currentEye][nbhd.key] = {
+      threshold: threshold,
+      history:   STATE.trialHistory.slice()
+    };
+    nextNeighborhood();
+  } else {
+    randomizeSides();
+    renderTrial();
+    updateProgress();
+    announce("Trial " + (STATE.trialCount + 1) + ". Gap now " + STATE.currentGap + " degrees.");
+  }
+}
+
+function submitSameTrial() {
+  // READS: nothing  WRITES: via submitAnswer
+  // "These look identical" = can't find the match = wrong answer
+  // Force wrong: pass the opposite of leftIsAnchor (so correct = false)
+  submitAnswer(!STATE.leftIsAnchor);
+}
+
+function computeThreshold(history) {
+  // READS: history[]  WRITES: nothing — returns float
+  // Mean of last 4 reversal gaps (or last 4 gaps if < 2 reversals)
+  var reversalGaps = [];
+  for (var i = 1; i < history.length; i++) {
+    if (history[i].correct !== history[i-1].correct) {
+      reversalGaps.push(history[i].gap);
+    }
+  }
+  if (reversalGaps.length >= 2) {
+    var from = Math.max(0, reversalGaps.length - 4);
+    var sum = 0;
+    for (var i = from; i < reversalGaps.length; i++) sum += reversalGaps[i];
+    return Math.round(sum / (reversalGaps.length - from));
+  }
+  var last = history.slice(-4);
+  var s = 0;
+  for (var i = 0; i < last.length; i++) s += last[i].gap;
+  return Math.round(s / last.length);
+}
+
+function nextNeighborhood() {
+  // READS: STATE.currentNbhdIdx  WRITES: STATE.currentNbhdIdx
+  STATE.currentNbhdIdx++;
+  if (STATE.currentNbhdIdx >= NEIGHBORHOODS.length) {
+    finishEye();
+    return;
+  }
+  startNeighborhood();
+  announce("Neighborhood complete. Now: " + NEIGHBORHOODS[STATE.currentNbhdIdx].name + ".");
+}
+
+function finishEye() {
+  // READS: STATE.staircase[eye]  WRITES: STATE.results
+  var sc          = STATE.staircase[STATE.currentEye];
+  var thresholds  = {};
+  var total       = 0;
+  var worstKey    = null;
+  var worstVal    = 0;
+
+  for (var i = 0; i < NEIGHBORHOODS.length; i++) {
+    var k = NEIGHBORHOODS[i].key;
+    var val = sc[k] ? sc[k].threshold : STAIRCASE.startGap;
+    thresholds[k] = val;
+    total += val;
+    if (val > worstVal) { worstVal = val; worstKey = k; }
+  }
+
+  var meanJND    = Math.round(total / NEIGHBORHOODS.length);
+  var analysis   = analyzeThresholds(thresholds, worstKey);
+  var bpThreshold = thresholds["blue_purple"] || STAIRCASE.startGap;
+
+  STATE.results[STATE.currentEye] = {
+    thresholds:   thresholds,
+    meanJND:      meanJND,
+    worstKey:     worstKey,
+    worstVal:     worstVal,
+    bpThreshold:  bpThreshold,
+    label:        analysis.label,
+    verdictClass: analysis.verdictClass,
+    note:         analysis.note,
+    staircase:    sc
+  };
+
+  var bothDone = STATE.results.right && STATE.results.left;
+  if (bothDone) { renderResults(); return; }
+
+  var nextEye   = STATE.currentEye === "right" ? "left" : "right";
+  var nextLabel = nextEye.charAt(0).toUpperCase() + nextEye.slice(1);
+  document.getElementById("switch-label").textContent = nextLabel.toUpperCase();
+  document.getElementById("switch-label").className   = "big-eye-label eye-" + nextEye;
+  document.getElementById("switch-btn").textContent   = "Continue — " + nextLabel + " Eye";
+  document.getElementById("switch-btn").setAttribute("aria-label", "Continue with " + nextEye + " eye");
+  document.getElementById("switch-msg").textContent   = STATE.currentEye.charAt(0).toUpperCase() + STATE.currentEye.slice(1) + " eye done. Cover your " + STATE.currentEye + " eye and continue with your " + nextEye + " eye.";
+
+  showScreen("screen-switch");
+  announce(STATE.currentEye + " eye complete. Ready for " + nextEye + ".");
+}
+
+function analyzeThresholds(thresholds, worstKey) {
+  // READS: thresholds {}, worstKey  WRITES: nothing — returns analysis object
+  var elevated = [], mild = [];
+  for (var i = 0; i < NEIGHBORHOODS.length; i++) {
+    var k = NEIGHBORHOODS[i].key;
+    var v = thresholds[k];
+    if (v >= ELEVATED_JND) elevated.push(NEIGHBORHOODS[i].name);
+    else if (v >= MILD_JND) mild.push(NEIGHBORHOODS[i].name);
+  }
+
+  var worstNbhd = null;
+  for (var i = 0; i < NEIGHBORHOODS.length; i++) {
+    if (NEIGHBORHOODS[i].key === worstKey) { worstNbhd = NEIGHBORHOODS[i]; break; }
+  }
+
+  var label, verdictClass, note;
+
+  if (elevated.length === 0 && mild.length === 0) {
+    label        = "Normal hue discrimination";
+    verdictClass = "ok";
+    note         = "All seven hue neighborhoods were distinguished at small angular separations, consistent with normal hue discrimination for screen-based testing. Normal JND on a consumer sRGB display is approximately " + NORMAL_JND + "°. If your blue/purple threshold was below 10°, your tritan-axis discrimination is strong.";
+  } else if (elevated.length > 0) {
+    label        = "Elevated threshold — " + elevated.slice(0, 2).join(", ") + (elevated.length > 2 ? " +" + (elevated.length - 2) + " more" : "");
+    verdictClass = "";
+    note         = buildElevatedNote(elevated, mild, worstNbhd, thresholds);
+  } else {
+    label        = "Mild elevation — " + mild.slice(0, 2).join(", ") + (mild.length > 2 ? " +" + (mild.length - 2) + " more" : "");
+    verdictClass = "warn";
+    note         = "Mildly elevated thresholds on " + mild.join(", ") + ". Mild JND elevation on screen tests is common and may reflect display gamut or lighting. If consistently elevated on retest, consider clinical evaluation.";
+  }
+
+  return { label: label, verdictClass: verdictClass, note: note };
+}
+
+function buildElevatedNote(elevated, mild, worstNbhd, thresholds) {
+  // READS: args  WRITES: nothing — returns string
+  var axisMap = {
+    blue_purple:    "Blue/purple confusion is the hallmark of tritan-type color deficiency. You required a wider hue separation to distinguish these — consistent with reduced blue-cone sensitivity.",
+    blue_bluegreen: "Blue/blue-green confusion is a secondary tritan indicator. Combined with blue/purple elevation, this pattern strengthens the tritan axis finding.",
+    red_orange:     "Red/orange confusion is associated with protan-type deficiency (protanomaly or protanopia). Reduced red-cone sensitivity compresses the discrimination range at the red end of the spectrum.",
+    green_yellow:   "Green/yellow confusion is the most diagnostically common finding. Deuteranomaly — reduced green-cone sensitivity — is the most prevalent inherited color vision deficiency and specifically impairs this pair.",
+    pink_gray:      "Pink/gray confusion at low saturation is a secondary deutan indicator. Deuteranopes frequently describe pale pinks as gray or off-white in everyday life.",
+    purple_pink:    "Purple/pink confusion involves both the red and blue channels — both protan and deutan deficiencies can elevate this threshold, but for different reasons.",
+    brown_olive:    "Brown/olive confusion is one of the most common real-world complaints from people with red-green CVD. Both protan and deutan types confuse these dark hue-shifted colors."
+  };
+
+  var note = "Significantly elevated thresholds on: " + elevated.join(", ") + ". ";
+  if (worstNbhd && axisMap[worstNbhd.key]) note += axisMap[worstNbhd.key] + " ";
+  note += "Cross-check with the Ishihara color test (opticquiz.com/color/) and D-15 hue sort (opticquiz.com/d15/) for converging data. For definitive evaluation, consult an optometrist.";
+  return note;
+}
+
+function startSecondEye() {
+  STATE.currentEye     = STATE.currentEye === "right" ? "left" : "right";
+  STATE.currentNbhdIdx = 0;
+  updateEyeBanner(STATE.currentEye);
+  showScreen("screen-test");
+  startNeighborhood();
+  announce(STATE.currentEye + " eye. Blue and purple. Trial 1.");
+}
+
+function retakeTest() { showScreen("screen-intro"); }
+
+// ── 5. RENDER ─────────────────────────────────────────────
+
+function hsl(h, s, l) {
+  // READS: h, s, l  WRITES: nothing — returns CSS string
+  return "hsl(" + h + "," + s + "%," + l + "%)";
+}
+
+function renderNbhdBanner() {
+  // READS: STATE.currentNbhdIdx, NEIGHBORHOODS  WRITES: DOM
+  var nbhd   = NEIGHBORHOODS[STATE.currentNbhdIdx];
+  var sB     = (nbhd.swatchBS !== undefined) ? nbhd.swatchBS : nbhd.S;
+  var colorA = hsl(nbhd.swatchA, nbhd.S, nbhd.L);
+  var colorB = hsl(nbhd.swatchB, sB,     nbhd.L);
+
+  document.getElementById("nbhd-banner-wrap").innerHTML =
+    '<div class="nbhd-banner" role="note" aria-label="Current hue pair: ' + nbhd.name + '">' +
+    '<div class="nbhd-swatch-pair" aria-hidden="true">' +
+      '<div class="nbhd-sw" style="background:' + colorA + ';"></div>' +
+      '<div class="nbhd-sw" style="background:' + colorB + ';"></div>' +
+    '</div>' +
+    '<div>' +
+      '<div class="nbhd-name">' + nbhd.name.toUpperCase() + '</div>' +
+      '<div class="nbhd-clinical">' + nbhd.clinical + '</div>' +
+    '</div>' +
+    '</div>';
+}
+
+function renderTrial() {
+  // READS: STATE  WRITES: DOM
+  // DECISION: 2AFC with anchor reference.
+  // Reference patch (anchor) displayed above — labeled, fixed.
+  // Two test patches below — one matches reference, one does not.
+  // User picks which test patch matches the reference.
+  // Correct = chose the anchor patch. This is unambiguous.
+  var nbhd     = NEIGHBORHOODS[STATE.currentNbhdIdx];
+  var hues     = computePatchHues();
+  var leftHue  = STATE.leftIsAnchor ? hues.anchorHue  : hues.neighborHue;
+  var rightHue = STATE.leftIsAnchor ? hues.neighborHue : hues.anchorHue;
+  var leftS    = STATE.leftIsAnchor ? hues.anchorS     : hues.neighborS;
+  var rightS   = STATE.leftIsAnchor ? hues.neighborS   : hues.anchorS;
+  var L = nbhd.L;
+
+  var refColor   = hsl(hues.anchorHue, hues.anchorS, L);
+  var leftColor  = hsl(leftHue,  leftS,  L);
+  var rightColor = hsl(rightHue, rightS, L);
+
+  // DECISION: patch label color — L < 45 → light text; L >= 45 → dark text
+  var lblClass = L < 45 ? "patch-lbl patch-lbl-light" : "patch-lbl patch-lbl-dark";
+
+  // Build reference desc text per neighborhood
+  var refDesc = nbhd.name.split(" / ")[0];
+  var refSub  = nbhd.grayMode ? "This is your reference pink" : "This is your reference color";
+
+  // Trial dots
+  var dots = '<div class="trial-dots" role="list" aria-label="Trial history">';
+  for (var i = 0; i < STAIRCASE.maxTrials; i++) {
+    var cls = "trial-dot";
+    if (i < STATE.trialHistory.length) {
+      cls += STATE.trialHistory[i].correct ? " correct" : " wrong";
+    } else if (i === STATE.trialHistory.length) {
+      cls += " active";
+    }
+    dots += '<div class="' + cls + '" role="listitem" aria-label="Trial ' + (i+1) + '"></div>';
+  }
+  dots += '</div>';
+
+  // Gap meter
+  var gapPct   = Math.round((STATE.currentGap / STAIRCASE.maxGap) * 100);
+  var gapColor = hsl(nbhd.anchorHue, Math.max(20, nbhd.S - 20), L);
+  var gapLabel = nbhd.grayMode ? "Saturation gap" : "Hue gap";
+  var gapUnit  = nbhd.grayMode ? (STATE.currentGap + "% sat") : (STATE.currentGap + "°");
+  var gapHint  = nbhd.grayMode ? "Patches get more similar as you answer correctly" : "Patches get more similar as you answer correctly";
+
+  document.getElementById("trial-area").innerHTML =
+    dots +
+
+    '<div class="reference-wrap" role="note" aria-label="Reference color — ' + refDesc + '">' +
+      '<div class="reference-patch" style="background:' + refColor + ';" aria-hidden="true"></div>' +
+      '<div class="reference-text">' +
+        '<div class="reference-label">Reference</div>' +
+        '<div class="reference-desc">' + refDesc + '</div>' +
+        '<div class="reference-sub">' + refSub + '</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="trial-q" id="trial-q">Which patch below matches the reference?</div>' +
+
+    '<div class="patch-row" role="group" ' +
+         'aria-label="Two test patches — tap the one that matches the reference above">' +
+      '<button class="patch-btn" style="background:' + leftColor + ';" ' +
+        'onclick="submitAnswer(true)" ' +
+        'aria-label="Left patch — tap if this matches the reference">' +
+        '<span class="' + lblClass + '" aria-hidden="true">LEFT</span>' +
+      '</button>' +
+      '<button class="patch-btn" style="background:' + rightColor + ';" ' +
+        'onclick="submitAnswer(false)" ' +
+        'aria-label="Right patch — tap if this matches the reference">' +
+        '<span class="' + lblClass + '" aria-hidden="true">RIGHT</span>' +
+      '</button>' +
+    '</div>' +
+
+    '<button class="same-btn" onclick="submitSameTrial()" ' +
+      'aria-label="Both patches look the same to me — I cannot tell which matches">Both look the same — I can\'t tell</button>' +
+
+    '<div class="gap-meter" aria-label="Current gap: ' + gapUnit + '">' +
+      '<div class="gap-meta">' +
+        '<span>' + gapLabel + '</span>' +
+        '<span id="gap-deg-label">' + gapUnit + '</span>' +
+      '</div>' +
+      '<div class="gap-track">' +
+        '<div class="gap-fill" style="width:' + gapPct + '%;background:' + gapColor + ';"></div>' +
+      '</div>' +
+      '<div class="gap-hint">' + gapHint + '</div>' +
+    '</div>';
+}
+
+function updateProgress() {
+  // READS: STATE  WRITES: DOM
+  var eyePct   = STATE.currentEye === "left" ? 50 : 0;
+  var nbhdPct  = Math.round((STATE.currentNbhdIdx / NEIGHBORHOODS.length) * 50);
+  var trialPct = Math.round((STATE.trialCount / STAIRCASE.maxTrials) * (50 / NEIGHBORHOODS.length));
+  var total    = Math.max(3, eyePct + nbhdPct + trialPct);
+
+  document.getElementById("prog-fill").style.width = total + "%";
+  document.getElementById("prog-bar").setAttribute("aria-valuenow", total);
+
+  var nbhd     = NEIGHBORHOODS[STATE.currentNbhdIdx];
+  var eyeLabel = STATE.currentEye.charAt(0).toUpperCase() + STATE.currentEye.slice(1);
+  document.getElementById("prog-label").textContent     = eyeLabel.toUpperCase() + " EYE — " + nbhd.name.toUpperCase();
+  document.getElementById("prog-nbhd-num").textContent  = "Pair " + (STATE.currentNbhdIdx + 1) + " / " + NEIGHBORHOODS.length;
+}
+
+function updateEyeBanner(eye) {
+  // READS: eye  WRITES: DOM
+  var cover = eye === "right" ? "LEFT" : "RIGHT";
+  var keep  = eye === "right" ? "RIGHT" : "LEFT";
+  document.getElementById("eb-main").textContent = "Cover your " + cover + " eye with your palm";
+  document.getElementById("eb-sub").textContent  = "Maximum brightness. Keep your " + keep + " eye on the patches.";
+}
+
+function renderIntroStrip() {
+  // READS: NEIGHBORHOODS  WRITES: DOM #nbhd-strip-intro
+  var html = '<div style="display:flex;flex-wrap:wrap;gap:8px;" aria-label="Hue neighborhoods to be tested" role="list">';
+  for (var i = 0; i < NEIGHBORHOODS.length; i++) {
+    var nbhd   = NEIGHBORHOODS[i];
+    var sB     = (nbhd.swatchBS !== undefined) ? nbhd.swatchBS : nbhd.S;
+    var colorA = hsl(nbhd.swatchA, nbhd.S, nbhd.L);
+    var colorB = hsl(nbhd.swatchB, sB,     nbhd.L);
+    html += '<div role="listitem" style="text-align:center;">' +
+      '<div style="display:flex;border-radius:var(--r);overflow:hidden;border:1px solid var(--lgray);height:32px;">' +
+        '<div style="width:30px;background:' + colorA + ';"></div>' +
+        '<div style="width:30px;background:' + colorB + ';"></div>' +
+      '</div>' +
+      '<div style="font-family:var(--fm);font-size:9px;color:var(--gray);letter-spacing:0.05em;margin-top:3px;max-width:60px;">' + nbhd.name + '</div>' +
+      '</div>';
+  }
+  html += '</div>';
+  document.getElementById("nbhd-strip-intro").innerHTML = html;
+}
+
+// ── 6. RESULTS RENDER ─────────────────────────────────────
+
+function renderResults() {
+  // READS: STATE.results  WRITES: DOM
+  var r = STATE.results;
+  var rLabel = r.right ? classifyMean(r.right.meanJND) : "—";
+  var lLabel = r.left  ? classifyMean(r.left.meanJND)  : "—";
+
+  document.getElementById("tab-right-val").textContent = rLabel;
+  document.getElementById("tab-left-val").textContent  = lLabel;
+
+  STATE.activeTab = "right";
+  renderResultDetail("right");
+  showScreen("screen-results");
+  announce("Results ready. Right eye: " + (r.right ? r.right.label : "not tested") + ". Left eye: " + (r.left ? r.left.label : "not tested") + ".");
+}
+
+function classifyMean(mean) {
+  if (mean < MILD_JND)     return "Normal";
+  if (mean < ELEVATED_JND) return "Mild";
+  return "Elevated";
+}
+
+function renderResultDetail(eye) {
+  // READS: STATE.results[eye]  WRITES: DOM
+  var r = STATE.results[eye];
+  if (!r) {
+    document.getElementById("result-detail").innerHTML = '<p style="padding:16px 0;color:var(--gray)">No data for this eye.</p>';
+    return;
+  }
+
+  // ── Verdict ──
+  var html = '<div class="verdict-block ' + r.verdictClass + '" role="region" aria-label="' + eye + ' eye finding">' +
+    '<div class="v-eyebrow">' + eye + ' eye</div>' +
+    '<div class="v-main">' + r.label + '</div>' +
+    '<div class="v-body">' + r.note + '</div>' +
+    '</div>';
+
+  // ── Blue/purple highlight card — always shown first ──
+  var bpT      = r.bpThreshold;
+  var bpLevel  = bpT < MILD_JND ? "Normal" : bpT < ELEVATED_JND ? "Mildly elevated" : "Significantly elevated";
+  var bpColor  = bpT < MILD_JND ? "var(--green)" : bpT < ELEVATED_JND ? "var(--amber)" : "var(--red)";
+  var bpBg     = bpT < MILD_JND ? "var(--gbg)" : bpT < ELEVATED_JND ? "#FFF8EE" : "var(--redbg)";
+  var bpBorder = bpT < MILD_JND ? "var(--green)" : bpT < ELEVATED_JND ? "var(--amber)" : "var(--red)";
+
+  html += '<div class="highlight-card" style="background:' + bpBg + ';border-color:' + bpBorder + ';" role="region" aria-label="Blue/purple threshold result">' +
+    '<div class="hc-label" style="color:' + bpColor + ';">Blue / Purple Threshold</div>' +
+    '<div class="hc-val">' + bpT + '° <span style="font-family:var(--fs);font-size:16px;color:var(--gray);">hue separation</span></div>' +
+    '<div class="hc-desc">' + bpLevel + '. Normal screen JND for blue/purple is ~' + NORMAL_JND + '°. You required a ' + bpT + '° separation to reliably tell them apart.' +
+    (bpT >= ELEVATED_JND ? ' This degree of elevation is consistent with reduced tritan-axis discrimination.' : bpT >= MILD_JND ? ' This mild elevation may reflect display gamut, lighting, or subtle tritan-axis sensitivity.' : ' This is within the normal range for screen-based blue/purple discrimination.') +
+    '</div></div>';
+
+  // ── Score summary ──
+  html += '<div class="score-grid" role="list">' +
+    '<div class="score-cell" role="listitem"><span class="score-val">' + r.meanJND + '°</span><span class="score-lbl">Mean JND</span></div>' +
+    '<div class="score-cell" role="listitem"><span class="score-val">' + r.worstVal + '°</span><span class="score-lbl">Worst threshold</span></div>' +
+    '</div>';
+
+  // ── JND chart ──
+  html += '<h3>Threshold per hue pair</h3><div class="jnd-chart" role="list">';
+  var normalPct = Math.round((NORMAL_JND / STAIRCASE.maxGap) * 100);
+
+  for (var i = 0; i < NEIGHBORHOODS.length; i++) {
+    var nbhd = NEIGHBORHOODS[i];
+    var t    = r.thresholds[nbhd.key];
+    var bw   = Math.round((t / STAIRCASE.maxGap) * 100);
+    var fillColor = t < MILD_JND ? "#4A8C3F" : t < ELEVATED_JND ? "#D4820A" : "#E8431A";
+    var levelNote = t < MILD_JND ? "Normal" : t < ELEVATED_JND ? "Mildly elevated" : "Elevated";
+    var sBjnd  = (nbhd.swatchBS !== undefined) ? nbhd.swatchBS : nbhd.S;
+    var colorA = hsl(nbhd.swatchA, nbhd.S,  nbhd.L);
+    var colorB = hsl(nbhd.swatchB, sBjnd,   nbhd.L);
+    // For grayMode, show the threshold value as saturation difference, not degrees
+    var threshLabel = nbhd.grayMode ? (t + "% sat") : (t + "°");
+
+    html += '<div class="jnd-row" role="listitem">' +
+      '<div class="jnd-meta">' +
+        '<div class="jnd-swatches" aria-hidden="true">' +
+          '<div class="jnd-sw" style="background:' + colorA + ';"></div>' +
+          '<div class="jnd-sw" style="background:' + colorB + ';"></div>' +
+        '</div>' +
+        '<span class="jnd-name">' + nbhd.name + '</span>' +
+        '<span class="jnd-val" aria-label="Threshold ' + threshLabel + '">' + threshLabel + '</span>' +
+      '</div>' +
+      '<div class="jnd-track">' +
+        '<div class="jnd-fill" style="width:0%;background:' + fillColor + ';" data-target="' + bw + '"></div>' +
+        '<div class="jnd-normal-line" style="left:' + normalPct + '%;" aria-hidden="true" title="Normal ~' + NORMAL_JND + '°"></div>' +
+      '</div>' +
+      '<div class="jnd-note">' + levelNote + ' · Normal reference ~' + NORMAL_JND + '° · ' + nbhd.clinical + '</div>' +
+    '</div>';
+  }
+  html += '</div>';
+
+  // ── Staircase history dots ──
+  html += '<h3>Trial history per pair</h3><div style="margin-bottom:20px;" role="list">';
+  for (var i = 0; i < NEIGHBORHOODS.length; i++) {
+    var nbhd = NEIGHBORHOODS[i];
+    var sc   = r.staircase[nbhd.key];
+    if (!sc || !sc.history) continue;
+    var colorA = hsl(nbhd.swatchA, nbhd.S, nbhd.L);
+    var sBhist = (nbhd.swatchBS !== undefined) ? nbhd.swatchBS : nbhd.S;
+    var colorB = hsl(nbhd.swatchB, sBhist, nbhd.L);
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;" role="listitem">' +
+      '<div style="display:flex;border-radius:2px;overflow:hidden;border:1px solid var(--lgray);flex-shrink:0;">' +
+        '<div style="width:10px;height:12px;background:' + colorA + ';"></div>' +
+        '<div style="width:10px;height:12px;background:' + colorB + ';"></div>' +
+      '</div>' +
+      '<span style="font-family:var(--fm);font-size:9px;color:var(--gray);letter-spacing:0.05em;min-width:80px;">' + nbhd.name.toUpperCase() + '</span>' +
+      '<div style="display:flex;gap:4px;flex-wrap:wrap;">';
+    for (var ti = 0; ti < sc.history.length; ti++) {
+      var dot      = sc.history[ti];
+      var dotColor = dot.correct ? "#4A8C3F" : "#E8431A";
+      html += '<div style="width:8px;height:8px;border-radius:50%;background:' + dotColor + ';" aria-label="Trial ' + (ti+1) + ': ' + (dot.correct ? 'correct' : 'wrong') + ' at ' + dot.gap + '°"></div>';
+    }
+    html += '</div></div>';
+  }
+  html += '</div>';
+
+  // ── Interpretation ──
+  var worstNbhd = null;
+  for (var i = 0; i < NEIGHBORHOODS.length; i++) {
+    if (NEIGHBORHOODS[i].key === r.worstKey) { worstNbhd = NEIGHBORHOODS[i]; break; }
+  }
+
+  var interpText;
+  if (r.verdictClass === "ok") {
+    interpText = "All seven hue pairs were discriminated at separations consistent with normal color vision on a screen-based test. The normal JND reference of ~" + NORMAL_JND + "° reflects typical performance on consumer sRGB displays. If your blue/purple threshold was particularly low (under 8°), your tritan-axis discrimination is strong. If you've had the blue/purple confusion in real life but scored normal here, note that real-world object colors are at lower saturation than these test patches — the saturation threshold test at opticquiz.com/sat/ tests that dimension directly.";
+  } else if (r.worstKey === "blue_purple" || r.worstKey === "blue_bluegreen") {
+    interpText = "<strong>Blue/purple confusion</strong> is your most prominent finding. This is the hallmark of tritan-type color vision differences — reduced sensitivity of the S (short-wavelength / blue) cone. Tritanomaly affects men and women equally and is not X-linked. It can also be acquired through certain medications, diabetes-related retinal changes, or simply aging. Cross-check with the saturation threshold test at opticquiz.com/sat/ (blue axis) and consult an optometrist if the finding is consistent.";
+  } else if (r.worstKey === "green_yellow" || r.worstKey === "brown_olive" || r.worstKey === "pink_gray") {
+    interpText = "<strong>Green-axis confusion</strong> is your most prominent finding. Deuteranomaly — reduced green-cone sensitivity — is the single most common inherited color vision deficiency, affecting approximately 5% of men. Green/yellow and brown/olive are classic deutan confusion pairs in everyday life. Cross-check with the Ishihara plates at opticquiz.com/color/ and the D-15 hue sort at opticquiz.com/d15/.";
+  } else if (r.worstKey === "red_orange" || r.worstKey === "purple_pink") {
+    interpText = "<strong>Red-axis confusion</strong> is your most prominent finding. Protanomaly reduces red-cone sensitivity — reds appear dimmer, and red/orange and purple/pink can merge. Protanopia and protanomaly both elevate this threshold. A secondary effect is that red lights (brake lights, warning signals) appear dimmer than to those with normal vision. Cross-check with the Ishihara test at opticquiz.com/color/.";
+  } else {
+    interpText = "Multiple hue pairs showed mild elevation. This pattern can reflect a mild anomalous trichromacy, display gamut limitations, or inconsistent testing conditions. Retake in a darker room with maximum brightness for the most reliable result. If mild elevations persist on multiple tests, a clinical color vision evaluation is worth pursuing.";
+  }
+
+  html += '<h3>What this means</h3><div class="interp-card"><div class="interp-text">' + interpText + '</div></div>';
+
+  document.getElementById("result-detail").innerHTML = html;
+
+  // Animate bars
+  setTimeout(function() {
+    var fills = document.querySelectorAll(".jnd-fill");
+    for (var i = 0; i < fills.length; i++) {
+      (function(el) {
+        el.style.transition = "width 0.9s cubic-bezier(0.4,0,0.2,1)";
+        el.style.width = el.getAttribute("data-target") + "%";
+      })(fills[i]);
+    }
+  }, 120);
+}
+
+function switchTab(eye) {
+  // READS: eye  WRITES: STATE.activeTab, DOM
+  STATE.activeTab = eye;
+  document.getElementById("tab-right").classList.toggle("active", eye === "right");
+  document.getElementById("tab-right").setAttribute("aria-selected", eye === "right" ? "true" : "false");
+  document.getElementById("tab-left").classList.toggle("active", eye === "left");
+  document.getElementById("tab-left").setAttribute("aria-selected", eye === "left" ? "true" : "false");
+  renderResultDetail(eye);
+  announce(eye + " eye results displayed");
+}
+
+// ── UTILITY ───────────────────────────────────────────────
+
+function showScreen(id) {
+  // READS: id  WRITES: DOM
+  var screens = document.querySelectorAll(".screen");
+  for (var i = 0; i < screens.length; i++) screens[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+function announce(msg) {
+  // READS: msg  WRITES: aria-live region
+  var el = document.getElementById("a11y-live");
+  if (!el) return;
+  el.textContent = "";
+  setTimeout(function() { el.textContent = msg; }, 60);
+}
+
+function shareResults() {
+  // READS: STATE.results  WRITES: clipboard / share sheet
+  var r    = STATE.results;
+  var parts = [];
+  if (r.right) {
+    parts.push("R: Blue/Purple " + r.right.bpThreshold + "° — " + r.right.label);
+  }
+  if (r.left) {
+    parts.push("L: Blue/Purple " + r.left.bpThreshold + "° — " + r.left.label);
+  }
+  var text = "My OpticQuiz Hue Neighbor result — " + parts.join(" | ") + ". Can you tell blue from purple? Find your threshold: opticquiz.com/hue/";
+  try {
+    if (navigator.share) {
+      navigator.share({ title: "OpticQuiz Hue Test", text: text, url: "https://opticquiz.com/hue/" });
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function() { announce("Result copied to clipboard"); });
+    } else {
+      prompt("Copy your result:", text);
+    }
+  } catch(e) {
+    try { if (navigator.clipboard) navigator.clipboard.writeText(text); } catch(e2) {}
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────
+// Render intro neighborhood strip on page load
+renderIntroStrip();
+</script>
+</body>
+</html>
