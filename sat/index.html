@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ===== WORKFLOW STACK =====
+  File:         sat/index.html
+  Site:         OpticQuiz — Saturation Threshold Test
+  Domain:       opticquiz.com/sat/
+  Repo:         zengineco/opticquiz.com  /sat/index.html
+  Author:       Vince Gonzalez / Zengine™
+  Version:      v1.2.0
+  Boot Order:   1.CONFIG  2.TRIALS  3.ENGINE  4.RENDER  5.INIT
+
+  What this test does:
+    Presents a 2-patch forced-choice task: one patch is a pure hue,
+    one is gray. Saturation decreases in steps. User picks which patch
+    looks more colored. The saturation level at which they can no longer
+    reliably distinguish color from gray = their detection threshold.
+    Done across 4 hue axes:
+      Red    (0°)   — protan/deutan axis
+      Green  (120°) — deutan axis
+      Blue   (240°) — tritan axis
+      Yellow (60°)  — tritan/deutan axis
+    Per-eye bilateral. Right eye first.
+
+  Scoring:
+    For each hue: record the saturation % at which the user first fails
+    to pick the colored patch (gets it wrong or presses "I can't tell").
+    High threshold = good discrimination. Low threshold = poor.
+    Map per-axis thresholds to clinical CVD likelihood.
+
+  Why this catches what plates miss:
+    Ishihara plates test at high saturation with confusion colors embedded.
+    Mild anomalous trichromacy can pass plates but fail at reduced saturation.
+    This test isolates the saturation dimension directly.
+
+  Features:
+    - Adaptive staircase: saturation steps down on correct, up on wrong
+    - 4 hue axes × 2 eyes = 8 test runs
+    - Each run: max 12 trials, terminates early at reversal threshold
+    - Forced choice + "I can't tell" option (treated as wrong)
+    - CSS hsl() for all color generation — no images
+    - Results: per-axis threshold chart + clinical interpretation
+    - WCAG 2.1 AA throughout
+    - var-only JS, single STATE object, READS/WRITES annotated
+
+  Palette: white/#F8F6F2/#E8431A/#4A8C3F/#1A1A1A (logo-derived)
+  Fonts: Bebas Neue (display) + Source Serif 4 (body) + Courier New (mono)
+  No images. No base64. No backend.
+===== END WORKFLOW STACK ===== -->
+
+<!-- ===== ASSET MANIFEST =====
+  /opticquiz_icon.png   live on GitHub repo root
+  Google Fonts: Bebas Neue, Source Serif 4
+  All patches: CSS hsl() inline — zero images
+===== END ASSET MANIFEST ===== -->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz Saturation Threshold — finds the minimum saturation you can detect across red, green, blue, and yellow. Catches mild color vision deficiency that Ishihara plates miss.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Saturation Threshold Test">
+<meta property="og:description" content="Adaptive staircase color test. Finds your hue detection threshold across 4 axes. Catches anomalous trichromacy plates miss. Free, no account.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/sat/">
+<link rel="canonical" href="https://opticquiz.com/sat/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Saturation Threshold — OpticQuiz</title>
+
+<!-- GA4 — replace G-XXXXXXXXXX with your Measurement ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX');
+</script>
+
+<!-- AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+
+<style>
+/* ===== DESIGN SYSTEM — logo palette =====
+  --white  #FFFFFF
+  --bg     #F8F6F2   warm off-white
+  --cream  #F0EDE6   card bg
+  --lgray  #D4D0C8   borders
+  --gray   #6B6B6B   secondary text (AA)
+  --black  #1A1A1A   primary text (AAA)
+  --red    #E8431A   orange-red accent
+  --redd   #C23410
+  --green  #4A8C3F
+  --greend #38692F
+  --redbg  #FDF1EE
+  --gbg    #EEF5ED
+  --amber  #D4820A
+===== END DESIGN SYSTEM ===== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #FFFFFF;
+  --bg: #F8F6F2;
+  --cream: #F0EDE6;
+  --lgray: #D4D0C8;
+  --gray: #6B6B6B;
+  --black: #1A1A1A;
+  --red: #E8431A;
+  --redd: #C23410;
+  --green: #4A8C3F;
+  --greend: #38692F;
+  --redbg: #FDF1EE;
+  --gbg: #EEF5ED;
+  --amber: #D4820A;
+  --fd: "Bebas Neue", Impact, fantasy;
+  --fs: "Source Serif 4", Georgia, serif;
+  --fm: "Courier New", monospace;
+  --r: 4px;
+  --rc: 8px;
+}
+
+html { background: var(--bg); }
+body { font-family: var(--fs); background: var(--bg); color: var(--black); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+/* ── A11Y ────────────────────────────────────────── */
+.skip-link { position: absolute; top: -48px; left: 16px; z-index: 9999; background: var(--red); color: var(--white); padding: 10px 18px; border-radius: var(--r); font-family: var(--fs); font-size: 14px; font-weight: 600; text-decoration: none; transition: top 0.15s; }
+.skip-link:focus { top: 12px; }
+*:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; border-radius: var(--r); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* ── LAYOUT ──────────────────────────────────────── */
+.wrap { max-width: 560px; margin: 0 auto; padding: 0 20px 80px; }
+.site-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 0; max-width: 560px; margin: 0 auto; }
+.logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-wrap img { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--lgray); }
+.logo-name { font-family: var(--fd); font-size: 22px; color: var(--black); letter-spacing: 0.03em; }
+.logo-name span { color: var(--red); }
+.ver-badge { font-family: var(--fm); font-size: 10px; color: var(--gray); border: 1px solid var(--lgray); padding: 3px 8px; border-radius: 20px; letter-spacing: 0.1em; }
+
+/* ── SCREENS ─────────────────────────────────────── */
+.screen { display: none; }
+.screen.active { display: block; animation: fadein 0.2s ease; }
+@keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+/* ── TYPE ────────────────────────────────────────── */
+.eyebrow { font-family: var(--fm); font-size: 11px; letter-spacing: 0.14em; color: var(--red); text-transform: uppercase; display: block; margin-bottom: 10px; }
+h1 { font-family: var(--fd); font-size: clamp(48px, 12vw, 72px); color: var(--black); line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 16px; }
+h2 { font-family: var(--fd); font-size: clamp(32px, 8vw, 48px); color: var(--black); line-height: 0.94; letter-spacing: 0.02em; margin-bottom: 16px; }
+h3 { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+p { font-size: 15px; color: var(--gray); line-height: 1.7; }
+
+/* ── BUTTONS ─────────────────────────────────────── */
+.btn { display: block; width: 100%; padding: 16px 20px; font-family: var(--fs); font-size: 16px; font-weight: 600; color: var(--black); background: var(--white); border: 1.5px solid var(--lgray); border-radius: var(--r); cursor: pointer; text-align: center; transition: border-color 0.12s, background 0.12s, transform 0.08s; min-height: 52px; -webkit-tap-highlight-color: transparent; }
+.btn:hover { border-color: var(--black); background: var(--cream); }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--red); color: var(--white); border-color: transparent; }
+.btn-primary:hover { background: var(--redd); }
+.btn-secondary { background: var(--green); color: var(--white); border-color: transparent; }
+.btn-secondary:hover { background: var(--greend); }
+.btn + .btn { margin-top: 10px; }
+
+/* ── DIVIDER ─────────────────────────────────────── */
+.divider { height: 1px; background: var(--lgray); margin: 24px 0; }
+
+/* ── INSTRUCTIONS ────────────────────────────────── */
+.instr-list { margin: 20px 0; }
+.instr-item { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--lgray); }
+.instr-item:last-child { border-bottom: none; }
+.instr-num { font-family: var(--fd); font-size: 28px; color: var(--red); min-width: 28px; line-height: 1; margin-top: 2px; }
+.instr-text { font-size: 14px; color: var(--black); line-height: 1.6; }
+.instr-sub { font-size: 13px; color: var(--gray); margin-top: 2px; }
+
+/* ── PROGRESS ────────────────────────────────────── */
+.prog-wrap { margin-bottom: 20px; }
+.prog-meta { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.prog-meta span { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.06em; }
+.prog-track { height: 3px; background: var(--lgray); border-radius: 2px; }
+.prog-fill { height: 100%; background: var(--red); border-radius: 2px; transition: width 0.35s cubic-bezier(0.4,0,0.2,1); }
+
+/* ── EYE BANNER ──────────────────────────────────── */
+.eye-banner { background: var(--redbg); border: 1.5px solid var(--red); border-radius: var(--rc); padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+.eb-icon { font-family: var(--fd); font-size: 22px; color: var(--red); flex-shrink: 0; }
+.eb-main { font-size: 14px; font-weight: 600; color: var(--black); }
+.eb-sub { font-size: 12px; color: var(--gray); margin-top: 1px; }
+
+/* ── HUE AXIS INDICATOR ──────────────────────────── */
+.axis-indicator {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--white); border: 1.5px solid var(--lgray);
+  border-radius: var(--rc); padding: 12px 16px; margin-bottom: 20px;
+}
+.axis-swatch { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.12); flex-shrink: 0; }
+.axis-name { font-family: var(--fd); font-size: 22px; color: var(--black); letter-spacing: 0.02em; flex: 1; }
+.axis-sub { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* ── PATCH TRIAL AREA ────────────────────────────── */
+.trial-area { margin: 4px 0 20px; }
+
+.trial-question {
+  font-size: 16px; font-weight: 600; color: var(--black);
+  text-align: center; margin-bottom: 16px; line-height: 1.4;
+}
+
+.patch-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.patch-btn {
+  aspect-ratio: 1;
+  border-radius: var(--rc);
+  border: 2.5px solid var(--lgray);
+  cursor: pointer;
+  transition: border-color 0.1s, transform 0.08s, box-shadow 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 120px;
+  position: relative;
+  overflow: hidden;
+}
+.patch-btn:hover { border-color: var(--black); transform: scale(1.02); box-shadow: 0 2px 12px rgba(0,0,0,0.10); }
+.patch-btn:active { transform: scale(0.97); }
+.patch-btn:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+
+/* Patch label for screen readers and sighted users */
+.patch-label {
+  position: absolute; bottom: 8px; left: 0; right: 0;
+  text-align: center; font-family: var(--fm); font-size: 11px;
+  color: rgba(0,0,0,0.35); letter-spacing: 0.06em; pointer-events: none;
+}
+.patch-label.light { color: rgba(255,255,255,0.5); }
+
+/* "Can't tell" option */
+.cant-tell-btn {
+  display: block; width: 100%; padding: 14px 20px;
+  font-family: var(--fs); font-size: 14px; font-weight: 400;
+  color: var(--gray); background: var(--white);
+  border: 1px dashed var(--lgray); border-radius: var(--r);
+  cursor: pointer; text-align: center; letter-spacing: 0.01em;
+  transition: border-color 0.12s, background 0.12s;
+  min-height: 48px; -webkit-tap-highlight-color: transparent;
+}
+.cant-tell-btn:hover { border-color: var(--gray); background: var(--cream); color: var(--black); }
+
+/* Saturation meter */
+.sat-meter { margin: 16px 0 4px; }
+.sat-meter-label { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; display: flex; justify-content: space-between; }
+.sat-meter-track { height: 6px; background: var(--lgray); border-radius: 3px; overflow: hidden; position: relative; }
+.sat-meter-fill { height: 100%; border-radius: 3px; transition: width 0.4s cubic-bezier(0.4,0,0.2,1), background-color 0.4s; }
+.sat-meter-hint { font-family: var(--fm); font-size: 10px; color: var(--lgray); text-align: center; margin-top: 5px; letter-spacing: 0.04em; }
+
+/* Trial counter dots */
+.trial-dots { display: flex; gap: 5px; justify-content: center; margin-bottom: 16px; }
+.trial-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lgray); transition: background 0.15s; }
+.trial-dot.correct { background: var(--green); }
+.trial-dot.wrong { background: var(--red); }
+.trial-dot.active { background: var(--black); }
+
+/* ── SWITCH ──────────────────────────────────────── */
+.switch-content { padding-top: 40px; text-align: center; }
+.big-eye-label { font-family: var(--fd); font-size: clamp(64px, 18vw, 100px); line-height: 0.9; letter-spacing: 0.02em; margin-bottom: 12px; }
+.big-eye-label.eye-left { color: var(--green); }
+.big-eye-label.eye-right { color: var(--red); }
+
+/* ── RESULTS ─────────────────────────────────────── */
+.eye-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.eye-tab { padding: 12px; border-radius: var(--r); border: 1.5px solid var(--lgray); background: var(--white); cursor: pointer; text-align: center; transition: all 0.12s; -webkit-tap-highlight-color: transparent; }
+.eye-tab.active { border-color: var(--red); background: var(--redbg); }
+.eye-tab-lbl { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px; }
+.eye-tab-val { font-family: var(--fd); font-size: 20px; color: var(--black); letter-spacing: 0.02em; }
+
+.verdict-block { background: var(--white); border: 1.5px solid var(--lgray); border-top: 4px solid var(--red); border-radius: var(--rc); padding: 20px; margin-bottom: 20px; }
+.verdict-block.ok { border-top-color: var(--green); }
+.verdict-block.warn { border-top-color: var(--amber); }
+.v-eyebrow { font-family: var(--fm); font-size: 10px; color: var(--red); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
+.verdict-block.ok .v-eyebrow { color: var(--green); }
+.verdict-block.warn .v-eyebrow { color: var(--amber); }
+.v-main { font-family: var(--fd); font-size: clamp(22px, 5.5vw, 32px); color: var(--black); line-height: 1; margin-bottom: 6px; }
+.v-body { font-size: 14px; color: var(--gray); line-height: 1.75; }
+
+/* Threshold chart */
+.threshold-chart { margin-bottom: 24px; }
+.tc-row { margin-bottom: 14px; }
+.tc-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+.tc-swatch { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.12); flex-shrink: 0; }
+.tc-name { font-size: 13px; font-weight: 600; color: var(--black); flex: 1; }
+.tc-val { font-family: var(--fm); font-size: 12px; color: var(--gray); }
+.tc-track { height: 8px; background: var(--lgray); border-radius: 4px; overflow: hidden; }
+.tc-fill { height: 100%; border-radius: 4px; transition: width 0.9s cubic-bezier(0.4,0,0.2,1); }
+.tc-note { font-size: 12px; color: var(--gray); margin-top: 4px; font-style: italic; }
+
+/* Normal range reference line overlay */
+.tc-track { position: relative; }
+.tc-normal-marker {
+  position: absolute; top: -3px; bottom: -3px;
+  width: 2px; background: var(--black); opacity: 0.2;
+  border-radius: 1px;
+}
+
+/* Score summary grid */
+.score-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 20px; }
+.score-cell { background: var(--cream); border: 1px solid var(--lgray); border-radius: var(--r); padding: 12px; text-align: center; }
+.score-val { font-family: var(--fd); font-size: 24px; color: var(--black); display: block; line-height: 1; }
+.score-lbl { font-family: var(--fm); font-size: 9px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px; display: block; }
+
+.interp-card { background: var(--cream); border: 1px solid var(--lgray); border-radius: var(--rc); padding: 18px; margin-bottom: 20px; }
+.interp-text { font-size: 14px; color: var(--gray); line-height: 1.8; }
+.interp-text strong { color: var(--black); }
+
+.disclaimer { background: var(--cream); border: 1.5px solid var(--lgray); border-left: 4px solid var(--red); border-radius: var(--rc); padding: 18px 18px 18px 20px; margin-top: 24px; }
+.disclaimer-title { font-family: var(--fm); font-size: 11px; letter-spacing: 0.1em; color: var(--red); text-transform: uppercase; margin-bottom: 8px; }
+.disclaimer-body { font-size: 12px; color: var(--gray); line-height: 1.8; }
+.disclaimer-body strong { color: var(--black); font-weight: 600; }
+
+.share-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.back-link { display: block; text-align: center; margin-top: 16px; font-family: var(--fm); font-size: 12px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+.back-link:hover { color: var(--black); }
+footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.06em; text-align: center; padding: 24px 0 8px; border-top: 1px solid var(--lgray); margin-top: 32px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home">
+    <img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38">
+    <div class="logo-name">OPTIC<span>QUIZ</span></div>
+  </a>
+  <div class="ver-badge">SAT THRESHOLD</div>
+</header>
+
+<main id="main" class="wrap" role="main">
+
+<!-- ══ INTRO ══════════════════════════════════════════════ -->
+<div id="screen-intro" class="screen active" role="region" aria-labelledby="intro-h1">
+  <div style="padding-top:32px">
+    <span class="eyebrow">Saturation Threshold Test</span>
+    <h1 id="intro-h1">HOW<br>FADED<br>IS TOO<br>FADED?</h1>
+    <p>Two colored patches appear side by side. One is a pure hue, one is gray. Saturation decreases until you can no longer tell which is which. That threshold reveals how sensitive your color vision is — per axis, per eye.</p>
+
+    <div class="divider"></div>
+
+    <h3>Why this catches what plates miss</h3>
+    <p style="margin-bottom:16px;">Ishihara plates test at full saturation — you either see the number or you don't. <strong style="color:var(--black)">Mild anomalous trichromacy</strong> can pass plates perfectly but fail at reduced saturation, because the hue shift is small enough to overcome at high chroma. This test isolates the saturation dimension directly across four clinical axes: red, green, blue, and yellow.</p>
+
+    <div class="divider"></div>
+
+    <h3>How to take the test</h3>
+    <div class="instr-list" role="list">
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">1</div>
+        <div>
+          <div class="instr-text">Maximize screen brightness — this test is very sensitive to display settings</div>
+          <div class="instr-sub">Low brightness compresses the saturation range and produces falsely low thresholds.</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">2</div>
+        <div>
+          <div class="instr-text">Cover one eye with your palm. Test both eyes separately.</div>
+          <div class="instr-sub">Right eye first. The other eye follows automatically. Do not squint or use a lens as a cover.</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">3</div>
+        <div>
+          <div class="instr-text">Tap the patch that looks more colored — even if the difference is very small</div>
+          <div class="instr-sub">If you truly cannot tell any difference at all, tap "I can't tell." Don't guess for the sake of it.</div>
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">4</div>
+        <div>
+          <div class="instr-text">Four hue axes are tested: red, green, blue, yellow</div>
+          <div class="instr-sub">Each axis runs up to 12 trials. The test ends each axis when it detects your threshold.</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startTest()" style="margin-top:8px" aria-label="Start the saturation threshold test">Start Test — Right Eye</button>
+    <a href="/" class="back-link" aria-label="Back to all OpticQuiz tests">← All Tests</a>
+  </div>
+</div>
+
+<!-- ══ TEST ════════════════════════════════════════════════ -->
+<div id="screen-test" class="screen" role="region" aria-label="Saturation threshold test">
+  <div style="padding-top:24px">
+    <div class="prog-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog-bar" aria-label="Test progress">
+      <div class="prog-meta">
+        <span id="prog-label">RIGHT EYE — RED</span>
+        <span id="prog-axis-num">Axis 1 / 4</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:5%"></div></div>
+    </div>
+
+    <div class="eye-banner" id="eye-banner" role="note" aria-label="Eye reminder">
+      <div class="eb-icon" aria-hidden="true">◑</div>
+      <div>
+        <div class="eb-main" id="eb-main">Cover your LEFT eye with your palm</div>
+        <div class="eb-sub">Maximum brightness. Keep your RIGHT eye focused on the patches.</div>
+      </div>
+    </div>
+
+    <div id="axis-indicator-wrap"></div>
+    <div id="trial-area"></div>
+  </div>
+</div>
+
+<!-- ══ SWITCH ══════════════════════════════════════════════ -->
+<div id="screen-switch" class="screen" role="region" aria-label="Switch eyes">
+  <div class="switch-content">
+    <span class="eyebrow">Eye complete</span>
+    <div class="big-eye-label eye-left" id="switch-label">LEFT</div>
+    <h2>EYE</h2>
+    <p id="switch-msg" style="margin-bottom:28px;"></p>
+    <button class="btn btn-primary" id="switch-btn" onclick="startSecondEye()">Continue — Left Eye</button>
+    <a href="/" class="back-link">← All Tests</a>
+  </div>
+</div>
+
+<!-- ══ RESULTS ═════════════════════════════════════════════ -->
+<div id="screen-results" class="screen" role="region" aria-label="Test results">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Results</span>
+    <h2>SATURATION<br>PROFILE</h2>
+
+    <div class="eye-tabs" role="tablist" aria-label="Eye results">
+      <div class="eye-tab active" id="tab-right" role="tab" aria-selected="true" tabindex="0"
+           onclick="switchTab('right')" onkeydown="if(event.key==='Enter'||event.key===' ')switchTab('right')">
+        <div class="eye-tab-lbl">Right eye</div>
+        <div class="eye-tab-val" id="tab-right-val">—</div>
+      </div>
+      <div class="eye-tab" id="tab-left" role="tab" aria-selected="false" tabindex="0"
+           onclick="switchTab('left')" onkeydown="if(event.key==='Enter'||event.key===' ')switchTab('left')">
+        <div class="eye-tab-lbl">Left eye</div>
+        <div class="eye-tab-val" id="tab-left-val">—</div>
+      </div>
+    </div>
+
+    <div id="result-detail"></div>
+
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()">Share</button>
+      <button class="btn btn-secondary" onclick="retakeTest()">Retake</button>
+    </div>
+    <a href="/" class="back-link">← All Tests</a>
+
+    <div class="disclaimer" role="note">
+      <div class="disclaimer-title">Results Disclaimer</div>
+      <div class="disclaimer-body">
+        Results are <strong>educational screening estimates only</strong>. Screen saturation is constrained by sRGB gamut — many consumer displays cannot render the full saturation range used in clinical testing. Thresholds measured here are relative to your specific display and may differ from clinical colorimetric thresholds.
+        <strong>Do not use these results for clinical, employment, or medical decisions.</strong>
+        Consult a licensed optometrist for definitive color vision assessment.
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer role="contentinfo">
+  www.zengine.site &nbsp;|&nbsp; © 2025 Zengine™ &nbsp;|&nbsp; Educational use only — not a medical diagnostic
+</footer>
+
+<script>
+// ===== BOOT ORDER: CONFIG → TRIALS → ENGINE → RENDER → INIT =====
+
+// ── 1. CONFIG ─────────────────────────────────────────────
+// READS: nothing  WRITES: nothing (constants)
+
+// DECISION: 4 hue axes selected to cover the three clinical CVD axes:
+//   Red   (0°)   — protan confusion axis
+//   Green (120°) — deutan confusion axis
+//   Blue  (240°) — tritan confusion axis
+//   Yellow(60°)  — tritan / deutan overlap, clinically informative
+// Lightness fixed at 60% (L in HSL) — perceptually mid-bright, not washed out.
+// DECISION: L=60% because lower L compresses perceived saturation on most screens;
+// higher L flattens contrast. 60% is the sweet spot for sRGB displays.
+var AXES = [
+  { key: "red",    hue: 0,   label: "Red",    subLabel: "Protan axis",        cssHue: 0,   barColor: "#E8431A" },
+  { key: "green",  hue: 120, label: "Green",  subLabel: "Deutan axis",        cssHue: 120, barColor: "#4A8C3F" },
+  { key: "blue",   hue: 240, label: "Blue",   subLabel: "Tritan axis",        cssHue: 240, barColor: "#3A7FE8" },
+  { key: "yellow", hue: 60,  label: "Yellow", subLabel: "Tritan/deutan axis", cssHue: 60,  barColor: "#D4820A" }
+];
+
+// Staircase config
+// DECISION: start at 40% saturation (visible but not trivial on most screens),
+// step down by 8% on correct, step up by 4% on wrong (3-down-1-up rule approximation),
+// min 2%, max 80%, terminate after 4 reversals or 12 trials.
+var STAIRCASE = {
+  startSat:   40,    // starting saturation %
+  stepDown:    8,    // decrease on correct answer
+  stepUp:      4,    // increase on wrong answer
+  minSat:      2,    // floor
+  maxSat:     80,    // ceiling
+  maxTrials:  12,    // max trials per axis
+  maxReversals: 4    // terminate after this many direction reversals
+};
+
+// Normal threshold reference: ~15% saturation for typical trichromats on sRGB
+// DECISION: based on published forced-choice saturation discrimination studies on
+// consumer displays. Used as the "normal" reference line on the chart.
+var NORMAL_THRESHOLD_PCT = 15;
+
+// Axis interpretation thresholds
+// DECISION: > 30% = significantly elevated threshold = reduced sensitivity
+// 20-30% = mildly elevated  < 20% = normal range
+var THRESHOLD_NORMAL = 20;    // below this = normal
+var THRESHOLD_MILD   = 30;    // 20-30 = mild elevation
+// above 30 = marked elevation
+
+// ── 2. STATE ──────────────────────────────────────────────
+var STATE = {
+  currentEye:   "right",
+  currentAxisIdx: 0,
+  // Per axis per eye: staircase tracking
+  staircase: {
+    right: { red: null, green: null, blue: null, yellow: null },
+    left:  { red: null, green: null, blue: null, yellow: null }
+  },
+  // Results: threshold per axis per eye
+  results: {
+    right: null,
+    left:  null
+  },
+  activeTab: "right",
+  // Current trial state
+  currentSat:    40,
+  lastDirection: null,   // "down" | "up"
+  reversals:     0,
+  trialCount:    0,
+  trialHistory:  [],     // [{sat, correct}]
+  leftPatchIsColored: true  // randomized each trial
+};
+
+// ── 3. ENGINE ─────────────────────────────────────────────
+
+function startTest() {
+  // READS: nothing  WRITES: STATE (full reset)
+  STATE.currentEye = "right";
+  STATE.currentAxisIdx = 0;
+  STATE.results = { right: null, left: null };
+  STATE.staircase = {
+    right: { red: null, green: null, blue: null, yellow: null },
+    left:  { red: null, green: null, blue: null, yellow: null }
+  };
+  updateEyeBanner("right");
+  showScreen("screen-test");
+  startAxis();
+  announce("Saturation threshold test. Right eye. Red axis. Trial 1.");
+}
+
+function startAxis() {
+  // READS: STATE.currentAxisIdx, STATE.currentEye
+  // WRITES: STATE staircase fields, STATE.trialHistory
+  STATE.currentSat = STAIRCASE.startSat;
+  STATE.lastDirection = null;
+  STATE.reversals = 0;
+  STATE.trialCount = 0;
+  STATE.trialHistory = [];
+  randomizePatchSide();
+  renderAxisIndicator();
+  renderTrial();
+  updateProgress();
+}
+
+function randomizePatchSide() {
+  // READS: nothing  WRITES: STATE.leftPatchIsColored
+  // DECISION: randomize which side is colored each trial to prevent position bias
+  STATE.leftPatchIsColored = Math.random() < 0.5;
+}
+
+function submitTrialAnswer(userChoseLeft) {
+  // READS: userChoseLeft (bool), STATE  WRITES: STATE staircase
+  var correct = (userChoseLeft === STATE.leftPatchIsColored);
+  STATE.trialHistory.push({ sat: STATE.currentSat, correct: correct });
+  STATE.trialCount++;
+
+  // Update staircase
+  var newDirection = correct ? "down" : "up";
+  if (STATE.lastDirection !== null && newDirection !== STATE.lastDirection) {
+    STATE.reversals++;
+  }
+  STATE.lastDirection = newDirection;
+
+  if (correct) {
+    STATE.currentSat = Math.max(STAIRCASE.minSat, STATE.currentSat - STAIRCASE.stepDown);
+  } else {
+    STATE.currentSat = Math.min(STAIRCASE.maxSat, STATE.currentSat + STAIRCASE.stepUp);
+  }
+
+  // Check termination
+  var axisKey = AXES[STATE.currentAxisIdx].key;
+  var shouldTerminate = (STATE.reversals >= STAIRCASE.maxReversals) || (STATE.trialCount >= STAIRCASE.maxTrials);
+
+  if (shouldTerminate) {
+    // Compute threshold = mean of last 4 reversal points, or mean of last 4 trials
+    var threshold = computeThreshold(STATE.trialHistory);
+    STATE.staircase[STATE.currentEye][axisKey] = { threshold: threshold, history: STATE.trialHistory.slice() };
+    nextAxis();
+  } else {
+    randomizePatchSide();
+    renderTrial();
+    updateProgress();
+    announce("Trial " + (STATE.trialCount + 1) + " of " + STAIRCASE.maxTrials + ". Saturation " + STATE.currentSat + " percent.");
+  }
+}
+
+function computeThreshold(history) {
+  // READS: history[]  WRITES: nothing — returns threshold float
+  // Use the saturation values at reversal points (direction changes)
+  // DECISION: if < 2 reversals, fall back to mean of last 4 trial saturations
+  var reversalSats = [];
+  for (var i = 1; i < history.length; i++) {
+    var prevCorrect = history[i-1].correct;
+    var curCorrect  = history[i].correct;
+    if (prevCorrect !== curCorrect) {
+      reversalSats.push(history[i].sat);
+    }
+  }
+
+  if (reversalSats.length >= 2) {
+    var sum = 0;
+    // Use last min(4, all) reversal points
+    var useFrom = Math.max(0, reversalSats.length - 4);
+    for (var i = useFrom; i < reversalSats.length; i++) sum += reversalSats[i];
+    return Math.round(sum / (reversalSats.length - useFrom));
+  }
+
+  // Fallback: mean of last 4 saturations
+  var last = history.slice(-4);
+  var s = 0;
+  for (var i = 0; i < last.length; i++) s += last[i].sat;
+  return Math.round(s / last.length);
+}
+
+function nextAxis() {
+  // READS: STATE.currentAxisIdx  WRITES: STATE.currentAxisIdx
+  STATE.currentAxisIdx++;
+
+  if (STATE.currentAxisIdx >= AXES.length) {
+    finishEye();
+    return;
+  }
+
+  startAxis();
+  announce("Axis complete. Now testing " + AXES[STATE.currentAxisIdx].label + ".");
+}
+
+function finishEye() {
+  // READS: STATE.staircase[eye]  WRITES: STATE.results
+  var sc = STATE.staircase[STATE.currentEye];
+  var thresholds = {};
+  var totalScore = 0;
+  for (var i = 0; i < AXES.length; i++) {
+    var k = AXES[i].key;
+    thresholds[k] = sc[k] ? sc[k].threshold : STAIRCASE.startSat;
+    totalScore += thresholds[k];
+  }
+  var meanThreshold = Math.round(totalScore / AXES.length);
+  var analysis = analyzeThresholds(thresholds);
+
+  STATE.results[STATE.currentEye] = {
+    thresholds: thresholds,
+    meanThreshold: meanThreshold,
+    label: analysis.label,
+    verdictClass: analysis.verdictClass,
+    weakestAxis: analysis.weakestAxis,
+    note: analysis.note,
+    staircase: sc
+  };
+
+  var bothDone = STATE.results.right && STATE.results.left;
+  if (bothDone) { renderResults(); return; }
+
+  var nextEye = STATE.currentEye === "right" ? "left" : "right";
+  var nextLabel = nextEye.charAt(0).toUpperCase() + nextEye.slice(1);
+  document.getElementById("switch-label").textContent = nextLabel.toUpperCase();
+  document.getElementById("switch-label").className = "big-eye-label eye-" + nextEye;
+  document.getElementById("switch-btn").textContent = "Continue — " + nextLabel + " Eye";
+  document.getElementById("switch-btn").setAttribute("aria-label", "Continue with " + nextEye + " eye");
+  document.getElementById("switch-msg").textContent = STATE.currentEye.charAt(0).toUpperCase() + STATE.currentEye.slice(1) + " eye complete. Cover your " + STATE.currentEye + " eye with your palm and continue with your " + nextEye + " eye.";
+
+  showScreen("screen-switch");
+  announce(STATE.currentEye + " eye complete. Ready for " + nextEye + " eye.");
+}
+
+function analyzeThresholds(thresholds) {
+  // READS: thresholds {}  WRITES: nothing — returns analysis object
+  var weakestAxis = null;
+  var highestThreshold = 0;
+  for (var i = 0; i < AXES.length; i++) {
+    var k = AXES[i].key;
+    if (thresholds[k] > highestThreshold) {
+      highestThreshold = thresholds[k];
+      weakestAxis = k;
+    }
+  }
+
+  var elevated = [];
+  var mild = [];
+  for (var i = 0; i < AXES.length; i++) {
+    var k = AXES[i].key;
+    if (thresholds[k] > THRESHOLD_MILD) elevated.push(AXES[i].label);
+    else if (thresholds[k] > THRESHOLD_NORMAL) mild.push(AXES[i].label);
+  }
+
+  var label, verdictClass, note;
+
+  if (elevated.length === 0 && mild.length === 0) {
+    label = "Normal saturation sensitivity";
+    verdictClass = "ok";
+    note = "All four hue axes were detected at low saturation levels, consistent with typical color discrimination. Thresholds were within the normal range for a screen-based test.";
+  } else if (elevated.length > 0) {
+    label = "Reduced sensitivity — " + elevated.join(", ") + " axis" + (elevated.length > 1 ? "es" : "");
+    verdictClass = "";
+    note = buildElevatedNote(elevated, mild, weakestAxis, thresholds);
+  } else {
+    label = "Mild elevation — " + mild.join(", ") + " axis" + (mild.length > 1 ? "es" : "");
+    verdictClass = "warn";
+    note = buildMildNote(mild, weakestAxis, thresholds);
+  }
+
+  return { label: label, verdictClass: verdictClass, weakestAxis: weakestAxis, note: note };
+}
+
+function buildElevatedNote(elevated, mild, weakestAxis, thresholds) {
+  // READS: args  WRITES: nothing — returns string
+  var axisMap = {
+    red:    "The red axis elevation is associated with protanomaly or protanopia — reduced red-cone sensitivity.",
+    green:  "The green axis elevation is associated with deuteranomaly or deuteranopia — the most common form of color vision deficiency.",
+    blue:   "The blue axis elevation is associated with tritanomaly or tritanopia — a rare blue-yellow deficiency.",
+    yellow: "Yellow axis elevation can indicate deutan or tritan type deficiencies, as yellow discrimination requires intact red and blue cone balance."
+  };
+
+  var note = "Saturation detection threshold was significantly elevated on the " + elevated.join(", ") + " axis" + (elevated.length > 1 ? "es" : "") + ". " + (axisMap[weakestAxis] || "") + " ";
+  note += "A high threshold means you required more saturation to distinguish color from gray on this axis. This pattern is consistent with reduced cone sensitivity along that confusion axis. ";
+  note += "Consider cross-checking with the Ishihara color test at opticquiz.com/color/ and the D-15 hue sort at opticquiz.com/d15/. For a definitive result, consult an optometrist.";
+  return note;
+}
+
+function buildMildNote(mild, weakestAxis, thresholds) {
+  // READS: args  WRITES: nothing — returns string
+  return "Saturation detection threshold was mildly elevated on the " + mild.join(", ") + " axis" + (mild.length > 1 ? "es" : "") + ". Mild elevations are common on screen-based tests and may reflect display gamut limitations, ambient lighting, or mild anomalous trichromacy. If the same axis is consistently elevated across retests, consider a clinical evaluation.";
+}
+
+function startSecondEye() {
+  STATE.currentEye = STATE.currentEye === "right" ? "left" : "right";
+  STATE.currentAxisIdx = 0;
+  updateEyeBanner(STATE.currentEye);
+  showScreen("screen-test");
+  startAxis();
+  announce(STATE.currentEye + " eye. Red axis. Trial 1.");
+}
+
+function retakeTest() { showScreen("screen-intro"); }
+
+// ── 4. RENDER ─────────────────────────────────────────────
+
+function buildHSL(hue, sat, light) {
+  // READS: hue, sat, light  WRITES: nothing — returns CSS hsl string
+  return "hsl(" + hue + "," + sat + "%," + light + "%)";
+}
+
+function renderAxisIndicator() {
+  // READS: STATE.currentAxisIdx, AXES  WRITES: DOM
+  var axis = AXES[STATE.currentAxisIdx];
+  var swatchColor = buildHSL(axis.cssHue, 70, 55);
+  document.getElementById("axis-indicator-wrap").innerHTML =
+    '<div class="axis-indicator" role="note" aria-label="Current axis: ' + axis.label + '">' +
+    '<div class="axis-swatch" style="background:' + swatchColor + ';" aria-hidden="true"></div>' +
+    '<div><div class="axis-name">' + axis.label.toUpperCase() + '</div>' +
+    '<div class="axis-sub">' + axis.subLabel + '</div></div>' +
+    '</div>';
+}
+
+function renderTrial() {
+  // READS: STATE  WRITES: DOM
+  var axis = AXES[STATE.currentAxisIdx];
+  var sat = STATE.currentSat;
+  var L = 60;
+
+  // Build the two patches
+  var coloredHsl = buildHSL(axis.cssHue, sat, L);
+  var grayHsl    = "hsl(0,0%," + L + "%)";
+
+  var leftColor  = STATE.leftPatchIsColored ? coloredHsl : grayHsl;
+  var rightColor = STATE.leftPatchIsColored ? grayHsl    : coloredHsl;
+
+  var leftLabel  = STATE.leftPatchIsColored ? "Left patch (colored)" : "Left patch (gray)";
+  var rightLabel = STATE.leftPatchIsColored ? "Right patch (gray)"   : "Right patch (colored)";
+
+  // Trial dots
+  var dotsHtml = '<div class="trial-dots" role="list" aria-label="Trial history">';
+  for (var i = 0; i < STAIRCASE.maxTrials; i++) {
+    var cls = "trial-dot";
+    if (i < STATE.trialHistory.length) {
+      cls += STATE.trialHistory[i].correct ? " correct" : " wrong";
+    } else if (i === STATE.trialHistory.length) {
+      cls += " active";
+    }
+    var dotLabel = i < STATE.trialHistory.length ? (STATE.trialHistory[i].correct ? "correct" : "wrong") : (i === STATE.trialHistory.length ? "current" : "upcoming");
+    dotsHtml += '<div class="' + cls + '" role="listitem" aria-label="Trial ' + (i+1) + ': ' + dotLabel + '"></div>';
+  }
+  dotsHtml += '</div>';
+
+  // Saturation meter — goes from full color to gray as sat decreases
+  var meterPct = Math.round((sat / STAIRCASE.maxSat) * 100);
+  var meterColor = buildHSL(axis.cssHue, sat, 50);
+
+  // Patch label color — need to be readable on both light and potentially saturated bgs
+  // DECISION: always use dark text on patches (L=60% is mid-bright, dark text passes AA)
+  var html =
+    dotsHtml +
+    '<div class="trial-question" id="trial-q">Which patch looks more colored?</div>' +
+    '<div class="patch-row" role="group" aria-label="Two patches — select the more colored one">' +
+
+    '<button class="patch-btn" id="patch-left" ' +
+      'style="background:' + leftColor + ';" ' +
+      'onclick="submitTrialAnswer(true)" ' +
+      'aria-label="Left patch — tap if this looks more colored" ' +
+      '>' +
+      '<span class="patch-label" aria-hidden="true">LEFT</span>' +
+    '</button>' +
+
+    '<button class="patch-btn" id="patch-right" ' +
+      'style="background:' + rightColor + ';" ' +
+      'onclick="submitTrialAnswer(false)" ' +
+      'aria-label="Right patch — tap if this looks more colored" ' +
+      '>' +
+      '<span class="patch-label" aria-hidden="true">RIGHT</span>' +
+    '</button>' +
+
+    '</div>' +
+
+    '<button class="cant-tell-btn" onclick="submitCantTell()" aria-label="I cannot tell any difference between the two patches">' +
+      'I can\'t tell any difference' +
+    '</button>' +
+
+    '<div class="sat-meter" aria-label="Current saturation level: ' + sat + ' percent">' +
+      '<div class="sat-meter-label">' +
+        '<span>Saturation level</span>' +
+        '<span id="sat-pct-label">' + sat + '%</span>' +
+      '</div>' +
+      '<div class="sat-meter-track">' +
+        '<div class="sat-meter-fill" id="sat-fill" style="width:' + meterPct + '%;background:' + meterColor + ';"></div>' +
+      '</div>' +
+      '<div class="sat-meter-hint">Decreases as you answer correctly</div>' +
+    '</div>';
+
+  document.getElementById("trial-area").innerHTML = html;
+}
+
+function submitCantTell() {
+  // READS: nothing  WRITES: via submitTrialAnswer
+  // DECISION: "can't tell" is treated as incorrect — same as choosing the wrong patch.
+  // This is consistent with forced-choice psychophysics: inability to discriminate = threshold crossed.
+  submitTrialAnswer(!STATE.leftPatchIsColored); // always wrong
+}
+
+function updateProgress() {
+  // READS: STATE  WRITES: DOM
+  var eyePct = STATE.currentEye === "left" ? 50 : 0;
+  var axisPct = Math.round((STATE.currentAxisIdx / AXES.length) * 50);
+  var trialPct = Math.round((STATE.trialCount / STAIRCASE.maxTrials) * (50 / AXES.length));
+  var total = Math.max(5, eyePct + axisPct + trialPct);
+
+  document.getElementById("prog-fill").style.width = total + "%";
+  document.getElementById("prog-bar").setAttribute("aria-valuenow", total);
+
+  var axis = AXES[STATE.currentAxisIdx];
+  var eyeLabel = STATE.currentEye.charAt(0).toUpperCase() + STATE.currentEye.slice(1);
+  document.getElementById("prog-label").textContent = eyeLabel.toUpperCase() + " EYE — " + axis.label.toUpperCase();
+  document.getElementById("prog-axis-num").textContent = "Axis " + (STATE.currentAxisIdx + 1) + " / " + AXES.length;
+}
+
+function updateEyeBanner(eye) {
+  // READS: eye  WRITES: DOM
+  var cover = eye === "right" ? "LEFT" : "RIGHT";
+  var keep  = eye === "right" ? "RIGHT" : "LEFT";
+  document.getElementById("eb-main").textContent = "Cover your " + cover + " eye with your palm";
+  document.getElementById("eye-banner").querySelector(".eb-sub").textContent = "Maximum brightness. Keep your " + keep + " eye focused on the patches.";
+}
+
+// ── 5. RESULTS ────────────────────────────────────────────
+
+function renderResults() {
+  // READS: STATE.results  WRITES: DOM
+  var r = STATE.results;
+  var rightLabel = r.right ? (r.right.meanThreshold <= THRESHOLD_NORMAL ? "Normal" : r.right.meanThreshold <= THRESHOLD_MILD ? "Mild" : "Elevated") : "—";
+  var leftLabel  = r.left  ? (r.left.meanThreshold  <= THRESHOLD_NORMAL ? "Normal" : r.left.meanThreshold  <= THRESHOLD_MILD ? "Mild" : "Elevated") : "—";
+
+  document.getElementById("tab-right-val").textContent = rightLabel;
+  document.getElementById("tab-left-val").textContent  = leftLabel;
+
+  STATE.activeTab = "right";
+  renderResultDetail("right");
+  showScreen("screen-results");
+  announce("Results ready. Right eye: " + (r.right ? r.right.label : "not tested") + ". Left eye: " + (r.left ? r.left.label : "not tested") + ".");
+}
+
+function renderResultDetail(eye) {
+  // READS: STATE.results[eye]  WRITES: DOM
+  var r = STATE.results[eye];
+  if (!r) {
+    document.getElementById("result-detail").innerHTML = '<p style="padding:16px 0;color:var(--gray)">No data for this eye.</p>';
+    return;
+  }
+
+  // Verdict
+  var html = '<div class="verdict-block ' + r.verdictClass + '" role="region" aria-label="' + eye + ' eye finding">' +
+    '<div class="v-eyebrow">' + eye + ' eye</div>' +
+    '<div class="v-main">' + r.label + '</div>' +
+    '<div class="v-body">' + r.note + '</div>' +
+    '</div>';
+
+  // Score summary
+  html += '<div class="score-grid" role="list">' +
+    '<div class="score-cell" role="listitem"><span class="score-val">' + r.meanThreshold + '%</span><span class="score-lbl">Mean threshold</span></div>' +
+    '<div class="score-cell" role="listitem"><span class="score-val">' + (r.weakestAxis ? r.weakestAxis.charAt(0).toUpperCase() + r.weakestAxis.slice(1) : "—") + '</span><span class="score-lbl">Weakest axis</span></div>' +
+    '</div>';
+
+  // Per-axis threshold chart
+  html += '<h3>Per-axis thresholds</h3><div class="threshold-chart" role="list">';
+  for (var i = 0; i < AXES.length; i++) {
+    var axis = AXES[i];
+    var threshold = r.thresholds[axis.key];
+    var swatchColor = "hsl(" + axis.cssHue + ",70%,50%)";
+    var barWidth = Math.round((threshold / STAIRCASE.maxSat) * 100);
+    var normalLineLeft = Math.round((NORMAL_THRESHOLD_PCT / STAIRCASE.maxSat) * 100);
+    var levelNote = threshold <= THRESHOLD_NORMAL ? "Normal range" : threshold <= THRESHOLD_MILD ? "Mildly elevated" : "Significantly elevated";
+    var barColor = threshold <= THRESHOLD_NORMAL ? "#4A8C3F" : threshold <= THRESHOLD_MILD ? "#D4820A" : "#E8431A";
+
+    html += '<div class="tc-row" role="listitem">' +
+      '<div class="tc-meta">' +
+        '<div class="tc-swatch" style="background:' + swatchColor + ';" aria-hidden="true"></div>' +
+        '<span class="tc-name">' + axis.label + '</span>' +
+        '<span class="tc-val" aria-label="Threshold ' + threshold + ' percent">' + threshold + '% sat</span>' +
+      '</div>' +
+      '<div class="tc-track" aria-label="' + axis.label + ' threshold bar">' +
+        '<div class="tc-fill" style="width:0%;background:' + barColor + ';" data-target="' + barWidth + '"></div>' +
+        '<div class="tc-normal-marker" style="left:' + normalLineLeft + '%;" aria-hidden="true" title="Normal range"></div>' +
+      '</div>' +
+      '<div class="tc-note">' + levelNote + ' · Normal reference: ~' + NORMAL_THRESHOLD_PCT + '%</div>' +
+    '</div>';
+  }
+  html += '</div>';
+
+  // Staircase history (compact) — show trial dots per axis
+  html += '<h3>Trial history per axis</h3>' +
+    '<div style="margin-bottom:20px;" role="list">';
+  for (var i = 0; i < AXES.length; i++) {
+    var axis = AXES[i];
+    var sc = r.staircase[axis.key];
+    if (!sc || !sc.history) continue;
+    var swatchColor = "hsl(" + axis.cssHue + ",70%,50%)";
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;" role="listitem">' +
+      '<div style="width:12px;height:12px;border-radius:50%;background:' + swatchColor + ';flex-shrink:0;border:1px solid rgba(0,0,0,0.12);" aria-hidden="true"></div>' +
+      '<span style="font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:0.06em;min-width:52px;">' + axis.label.toUpperCase() + '</span>' +
+      '<div style="display:flex;gap:4px;flex-wrap:wrap;">';
+    for (var ti = 0; ti < sc.history.length; ti++) {
+      var dot = sc.history[ti];
+      var dotColor = dot.correct ? "#4A8C3F" : "#E8431A";
+      html += '<div style="width:8px;height:8px;border-radius:50%;background:' + dotColor + ';" aria-label="Trial ' + (ti+1) + ': ' + (dot.correct ? 'correct' : 'wrong') + ' at ' + dot.sat + '% saturation"></div>';
+    }
+    html += '</div></div>';
+  }
+  html += '</div>';
+
+  // Interpretation
+  var interpText;
+  if (r.verdictClass === "ok") {
+    interpText = "All four hue axes were detected at saturation levels consistent with normal color discrimination on a screen-based test. The normal threshold reference is approximately " + NORMAL_THRESHOLD_PCT + "% saturation — all your axes fell within or below this range. Note that this test is primarily useful for detecting <strong>mild anomalous trichromacy that passes Ishihara plates</strong>. If you passed both this test and the plate test, that is a strong indicator of normal color vision for the purposes of screen-based screening.";
+  } else if (r.weakestAxis === "red" || r.weakestAxis === "green") {
+    interpText = "Elevated threshold on the " + r.weakestAxis + " axis suggests possible <strong>red-green type color vision deficiency</strong> — the most common form of CVD. For more detail, the Ishihara plate test at opticquiz.com/color/ and the D-15 hue sort at opticquiz.com/d15/ provide complementary data. Screen saturation is limited by sRGB gamut, so clinical validation requires a physical test under standard illumination.";
+  } else if (r.weakestAxis === "blue") {
+    interpText = "Elevated threshold on the blue axis suggests possible <strong>tritan-type color vision deficiency</strong> — a rare blue-yellow deficiency that affects men and women equally and is not inherited X-linked. Acquired tritanomaly can also develop with age, certain medications, or ocular conditions. A specialist evaluation is worth considering.";
+  } else if (r.weakestAxis === "yellow") {
+    interpText = "Elevated threshold on the yellow axis can indicate <strong>deutan or tritan overlap</strong> — yellow discrimination requires balanced input from both red and blue cones, so deficiencies in either axis can elevate the yellow threshold. Cross-check with the D-15 hue sort (opticquiz.com/d15/) to look for axis-specific confusion patterns.";
+  } else {
+    interpText = "Thresholds were mildly elevated on one or more axes. Mild elevations on screen-based tests often reflect display gamut limitations rather than clinically significant CVD. Consider retesting and cross-checking with the Ishihara and D-15 tests if you have concerns.";
+  }
+
+  html += '<h3>What this means</h3><div class="interp-card"><div class="interp-text">' + interpText + '</div></div>';
+
+  document.getElementById("result-detail").innerHTML = html;
+
+  // Animate bars
+  setTimeout(function() {
+    var fills = document.querySelectorAll(".tc-fill");
+    for (var i = 0; i < fills.length; i++) {
+      (function(el) { el.style.transition = "width 0.9s cubic-bezier(0.4,0,0.2,1)"; el.style.width = el.getAttribute("data-target") + "%"; })(fills[i]);
+    }
+  }, 120);
+}
+
+function switchTab(eye) {
+  // READS: eye  WRITES: DOM, STATE.activeTab
+  STATE.activeTab = eye;
+  document.getElementById("tab-right").classList.toggle("active", eye === "right");
+  document.getElementById("tab-right").setAttribute("aria-selected", eye === "right" ? "true" : "false");
+  document.getElementById("tab-left").classList.toggle("active", eye === "left");
+  document.getElementById("tab-left").setAttribute("aria-selected", eye === "left" ? "true" : "false");
+  renderResultDetail(eye);
+  announce(eye + " eye results displayed");
+}
+
+// ── UTILITY ───────────────────────────────────────────────
+
+function showScreen(id) {
+  // READS: id  WRITES: DOM
+  var screens = document.querySelectorAll(".screen");
+  for (var i = 0; i < screens.length; i++) screens[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+function announce(msg) {
+  // READS: msg  WRITES: aria-live region
+  var el = document.getElementById("a11y-live");
+  if (!el) return;
+  el.textContent = "";
+  setTimeout(function() { el.textContent = msg; }, 60);
+}
+
+function shareResults() {
+  // READS: STATE.results  WRITES: clipboard / share sheet
+  var r = STATE.results;
+  var parts = [];
+  if (r.right) parts.push("R: " + r.right.label);
+  if (r.left)  parts.push("L: " + r.left.label);
+  var text = "My OpticQuiz Saturation Threshold result — " + parts.join(" | ") + ". Educational screening only, not a diagnosis. opticquiz.com/sat/";
+  try {
+    if (navigator.share) {
+      navigator.share({ title: "OpticQuiz Saturation Threshold", text: text, url: "https://opticquiz.com/sat/" });
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function() { announce("Result copied to clipboard"); });
+    } else {
+      prompt("Copy your result:", text);
+    }
+  } catch(e) {
+    try { if (navigator.clipboard) navigator.clipboard.writeText(text); } catch(e2) {}
+  }
+}
+</script>
+</body>
+</html>
