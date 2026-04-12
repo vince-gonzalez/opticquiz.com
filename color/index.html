@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ===== WORKFLOW STACK =====
+  File:         color/index.html
+  Site:         OpticQuiz — Color Vision Test
+  Domain:       opticquiz.com/color/
+  Repo:         zengineco/opticquiz.com  /color/index.html
+  Author:       Vince Gonzalez / Zengine™
+  Version:      v1.2.0
+  Boot Order:   1.CONFIG  2.PLATES  3.BAYES  4.ENGINE  5.RENDER  6.INIT
+  Features:
+    - 10 Ishihara-style plates (images served from /plates/)
+    - Bayesian posterior over 8 vision types
+    - Adaptive plate ordering via Shannon entropy / information gain
+    - Time-weighted answer scoring
+    - Per-eye bilateral testing (right eye first, then left)
+    - Response time histogram on results screen
+    - Share results (Web Share API → clipboard → prompt fallback)
+    - WCAG 2.1 AA accessibility
+  Palette: white/cream/red(#E8431A)/green(#4A8C3F)/black — matches logo
+===== END WORKFLOW STACK ===== -->
+
+<!-- ===== ASSET MANIFEST =====
+  EXTERNAL:
+    /opticquiz_icon.png         logo — live on GitHub
+    Google Fonts: Bebas Neue, Source Serif 4
+  PLATE IMAGES (must be in /plates/ at repo root):
+    plate_12.png     correct=12  deutan primary
+    plate_8.png      correct=8   deutan
+    plate_29.png     correct=29  deutan/protan
+    plate_5.png      correct=5   protan primary
+    plate_3.png      correct=3   protan
+    plate_15.png     correct=15  deutan/protan
+    plate_tritan_1.png  correct=6   tritan primary
+    plate_tritan_2.png  correct=2   tritan
+    plate_achromat.png  correct=45  achromatopsia trap
+    plate_control.png   correct=7   universal control
+===== END ASSET MANIFEST ===== -->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz Color Vision Test — probabilistic Bayesian screening for deuteranopia, protanopia, tritanopia, and more. Educational use only.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Color Vision Screening">
+<meta property="og:description" content="10 Ishihara-style plates. Estimates likelihood of 8 color vision deficiency types. Free. No account. Results on-device only.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/color/">
+<link rel="canonical" href="https://opticquiz.com/color/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Color Vision Test — OpticQuiz</title>
+
+<!-- AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+
+<style>
+/* ===== DESIGN SYSTEM =====
+  Palette (from opticquiz_icon.png):
+    --white  #FFFFFF
+    --bg     #F8F6F2   warm off-white
+    --cream  #F0EDE6   card bg
+    --lgray  #D4D0C8   borders
+    --gray   #6B6B6B   secondary text (5.74:1 on white — AA)
+    --black  #1A1A1A   primary text   (16.2:1 on white — AAA)
+    --red    #E8431A   orange-red accent
+    --redd   #C23410   red hover
+    --green  #4A8C3F   forest green
+    --greend #38692F   green hover
+    --redbg  #FDF1EE   red tint
+    --gbg    #EEF5ED   green tint
+    --amber  #D4820A   warning/hesitation in histogram
+  Fonts: Bebas Neue (display) + Source Serif 4 (body) + Courier New (mono)
+===== END DESIGN SYSTEM ===== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #FFFFFF;
+  --bg: #F8F6F2;
+  --cream: #F0EDE6;
+  --lgray: #D4D0C8;
+  --gray: #6B6B6B;
+  --black: #1A1A1A;
+  --red: #E8431A;
+  --redd: #C23410;
+  --green: #4A8C3F;
+  --greend: #38692F;
+  --redbg: #FDF1EE;
+  --gbg: #EEF5ED;
+  --amber: #D4820A;
+  --fd: "Bebas Neue", Impact, fantasy;
+  --fs: "Source Serif 4", Georgia, serif;
+  --fm: "Courier New", monospace;
+  --r: 4px;
+  --rc: 8px;
+}
+
+html { background: var(--bg); }
+body {
+  font-family: var(--fs);
+  background: var(--bg);
+  color: var(--black);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── A11Y ──────────────────────────────────────── */
+.skip-link {
+  position: absolute; top: -48px; left: 16px; z-index: 9999;
+  background: var(--red); color: var(--white);
+  padding: 10px 18px; border-radius: var(--r);
+  font-family: var(--fs); font-size: 14px; font-weight: 600;
+  text-decoration: none; transition: top 0.15s;
+}
+.skip-link:focus { top: 12px; }
+*:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; border-radius: var(--r); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* ── LAYOUT ────────────────────────────────────── */
+.wrap { max-width: 560px; margin: 0 auto; padding: 0 20px 80px; }
+
+/* ── HEADER ────────────────────────────────────── */
+.site-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 20px 0; max-width: 560px; margin: 0 auto;
+}
+.logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-wrap img { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--lgray); }
+.logo-name { font-family: var(--fd); font-size: 22px; color: var(--black); letter-spacing: 0.03em; }
+.logo-name span { color: var(--red); }
+.ver-badge { font-family: var(--fm); font-size: 10px; color: var(--gray); border: 1px solid var(--lgray); padding: 3px 8px; border-radius: 20px; letter-spacing: 0.1em; }
+
+/* ── SCREENS ───────────────────────────────────── */
+.screen { display: none; }
+.screen.active { display: block; animation: fadein 0.2s ease; }
+@keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+/* ── TYPOGRAPHY ────────────────────────────────── */
+.eyebrow { font-family: var(--fm); font-size: 11px; letter-spacing: 0.14em; color: var(--red); text-transform: uppercase; display: block; margin-bottom: 10px; }
+h1 { font-family: var(--fd); font-size: clamp(48px, 12vw, 72px); color: var(--black); line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 16px; }
+h2 { font-family: var(--fd); font-size: clamp(32px, 8vw, 48px); color: var(--black); line-height: 0.94; letter-spacing: 0.02em; margin-bottom: 16px; }
+h3 { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+p { font-size: 15px; color: var(--gray); line-height: 1.7; }
+
+/* ── BUTTONS ────────────────────────────────────── */
+.btn {
+  display: block; width: 100%; padding: 16px 20px;
+  font-family: var(--fs); font-size: 16px; font-weight: 600;
+  color: var(--black); background: var(--white);
+  border: 1.5px solid var(--lgray); border-radius: var(--r);
+  cursor: pointer; text-align: center;
+  transition: border-color 0.12s, background 0.12s, transform 0.08s;
+  min-height: 52px; letter-spacing: 0.01em;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:hover { border-color: var(--black); background: var(--cream); }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--red); color: var(--white); border-color: transparent; }
+.btn-primary:hover { background: var(--redd); }
+.btn-secondary { background: var(--green); color: var(--white); border-color: transparent; }
+.btn-secondary:hover { background: var(--greend); }
+.btn + .btn { margin-top: 10px; }
+
+/* ── CHECKLIST ──────────────────────────────────── */
+.check-list { margin: 20px 0; }
+.check-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 0; border-bottom: 1px solid var(--lgray);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.check-item:last-child { border-bottom: none; }
+.check-box {
+  width: 22px; height: 22px; border-radius: var(--r);
+  border: 1.5px solid var(--lgray); flex-shrink: 0; margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.12s; background: var(--white);
+}
+.check-box.on { background: var(--green); border-color: var(--green); }
+.check-box.on::after { content: ''; display: block; width: 5px; height: 9px; border: 2px solid #fff; border-top: none; border-left: none; transform: rotate(45deg) translateY(-1px); }
+.check-title { font-size: 14px; font-weight: 600; color: var(--black); margin-bottom: 2px; }
+.check-sub { font-size: 13px; color: var(--gray); line-height: 1.5; }
+
+/* ── EYE SELECTOR ───────────────────────────────── */
+.eye-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+.eye-btn {
+  padding: 20px 16px; border: 2px solid var(--lgray); border-radius: var(--rc);
+  background: var(--white); cursor: pointer; text-align: center;
+  transition: border-color 0.12s, background 0.12s;
+  -webkit-tap-highlight-color: transparent; min-height: 64px;
+}
+.eye-btn:hover { border-color: var(--red); background: var(--redbg); }
+.eye-btn.selected { border-color: var(--red); background: var(--redbg); }
+.eye-btn-label { font-family: var(--fd); font-size: 24px; color: var(--black); letter-spacing: 0.02em; display: block; margin-bottom: 2px; }
+.eye-btn-sub { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* ── PROGRESS ───────────────────────────────────── */
+.prog-wrap { margin-bottom: 24px; }
+.prog-meta { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.prog-meta span { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.06em; }
+.prog-track { height: 3px; background: var(--lgray); border-radius: 2px; position: relative; }
+.prog-fill { height: 100%; background: var(--red); border-radius: 2px; transition: width 0.35s cubic-bezier(0.4,0,0.2,1); }
+
+/* ── PLATE ──────────────────────────────────────── */
+.plate-wrap { text-align: center; margin: 20px 0 18px; }
+.plate-frame {
+  display: inline-block; border-radius: 50%; overflow: hidden;
+  border: 2px solid var(--lgray); background: var(--cream);
+}
+.plate-frame img { display: block; width: min(76vw, 300px); height: min(76vw, 300px); object-fit: cover; border-radius: 50%; }
+.plate-placeholder {
+  width: min(76vw, 300px); height: min(76vw, 300px);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 8px; background: var(--cream);
+}
+.ph-num { font-family: var(--fd); font-size: 72px; color: var(--lgray); line-height: 1; }
+.ph-file { font-family: var(--fm); font-size: 10px; color: var(--gray); padding: 0 12px; text-align: center; }
+.plate-cue { font-family: var(--fm); font-size: 12px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; text-align: center; margin-bottom: 14px; }
+
+/* ── OPTIONS ────────────────────────────────────── */
+.options { display: grid; gap: 10px; }
+.options.g2 { grid-template-columns: 1fr 1fr; }
+.options.g3 { grid-template-columns: 1fr 1fr 1fr; }
+.opt-btn {
+  padding: 18px 10px; font-family: var(--fs); font-size: 20px; font-weight: 600;
+  color: var(--black); background: var(--white);
+  border: 1.5px solid var(--lgray); border-radius: var(--r);
+  cursor: pointer; text-align: center;
+  transition: border-color 0.12s, background 0.1s, transform 0.08s;
+  min-height: 64px; -webkit-tap-highlight-color: transparent;
+}
+.opt-btn:hover { border-color: var(--red); background: var(--redbg); }
+.opt-btn:active { transform: scale(0.95); }
+.opt-nothing { font-size: 13px; font-weight: 400; color: var(--gray); letter-spacing: 0.03em; font-family: var(--fm); }
+
+/* ── RESULTS ────────────────────────────────────── */
+.verdict-block {
+  background: var(--white); border: 1.5px solid var(--lgray);
+  border-top: 4px solid var(--red); border-radius: var(--rc);
+  padding: 20px; margin-bottom: 20px;
+}
+.v-eyebrow { font-family: var(--fm); font-size: 10px; color: var(--red); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
+.v-main { font-family: var(--fd); font-size: clamp(24px, 6vw, 34px); color: var(--black); line-height: 1; margin-bottom: 3px; }
+.v-sub { font-size: 14px; color: var(--gray); line-height: 1.5; margin-bottom: 16px; }
+.conf-row { display: flex; align-items: center; gap: 10px; }
+.conf-lbl { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; min-width: 70px; }
+.conf-track { flex: 1; height: 4px; background: var(--lgray); border-radius: 2px; overflow: hidden; }
+.conf-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width 0.9s cubic-bezier(0.4,0,0.2,1); }
+.conf-pct { font-family: var(--fm); font-size: 12px; color: var(--gray); min-width: 34px; text-align: right; }
+
+/* Result bars */
+.result-section { margin-bottom: 24px; }
+.result-row { margin-bottom: 10px; }
+.result-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.result-name { font-size: 13px; font-weight: 600; color: var(--black); }
+.result-pct { font-family: var(--fm); font-size: 12px; color: var(--gray); }
+.result-track { height: 6px; background: var(--lgray); border-radius: 3px; overflow: hidden; }
+.result-fill { height: 100%; border-radius: 3px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+
+/* Response time histogram */
+.histogram { margin-bottom: 24px; }
+.hist-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.hist-label { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.06em; min-width: 82px; text-align: right; }
+.hist-track { flex: 1; height: 18px; background: var(--cream); border-radius: 3px; overflow: hidden; position: relative; }
+.hist-fill { height: 100%; border-radius: 3px; transition: width 0.7s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; padding-left: 8px; }
+.hist-time { font-family: var(--fm); font-size: 10px; color: rgba(255,255,255,0.9); letter-spacing: 0.04em; white-space: nowrap; }
+.hist-correct { background: var(--green); }
+.hist-wrong { background: var(--red); }
+.hist-hesitant { background: var(--amber); }
+
+/* Interpretation */
+.interp-card { background: var(--cream); border: 1px solid var(--lgray); border-radius: var(--rc); padding: 18px; margin-bottom: 20px; }
+.interp-text { font-size: 14px; color: var(--gray); line-height: 1.8; }
+
+/* Eye result tabs */
+.eye-result-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+.eye-result-tab {
+  padding: 10px 14px; border-radius: var(--r);
+  border: 1.5px solid var(--lgray); background: var(--white);
+  cursor: pointer; text-align: center; transition: all 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.eye-result-tab.active { border-color: var(--red); background: var(--redbg); }
+.eye-result-tab-label { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px; }
+.eye-result-tab-val { font-family: var(--fd); font-size: 18px; color: var(--black); letter-spacing: 0.02em; }
+
+/* Disclaimer */
+.disclaimer {
+  background: var(--cream); border: 1.5px solid var(--lgray);
+  border-left: 4px solid var(--red); border-radius: var(--rc);
+  padding: 18px 18px 18px 20px; margin-top: 24px;
+}
+.disclaimer-title { font-family: var(--fm); font-size: 11px; letter-spacing: 0.1em; color: var(--red); text-transform: uppercase; margin-bottom: 8px; }
+.disclaimer-body { font-size: 12px; color: var(--gray); line-height: 1.8; }
+.disclaimer-body strong { color: var(--black); font-weight: 600; }
+
+/* Share row */
+.share-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+
+/* Divider */
+.divider { height: 1px; background: var(--lgray); margin: 24px 0; }
+
+/* Footer */
+footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spacing: 0.06em; text-align: center; padding: 24px 0 8px; border-top: 1px solid var(--lgray); margin-top: 32px; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home">
+    <img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38">
+    <div class="logo-name">OPTIC<span>QUIZ</span></div>
+  </a>
+  <div class="ver-badge">COLOR TEST</div>
+</header>
+
+<main id="main" class="wrap" role="main">
+
+<!-- ══ SCREEN: INTRO ══════════════════════════════════════ -->
+<div id="screen-intro" class="screen active" role="region" aria-labelledby="intro-h1">
+  <div style="padding-top:32px">
+    <span class="eyebrow">Color Vision Screening</span>
+    <h1 id="intro-h1">COLOR<br>VISION<br>TEST</h1>
+    <p>10 Ishihara-style dot plates. Bayesian scoring across 8 vision types. Tests both eyes independently. Results stay on your device.</p>
+
+    <div class="divider"></div>
+
+    <h3 id="setup-heading">Before you begin</h3>
+    <div class="check-list" id="check-list" role="list" aria-labelledby="setup-heading">
+      <div class="check-item" id="ci-0" role="checkbox" aria-checked="false" tabindex="0"
+           onclick="toggleCheck(0)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(0)">
+        <div class="check-box" id="cb-0" aria-hidden="true"></div>
+        <div><div class="check-title">Maximize screen brightness</div><div class="check-sub">Low brightness shifts perceived hue and measurably reduces plate test accuracy.</div></div>
+      </div>
+      <div class="check-item" id="ci-1" role="checkbox" aria-checked="false" tabindex="0"
+           onclick="toggleCheck(1)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(1)">
+        <div class="check-box" id="cb-1" aria-hidden="true"></div>
+        <div><div class="check-title">Normal indoor or diffuse light</div><div class="check-sub">Direct sunlight on screen or strong colored ambient light will skew results.</div></div>
+      </div>
+      <div class="check-item" id="ci-2" role="checkbox" aria-checked="false" tabindex="0"
+           onclick="toggleCheck(2)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(2)">
+        <div class="check-box" id="cb-2" aria-hidden="true"></div>
+        <div><div class="check-title">Remove tinted glasses or lenses</div><div class="check-sub">Prescription lenses are fine. Tinted, photochromic, or colored lenses are not.</div></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>Select which eye to test first</h3>
+    <div class="eye-selector" role="group" aria-label="Eye selection">
+      <div class="eye-btn selected" id="eye-right" role="radio" aria-checked="true" tabindex="0"
+           onclick="selectEye('right')" onkeydown="if(event.key==='Enter'||event.key===' ')selectEye('right')">
+        <span class="eye-btn-label">Right</span>
+        <span class="eye-btn-sub">Start here</span>
+      </div>
+      <div class="eye-btn" id="eye-left" role="radio" aria-checked="false" tabindex="0"
+           onclick="selectEye('left')" onkeydown="if(event.key==='Enter'||event.key===' ')selectEye('left')">
+        <span class="eye-btn-label">Left</span>
+        <span class="eye-btn-sub">Or here</span>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--gray);margin-bottom:20px;">You will test both eyes — the other eye follows automatically. Cover the non-testing eye with your palm, not a lens.</p>
+
+    <button class="btn btn-primary" onclick="startTest()" aria-label="Start the color vision test">Start Test</button>
+    <a href="/" style="display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;" aria-label="Back to OpticQuiz home">← All Tests</a>
+  </div>
+</div>
+
+<!-- ══ SCREEN: TEST ═══════════════════════════════════════ -->
+<div id="screen-test" class="screen" role="region" aria-label="Active test">
+  <div style="padding-top:24px">
+    <div class="prog-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog-bar" aria-label="Test progress">
+      <div class="prog-meta">
+        <span id="prog-label">QUESTION 1 / 10</span>
+        <span id="prog-eye">RIGHT EYE</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+
+    <div id="test-content"></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: BETWEEN EYES ══════════════════════════════ -->
+<div id="screen-switch" class="screen" role="region" aria-label="Switch eyes">
+  <div style="padding-top:40px;text-align:center">
+    <span class="eyebrow">Eye complete</span>
+    <h2 id="switch-heading">SWITCH<br>EYES</h2>
+    <p id="switch-msg" style="margin-bottom:28px;"></p>
+    <button class="btn btn-primary" onclick="startSecondEye()" id="switch-btn" aria-label="Continue with second eye">Continue — Left Eye</button>
+    <a href="/" style="display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;">← All Tests</a>
+  </div>
+</div>
+
+<!-- ══ SCREEN: RESULTS ════════════════════════════════════ -->
+<div id="screen-results" class="screen" role="region" aria-label="Test results">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Results</span>
+    <h2>YOUR<br>VISION<br>PROFILE</h2>
+
+    <div class="eye-result-tabs" role="tablist" aria-label="Eye results">
+      <div class="eye-result-tab active" id="tab-right" role="tab" aria-selected="true" tabindex="0"
+           onclick="switchResultTab('right')" onkeydown="if(event.key==='Enter'||event.key===' ')switchResultTab('right')">
+        <div class="eye-result-tab-label">Right eye</div>
+        <div class="eye-result-tab-val" id="tab-right-val">—</div>
+      </div>
+      <div class="eye-result-tab" id="tab-left" role="tab" aria-selected="false" tabindex="0"
+           onclick="switchResultTab('left')" onkeydown="if(event.key==='Enter'||event.key===' ')switchResultTab('left')">
+        <div class="eye-result-tab-label">Left eye</div>
+        <div class="eye-result-tab-val" id="tab-left-val">—</div>
+      </div>
+    </div>
+
+    <div id="result-detail"></div>
+
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()" aria-label="Share your results">Share</button>
+      <button class="btn btn-secondary" onclick="retakeTest()" aria-label="Retake this test">Retake</button>
+    </div>
+    <a href="/" style="display:block;text-align:center;margin-top:10px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;" aria-label="Back to all tests">← All Tests</a>
+
+    <div class="disclaimer" role="note" aria-label="Results disclaimer">
+      <div class="disclaimer-title">Results Disclaimer</div>
+      <div class="disclaimer-body">
+        These are <strong>probabilistic estimates only</strong> — not diagnoses. Results are generated by a statistical model running in your browser using population-level priors. Screen calibration, ambient lighting, and response patterns all affect output.
+        <strong>Do not use these results for any medical, employment, or safety decision.</strong>
+        If you have concerns about your color vision or eye health, consult a licensed optometrist or ophthalmologist.
+        Results are processed locally and never transmitted.
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer role="contentinfo">
+  www.zengine.site &nbsp;|&nbsp; © 2025 Zengine™ &nbsp;|&nbsp; Educational use only — not a medical diagnostic
+</footer>
+
+<script>
+// ===== BOOT ORDER: CONFIG → PLATES → BAYES → ENGINE → RENDER → INIT =====
+
+// ── 1. CONFIG ─────────────────────────────────────────────
+// READS: nothing  WRITES: nothing (constants)
+
+var DEV_MODE = false; // DECISION: flip true to show plate filenames on placeholders
+
+var TYPE_LABELS = {
+  normal:"Normal Vision",
+  deuteranomaly:"Deuteranomaly",
+  protanomaly:"Protanomaly",
+  tritanomaly:"Tritanomaly",
+  deuteranopia:"Deuteranopia",
+  protanopia:"Protanopia",
+  tritanopia:"Tritanopia",
+  achromatopsia:"Achromatopsia"
+};
+
+var TYPE_SUB = {
+  normal:"Typical trichromatic color vision",
+  deuteranomaly:"Mild green-sensitivity reduction (~5% of men)",
+  protanomaly:"Mild red-sensitivity reduction (~1% of men)",
+  tritanomaly:"Mild blue-sensitivity reduction (~0.01%)",
+  deuteranopia:"Green channel deficiency (~1% of men)",
+  protanopia:"Red channel deficiency (~1% of men)",
+  tritanopia:"Blue channel deficiency (~0.003%)",
+  achromatopsia:"Monochromatic vision (~0.003%)"
+};
+
+// DECISION: bar colors use logo palette — red spectrum for red-green deficiencies, blue for tritan, gray for normal
+var TYPE_COLORS = {
+  normal:"#6B6B6B",
+  deuteranomaly:"#D4520A",
+  protanomaly:"#E8431A",
+  tritanomaly:"#3A82E8",
+  deuteranopia:"#B83A10",
+  protanopia:"#C23410",
+  tritanopia:"#1A5CB8",
+  achromatopsia:"#9B9B9B"
+};
+
+var INTERPRETATIONS = {
+  normal:"Response pattern is consistent with typical trichromatic color vision. No significant confusion pattern was detected across red-green or blue-yellow axes. Note that mild anomalous trichromacy can occasionally produce near-normal plate results — if you have specific concerns, clinical testing with a Farnsworth-Munsell 100-Hue test offers more granular data.",
+  deuteranomaly:"Mild green-sensitivity shift detected. Deuteranomaly is the most common inherited color vision deficiency, present in approximately 5% of men and 0.4% of women. Common confusions: mid-reds with mid-greens, bright greens with yellows, pale pinks with light gray, and certain blue-purple combinations. Severity ranges from near-normal to near-deuteranopic.",
+  protanomaly:"Mild red-sensitivity reduction detected. Affects roughly 1% of men. Common confusions: dark brown with dark green or dark red, some blues with reds or purples, mid-greens with certain oranges. Red light sources appear dimmer than to those with normal vision — relevant near traffic signals.",
+  tritanomaly:"Mild blue-sensitivity shift detected. Tritanomaly is rare, affecting approximately 0.01% of the population regardless of sex. Typical confusions include blue versus green and yellow versus violet. Unlike red-green deficiencies, tritanomaly is not X-linked.",
+  deuteranopia:"Strong green-channel deficiency pattern. Mid-reds and mid-greens may appear indistinguishable. Blue-greens, grays, and mid-pinks may merge. Bright greens can resemble yellows. Deuteranopia affects approximately 1% of men.",
+  protanopia:"Red-channel deficiency pattern. Red, orange, and brown may be difficult to distinguish. Some blues may resemble reds or purples. Red stimuli appear significantly dimmer — relevant for warning signals and red-coded information. Affects approximately 1% of men.",
+  tritanopia:"Blue-channel deficiency detected. Light blues may appear as gray, dark purples as black, mid-greens as blues, and oranges as reds. Tritanopia is rare and equally prevalent in men and women.",
+  achromatopsia:"Very low color discrimination across all channels detected. Complete achromatopsia is extremely rare (~1 in 33,000) and typically involves additional symptoms including photophobia and reduced visual acuity. A specialist evaluation is strongly recommended."
+};
+
+// ── 2. PLATES ─────────────────────────────────────────────
+// READS: nothing  WRITES: nothing (static data)
+
+var PRIORS = {
+  normal:0.90, deuteranomaly:0.05, protanomaly:0.01, tritanomaly:0.0005,
+  deuteranopia:0.01, protanopia:0.01, tritanopia:0.0005, achromatopsia:0.00003
+};
+
+var PLATES = [
+  {id:1, image:"/plates/plate_12.png", correct:"12", options:["12","8","Nothing"],
+   likelihoods:{
+    "12":{normal:0.90,deuteranomaly:0.55,protanomaly:0.55,tritanomaly:0.82,deuteranopia:0.25,protanopia:0.25,tritanopia:0.80,achromatopsia:0.10},
+    "8": {normal:0.05,deuteranomaly:0.72,protanomaly:0.42,tritanomaly:0.10,deuteranopia:0.82,protanopia:0.52,tritanopia:0.10,achromatopsia:0.20},
+    "Nothing":{normal:0.05,deuteranomaly:0.12,protanomaly:0.12,tritanomaly:0.38,deuteranopia:0.28,protanopia:0.28,tritanopia:0.48,achromatopsia:0.90}}},
+  {id:2, image:"/plates/plate_8.png", correct:"8", options:["8","3","Nothing"],
+   likelihoods:{
+    "8": {normal:0.92,deuteranomaly:0.52,protanomaly:0.52,tritanomaly:0.85,deuteranopia:0.22,protanopia:0.22,tritanopia:0.82,achromatopsia:0.08},
+    "3": {normal:0.04,deuteranomaly:0.68,protanomaly:0.55,tritanomaly:0.08,deuteranopia:0.78,protanopia:0.65,tritanopia:0.10,achromatopsia:0.22},
+    "Nothing":{normal:0.04,deuteranomaly:0.10,protanomaly:0.10,tritanomaly:0.42,deuteranopia:0.30,protanopia:0.30,tritanopia:0.52,achromatopsia:0.88}}},
+  {id:3, image:"/plates/plate_29.png", correct:"29", options:["29","70","Nothing"],
+   likelihoods:{
+    "29":{normal:0.90,deuteranomaly:0.60,protanomaly:0.60,tritanomaly:0.80,deuteranopia:0.20,protanopia:0.20,tritanopia:0.80,achromatopsia:0.10},
+    "70":{normal:0.05,deuteranomaly:0.72,protanomaly:0.45,tritanomaly:0.10,deuteranopia:0.80,protanopia:0.52,tritanopia:0.10,achromatopsia:0.20},
+    "Nothing":{normal:0.05,deuteranomaly:0.10,protanomaly:0.10,tritanomaly:0.40,deuteranopia:0.30,protanopia:0.30,tritanopia:0.48,achromatopsia:0.90}}},
+  {id:4, image:"/plates/plate_5.png", correct:"5", options:["5","2","Nothing"],
+   likelihoods:{
+    "5": {normal:0.91,deuteranomaly:0.50,protanomaly:0.62,tritanomaly:0.83,deuteranopia:0.18,protanopia:0.30,tritanopia:0.82,achromatopsia:0.09},
+    "2": {normal:0.05,deuteranomaly:0.45,protanomaly:0.70,tritanomaly:0.08,deuteranopia:0.60,protanopia:0.80,tritanopia:0.08,achromatopsia:0.18},
+    "Nothing":{normal:0.04,deuteranomaly:0.10,protanomaly:0.10,tritanomaly:0.42,deuteranopia:0.28,protanopia:0.28,tritanopia:0.50,achromatopsia:0.88}}},
+  {id:5, image:"/plates/plate_3.png", correct:"3", options:["3","5","Nothing"],
+   likelihoods:{
+    "3": {normal:0.90,deuteranomaly:0.52,protanomaly:0.65,tritanomaly:0.84,deuteranopia:0.20,protanopia:0.32,tritanopia:0.83,achromatopsia:0.09},
+    "5": {normal:0.05,deuteranomaly:0.48,protanomaly:0.72,tritanomaly:0.09,deuteranopia:0.62,protanopia:0.82,tritanopia:0.09,achromatopsia:0.20},
+    "Nothing":{normal:0.05,deuteranomaly:0.10,protanomaly:0.10,tritanomaly:0.40,deuteranopia:0.28,protanopia:0.28,tritanopia:0.50,achromatopsia:0.88}}},
+  {id:6, image:"/plates/plate_15.png", correct:"15", options:["15","17","Nothing"],
+   likelihoods:{
+    "15":{normal:0.91,deuteranomaly:0.58,protanomaly:0.58,tritanomaly:0.82,deuteranopia:0.24,protanopia:0.24,tritanopia:0.81,achromatopsia:0.10},
+    "17":{normal:0.05,deuteranomaly:0.66,protanomaly:0.50,tritanomaly:0.10,deuteranopia:0.78,protanopia:0.60,tritanopia:0.10,achromatopsia:0.22},
+    "Nothing":{normal:0.04,deuteranomaly:0.10,protanomaly:0.10,tritanomaly:0.40,deuteranopia:0.28,protanopia:0.28,tritanopia:0.48,achromatopsia:0.88}}},
+  {id:7, image:"/plates/plate_tritan_1.png", correct:"6", options:["6","8","Nothing"],
+   likelihoods:{
+    "6": {normal:0.91,deuteranomaly:0.80,protanomaly:0.82,tritanomaly:0.42,deuteranopia:0.72,protanopia:0.74,tritanopia:0.20,achromatopsia:0.10},
+    "8": {normal:0.05,deuteranomaly:0.12,protanomaly:0.10,tritanomaly:0.78,deuteranopia:0.18,protanopia:0.16,tritanopia:0.85,achromatopsia:0.25},
+    "Nothing":{normal:0.04,deuteranomaly:0.08,protanomaly:0.08,tritanomaly:0.42,deuteranopia:0.10,protanopia:0.10,tritanopia:0.55,achromatopsia:0.88}}},
+  {id:8, image:"/plates/plate_tritan_2.png", correct:"2", options:["2","4","Nothing"],
+   likelihoods:{
+    "2": {normal:0.91,deuteranomaly:0.80,protanomaly:0.80,tritanomaly:0.38,deuteranopia:0.72,protanopia:0.72,tritanopia:0.18,achromatopsia:0.10},
+    "4": {normal:0.05,deuteranomaly:0.12,protanomaly:0.12,tritanomaly:0.80,deuteranopia:0.18,protanopia:0.18,tritanopia:0.88,achromatopsia:0.28},
+    "Nothing":{normal:0.04,deuteranomaly:0.08,protanomaly:0.08,tritanomaly:0.42,deuteranopia:0.10,protanopia:0.10,tritanopia:0.52,achromatopsia:0.88}}},
+  {id:9, image:"/plates/plate_achromat.png", correct:"45", options:["45","Nothing"],
+   likelihoods:{
+    "45":{normal:0.92,deuteranomaly:0.88,protanomaly:0.88,tritanomaly:0.90,deuteranopia:0.82,protanopia:0.82,tritanopia:0.88,achromatopsia:0.20},
+    "Nothing":{normal:0.08,deuteranomaly:0.12,protanomaly:0.12,tritanomaly:0.10,deuteranopia:0.18,protanopia:0.18,tritanopia:0.12,achromatopsia:0.90}}},
+  {id:10, image:"/plates/plate_control.png", correct:"7", options:["7","1","Nothing"],
+   likelihoods:{
+    "7": {normal:0.94,deuteranomaly:0.92,protanomaly:0.92,tritanomaly:0.94,deuteranopia:0.90,protanopia:0.90,tritanopia:0.92,achromatopsia:0.30},
+    "1": {normal:0.03,deuteranomaly:0.04,protanomaly:0.04,tritanomaly:0.03,deuteranopia:0.06,protanopia:0.06,tritanopia:0.04,achromatopsia:0.40},
+    "Nothing":{normal:0.03,deuteranomaly:0.04,protanomaly:0.04,tritanomaly:0.03,deuteranopia:0.04,protanopia:0.04,tritanopia:0.04,achromatopsia:0.70}}}
+];
+
+// ── 3. BAYES ENGINE ───────────────────────────────────────
+// READS: PRIORS, PLATES  WRITES: nothing (pure)
+
+function computePosterior(answers, plates) {
+  // READS: answers[], plates[]  WRITES: returns posterior object
+  var logProb = {};
+  for (var t in PRIORS) logProb[t] = Math.log(PRIORS[t]);
+
+  for (var i = 0; i < answers.length; i++) {
+    var a = answers[i];
+    var plate = null;
+    for (var j = 0; j < plates.length; j++) {
+      if (plates[j].id === a.plateId) { plate = plates[j]; break; }
+    }
+    if (!plate) continue;
+    var lh = plate.likelihoods[a.answer];
+    if (!lh) continue;
+    var w = timeWeight(a.time);
+    for (var t in lh) logProb[t] += Math.log(Math.max(lh[t] * w, 1e-9));
+  }
+
+  var maxLog = -Infinity;
+  for (var t in logProb) if (logProb[t] > maxLog) maxLog = logProb[t];
+
+  var expVals = {}, sum = 0;
+  for (var t in logProb) {
+    expVals[t] = Math.exp(logProb[t] - maxLog);
+    sum += expVals[t];
+  }
+
+  var result = {};
+  for (var t in expVals) result[t] = expVals[t] / sum;
+  return result;
+}
+
+function timeWeight(ms) {
+  // Fast confident answer = stronger signal
+  if (ms < 1500) return 1.2;
+  if (ms > 4000) return 0.8;
+  return 1.0;
+}
+
+function computeConfidence(post) {
+  var entropy = 0;
+  var vals = Object.values(post);
+  for (var i = 0; i < vals.length; i++) {
+    if (vals[i] > 0) entropy -= vals[i] * Math.log2(vals[i]);
+  }
+  return 1 - entropy / Math.log2(vals.length);
+}
+
+function shannonEntropy(post) {
+  var e = 0;
+  for (var t in post) if (post[t] > 0) e -= post[t] * Math.log2(post[t]);
+  return e;
+}
+
+function informationGain(posterior, plate) {
+  // READS: posterior, plate  WRITES: nothing — returns float
+  var baseEnt = shannonEntropy(posterior);
+  var keys = Object.keys(plate.likelihoods);
+  var expectedEnt = 0;
+
+  for (var ai = 0; ai < keys.length; ai++) {
+    var ans = keys[ai];
+    var lh = plate.likelihoods[ans];
+    var simPost = {}, simSum = 0;
+    for (var t in posterior) {
+      simPost[t] = posterior[t] * (lh[t] || 1e-9);
+      simSum += simPost[t];
+    }
+    if (simSum === 0) continue;
+    for (var t in simPost) simPost[t] /= simSum;
+
+    var ansProb = 0;
+    for (var t in lh) ansProb += (lh[t] || 0);
+    ansProb /= Object.keys(lh).length;
+    expectedEnt += ansProb * shannonEntropy(simPost);
+  }
+  return baseEnt - expectedEnt;
+}
+
+function selectNextPlate(posterior, remaining) {
+  // READS: posterior, remaining[]  WRITES: nothing — returns highest-IG plate
+  var best = null, bestGain = -Infinity;
+  for (var i = 0; i < remaining.length; i++) {
+    var gain = informationGain(posterior, remaining[i]);
+    if (gain > bestGain) { bestGain = gain; best = remaining[i]; }
+  }
+  return best;
+}
+
+// ── 4. STATE ──────────────────────────────────────────────
+var STATE = {
+  firstEye: "right",
+  currentEye: "right",
+  answers: { right: [], left: [] },
+  plateQueue: [],
+  currentPlate: null,
+  currentIdx: 0,
+  questionStart: 0,
+  posterior: { right: {}, left: {} },
+  checks: [false, false, false],
+  results: { right: null, left: null },
+  activeResultTab: "right"
+};
+
+// ── 5. ENGINE ─────────────────────────────────────────────
+
+function startTest() {
+  // READS: STATE.firstEye  WRITES: STATE (full reset)
+  STATE.currentEye = STATE.firstEye;
+  STATE.answers = { right: [], left: [] };
+  STATE.currentIdx = 0;
+  STATE.results = { right: null, left: null };
+  STATE.posterior.right = {};
+  STATE.posterior.left = {};
+  for (var t in PRIORS) {
+    STATE.posterior.right[t] = PRIORS[t];
+    STATE.posterior.left[t] = PRIORS[t];
+  }
+  resetPlateQueue();
+  showScreen("screen-test");
+  renderQuestion();
+}
+
+function resetPlateQueue() {
+  // WRITES: STATE.plateQueue
+  STATE.plateQueue = PLATES.slice();
+  STATE.currentIdx = 0;
+}
+
+function advanceQuestion() {
+  // READS: STATE  WRITES: STATE
+  if (STATE.plateQueue.length === 0) {
+    finishEye();
+    return;
+  }
+  var post = STATE.posterior[STATE.currentEye];
+  var plate = selectNextPlate(post, STATE.plateQueue);
+  STATE.plateQueue = STATE.plateQueue.filter(function(p) { return p.id !== plate.id; });
+  STATE.currentPlate = plate;
+  STATE.questionStart = Date.now();
+  STATE.currentIdx++;
+  renderQuestion();
+}
+
+function submitAnswer(answer) {
+  // READS: STATE.currentPlate, STATE.questionStart
+  // WRITES: STATE.answers, STATE.posterior
+  var elapsed = Date.now() - STATE.questionStart;
+  var eyeAnswers = STATE.answers[STATE.currentEye];
+  eyeAnswers.push({
+    plateId: STATE.currentPlate.id,
+    answer: answer,
+    correct: STATE.currentPlate.correct,
+    time: elapsed
+  });
+  STATE.posterior[STATE.currentEye] = computePosterior(eyeAnswers, PLATES);
+  advanceQuestion();
+}
+
+function finishEye() {
+  // READS: STATE.currentEye, STATE.firstEye
+  // WRITES: STATE.results
+  var post = STATE.posterior[STATE.currentEye];
+  var sorted = Object.entries(post).sort(function(a,b){ return b[1]-a[1]; });
+  STATE.results[STATE.currentEye] = {
+    posterior: post,
+    topType: sorted[0][0],
+    topProb: sorted[0][1],
+    confidence: computeConfidence(post),
+    answers: STATE.answers[STATE.currentEye].slice()
+  };
+
+  var secondEye = STATE.currentEye === "right" ? "left" : "right";
+
+  // Set up switch screen
+  var switchBtn = document.getElementById("switch-btn");
+  switchBtn.textContent = "Continue \u2014 " + (secondEye.charAt(0).toUpperCase() + secondEye.slice(1)) + " Eye";
+  switchBtn.setAttribute("aria-label", "Continue with " + secondEye + " eye");
+  document.getElementById("switch-heading").textContent = secondEye === "left" ? "NOW\nLEFT\nEYE" : "NOW\nRIGHT\nEYE";
+  document.getElementById("switch-heading").innerHTML = "NOW<br>" + secondEye.toUpperCase() + "<br>EYE";
+  document.getElementById("switch-msg").textContent = STATE.currentEye.charAt(0).toUpperCase() + STATE.currentEye.slice(1) + " eye complete. Now cover your " + STATE.currentEye + " eye with your palm and keep your " + secondEye + " eye focused on each plate.";
+
+  showScreen("screen-switch");
+  announce(STATE.currentEye + " eye complete. Ready for " + secondEye + " eye.");
+}
+
+function startSecondEye() {
+  // READS: STATE.currentEye  WRITES: STATE.currentEye, queue
+  STATE.currentEye = STATE.currentEye === "right" ? "left" : "right";
+  resetPlateQueue();
+  showScreen("screen-test");
+  renderQuestion();
+}
+
+function selectEye(eye) {
+  // READS: eye  WRITES: STATE.firstEye, DOM
+  STATE.firstEye = eye;
+  document.getElementById("eye-right").classList.toggle("selected", eye === "right");
+  document.getElementById("eye-right").setAttribute("aria-checked", eye === "right" ? "true" : "false");
+  document.getElementById("eye-left").classList.toggle("selected", eye === "left");
+  document.getElementById("eye-left").setAttribute("aria-checked", eye === "left" ? "true" : "false");
+}
+
+function retakeTest() {
+  showScreen("screen-intro");
+}
+
+// ── 6. RENDER ─────────────────────────────────────────────
+
+function renderQuestion() {
+  // READS: STATE  WRITES: DOM
+  var total = PLATES.length;
+  var idx = STATE.currentIdx;
+  var pct = Math.round(((idx - 1) / total) * 100);
+  var eyeLabel = STATE.currentEye.charAt(0).toUpperCase() + STATE.currentEye.slice(1) + " Eye";
+
+  document.getElementById("prog-fill").style.width = pct + "%";
+  document.getElementById("prog-bar").setAttribute("aria-valuenow", pct);
+  document.getElementById("prog-label").textContent = "Q " + idx + " / " + total;
+  document.getElementById("prog-eye").textContent = eyeLabel.toUpperCase();
+
+  announce("Question " + idx + " of " + total + ", " + eyeLabel);
+
+  var plate = STATE.currentPlate || PLATES[0];
+  var optCount = plate.options.length;
+  var gridClass = optCount === 3 ? "g3" : "g2";
+
+  var phContent = '<div class="plate-placeholder" id="pp"><div class="ph-num">' + idx + '</div>' + (DEV_MODE ? '<div class="ph-file">' + plate.image + '</div>' : '') + '</div>';
+  var optButtons = '';
+  for (var i = 0; i < plate.options.length; i++) {
+    var ans = plate.options[i];
+    var cls = ans === "Nothing" ? "opt-btn opt-nothing" : "opt-btn";
+    var lbl = ans === "Nothing" ? "I see nothing" : ans;
+    var ariaLbl = ans === "Nothing" ? "I see no number" : "I see the number " + ans;
+    optButtons += '<button class="' + cls + '" onclick="submitAnswer(\'' + ans + '\')" aria-label="' + ariaLbl + '">' + lbl + '</button>';
+  }
+
+  document.getElementById("test-content").innerHTML =
+    '<div class="plate-wrap"><div class="plate-frame" id="plate-frame">' + phContent + '</div></div>' +
+    '<div class="plate-cue" aria-hidden="true">What number do you see?</div>' +
+    '<div class="options ' + gridClass + '" role="group" aria-label="Answer options">' + optButtons + '</div>';
+
+  // Attempt image load
+  var img = new Image();
+  img.style.cssText = "display:block;width:min(76vw,300px);height:min(76vw,300px);object-fit:cover;border-radius:50%;";
+  img.alt = "Color plate " + idx + " — select the number you see";
+  img.onload = function() {
+    if (STATE.currentPlate && STATE.currentPlate.id === plate.id) {
+      var pp = document.getElementById("pp");
+      if (pp) pp.style.display = "none";
+      var frame = document.getElementById("plate-frame");
+      if (frame) frame.appendChild(img);
+    }
+  };
+  img.src = plate.image;
+}
+
+function renderResults() {
+  // READS: STATE.results  WRITES: DOM
+  var r = STATE.results;
+
+  // Tab summary values
+  if (r.right) {
+    document.getElementById("tab-right-val").textContent = TYPE_LABELS[r.right.topType].split(" ")[0];
+  }
+  if (r.left) {
+    document.getElementById("tab-left-val").textContent = TYPE_LABELS[r.left.topType].split(" ")[0];
+  }
+
+  STATE.activeResultTab = STATE.firstEye;
+  renderResultDetail(STATE.activeResultTab);
+
+  document.getElementById("tab-right").classList.toggle("active", STATE.activeResultTab === "right");
+  document.getElementById("tab-right").setAttribute("aria-selected", STATE.activeResultTab === "right" ? "true" : "false");
+  document.getElementById("tab-left").classList.toggle("active", STATE.activeResultTab === "left");
+  document.getElementById("tab-left").setAttribute("aria-selected", STATE.activeResultTab === "left" ? "true" : "false");
+
+  showScreen("screen-results");
+  announce("Results ready. " + (r.right ? "Right eye: " + TYPE_LABELS[r.right.topType] + ". " : "") + (r.left ? "Left eye: " + TYPE_LABELS[r.left.topType] + "." : ""));
+}
+
+function renderResultDetail(eye) {
+  // READS: STATE.results[eye]  WRITES: DOM #result-detail
+  var r = STATE.results[eye];
+  if (!r) {
+    document.getElementById("result-detail").innerHTML = '<p style="color:var(--gray);padding:16px 0;">No data for this eye.</p>';
+    return;
+  }
+
+  var post = r.posterior;
+  var sorted = Object.entries(post).sort(function(a,b){ return b[1]-a[1]; });
+  var conf = r.confidence;
+  var confPct = Math.round(conf * 100);
+  var confColor = conf > 0.7 ? "var(--green)" : conf > 0.4 ? "var(--amber)" : "var(--gray)";
+
+  // Verdict
+  var html = '<div class="verdict-block" role="region" aria-label="Primary finding for ' + eye + ' eye">' +
+    '<div class="v-eyebrow">' + eye + ' eye — primary finding</div>' +
+    '<div class="v-main">' + TYPE_LABELS[r.topType] + '</div>' +
+    '<div class="v-sub">' + TYPE_SUB[r.topType] + '</div>' +
+    '<div class="conf-row" aria-label="Confidence: ' + confPct + ' percent">' +
+    '<span class="conf-lbl">Confidence</span>' +
+    '<div class="conf-track"><div class="conf-fill" id="conf-fill-' + eye + '" style="width:0%;background:' + confColor + '"></div></div>' +
+    '<span class="conf-pct" id="conf-pct-' + eye + '">0%</span>' +
+    '</div></div>';
+
+  // Probability bars
+  html += '<div class="result-section" role="list" aria-label="Probability breakdown">';
+  for (var i = 0; i < sorted.length; i++) {
+    var t = sorted[i][0], p = sorted[i][1];
+    if (p < 0.001 && t !== r.topType) continue;
+    var bw = Math.max(Math.round(p * 100), p > 0 ? 1 : 0);
+    html += '<div class="result-row" role="listitem">' +
+      '<div class="result-meta">' +
+      '<span class="result-name">' + TYPE_LABELS[t] + '</span>' +
+      '<span class="result-pct" aria-label="' + (p*100).toFixed(1) + ' percent">' + (p*100).toFixed(1) + '%</span>' +
+      '</div>' +
+      '<div class="result-track"><div class="result-fill" style="width:0%;background:' + TYPE_COLORS[t] + ';" data-target="' + bw + '"></div></div>' +
+      '</div>';
+  }
+  html += '</div>';
+
+  // Response time histogram
+  html += '<h3 style="margin-top:4px">Response time per plate</h3>';
+  html += '<div class="histogram" role="list" aria-label="Response time histogram">';
+  var maxTime = 0;
+  for (var i = 0; i < r.answers.length; i++) if (r.answers[i].time > maxTime) maxTime = r.answers[i].time;
+  maxTime = Math.max(maxTime, 1000);
+
+  for (var i = 0; i < r.answers.length; i++) {
+    var a = r.answers[i];
+    var isCorrect = a.answer === a.correct;
+    var isNothing = a.answer === "Nothing";
+    var barClass = isCorrect ? "hist-fill hist-correct" : "hist-fill hist-wrong";
+    var barW = Math.round((a.time / maxTime) * 100);
+    var timeLabel = a.time < 1000 ? (a.time + "ms") : ((a.time / 1000).toFixed(1) + "s");
+    var ariaDesc = "Plate " + (i+1) + ": " + (isCorrect ? "correct" : "incorrect") + ", " + timeLabel;
+    html += '<div class="hist-row" role="listitem" aria-label="' + ariaDesc + '">' +
+      '<span class="hist-label">Plate ' + (i+1) + (isCorrect ? ' ✓' : ' ✗') + '</span>' +
+      '<div class="hist-track">' +
+      '<div class="' + barClass + '" style="width:0%;" data-target="' + barW + '">' +
+      '<span class="hist-time">' + timeLabel + '</span>' +
+      '</div></div></div>';
+  }
+  html += '</div>';
+
+  // Interpretation
+  html += '<h3>What this means</h3><div class="interp-card"><div class="interp-text">' + (INTERPRETATIONS[r.topType] || "") + '</div></div>';
+
+  document.getElementById("result-detail").innerHTML = html;
+
+  // Animate bars after paint
+  setTimeout(function() {
+    var confFill = document.getElementById("conf-fill-" + eye);
+    if (confFill) { confFill.style.transition = "width 0.9s cubic-bezier(0.4,0,0.2,1)"; confFill.style.width = confPct + "%"; }
+    var confPctEl = document.getElementById("conf-pct-" + eye);
+    if (confPctEl) confPctEl.textContent = confPct + "%";
+
+    var fills = document.querySelectorAll(".result-fill, .hist-fill");
+    for (var i = 0; i < fills.length; i++) {
+      (function(el) {
+        el.style.transition = "width 0.8s cubic-bezier(0.4,0,0.2,1)";
+        el.style.width = el.getAttribute("data-target") + "%";
+      })(fills[i]);
+    }
+  }, 120);
+}
+
+function switchResultTab(eye) {
+  // READS: eye  WRITES: STATE.activeResultTab, DOM
+  STATE.activeResultTab = eye;
+  document.getElementById("tab-right").classList.toggle("active", eye === "right");
+  document.getElementById("tab-right").setAttribute("aria-selected", eye === "right" ? "true" : "false");
+  document.getElementById("tab-left").classList.toggle("active", eye === "left");
+  document.getElementById("tab-left").setAttribute("aria-selected", eye === "left" ? "true" : "false");
+  renderResultDetail(eye);
+  announce(eye + " eye results displayed");
+}
+
+// ── UTILITY ───────────────────────────────────────────────
+
+function showScreen(id) {
+  // READS: id  WRITES: DOM
+  var screens = document.querySelectorAll(".screen");
+  for (var i = 0; i < screens.length; i++) screens[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+function announce(msg) {
+  // READS: msg  WRITES: aria-live region
+  var el = document.getElementById("a11y-live");
+  if (!el) return;
+  el.textContent = "";
+  setTimeout(function() { el.textContent = msg; }, 60);
+}
+
+function toggleCheck(n) {
+  // READS: n  WRITES: STATE.checks, DOM
+  STATE.checks[n] = !STATE.checks[n];
+  var cb = document.getElementById("cb-" + n);
+  if (cb) cb.classList.toggle("on", STATE.checks[n]);
+  var ci = document.getElementById("ci-" + n);
+  if (ci) ci.setAttribute("aria-checked", STATE.checks[n] ? "true" : "false");
+}
+
+function shareResults() {
+  // READS: STATE.results  WRITES: clipboard / share sheet
+  var r = STATE.results;
+  var parts = [];
+  if (r.right) parts.push("R: " + TYPE_LABELS[r.right.topType] + " (" + (r.right.topProb * 100).toFixed(0) + "%)");
+  if (r.left)  parts.push("L: " + TYPE_LABELS[r.left.topType]  + " (" + (r.left.topProb  * 100).toFixed(0) + "%)");
+  var text = "My OpticQuiz color vision screening — " + parts.join(" | ") + ". Educational screening only, not a diagnosis. opticquiz.com/color/";
+
+  try {
+    if (navigator.share) {
+      navigator.share({ title: "OpticQuiz Color Vision", text: text, url: "https://opticquiz.com/color/" });
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function() { announce("Result copied to clipboard"); });
+    } else {
+      prompt("Copy your result:", text);
+    }
+  } catch(e) {
+    try { if (navigator.clipboard) navigator.clipboard.writeText(text); } catch(e2) {}
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────
+// Check if both eyes done and trigger results
+function checkBothEyesDone() {
+  if (STATE.results.right && STATE.results.left) {
+    renderResults();
+  }
+}
+
+// Patch finishEye to check completion after second eye
+var _origFinishEye = finishEye;
+finishEye = function() {
+  _origFinishEye();
+  // after setting result, check if both done
+  setTimeout(function() {
+    if (STATE.results[STATE.currentEye] && STATE.results[STATE.currentEye === "right" ? "left" : "right"]) {
+      renderResults();
+    }
+  }, 50);
+};
+
+// Override startSecondEye to also check after it triggers finish
+var _origStartSecond = startSecondEye;
+startSecondEye = function() {
+  _origStartSecond();
+};
+
+// Actually — simpler: wire finishEye correctly inline
+// DECISION: re-declare finishEye cleanly below, no wrapper needed
+
+finishEye = function() {
+  var post = STATE.posterior[STATE.currentEye];
+  var sorted = Object.entries(post).sort(function(a,b){ return b[1]-a[1]; });
+  STATE.results[STATE.currentEye] = {
+    posterior: post,
+    topType: sorted[0][0],
+    topProb: sorted[0][1],
+    confidence: computeConfidence(post),
+    answers: STATE.answers[STATE.currentEye].slice()
+  };
+
+  var secondEye = STATE.currentEye === "right" ? "left" : "right";
+  var bothDone = STATE.results.right && STATE.results.left;
+
+  if (bothDone) {
+    renderResults();
+    return;
+  }
+
+  // Switch screen
+  var switchBtn = document.getElementById("switch-btn");
+  switchBtn.textContent = "Continue — " + secondEye.charAt(0).toUpperCase() + secondEye.slice(1) + " Eye";
+  switchBtn.setAttribute("aria-label", "Continue with " + secondEye + " eye");
+  document.getElementById("switch-heading").innerHTML = "NOW<br>" + secondEye.toUpperCase() + "<br>EYE";
+  document.getElementById("switch-msg").textContent = STATE.currentEye.charAt(0).toUpperCase() + STATE.currentEye.slice(1) + " eye done. Cover your " + STATE.currentEye + " eye with your palm and keep your " + secondEye + " eye on each plate.";
+
+  showScreen("screen-switch");
+  announce(STATE.currentEye + " eye complete. Ready for " + secondEye + " eye.");
+};
+</script>
+</body>
+</html>
