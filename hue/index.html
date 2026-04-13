@@ -254,15 +254,20 @@ p { font-size: 15px; color: var(--gray); line-height: 1.7; }
 .patch-lbl-light { color: rgba(255,255,255,0.55); }
 
 .same-btn {
-  display: block; width: 100%; padding: 14px 20px;
-  font-family: var(--fs); font-size: 14px; font-weight: 400;
-  color: var(--gray); background: var(--white);
-  border: 1px dashed var(--lgray); border-radius: var(--r);
+  display: block; width: 100%; padding: 16px 20px;
+  font-family: var(--fs); font-size: 15px; font-weight: 600;
+  color: var(--redd); background: var(--redbg);
+  border: 2px solid rgba(232,67,26,0.35); border-radius: var(--r);
   cursor: pointer; text-align: center;
   transition: border-color 0.12s, background 0.12s;
-  min-height: 48px; -webkit-tap-highlight-color: transparent;
+  min-height: 56px; -webkit-tap-highlight-color: transparent;
+  line-height: 1.3;
 }
-.same-btn:hover { border-color: var(--gray); background: var(--cream); color: var(--black); }
+.same-btn:hover { border-color: var(--red); background: #f9e0d9; }
+.same-btn-note {
+  font-family: var(--fm); font-size: 10px; color: var(--muted, var(--gray));
+  text-align: center; margin-top: 5px; letter-spacing: 0.04em;
+}
 
 /* Gap meter — shows current hue separation */
 .gap-meter { margin: 16px 0 4px; }
@@ -401,8 +406,8 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
       <div class="instr-item" role="listitem">
         <div class="instr-num" aria-hidden="true">4</div>
         <div>
-          <div class="instr-text">If both test patches look identical and you truly cannot match either one to the reference, tap "Both look the same."</div>
-          <div class="instr-sub">Don't tap this unless the patches look genuinely indistinguishable from each other. It is scored as a miss.</div>
+          <div class="instr-text">When both test patches look completely identical, tap "Both look the same." That is the correct response — not a cop-out.</div>
+          <div class="instr-sub">The test is designed to push you to that point. Guessing when you can't tell skews the threshold — using that button is what makes the result accurate.</div>
         </div>
       </div>
     </div>
@@ -444,6 +449,14 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
     <h2>EYE</h2>
     <p id="switch-msg" style="margin-bottom:28px;"></p>
     <button class="btn btn-primary" id="switch-btn" onclick="startSecondEye()">Continue — Left Eye</button>
+    <button class="btn btn-ghost" onclick="skipToResults()"
+            style="margin-top:10px;font-size:13px;color:var(--gray);"
+            aria-label="Skip second eye and go straight to results">
+      Skip — my CVD is inherited / both eyes are the same
+    </button>
+    <p style="font-size:11px;color:var(--lgray);margin-top:8px;font-family:var(--fm);letter-spacing:0.04em;">
+      Genetic CVD is symmetric. Second eye only adds time, not data.
+    </p>
     <a href="/" class="back-link">← All Tests</a>
   </div>
 </div>
@@ -502,7 +515,10 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
 // Min 1° = the floor of what sRGB can even render as distinct hues on screen.
 // 4 reversals or 14 trials per neighborhood — sufficient for stable threshold estimate.
 var STAIRCASE = {
-  startGap:     30,
+  startGap:     20,   // DECISION: lowered from 30 — at 30 the first trials are easy
+                      // enough that random guessing closes the gap before the staircase
+                      // finds a real threshold. 20 makes early trials harder so chance
+                      // and real detection diverge faster.
   stepDown:      5,
   stepUp:        3,
   minGap:        1,
@@ -881,6 +897,17 @@ function buildElevatedNote(elevated, mild, worstNbhd, thresholds) {
   return note;
 }
 
+function skipToResults() {
+  // READS: STATE.currentEye, STATE.results
+  // WRITES: STATE.results for the skipped eye (null stays null), renders results
+  // DECISION: genetic CVD is bilateral symmetric — user explicitly opting out of
+  // second eye test. We render results with only the completed eye's data.
+  // The results tab for the untested eye will show a "skipped" state.
+  STATE.results[STATE.currentEye === "right" ? "left" : "right"] = "skipped";
+  renderResults();
+  announce("Skipped second eye. Showing single-eye results.");
+}
+
 function startSecondEye() {
   STATE.currentEye     = STATE.currentEye === "right" ? "left" : "right";
   STATE.currentNbhdIdx = 0;
@@ -994,7 +1021,10 @@ function renderTrial() {
     '</div>' +
 
     '<button class="same-btn" onclick="submitSameTrial()" ' +
-      'aria-label="Both patches look the same to me — I cannot tell which matches">Both look the same — I can\'t tell</button>' +
+      'aria-label="Both patches look identical — I cannot tell which matches the reference">' +
+      'Both look the same — I can\'t tell' +
+    '</button>' +
+    '<div class="same-btn-note" aria-live="polite">↑ Use this when the patches look genuinely identical. It\'s the correct response at threshold — not a give-up button.</div>' +
 
     '<div class="gap-meter" aria-label="Current gap: ' + gapUnit + '">' +
       '<div class="gap-meta">' +
@@ -1057,16 +1087,25 @@ function renderIntroStrip() {
 function renderResults() {
   // READS: STATE.results  WRITES: DOM
   var r = STATE.results;
-  var rLabel = r.right ? classifyMean(r.right.meanJND) : "—";
-  var lLabel = r.left  ? classifyMean(r.left.meanJND)  : "—";
+  var rLabel = r.right === "skipped" ? "Skipped" : (r.right ? classifyMean(r.right.meanJND) : "—");
+  var lLabel = r.left  === "skipped" ? "Skipped" : (r.left  ? classifyMean(r.left.meanJND)  : "—");
 
   document.getElementById("tab-right-val").textContent = rLabel;
   document.getElementById("tab-left-val").textContent  = lLabel;
 
-  STATE.activeTab = "right";
-  renderResultDetail("right");
+  // Set active tab to whichever eye was actually tested
+  STATE.activeTab = (r.right && r.right !== "skipped") ? "right" : "left";
+  renderResultDetail(STATE.activeTab);
+
+  // Sync tab active state
+  document.getElementById("tab-right").classList.toggle("active", STATE.activeTab === "right");
+  document.getElementById("tab-right").setAttribute("aria-selected", STATE.activeTab === "right" ? "true" : "false");
+  document.getElementById("tab-left").classList.toggle("active", STATE.activeTab === "left");
+  document.getElementById("tab-left").setAttribute("aria-selected", STATE.activeTab === "left" ? "true" : "false");
+
   showScreen("screen-results");
-  announce("Results ready. Right eye: " + (r.right ? r.right.label : "not tested") + ". Left eye: " + (r.left ? r.left.label : "not tested") + ".");
+  var testedEye = STATE.activeTab;
+  announce("Results ready. " + testedEye + " eye: " + (r[testedEye] && r[testedEye] !== "skipped" ? r[testedEye].label : "not tested") + ".");
 }
 
 function classifyMean(mean) {
@@ -1078,6 +1117,14 @@ function classifyMean(mean) {
 function renderResultDetail(eye) {
   // READS: STATE.results[eye]  WRITES: DOM
   var r = STATE.results[eye];
+  if (r === "skipped") {
+    document.getElementById("result-detail").innerHTML =
+      '<div style="padding:20px 0;text-align:center;">' +
+      '<p style="color:var(--gray);font-size:14px;line-height:1.7;">Second eye skipped.<br>' +
+      '<span style="font-family:var(--fm);font-size:11px;color:var(--lgray);letter-spacing:0.06em;">Genetic CVD is symmetric — first eye results apply to both.</span></p>' +
+      '</div>';
+    return;
+  }
   if (!r) {
     document.getElementById("result-detail").innerHTML = '<p style="padding:16px 0;color:var(--gray)">No data for this eye.</p>';
     return;
