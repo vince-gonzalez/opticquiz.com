@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ============================================================
+  OPTICQUIZ — Anomaloscope (lite)  v1.0.0
+  Rayleigh-style match: mix red+green to match a yellow reference.
+  Zengine™ | www.zengine.site
+  ============================================================
+  WORKFLOW STACK: CONFIG -> STATE -> 3 match trials (random start) ->
+                  record mix + brightness -> midpoint + range -> RESULTS
+  ASSET MANIFEST: /opticquiz_icon.png ; Google Fonts ; GA4 ; AdSense (head)
+  BOOT ORDER: DOM -> startTest() -> match trials -> classify lean/range
+  HONESTY: the anomaloscope is the clinical GOLD STANDARD for red-green
+           deficiency. A real one uses monochromatic 545/670/589 nm lights;
+           a screen only has broadband RGB phosphors and no calibration, so
+           this is a FLAVOUR of the instrument, not the instrument. It can
+           hint at a protan (needs more red) vs deutan (needs more green) lean
+           and at a wide matching range, but a clean match here does NOT rule
+           deficiency out. Confirm anything real with a clinician.
+  ============================================================ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz Anomaloscope (lite) — mix red and green to match a yellow reference, the way the clinical gold-standard color test works. Screen approximation, educational only.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Anomaloscope (lite)">
+<meta property="og:description" content="Mix red and green light to match a yellow. The clinical gold-standard color test, in your browser.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/anomal/">
+<link rel="canonical" href="https://opticquiz.com/anomal/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Anomaloscope (lite) — OpticQuiz</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--redd:#C23410;--green:#4A8C3F;--greend:#38692F;--redbg:#FDF1EE;--amber:#D4820A;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:9999;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:12px;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:var(--r);}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.wrap{max-width:560px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:560px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.screen{display:none;}
+.screen.active{display:block;animation:fadein .2s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+.eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.14em;color:var(--red);text-transform:uppercase;display:block;margin-bottom:10px;}
+h1{font-family:var(--fd);font-size:clamp(44px,11vw,68px);color:var(--black);line-height:.92;letter-spacing:.02em;margin-bottom:16px;}
+h2{font-family:var(--fd);font-size:clamp(32px,8vw,48px);color:var(--black);line-height:.94;letter-spacing:.02em;margin-bottom:16px;}
+h3{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+p{font-size:15px;color:var(--gray);line-height:1.7;}
+.btn{display:block;width:100%;padding:16px 20px;font-family:var(--fs);font-size:16px;font-weight:600;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;text-align:center;transition:border-color .12s,background .12s,transform .08s;min-height:52px;-webkit-tap-highlight-color:transparent;}
+.btn:hover{border-color:var(--black);background:var(--cream);}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--red);color:#fff;border-color:transparent;}
+.btn-primary:hover{background:var(--redd);}
+.btn-secondary{background:var(--green);color:#fff;border-color:transparent;}
+.btn-secondary:hover{background:var(--greend);}
+.btn+.btn{margin-top:10px;}
+.divider{height:1px;background:var(--lgray);margin:24px 0;}
+.instr{margin:18px 0;}
+.instr-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--lgray);}
+.instr-item:last-child{border-bottom:none;}
+.instr-n{font-family:var(--fd);font-size:20px;color:var(--red);min-width:22px;}
+.instr-t{font-size:14px;color:var(--black);font-weight:600;}
+.instr-s{font-size:13px;color:var(--gray);line-height:1.5;}
+.trial-dots{display:flex;gap:8px;justify-content:center;margin:6px 0 12px;}
+.tdot{width:10px;height:10px;border-radius:50%;background:var(--lgray);}
+.tdot.done{background:var(--green);}
+.tdot.now{background:var(--red);}
+.scope-wrap{display:flex;justify-content:center;margin:10px 0 6px;}
+.scope{width:min(58vw,230px);height:min(58vw,230px);border-radius:50%;border:2px solid var(--lgray);overflow:hidden;position:relative;background:#000;}
+.scope-half{position:absolute;left:0;width:100%;height:50%;}
+.scope-top{top:0;}
+.scope-bot{bottom:0;}
+.scope-div{position:absolute;left:0;top:calc(50% - 1px);width:100%;height:2px;background:rgba(0,0,0,.35);}
+.scope-legend{display:flex;justify-content:space-between;max-width:min(58vw,230px);margin:0 auto 12px;font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;}
+.slider-block{margin:16px 0;}
+.slider-block label{display:flex;justify-content:space-between;font-size:13px;color:var(--black);font-weight:600;margin-bottom:6px;}
+.slider-block .val{font-family:var(--fm);color:var(--gray);font-weight:400;}
+.slider-block input[type=range]{width:100%;height:34px;}
+#mix-slider{accent-color:#C8A000;}
+#bri-slider{accent-color:var(--amber);}
+.stage-hint{font-size:13px;color:var(--gray);line-height:1.6;text-align:center;margin:4px 0 8px;}
+.big-stat{background:#fff;border:1.5px solid var(--lgray);border-top:4px solid var(--red);border-radius:var(--rc);padding:22px;margin-bottom:16px;text-align:center;}
+.big-stat-val{font-family:var(--fd);font-size:clamp(28px,7.5vw,40px);color:var(--black);line-height:1.05;}
+.big-stat-lbl{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.mini{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:14px;text-align:center;}
+.mini-val{font-family:var(--fd);font-size:24px;color:var(--black);}
+.mini-lbl{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;}
+.scale{height:12px;border-radius:6px;background:linear-gradient(90deg,#2fa02f,#c8b000,#e03010);position:relative;margin:8px 0 4px;}
+.scale-mark{position:absolute;top:-4px;width:4px;height:20px;background:var(--black);border-radius:2px;transform:translateX(-50%);}
+.scale-lbls{display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;}
+.interp-card{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:16px 0;}
+.interp-text{font-size:14px;color:var(--gray);line-height:1.8;}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:18px 18px 18px 20px;margin-top:24px;}
+.disclaimer-title{font-family:var(--fm);font-size:11px;letter-spacing:.1em;color:var(--red);text-transform:uppercase;margin-bottom:8px;}
+.disclaimer-body{font-size:12px;color:var(--gray);line-height:1.8;}
+.disclaimer-body strong{color:var(--black);font-weight:600;}
+.share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+@media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">ANOMALOSCOPE</div>
+</header>
+<main id="main" class="wrap" role="main">
+
+<div id="screen-intro" class="screen active">
+  <div style="padding-top:32px">
+    <span class="eyebrow">The Gold Standard</span>
+    <h1>ANOMALO&shy;SCOPE</h1>
+    <p>This is how eye clinics settle red-green color vision for real. A circle is split in two: the top is a fixed <strong>yellow</strong>. The bottom you build yourself by mixing <strong>red and green</strong>. When the two halves become one seamless disc, you've made a match — and <em>where</em> you had to set the mix reveals how your red and green cones balance.</p>
+    <div class="divider"></div>
+    <h3>How it works</h3>
+    <div class="instr">
+      <div class="instr-item"><div class="instr-n">1</div><div><div class="instr-t">Mix red ↔ green (bottom)</div><div class="instr-s">Slide until the bottom's hue matches the yellow top.</div></div></div>
+      <div class="instr-item"><div class="instr-n">2</div><div><div class="instr-t">Match the brightness (top)</div><div class="instr-s">Nudge the yellow's brightness until the seam between halves disappears.</div></div></div>
+      <div class="instr-item"><div class="instr-n">3</div><div><div class="instr-t">Lock it — three times</div><div class="instr-s">Each round starts scrambled. Where you land, and how much you wander, is the result.</div></div></div>
+    </div>
+    <button class="btn btn-primary" onclick="startTest()">Start</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<div id="screen-test" class="screen">
+  <div style="padding-top:16px">
+    <div class="trial-dots" id="trial-dots" aria-hidden="true"></div>
+    <p class="stage-hint" id="round-hint">Round 1 of 3 — make the two halves one solid disc.</p>
+    <div class="scope-wrap">
+      <div class="scope" id="scope" aria-hidden="true">
+        <div class="scope-half scope-top" id="scope-top"></div>
+        <div class="scope-half scope-bot" id="scope-bot"></div>
+        <div class="scope-div"></div>
+      </div>
+    </div>
+    <div class="scope-legend"><span>Top: yellow reference</span><span>Bottom: your mix</span></div>
+    <div class="slider-block">
+      <label for="mix-slider">Bottom mix <span class="val" id="mix-val">green ↔ red</span></label>
+      <input type="range" id="mix-slider" min="0" max="100" step="1" value="50" aria-label="Red to green mix of the bottom half" oninput="onMix(this.value)">
+    </div>
+    <div class="slider-block">
+      <label for="bri-slider">Top brightness <span class="val" id="bri-val">50%</span></label>
+      <input type="range" id="bri-slider" min="20" max="100" step="1" value="60" aria-label="Brightness of the yellow top half" oninput="onBri(this.value)">
+    </div>
+    <button class="btn btn-primary" onclick="lockRound()">It's One Disc — Lock Match</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<div id="screen-results" class="screen">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Results</span>
+    <h2>YOUR<br>RED-GREEN<br>MATCH</h2>
+    <div id="result-detail"></div>
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()">Share</button>
+      <button class="btn btn-secondary" onclick="retakeTest()">Retake</button>
+    </div>
+    <a href="/" class="backlink">← All Tests</a>
+    <div class="disclaimer" role="note">
+      <div class="disclaimer-title">Note</div>
+      <div class="disclaimer-body">A real anomaloscope uses pure single-wavelength lights and careful calibration; a screen uses broadband RGB with unknown gamma, so this is a <strong>flavour of the instrument, not the instrument</strong>. It can suggest a protan (needed more red) or deutan (needed more green) lean and show a wide matching range, but a clean match here <strong>does not rule out</strong> a deficiency. Anything suggestive should be confirmed by a clinician. Not a diagnosis.</div>
+    </div>
+  </div>
+</div>
+</main>
+<footer role="contentinfo">www.zengine.site &nbsp;|&nbsp; © 2026 Zengine™ &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
+
+<script>
+// ── CONFIG ──
+var ROUNDS = 3;
+// mix slider 0..100: 0 = pure green, 100 = pure red, 50 = balanced (yellow).
+// A normal observer matches near ~50. Protan (red-weak) perceives red as dim,
+// so adds MORE red -> match sits > 50. Deutan (green-weak) adds MORE green -> < 50.
+var NORMAL_CENTER = 50;
+
+// ── STATE ──
+var STATE = { round:0, matches:[], mix:50, bri:60 };
+
+// ── ENGINE ──
+function startTest(){
+  STATE.round=0; STATE.matches=[];
+  showScreen("screen-test");
+  renderDots();
+  beginRound();
+}
+
+function beginRound(){
+  // scramble start so each round is independent
+  STATE.mix = 15 + Math.floor(Math.random()*70);
+  STATE.bri = 40 + Math.floor(Math.random()*45);
+  document.getElementById("mix-slider").value=STATE.mix;
+  document.getElementById("bri-slider").value=STATE.bri;
+  document.getElementById("round-hint").textContent="Round "+(STATE.round+1)+" of "+ROUNDS+" — make the two halves one solid disc.";
+  updateScope();
+  renderDots();
+}
+
+function onMix(v){ STATE.mix=parseInt(v,10); updateScope(); }
+function onBri(v){ STATE.bri=parseInt(v,10); updateScope(); }
+
+function updateScope(){
+  // bottom = additive red+green mix; top = yellow at chosen brightness
+  var t=STATE.mix/100;
+  var red=Math.round(255*t);
+  var green=Math.round(255*(1-t));
+  document.getElementById("scope-bot").style.background="rgb("+red+","+green+",0)";
+  var y=Math.round(255*(STATE.bri/100));
+  document.getElementById("scope-top").style.background="rgb("+y+","+y+",0)";
+  document.getElementById("mix-val").textContent = STATE.mix<42?"more green":STATE.mix>58?"more red":"balanced";
+  document.getElementById("bri-val").textContent = STATE.bri+"%";
+}
+
+function lockRound(){
+  STATE.matches.push({ mix:STATE.mix, bri:STATE.bri });
+  STATE.round++;
+  renderDots();
+  if(STATE.round>=ROUNDS){ finish(); return; }
+  beginRound();
+  announce("Match locked. Round "+(STATE.round+1)+".");
+}
+
+function finish(){ renderResults(); showScreen("screen-results"); }
+
+// ── RENDER ──
+function renderDots(){
+  var el=document.getElementById("trial-dots"); var h="";
+  for(var i=0;i<ROUNDS;i++){
+    var c="tdot"; if(i<STATE.round)c+=" done"; else if(i===STATE.round)c+=" now";
+    h+='<span class="'+c+'"></span>';
+  }
+  el.innerHTML=h;
+}
+
+function renderResults(){
+  var mixes=STATE.matches.map(function(m){return m.mix;});
+  var mean=mixes.reduce(function(s,x){return s+x;},0)/mixes.length;
+  var minM=Math.min.apply(null,mixes), maxM=Math.max.apply(null,mixes);
+  var range=maxM-minM;
+  var delta=mean-NORMAL_CENTER;
+
+  var lean, leanTxt;
+  if(delta>9){ lean="protan"; leanTxt="a protan (red-weak) lean — you needed noticeably more red than a balanced match"; }
+  else if(delta<-9){ lean="deutan"; leanTxt="a deutan (green-weak) lean — you needed noticeably more green than a balanced match"; }
+  else { lean="balanced"; leanTxt="a balanced match, near where typical red-green vision settles"; }
+
+  var wide = range>28;
+  var rangeTxt = wide ? "Your three matches wandered a lot (range "+range+" points), which on a real anomaloscope hints at a broad matching range — but on an uncalibrated screen it just as easily means the match was hard to judge. Retake in steady lighting before reading anything into it."
+                      : "Your three matches were fairly consistent (range "+range+" points), which is what a stable color match looks like.";
+
+  var headline = lean==="balanced" ? "Balanced red-green match" : (lean==="protan"?"Leans protan (red-weak)":"Leans deutan (green-weak)");
+
+  var markPct = Math.max(0,Math.min(100,mean));
+  var h='<div class="big-stat"><div class="big-stat-val">'+headline+'</div><div class="big-stat-lbl">screen anomaloscope — approximate</div></div>';
+  h+='<div class="scale"><div class="scale-mark" style="left:'+markPct+'%"></div></div>';
+  h+='<div class="scale-lbls"><span>More green (deutan)</span><span>Balanced</span><span>More red (protan)</span></div>';
+  h+='<div class="mini-row"><div class="mini"><div class="mini-val">'+Math.round(mean)+'</div><div class="mini-lbl">Match point (50 = balanced)</div></div>'+
+     '<div class="mini"><div class="mini-val">'+range+'</div><div class="mini-lbl">Match range (spread)</div></div></div>';
+  h+='<div class="interp-card"><div class="interp-text">Averaged over three rounds, your red-green match showed <strong>'+leanTxt+'</strong>. '+rangeTxt+' Remember this is a broadband-screen approximation of a single-wavelength instrument — a clean or leaning result here is a curiosity, not a diagnosis.</div></div>';
+  document.getElementById("result-detail").innerHTML=h;
+}
+
+function retakeTest(){ showScreen("screen-intro"); }
+
+function shareResults(){
+  try{
+    var mixes=STATE.matches.map(function(m){return m.mix;});
+    var mean=Math.round(mixes.reduce(function(s,x){return s+x;},0)/mixes.length);
+    var lean=mean>59?"leans red-weak":mean<41?"leans green-weak":"balanced";
+    var text="My OpticQuiz anomaloscope red-green match — "+lean+" ("+mean+"/100). Try it: opticquiz.com/anomal/";
+    if(navigator.share){ navigator.share({title:"OpticQuiz Anomaloscope",text:text,url:"https://opticquiz.com/anomal/"}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){announce("Copied");}); }
+    else { prompt("Copy your result:",text); }
+  }catch(err){ console.error("shareResults:",err); }
+}
+
+// ── UTIL ──
+function showScreen(id){
+  var s=document.querySelectorAll(".screen");
+  for(var i=0;i<s.length;i++) s[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+function announce(msg){
+  var el=document.getElementById("a11y-live"); if(!el)return;
+  el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
+}
+</script>
+</body>
+</html>

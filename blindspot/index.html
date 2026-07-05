@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ============================================================
+  OPTICQUIZ — Blind Spot Mapper  v1.0.0
+  Find and measure your eye's natural blind spot (optic disc).
+  Zengine™ | www.zengine.site
+  ============================================================
+  WORKFLOW STACK: CONFIG -> STATE -> distance calibration -> sweep dot ->
+                  mark disappear/reappear -> compute angular position/size
+  ASSET MANIFEST: /opticquiz_icon.png ; Google Fonts ; GA4 ; AdSense (head)
+  BOOT ORDER: DOM -> pick eye -> calibrate viewing distance -> sweep -> results
+  HONESTY: everyone has a physiological blind spot where the optic nerve
+           exits the retina — it holds no photoreceptors. This tool LOCATES
+           and roughly SIZES yours; it is a demonstration + measurement, not
+           a disease screen. Angular numbers depend on the viewing distance
+           you enter and your screen's physical pixel size, so treat them as
+           approximate.
+  ============================================================ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz Blind Spot Mapper — find your eye's natural blind spot and measure roughly where it sits and how big it is. Free, on-device, educational.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Blind Spot Mapper">
+<meta property="og:description" content="Everyone has a blind spot where the optic nerve leaves the eye. Find yours and measure it.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/blindspot/">
+<link rel="canonical" href="https://opticquiz.com/blindspot/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Blind Spot Mapper — OpticQuiz</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--redd:#C23410;--green:#4A8C3F;--greend:#38692F;--redbg:#FDF1EE;--amber:#D4820A;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:9999;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:12px;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:var(--r);}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.wrap{max-width:560px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:560px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.screen{display:none;}
+.screen.active{display:block;animation:fadein .2s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+.eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.14em;color:var(--red);text-transform:uppercase;display:block;margin-bottom:10px;}
+h1{font-family:var(--fd);font-size:clamp(48px,12vw,72px);color:var(--black);line-height:.92;letter-spacing:.02em;margin-bottom:16px;}
+h2{font-family:var(--fd);font-size:clamp(32px,8vw,48px);color:var(--black);line-height:.94;letter-spacing:.02em;margin-bottom:16px;}
+h3{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+p{font-size:15px;color:var(--gray);line-height:1.7;}
+.btn{display:block;width:100%;padding:16px 20px;font-family:var(--fs);font-size:16px;font-weight:600;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;text-align:center;transition:border-color .12s,background .12s,transform .08s;min-height:52px;-webkit-tap-highlight-color:transparent;}
+.btn:hover{border-color:var(--black);background:var(--cream);}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--red);color:#fff;border-color:transparent;}
+.btn-primary:hover{background:var(--redd);}
+.btn-secondary{background:var(--green);color:#fff;border-color:transparent;}
+.btn-secondary:hover{background:var(--greend);}
+.btn+.btn{margin-top:10px;}
+.divider{height:1px;background:var(--lgray);margin:24px 0;}
+.instr{margin:18px 0;}
+.instr-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--lgray);}
+.instr-item:last-child{border-bottom:none;}
+.instr-n{font-family:var(--fd);font-size:20px;color:var(--red);min-width:22px;}
+.instr-t{font-size:14px;color:var(--black);font-weight:600;}
+.instr-s{font-size:13px;color:var(--gray);line-height:1.5;}
+.eye-selector{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0;}
+.eye-btn{padding:18px 16px;border:2px solid var(--lgray);border-radius:var(--rc);background:#fff;cursor:pointer;text-align:center;transition:border-color .12s,background .12s;min-height:64px;}
+.eye-btn.selected{border-color:var(--red);background:var(--redbg);}
+.eye-btn-label{font-family:var(--fd);font-size:24px;color:var(--black);display:block;}
+.eye-btn-sub{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;}
+.field{margin:16px 0;}
+.field label{font-size:13px;color:var(--black);font-weight:600;display:block;margin-bottom:6px;}
+.field input{width:100%;padding:12px 14px;font-family:var(--fm);font-size:16px;border:1.5px solid var(--lgray);border-radius:var(--r);background:#fff;color:var(--black);}
+.field .sub{font-size:12px;color:var(--gray);margin-top:6px;line-height:1.5;}
+/* stage */
+.stage-wrap{position:relative;background:#fff;border:2px solid var(--lgray);border-radius:var(--rc);overflow:hidden;margin:12px 0;height:min(52vh,340px);}
+.fix-cross{position:absolute;top:50%;transform:translate(-50%,-50%);font-family:var(--fm);font-size:26px;color:var(--black);font-weight:700;user-select:none;}
+.sweep-dot{position:absolute;top:50%;width:20px;height:20px;border-radius:50%;background:var(--red);transform:translate(-50%,-50%);}
+.stage-hint{font-size:13px;color:var(--gray);line-height:1.6;text-align:center;margin:6px 0 12px;}
+.big-stat{background:#fff;border:1.5px solid var(--lgray);border-top:4px solid var(--red);border-radius:var(--rc);padding:22px;margin-bottom:16px;text-align:center;}
+.big-stat-val{font-family:var(--fd);font-size:clamp(38px,11vw,60px);color:var(--black);line-height:1;}
+.big-stat-lbl{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.mini{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:14px;text-align:center;}
+.mini-val{font-family:var(--fd);font-size:26px;color:var(--black);}
+.mini-lbl{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;}
+.interp-card{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:16px 0;}
+.interp-text{font-size:14px;color:var(--gray);line-height:1.8;}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:18px 18px 18px 20px;margin-top:24px;}
+.disclaimer-title{font-family:var(--fm);font-size:11px;letter-spacing:.1em;color:var(--red);text-transform:uppercase;margin-bottom:8px;}
+.disclaimer-body{font-size:12px;color:var(--gray);line-height:1.8;}
+.disclaimer-body strong{color:var(--black);font-weight:600;}
+.share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+@media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">BLIND SPOT</div>
+</header>
+<main id="main" class="wrap" role="main">
+
+<div id="screen-intro" class="screen active">
+  <div style="padding-top:32px">
+    <span class="eyebrow">Retinal Anatomy</span>
+    <h1>BLIND<br>SPOT<br>MAPPER</h1>
+    <p>Where your optic nerve leaves the eye, the retina has no light sensors — a real hole in your vision your brain quietly paints over. Cover one eye, stare at the cross, and watch a dot vanish as it crosses that hole. We mark where it disappears and reappears to locate and size your blind spot.</p>
+    <div class="divider"></div>
+    <h3>Which eye are you testing?</h3>
+    <div class="eye-selector" role="group" aria-label="Eye selection">
+      <div class="eye-btn selected" id="eye-right" role="radio" aria-checked="true" tabindex="0" onclick="selectEye('right')" onkeydown="if(event.key==='Enter'||event.key===' ')selectEye('right')">
+        <span class="eye-btn-label">Right</span><span class="eye-btn-sub">cover left · look at cross</span>
+      </div>
+      <div class="eye-btn" id="eye-left" role="radio" aria-checked="false" tabindex="0" onclick="selectEye('left')" onkeydown="if(event.key==='Enter'||event.key===' ')selectEye('left')">
+        <span class="eye-btn-label">Left</span><span class="eye-btn-sub">cover right · look at cross</span>
+      </div>
+    </div>
+    <div class="field">
+      <label for="dist-input">How far are you from the screen? (cm)</label>
+      <input type="number" id="dist-input" value="50" min="20" max="120" inputmode="numeric">
+      <div class="sub">A comfortable arm's length is about 50 cm. This sets the angle math — a rough guess is fine.</div>
+    </div>
+    <button class="btn btn-primary" onclick="startTest()">Start</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<div id="screen-test" class="screen">
+  <div style="padding-top:16px">
+    <p class="stage-hint" id="stage-hint">Cover your other eye. Stare hard at the cross — never look at the dot. Tap the button the moment the dot vanishes.</p>
+    <div class="stage-wrap" id="stage">
+      <div class="fix-cross" id="fix-cross">+</div>
+      <div class="sweep-dot" id="sweep-dot"></div>
+    </div>
+    <button class="btn btn-primary" id="mark-btn" onclick="markEvent()">The Dot Just Vanished</button>
+    <button class="btn" onclick="restartSweep()">Restart this pass</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<div id="screen-results" class="screen">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Results</span>
+    <h2>YOUR<br>BLIND SPOT</h2>
+    <div id="result-detail"></div>
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()">Share</button>
+      <button class="btn btn-secondary" onclick="retakeTest()">Test Again</button>
+    </div>
+    <a href="/" class="backlink">← All Tests</a>
+    <div class="disclaimer" role="note">
+      <div class="disclaimer-title">Note</div>
+      <div class="disclaimer-body">Everyone has this blind spot — it is <strong>normal anatomy</strong>, not a defect. This tool locates and roughly sizes it for fun and curiosity. The angle figures depend on the viewing distance you entered and your screen's pixel size, so they are <strong>approximate, not clinical</strong>. Real blind-spot or visual-field testing (perimetry) is done by an eye clinic. If part of your central vision is genuinely missing or blank, see an optometrist.</div>
+    </div>
+  </div>
+</div>
+</main>
+<footer role="contentinfo">www.zengine.site &nbsp;|&nbsp; © 2026 Zengine™ &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
+
+<script>
+// ── CONFIG ──
+// The blind spot sits ~15° temporal to fixation. For the tested eye, "temporal"
+// means the dot sweeps from the cross toward the SAME side as the eye:
+//   right eye -> cross on left, dot sweeps rightward (temporal = right)
+//   left eye  -> cross on right, dot sweeps leftward  (temporal = left)
+var SWEEP_MS = 9000;           // one pass duration
+var CSS_PX_PER_CM = 37.8;      // ~96 CSS px/inch; disclosed approximation
+
+// ── STATE ──
+var STATE = { eye:"right", distCm:50, pass:0, edges:[], sweepStart:0, rafId:null,
+              dotX:0, crossX:0, dir:1, stageW:0, marks:[] };
+
+// ── ENGINE ──
+function selectEye(eye){
+  STATE.eye=eye;
+  document.getElementById("eye-right").classList.toggle("selected",eye==="right");
+  document.getElementById("eye-right").setAttribute("aria-checked",eye==="right"?"true":"false");
+  document.getElementById("eye-left").classList.toggle("selected",eye==="left");
+  document.getElementById("eye-left").setAttribute("aria-checked",eye==="left"?"true":"false");
+}
+
+function startTest(){
+  // READS: dist input  WRITES: STATE
+  var d=parseFloat(document.getElementById("dist-input").value);
+  STATE.distCm = (isFinite(d)&&d>=20&&d<=120) ? d : 50;
+  STATE.pass=0; STATE.marks=[]; STATE.edges=[];
+  showScreen("screen-test");
+  setTimeout(setupStage,40); // let layout settle so we can read width
+}
+
+function setupStage(){
+  var stage=document.getElementById("stage");
+  STATE.stageW = stage.clientWidth;
+  var cross=document.getElementById("fix-cross");
+  if(STATE.eye==="right"){
+    // cross near left edge, dot sweeps left->right (maximise angular reach to the blind spot)
+    STATE.crossX = STATE.stageW*0.07;
+    STATE.dir = 1;
+  } else {
+    // cross near right edge, dot sweeps right->left
+    STATE.crossX = STATE.stageW*0.93;
+    STATE.dir = -1;
+  }
+  cross.style.left = STATE.crossX+"px";
+  document.getElementById("stage-hint").textContent =
+    "Testing "+STATE.eye+" eye. Cover your "+(STATE.eye==="right"?"left":"right")+
+    " eye. Stare at the +, never at the dot. Tap the instant the dot disappears — then again when it returns. If it never vanishes, lean a little closer to the screen and restart.";
+  beginSweep();
+}
+
+function beginSweep(){
+  // WRITES: STATE.dotX, STATE.sweepStart, STATE.marks
+  STATE.marks=[];
+  document.getElementById("mark-btn").textContent="The Dot Just Vanished";
+  var startX = STATE.dir===1 ? STATE.crossX+40 : STATE.crossX-40;
+  var endX   = STATE.dir===1 ? STATE.stageW-20 : 20;
+  STATE.dotX=startX;
+  STATE.sweepStart=performance.now();
+  var dot=document.getElementById("sweep-dot");
+  function loop(t){
+    var p=(t-STATE.sweepStart)/SWEEP_MS;
+    if(p>=1){ // reached end without full pair -> restart pass
+      dot.style.left=endX+"px";
+      restartSweep();
+      return;
+    }
+    STATE.dotX = startX + (endX-startX)*p;
+    dot.style.left = STATE.dotX+"px";
+    STATE.rafId=requestAnimationFrame(loop);
+  }
+  STATE.rafId=requestAnimationFrame(loop);
+}
+
+function restartSweep(){
+  if(STATE.rafId){ cancelAnimationFrame(STATE.rafId); STATE.rafId=null; }
+  beginSweep();
+}
+
+function markEvent(){
+  // READS: STATE.dotX  WRITES: STATE.marks -> STATE.edges
+  try{
+    STATE.marks.push(STATE.dotX);
+    if(STATE.marks.length===1){
+      document.getElementById("mark-btn").textContent="…And Now It's Back";
+      announce("Disappearance marked. Tap again when the dot returns.");
+      return;
+    }
+    // second mark = reappearance -> we have one edge pair
+    if(STATE.rafId){ cancelAnimationFrame(STATE.rafId); STATE.rafId=null; }
+    var a=STATE.marks[0], b=STATE.marks[1];
+    STATE.edges.push({ start:Math.min(a,b), end:Math.max(a,b) });
+    STATE.pass++;
+    if(STATE.pass>=2){ finish(); return; }
+    announce("Pass "+STATE.pass+" done. One more pass to confirm.");
+    beginSweep();
+  }catch(err){ console.error("markEvent:",err); }
+}
+
+function finish(){
+  if(STATE.rafId){ cancelAnimationFrame(STATE.rafId); STATE.rafId=null; }
+  renderResults();
+  showScreen("screen-results");
+}
+
+// ── RESULTS ──
+function pxToDeg(px){
+  // angle subtended by px at viewing distance; disclosed approximation
+  var cm = px / CSS_PX_PER_CM;
+  return Math.atan2(cm, STATE.distCm) * 180/Math.PI;
+}
+
+function renderResults(){
+  // average the two passes
+  var centers=[], widths=[];
+  for(var i=0;i<STATE.edges.length;i++){
+    var e=STATE.edges[i];
+    centers.push((e.start+e.end)/2);
+    widths.push(Math.abs(e.end-e.start));
+  }
+  var centerX = centers.reduce(function(s,x){return s+x;},0)/centers.length;
+  var widthPx = widths.reduce(function(s,x){return s+x;},0)/widths.length;
+
+  var eccPx = Math.abs(centerX - STATE.crossX);
+  var eccDeg = pxToDeg(eccPx);
+  var widthDeg = pxToDeg(widthPx);
+
+  var eccTxt = eccDeg.toFixed(1);
+  var widthTxt = widthDeg.toFixed(1);
+  var typical = (eccDeg>=10 && eccDeg<=20) ? "right in the textbook range (about 12–15° from center)"
+              : (eccDeg<10) ? "a bit closer to center than the textbook 12–15° — usually a viewing-distance estimate being off"
+              : "a bit farther out than the textbook 12–15° — usually a viewing-distance estimate being off";
+
+  var h='<div class="big-stat"><div class="big-stat-val">'+eccTxt+'°</div><div class="big-stat-lbl">'+STATE.eye+' eye — blind spot offset from center</div></div>';
+  h+='<div class="mini-row"><div class="mini"><div class="mini-val">'+widthTxt+'°</div><div class="mini-lbl">Apparent width</div></div>'+
+     '<div class="mini"><div class="mini-val">'+STATE.distCm+' cm</div><div class="mini-lbl">Your distance</div></div></div>';
+  h+='<div class="interp-card"><div class="interp-text">Your '+STATE.eye+' eye\'s blind spot measured about <strong>'+eccTxt+'° to the side of where you were looking</strong>, roughly '+widthTxt+'° wide. That is '+typical+'. The blind spot is where your optic nerve exits — no photoreceptors live there, so anything landing on it simply isn\'t seen, and your brain fills the gap so convincingly you never notice in daily life. Figures scale with the distance you entered ('+STATE.distCm+' cm), so they\'re approximate.</div></div>';
+  document.getElementById("result-detail").innerHTML=h;
+}
+
+function retakeTest(){ showScreen("screen-intro"); }
+
+function shareResults(){
+  try{
+    var text="I mapped my eye's blind spot on OpticQuiz — try the demo, it's wild: opticquiz.com/blindspot/";
+    if(navigator.share){ navigator.share({title:"OpticQuiz Blind Spot",text:text,url:"https://opticquiz.com/blindspot/"}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){announce("Copied");}); }
+    else { prompt("Copy:",text); }
+  }catch(err){ console.error("shareResults:",err); }
+}
+
+// ── UTIL ──
+function showScreen(id){
+  var s=document.querySelectorAll(".screen");
+  for(var i=0;i<s.length;i++) s[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+function announce(msg){
+  var el=document.getElementById("a11y-live"); if(!el)return;
+  el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
+}
+</script>
+</body>
+</html>

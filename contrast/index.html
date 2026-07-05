@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ============================================================
+  OPTICQUIZ — Contrast Sensitivity  v1.0.0
+  Read the letter as it fades toward the background. Staircase to threshold.
+  Zengine™ | www.zengine.site
+  ============================================================
+  WORKFLOW STACK: CONFIG -> STATE -> letter 3AFC-ish (which letter / can't see)
+                  -> 1-up/2-down staircase on Weber contrast -> log CS -> RESULTS
+  ASSET MANIFEST: /opticquiz_icon.png ; Google Fonts ; GA4 ; AdSense (head)
+  BOOT ORDER: DOM -> startTest() -> trials -> converge contrast threshold
+  HONESTY: contrast sensitivity is a real, clinically meaningful axis distinct
+           from acuity (it degrades early in cataract, glaucoma, some optic-nerve
+           disease). BUT an uncalibrated screen has unknown gamma and brightness,
+           so the absolute log-CS here is NOT a Pelli-Robson score — it is a
+           relative measure on YOUR display. Compare against yourself over time.
+  ============================================================ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz Contrast Sensitivity — read the letter as it fades into the background. Finds the faintest contrast you can resolve, a different axis than letter-chart sharpness.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Contrast Sensitivity">
+<meta property="og:description" content="How faint can a letter get before you lose it? Test the contrast axis of your vision.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/contrast/">
+<link rel="canonical" href="https://opticquiz.com/contrast/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Contrast Sensitivity — OpticQuiz</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--redd:#C23410;--green:#4A8C3F;--greend:#38692F;--redbg:#FDF1EE;--amber:#D4820A;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:9999;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:12px;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:var(--r);}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.wrap{max-width:560px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:560px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.screen{display:none;}
+.screen.active{display:block;animation:fadein .2s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+.eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.14em;color:var(--red);text-transform:uppercase;display:block;margin-bottom:10px;}
+h1{font-family:var(--fd);font-size:clamp(48px,12vw,72px);color:var(--black);line-height:.92;letter-spacing:.02em;margin-bottom:16px;}
+h2{font-family:var(--fd);font-size:clamp(32px,8vw,48px);color:var(--black);line-height:.94;letter-spacing:.02em;margin-bottom:16px;}
+h3{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+p{font-size:15px;color:var(--gray);line-height:1.7;}
+.btn{display:block;width:100%;padding:16px 20px;font-family:var(--fs);font-size:16px;font-weight:600;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;text-align:center;transition:border-color .12s,background .12s,transform .08s;min-height:52px;-webkit-tap-highlight-color:transparent;}
+.btn:hover{border-color:var(--black);background:var(--cream);}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--red);color:#fff;border-color:transparent;}
+.btn-primary:hover{background:var(--redd);}
+.btn-secondary{background:var(--green);color:#fff;border-color:transparent;}
+.btn-secondary:hover{background:var(--greend);}
+.btn+.btn{margin-top:10px;}
+.divider{height:1px;background:var(--lgray);margin:24px 0;}
+.instr{margin:18px 0;}
+.instr-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--lgray);}
+.instr-item:last-child{border-bottom:none;}
+.instr-n{font-family:var(--fd);font-size:20px;color:var(--red);min-width:22px;}
+.instr-t{font-size:14px;color:var(--black);font-weight:600;}
+.instr-s{font-size:13px;color:var(--gray);line-height:1.5;}
+.prog-wrap{margin-bottom:18px;}
+.prog-meta{display:flex;justify-content:space-between;margin-bottom:8px;}
+.prog-meta span{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.06em;}
+.prog-track{height:3px;background:var(--lgray);border-radius:2px;}
+.prog-fill{height:100%;background:var(--red);border-radius:2px;transition:width .35s cubic-bezier(.4,0,.2,1);}
+.cs-stage{display:flex;justify-content:center;margin:16px 0;}
+.cs-frame{background:#fff;border:2px solid var(--lgray);border-radius:var(--rc);}
+.stage-hint{font-size:13px;color:var(--gray);line-height:1.6;text-align:center;margin:6px 0 10px;}
+.letters-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px;}
+.letter-btn{padding:16px 6px;font-family:var(--fs);font-weight:600;font-size:22px;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;min-height:56px;transition:border-color .12s,background .1s;}
+.letter-btn:hover{border-color:var(--red);background:var(--redbg);}
+.cant-btn{margin-top:8px;font-family:var(--fm);font-size:13px;color:var(--gray);}
+.big-stat{background:#fff;border:1.5px solid var(--lgray);border-top:4px solid var(--red);border-radius:var(--rc);padding:22px;margin-bottom:16px;text-align:center;}
+.big-stat-val{font-family:var(--fd);font-size:clamp(38px,11vw,60px);color:var(--black);line-height:1;}
+.big-stat-lbl{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.mini{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:14px;text-align:center;}
+.mini-val{font-family:var(--fd);font-size:26px;color:var(--black);}
+.mini-lbl{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;}
+.interp-card{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:16px 0;}
+.interp-text{font-size:14px;color:var(--gray);line-height:1.8;}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:18px 18px 18px 20px;margin-top:24px;}
+.disclaimer-title{font-family:var(--fm);font-size:11px;letter-spacing:.1em;color:var(--red);text-transform:uppercase;margin-bottom:8px;}
+.disclaimer-body{font-size:12px;color:var(--gray);line-height:1.8;}
+.disclaimer-body strong{color:var(--black);font-weight:600;}
+.share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+@media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">CONTRAST</div>
+</header>
+<main id="main" class="wrap" role="main">
+
+<div id="screen-intro" class="screen active">
+  <div style="padding-top:32px">
+    <span class="eyebrow">The Other Axis</span>
+    <h1>CONTRAST<br>SENSITIVITY</h1>
+    <p>Eye charts test sharpness with high-contrast black letters. But real life is full of <em>faint</em> differences — fog, dusk, a face across a dim room. This test fades a letter toward the background until it nearly vanishes, and finds the faintest one you can still read. It's a different axis of vision entirely, and often the first to slip.</p>
+    <div class="divider"></div>
+    <h3>How it works</h3>
+    <div class="instr">
+      <div class="instr-item"><div class="instr-n">1</div><div><div class="instr-t">Name the letter</div><div class="instr-s">One of six shows faintly. Tap which one — or "Can't tell" if it's gone.</div></div></div>
+      <div class="instr-item"><div class="instr-n">2</div><div><div class="instr-t">It fades as you succeed</div><div class="instr-s">Get it right and the next is fainter; miss and it strengthens. This finds your edge.</div></div></div>
+      <div class="instr-item"><div class="instr-n">3</div><div><div class="instr-t">Sit back a little</div><div class="instr-s">Arm's length, screen brightness up. ~24 trials.</div></div></div>
+    </div>
+    <button class="btn btn-primary" onclick="startTest()">Start</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<div id="screen-test" class="screen">
+  <div style="padding-top:20px">
+    <div class="prog-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog-bar">
+      <div class="prog-meta"><span id="prog-label">TRIAL 1 / 24</span><span id="prog-c">—</span></div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+    <p class="stage-hint">Which letter do you see?</p>
+    <div class="cs-stage"><canvas id="cs-canvas" class="cs-frame" width="300" height="220" role="img" aria-label="A faint letter on a plain background; identify it"></canvas></div>
+    <div class="letters-grid" id="letters-grid"></div>
+    <button class="btn cant-btn" onclick="answer(null)">Can't tell — it's gone</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<div id="screen-results" class="screen">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Results</span>
+    <h2>YOUR<br>CONTRAST<br>FLOOR</h2>
+    <div id="result-detail"></div>
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()">Share</button>
+      <button class="btn btn-secondary" onclick="retakeTest()">Retake</button>
+    </div>
+    <a href="/" class="backlink">← All Tests</a>
+    <div class="disclaimer" role="note">
+      <div class="disclaimer-title">Note</div>
+      <div class="disclaimer-body">Contrast sensitivity is a genuinely useful axis — it can dip before sharpness does in some eye conditions. But your screen's brightness and gamma are <strong>unknown and uncalibrated</strong>, so this is <strong>not a Pelli-Robson score</strong> and can't be compared between devices. It's most meaningful tracked against <strong>your own</strong> results on the same screen. A real contrast test is done by an eye clinic. Not a diagnosis.</div>
+    </div>
+  </div>
+</div>
+</main>
+<footer role="contentinfo">www.zengine.site &nbsp;|&nbsp; © 2026 Zengine™ &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
+
+<script>
+// ── CONFIG ──
+var MAX_TRIALS = 24;
+var LETTERS = ["C","D","H","K","N","O","R","S","V","Z"];
+var CHOICES_PER_TRIAL = 6;
+var START_C = 0.55;      // Weber contrast (letter vs bg), easy
+var MIN_C = 0.006;       // floor
+var STEP = 0.8;          // geometric staircase factor
+var BG = 128;            // mid-gray background luminance (0-255)
+
+// ── STATE ──
+var STATE = { trial:0, contrast:START_C, target:"", choices:[], consecCorrect:0,
+              prevWasCorrect:null, reversals:[], done:false };
+
+// ── ENGINE ──
+function startTest(){
+  STATE.trial=0; STATE.contrast=START_C; STATE.consecCorrect=0;
+  STATE.prevWasCorrect=null; STATE.reversals=[]; STATE.done=false;
+  showScreen("screen-test");
+  nextTrial();
+}
+
+function nextTrial(){
+  // READS: STATE  WRITES: STATE.target, choices, canvas
+  if(STATE.trial>=MAX_TRIALS){ finish(); return; }
+  STATE.trial++;
+  // pick target + distractor choices
+  var pool=LETTERS.slice();
+  shuffle(pool);
+  STATE.target=pool[0];
+  STATE.choices=pool.slice(0,CHOICES_PER_TRIAL);
+  shuffle(STATE.choices);
+  drawLetter(STATE.target, STATE.contrast);
+  renderChoices();
+  var pct=Math.round(((STATE.trial-1)/MAX_TRIALS)*100);
+  document.getElementById("prog-fill").style.width=pct+"%";
+  document.getElementById("prog-bar").setAttribute("aria-valuenow",pct);
+  document.getElementById("prog-label").textContent="TRIAL "+STATE.trial+" / "+MAX_TRIALS;
+  document.getElementById("prog-c").textContent=(STATE.contrast*100).toFixed(1)+"%";
+}
+
+function drawLetter(letter, contrast){
+  // READS: letter,contrast  WRITES: canvas — letter darker than mid-gray bg by Weber contrast
+  try{
+    var cv=document.getElementById("cs-canvas");
+    var dpr=window.devicePixelRatio||1;
+    var cssW=300, cssH=220;
+    cv.width=cssW*dpr; cv.height=cssH*dpr;
+    cv.style.width=cssW+"px"; cv.style.height=cssH+"px";
+    var ctx=cv.getContext("2d");
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    // background = mid gray
+    ctx.fillStyle="rgb("+BG+","+BG+","+BG+")";
+    ctx.fillRect(0,0,cssW,cssH);
+    // letter luminance = BG*(1-contrast) (darker). Weber-ish on a mid field.
+    var lum=Math.max(0, Math.round(BG*(1-contrast)));
+    ctx.fillStyle="rgb("+lum+","+lum+","+lum+")";
+    ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.font="600 120px 'Source Serif 4', Georgia, serif";
+    ctx.fillText(letter, cssW/2, cssH/2+4);
+  }catch(err){ console.error("drawLetter:",err); }
+}
+
+function renderChoices(){
+  var g=document.getElementById("letters-grid"); var h="";
+  for(var i=0;i<STATE.choices.length;i++){
+    var L=STATE.choices[i];
+    h+='<button class="letter-btn" onclick="answer(\''+L+'\')" aria-label="Letter '+L+'">'+L+'</button>';
+  }
+  g.innerHTML=h;
+}
+
+function answer(choice){
+  // READS: STATE.target  WRITES: staircase
+  try{
+    var correct = choice!==null && choice===STATE.target;
+    if(correct){
+      STATE.consecCorrect++;
+      if(STATE.consecCorrect>=2){
+        if(STATE.prevWasCorrect===false){ STATE.reversals.push(STATE.contrast); }
+        STATE.contrast=Math.max(MIN_C, STATE.contrast*STEP);
+        STATE.consecCorrect=0; STATE.prevWasCorrect=true;
+      }
+    } else {
+      if(STATE.prevWasCorrect===true){ STATE.reversals.push(STATE.contrast); }
+      STATE.contrast=Math.min(START_C, STATE.contrast/STEP);
+      STATE.consecCorrect=0; STATE.prevWasCorrect=false;
+    }
+    nextTrial();
+  }catch(err){ console.error("answer:",err); }
+}
+
+function finish(){ STATE.done=true; renderResults(); showScreen("screen-results"); }
+
+// ── RESULTS ──
+function renderResults(){
+  var revs=STATE.reversals.slice();
+  var thr;
+  if(revs.length>=4){ thr=revs.slice(-4).reduce(function(s,x){return s+x;},0)/4; }
+  else if(revs.length>0){ thr=revs.reduce(function(s,x){return s+x;},0)/revs.length; }
+  else { thr=STATE.contrast; }
+
+  var sensitivity = 1/thr;                 // contrast sensitivity (relative)
+  var logCS = Math.log(sensitivity)/Math.LN10;
+  var thrPct=(thr*100).toFixed(1);
+  var logTxt=logCS.toFixed(2);
+
+  var band = logCS>2.0 ? "very sharp — you held on to extremely faint letters"
+           : logCS>1.6 ? "strong contrast sensitivity"
+           : logCS>1.2 ? "solid, everyday range"
+           : "coarser today — worth a retry with brightness up and sitting back";
+
+  var interp="You could still read the letter down to about <strong>"+thrPct+"% contrast</strong> against the gray field — a relative contrast sensitivity of roughly <strong>"+sensitivity.toFixed(0)+"×</strong> (log "+logTxt+"). Lower percentage = fainter letter caught = better. This is the axis that fades in fog, glare, and dim light, and it can soften before letter-chart sharpness does. Because your display isn't calibrated, treat the number as a personal baseline on this screen, not a clinical Pelli-Robson value — your result is in the "+band.split("—")[0].trim()+" range.";
+
+  var h='<div class="big-stat"><div class="big-stat-val">log '+logTxt+'</div><div class="big-stat-lbl">contrast sensitivity (this screen)</div></div>';
+  h+='<div class="mini-row"><div class="mini"><div class="mini-val">'+thrPct+'%</div><div class="mini-lbl">Faintest letter read</div></div>'+
+     '<div class="mini"><div class="mini-val">'+sensitivity.toFixed(0)+'×</div><div class="mini-lbl">Sensitivity</div></div></div>';
+  h+='<div class="interp-card"><div class="interp-text">'+interp+'</div></div>';
+  document.getElementById("result-detail").innerHTML=h;
+}
+
+function retakeTest(){ showScreen("screen-intro"); }
+
+function shareResults(){
+  try{
+    var revs=STATE.reversals.slice();
+    var thr = revs.length>=4 ? revs.slice(-4).reduce(function(s,x){return s+x;},0)/4 : STATE.contrast;
+    var logCS=(Math.log(1/thr)/Math.LN10).toFixed(2);
+    var text="My OpticQuiz contrast sensitivity — log "+logCS+" on my screen. Test yours: opticquiz.com/contrast/";
+    if(navigator.share){ navigator.share({title:"OpticQuiz Contrast Sensitivity",text:text,url:"https://opticquiz.com/contrast/"}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){announce("Copied");}); }
+    else { prompt("Copy your result:",text); }
+  }catch(err){ console.error("shareResults:",err); }
+}
+
+// ── UTIL ──
+function shuffle(a){
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function showScreen(id){
+  var s=document.querySelectorAll(".screen");
+  for(var i=0;i<s.length;i++) s[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+function announce(msg){
+  var el=document.getElementById("a11y-live"); if(!el)return;
+  el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
+}
+</script>
+</body>
+</html>

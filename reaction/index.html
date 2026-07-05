@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ============================================================
+  OPTICQUIZ — Visual Reaction Time  v1.0.0
+  Simple visual reaction time: tap when the field turns green.
+  Zengine™ | www.zengine.site
+  ============================================================
+  WORKFLOW STACK: CONFIG -> STATE -> ENGINE(trial loop) -> RENDER -> RESULTS
+  ASSET MANIFEST: /opticquiz_icon.png ; Google Fonts ; GA4 G-T6CF42RKT4 ;
+                  AdSense ca-pub-8826956454892311 (head only)
+  BOOT ORDER: DOM -> startTest() -> 5 valid trials (false starts redone) -> results
+  HONESTY: measures simple visual reaction time = perception + motor delay.
+           Display refresh + input latency add a fixed offset, so absolute
+           numbers skew ~20-50ms slow vs a lab button. Trends and your own
+           best-of are meaningful; the raw number is not a clinical value.
+  ============================================================ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz Visual Reaction Time — tap when the screen turns green. Measures your simple visual reaction time over 5 trials. Free, on-device, for fun.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Visual Reaction Time">
+<meta property="og:description" content="How fast can you react? Tap when the field turns green. 5 trials, best and average in milliseconds.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/reaction/">
+<link rel="canonical" href="https://opticquiz.com/reaction/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Visual Reaction Time — OpticQuiz</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--redd:#C23410;--green:#4A8C3F;--greend:#38692F;--redbg:#FDF1EE;--gbg:#EEF5ED;--amber:#D4820A;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:9999;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:12px;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:var(--r);}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.wrap{max-width:560px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:560px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.screen{display:none;}
+.screen.active{display:block;animation:fadein .2s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+.eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.14em;color:var(--red);text-transform:uppercase;display:block;margin-bottom:10px;}
+h1{font-family:var(--fd);font-size:clamp(48px,12vw,72px);color:var(--black);line-height:.92;letter-spacing:.02em;margin-bottom:16px;}
+h2{font-family:var(--fd);font-size:clamp(32px,8vw,48px);color:var(--black);line-height:.94;letter-spacing:.02em;margin-bottom:16px;}
+h3{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+p{font-size:15px;color:var(--gray);line-height:1.7;}
+.btn{display:block;width:100%;padding:16px 20px;font-family:var(--fs);font-size:16px;font-weight:600;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;text-align:center;transition:border-color .12s,background .12s,transform .08s;min-height:52px;-webkit-tap-highlight-color:transparent;}
+.btn:hover{border-color:var(--black);background:var(--cream);}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--red);color:#fff;border-color:transparent;}
+.btn-primary:hover{background:var(--redd);}
+.btn-secondary{background:var(--green);color:#fff;border-color:transparent;}
+.btn-secondary:hover{background:var(--greend);}
+.btn+.btn{margin-top:10px;}
+.divider{height:1px;background:var(--lgray);margin:24px 0;}
+.instr{margin:18px 0;}
+.instr-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--lgray);}
+.instr-item:last-child{border-bottom:none;}
+.instr-n{font-family:var(--fd);font-size:20px;color:var(--red);min-width:22px;}
+.instr-t{font-size:14px;color:var(--black);font-weight:600;}
+.instr-s{font-size:13px;color:var(--gray);line-height:1.5;}
+/* arena */
+.arena{-webkit-tap-highlight-color:transparent;user-select:none;border-radius:var(--rc);height:min(62vh,420px);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;cursor:pointer;text-align:center;padding:20px;transition:background .05s;border:2px solid var(--lgray);}
+.arena-wait{background:var(--redbg);}
+.arena-hot{background:var(--green);}
+.arena-idle{background:var(--cream);}
+.arena-false{background:#F3E0DA;}
+.arena-big{font-family:var(--fd);font-size:clamp(34px,9vw,56px);letter-spacing:.02em;line-height:1;}
+.arena-hot .arena-big{color:#fff;}
+.arena-sub{font-family:var(--fm);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);}
+.arena-hot .arena-sub{color:rgba(255,255,255,.85);}
+.trial-dots{display:flex;gap:8px;justify-content:center;margin:16px 0 4px;}
+.tdot{width:10px;height:10px;border-radius:50%;background:var(--lgray);}
+.tdot.done{background:var(--green);}
+.tdot.now{background:var(--red);}
+/* results */
+.big-stat{background:#fff;border:1.5px solid var(--lgray);border-top:4px solid var(--red);border-radius:var(--rc);padding:22px;margin-bottom:16px;text-align:center;}
+.big-stat-val{font-family:var(--fd);font-size:clamp(44px,13vw,72px);color:var(--black);line-height:1;}
+.big-stat-lbl{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.mini{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:14px;text-align:center;}
+.mini-val{font-family:var(--fd);font-size:28px;color:var(--black);}
+.mini-lbl{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;}
+.tr-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.tr-lbl{font-family:var(--fm);font-size:10px;color:var(--gray);min-width:56px;text-align:right;}
+.tr-track{flex:1;height:16px;background:var(--cream);border-radius:3px;overflow:hidden;}
+.tr-fill{height:100%;background:var(--green);border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;padding-left:8px;}
+.tr-time{font-family:var(--fm);font-size:10px;color:#fff;}
+.interp-card{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:16px 0;}
+.interp-text{font-size:14px;color:var(--gray);line-height:1.8;}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:18px 18px 18px 20px;margin-top:24px;}
+.disclaimer-title{font-family:var(--fm);font-size:11px;letter-spacing:.1em;color:var(--red);text-transform:uppercase;margin-bottom:8px;}
+.disclaimer-body{font-size:12px;color:var(--gray);line-height:1.8;}
+.disclaimer-body strong{color:var(--black);font-weight:600;}
+.share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">REACTION</div>
+</header>
+<main id="main" class="wrap" role="main">
+
+<div id="screen-intro" class="screen active">
+  <div style="padding-top:32px">
+    <span class="eyebrow">Speed &amp; Perception</span>
+    <h1>REACTION<br>TIME</h1>
+    <p>The field is red. The moment it flashes green, tap it. We measure the gap between the flash and your tap, five times, and report your best and average in milliseconds.</p>
+    <div class="divider"></div>
+    <h3>How it works</h3>
+    <div class="instr">
+      <div class="instr-item"><div class="instr-n">1</div><div><div class="instr-t">Wait on red</div><div class="instr-s">Tap too early and the trial resets — no cheating the clock.</div></div></div>
+      <div class="instr-item"><div class="instr-n">2</div><div><div class="instr-t">Tap the instant it turns green</div><div class="instr-s">The green appears after a random 1.5–4 second delay so you can't anticipate it.</div></div></div>
+      <div class="instr-item"><div class="instr-n">3</div><div><div class="instr-t">Five valid trials</div><div class="instr-s">Your slowest is dropped; best and average are reported.</div></div></div>
+    </div>
+    <button class="btn btn-primary" onclick="startTest()">Start</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<div id="screen-test" class="screen">
+  <div style="padding-top:20px">
+    <div class="trial-dots" id="trial-dots" aria-hidden="true"></div>
+    <div class="arena arena-idle" id="arena" role="button" tabindex="0" aria-label="Reaction arena. Tap when it turns green."
+         onclick="onTap()" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();onTap();}">
+      <div class="arena-big" id="arena-big">GET READY</div>
+      <div class="arena-sub" id="arena-sub">Tap to begin the first trial</div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-results" class="screen">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Results</span>
+    <h2>YOUR<br>REACTION</h2>
+    <div id="result-detail"></div>
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()">Share</button>
+      <button class="btn btn-secondary" onclick="retakeTest()">Retake</button>
+    </div>
+    <a href="/" class="backlink">← All Tests</a>
+    <div class="disclaimer" role="note">
+      <div class="disclaimer-title">Note</div>
+      <div class="disclaimer-body">This measures <strong>simple visual reaction time</strong> — how fast you perceive a change and move. Your screen's refresh rate and input lag add a small fixed delay, so treat the absolute number as ballpark, not clinical. <strong>Not a medical or fitness assessment.</strong> Compare against your own runs, not other devices.</div>
+    </div>
+  </div>
+</div>
+</main>
+<footer role="contentinfo">www.zengine.site &nbsp;|&nbsp; © 2026 Zengine™ &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
+
+<script>
+// ── CONFIG ──
+var TOTAL_TRIALS = 5;
+var MIN_WAIT = 1500, MAX_WAIT = 4000;
+
+// ── STATE ──
+var STATE = { phase:"idle", trial:0, times:[], waitTimer:null, hotStart:0 };
+
+// ── ENGINE ──
+function startTest(){
+  // WRITES: STATE (reset)
+  STATE.phase="idle"; STATE.trial=0; STATE.times=[]; STATE.hotStart=0;
+  if(STATE.waitTimer){ clearTimeout(STATE.waitTimer); STATE.waitTimer=null; }
+  showScreen("screen-test");
+  renderDots();
+  setArena("idle","GET READY","Tap to start trial 1");
+}
+
+function beginTrial(){
+  // READS: STATE.trial  WRITES: STATE.phase, STATE.waitTimer
+  STATE.phase="wait";
+  setArena("wait","WAIT…","Green means go");
+  var delay = MIN_WAIT + Math.random()*(MAX_WAIT-MIN_WAIT);
+  STATE.waitTimer = setTimeout(function(){
+    STATE.phase="hot";
+    STATE.hotStart = performance.now();
+    setArena("hot","TAP!","");
+    announce("Tap now");
+  }, delay);
+}
+
+function onTap(){
+  // READS: STATE.phase  WRITES: STATE.times, STATE.trial
+  try{
+    if(STATE.phase==="idle"){ beginTrial(); return; }
+    if(STATE.phase==="wait"){
+      // false start
+      if(STATE.waitTimer){ clearTimeout(STATE.waitTimer); STATE.waitTimer=null; }
+      STATE.phase="false";
+      setArena("false","TOO EARLY","Tap to try this trial again");
+      announce("Too early. Trial restarts.");
+      return;
+    }
+    if(STATE.phase==="false"){ beginTrial(); return; }
+    if(STATE.phase==="hot"){
+      var rt = Math.round(performance.now() - STATE.hotStart);
+      STATE.times.push(rt);
+      STATE.trial++;
+      renderDots();
+      if(STATE.trial>=TOTAL_TRIALS){ finish(); return; }
+      STATE.phase="between";
+      setArena("idle", rt+" ms", "Tap for trial "+(STATE.trial+1));
+      announce(rt+" milliseconds. "+(TOTAL_TRIALS-STATE.trial)+" trials left.");
+      return;
+    }
+    if(STATE.phase==="between"){ beginTrial(); return; }
+  }catch(err){ console.error("onTap:",err); }
+}
+
+function finish(){
+  // READS: STATE.times  WRITES: DOM
+  renderResults();
+  showScreen("screen-results");
+}
+
+// ── RENDER ──
+function setArena(kind,big,sub){
+  var a=document.getElementById("arena");
+  a.className="arena arena-"+kind;
+  document.getElementById("arena-big").textContent=big;
+  document.getElementById("arena-sub").textContent=sub;
+}
+function renderDots(){
+  var el=document.getElementById("trial-dots"); var h="";
+  for(var i=0;i<TOTAL_TRIALS;i++){
+    var c="tdot"; if(i<STATE.trial)c+=" done"; else if(i===STATE.trial)c+=" now";
+    h+='<span class="'+c+'"></span>';
+  }
+  el.innerHTML=h;
+}
+function renderResults(){
+  var times=STATE.times.slice();
+  var best=Math.min.apply(null,times);
+  var kept=times.slice().sort(function(a,b){return a-b;}); kept.pop(); // drop slowest
+  var avg=Math.round(kept.reduce(function(s,x){return s+x;},0)/kept.length);
+  var maxT=Math.max.apply(null,times);
+
+  var band = avg<220?"lightning-fast":avg<280?"quick":avg<350?"about average":avg<450?"a little relaxed":"unhurried";
+  var context = "Typical simple visual reaction time on a screen is about 250–350 ms. Under ~200 ms usually means you anticipated the flash; a lab button with no display lag runs 20–50 ms faster than any browser can measure.";
+
+  var h='<div class="big-stat"><div class="big-stat-val">'+avg+'</div><div class="big-stat-lbl">Average ms — '+band+'</div></div>';
+  h+='<div class="mini-row"><div class="mini"><div class="mini-val">'+best+'</div><div class="mini-lbl">Best ms</div></div>'+
+     '<div class="mini"><div class="mini-val">'+maxT+'</div><div class="mini-lbl">Slowest ms</div></div></div>';
+  h+='<h3>Every trial</h3>';
+  for(var i=0;i<times.length;i++){
+    var w=Math.round((times[i]/maxT)*100);
+    h+='<div class="tr-row"><span class="tr-lbl">Trial '+(i+1)+'</span><div class="tr-track"><div class="tr-fill" style="width:0%" data-target="'+w+'"><span class="tr-time">'+times[i]+' ms</span></div></div></div>';
+  }
+  h+='<div class="interp-card"><div class="interp-text">'+context+'</div></div>';
+  document.getElementById("result-detail").innerHTML=h;
+  setTimeout(function(){
+    var f=document.querySelectorAll(".tr-fill");
+    for(var i=0;i<f.length;i++){ f[i].style.width=f[i].getAttribute("data-target")+"%"; }
+  },120);
+}
+
+function retakeTest(){ showScreen("screen-intro"); }
+
+function shareResults(){
+  try{
+    var kept=STATE.times.slice().sort(function(a,b){return a-b;}); var best=kept[0]; kept.pop();
+    var avg=Math.round(kept.reduce(function(s,x){return s+x;},0)/kept.length);
+    var text="My OpticQuiz reaction time — best "+best+" ms, avg "+avg+" ms. Try it: opticquiz.com/reaction/";
+    if(navigator.share){ navigator.share({title:"OpticQuiz Reaction Time",text:text,url:"https://opticquiz.com/reaction/"}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){announce("Copied");}); }
+    else { prompt("Copy your result:",text); }
+  }catch(err){ console.error("shareResults:",err); }
+}
+
+// ── UTIL ──
+function showScreen(id){
+  var s=document.querySelectorAll(".screen");
+  for(var i=0;i<s.length;i++) s[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+function announce(msg){
+  var el=document.getElementById("a11y-live"); if(!el)return;
+  el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
+}
+</script>
+</body>
+</html>

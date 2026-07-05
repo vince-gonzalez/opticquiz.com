@@ -7,16 +7,23 @@
   Domain:       opticquiz.com
   Repo:         zengineco/opticquiz.com
   Author:       Vince Gonzalez / Zengine™
-  Version:      v1.3.0
-  Change:       Unlocked D-15, Saturation Threshold, Hue Neighbor
-                Added /hue/ as 6th test card
+  Version:      v1.4.0
+  Change:       Added 6 new tests (anomaloscope, contrast, vernier,
+                reaction, flicker, blind spot). Every card now carries an
+                inline-SVG sample thumbnail. Cards grouped into 3 sections.
   Sub-pages:
-    /color/   Color Vision (procedural Ishihara vanishing plates, red-green + tritan)
-    /amsler/  Amsler Grid (macular, per-eye, tappable)
-    /astig/   Astigmatism Fan (axis detection, SVG)
-    /d15/     Farnsworth D-15 (drag-sort, confusion vectors)
-    /sat/     Saturation Threshold (adaptive staircase, 4 axes)
-    /hue/     Hue Neighbor JND (blue/purple + 6 pairs, staircase)
+    /color/     Color Vision (procedural Ishihara vanishing plates, red-green + tritan)
+    /anomal/    Anomaloscope lite (Rayleigh red-green match)          [NEW]
+    /contrast/  Contrast Sensitivity (fading-letter staircase)        [NEW]
+    /vernier/   Vernier Acuity (alignment hyperacuity, 2AFC)          [NEW]
+    /reaction/  Visual Reaction Time (5-trial ms)                     [NEW]
+    /flicker/   Flicker Fusion Threshold (refresh-aware CFF)          [NEW]
+    /blindspot/ Blind Spot Mapper (optic-disc locator)               [NEW]
+    /amsler/    Amsler Grid (macular, per-eye, tappable)
+    /astig/     Astigmatism Fan (axis detection, SVG)
+    /d15/       Farnsworth D-15 (drag-sort, confusion vectors)
+    /sat/       Saturation Threshold (adaptive staircase, 4 axes)
+    /hue/       Hue Neighbor JND (blue/purple + 6 pairs, staircase)
   Palette: white/#F8F6F2/#E8431A/#4A8C3F/#1A1A1A (logo-derived)
   Fonts: Bebas Neue (display) + Source Serif 4 (body) + Courier New (mono)
   A11y: WCAG 2.1 AA
@@ -29,10 +36,10 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="OpticQuiz — free eye wellness screening tools. Color vision, Amsler grid, astigmatism fan, Farnsworth D-15, saturation threshold, and blue/purple hue neighbor test. Educational use only.">
+<meta name="description" content="OpticQuiz — 12 free browser-based eye and vision tools. Color vision, anomaloscope, contrast sensitivity, vernier acuity, reaction time, flicker fusion, blind spot, Amsler grid, astigmatism, D-15, saturation, hue. Educational use only.">
 <meta name="theme-color" content="#F8F6F2">
-<meta property="og:title" content="OpticQuiz — Eye Wellness Screening">
-<meta property="og:description" content="6 free browser-based eye screening tools. Color blindness, Amsler grid, astigmatism, D-15 hue sort, saturation threshold, blue/purple test. No account. Results stay on your device.">
+<meta property="og:title" content="OpticQuiz — Eye &amp; Vision Tests">
+<meta property="og:description" content="12 free browser-based vision tests. Color vision, anomaloscope, contrast, vernier hyperacuity, reaction time, flicker fusion, blind spot, and more. No account. Results stay on your device.">
 <meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
 <meta property="og:url" content="https://opticquiz.com">
 <meta property="og:type" content="website">
@@ -181,6 +188,18 @@ h3 { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing
 .icon-amber { background: #FFF8EE;       color: #B86A00; }
 .icon-purple{ background: #F3EEFF;       color: #7044CC; }
 
+/* ── SAMPLE THUMBNAIL (a taste of each test) ─────── */
+.card-thumb {
+  width: 52px; height: 52px; border-radius: 7px;
+  flex-shrink: 0; overflow: hidden; line-height: 0;
+  border: 1px solid var(--lgray); background: #fff;
+}
+.card-thumb svg { display: block; width: 52px; height: 52px; }
+
+/* ── GROUP LABEL ─────────────────────────────────── */
+.group-label { font-family: var(--fm); font-size: 11px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; margin: 22px 0 12px; }
+.group-label:first-of-type { margin-top: 0; }
+
 .card-body { flex: 1; min-width: 0; }
 .card-title { font-family: var(--fd); font-size: 20px; color: var(--black); letter-spacing: 0.02em; line-height: 1; margin-bottom: 4px; }
 .card-desc { font-size: 13px; color: var(--gray); line-height: 1.6; margin-bottom: 6px; }
@@ -237,20 +256,20 @@ footer {
     <img src="/opticquiz_icon.png" alt="OpticQuiz — Ishihara-style dot logo" width="44" height="44">
     <div class="logo-name">OPTIC<span>QUIZ</span></div>
   </a>
-  <div class="ver-badge" aria-label="Version 1.3.0">v1.3.0</div>
+  <div class="ver-badge" aria-label="Version 1.4.0">v1.4.0</div>
 </header>
 
 <main id="main" class="wrap" role="main">
 
   <section class="hero" aria-labelledby="hero-heading">
-    <span class="eyebrow" aria-hidden="true">Eye Wellness Screening</span>
+    <span class="eyebrow" aria-hidden="true">Eye &amp; Vision Tests</span>
     <h1 id="hero-heading">CAN<br>YOU<br><em>SEE</em><br>THIS?</h1>
-    <p class="hero-body">Six free browser-based eye wellness tools. No account. No data collected. Results never leave your device. Educational use only — not a medical diagnostic.</p>
+    <p class="hero-body">Twelve free browser-based tests for color, sharpness, speed, and the eye itself. No account. No data collected. Results never leave your device. Educational use only — not a medical diagnostic.</p>
   </section>
 
   <div class="stats" role="list" aria-label="Quick stats">
-    <div class="stat" role="listitem"><span class="stat-val">6</span><span class="stat-lbl">Screening tools</span></div>
-    <div class="stat" role="listitem"><span class="stat-val">8</span><span class="stat-lbl">CVD types</span></div>
+    <div class="stat" role="listitem"><span class="stat-val">12</span><span class="stat-lbl">Vision tests</span></div>
+    <div class="stat" role="listitem"><span class="stat-val">0</span><span class="stat-lbl">Data collected</span></div>
     <div class="stat" role="listitem"><span class="stat-val">&lt;5<span style="font-size:18px"> min</span></span><span class="stat-lbl">Per test</span></div>
   </div>
 
@@ -258,11 +277,12 @@ footer {
 
   <h3 id="tests-label">Choose a screening</h3>
 
-  <nav class="test-grid" aria-labelledby="tests-label" role="navigation">
+  <div class="group-label">Color vision</div>
+  <nav class="test-grid" aria-label="Color vision tests" role="navigation">
 
     <a href="/hue/" class="test-card"
        aria-label="Blue/Purple and Hue Neighbor Test — can you tell blue from purple? Just-noticeable difference across 7 hue pairs. About 5 minutes.">
-      <div class="card-icon icon-purple" aria-hidden="true">HN</div>
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><rect width="52" height="52" fill="#3A6ED4"/><rect x="26" width="26" height="52" fill="#7A45CC"/></svg></span>
       <div class="card-body">
         <div class="card-title">Blue / Purple<span class="origin-badge">Origin</span></div>
         <div class="card-desc">Can you tell blue from purple? Finds your just-noticeable hue difference across 7 color pairs including red/orange, green/yellow, pink/gray, and more.</div>
@@ -273,7 +293,7 @@ footer {
 
     <a href="/color/" class="test-card"
        aria-label="Color Vision Test — 8 procedural Ishihara-style plates, red-green and tritan screening, both eyes, about 2 minutes.">
-      <div class="card-icon icon-red" aria-hidden="true">CV</div>
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="25" fill="#F0EDE6"/><g fill="#D98A3A"><circle cx="35" cy="8" r="3.6"/><circle cx="44" cy="8" r="3.6"/><circle cx="17" cy="17" r="3.6"/><circle cx="26" cy="17" r="3.6"/><circle cx="35" cy="17" r="3.6"/><circle cx="44" cy="17" r="3.6"/><circle cx="35" cy="26" r="3.6"/><circle cx="44" cy="26" r="3.6"/><circle cx="8" cy="35" r="3.6"/><circle cx="17" cy="35" r="3.6"/><circle cx="35" cy="35" r="3.6"/><circle cx="44" cy="35" r="3.6"/><circle cx="35" cy="44" r="3.6"/><circle cx="44" cy="44" r="3.6"/></g><g fill="#4A8C3F"><circle cx="8" cy="8" r="3.6"/><circle cx="17" cy="8" r="3.6"/><circle cx="26" cy="8" r="3.6"/><circle cx="8" cy="17" r="3.6"/><circle cx="8" cy="26" r="3.6"/><circle cx="17" cy="26" r="3.6"/><circle cx="26" cy="26" r="3.6"/><circle cx="26" cy="35" r="3.6"/><circle cx="8" cy="44" r="3.6"/><circle cx="17" cy="44" r="3.6"/><circle cx="26" cy="44" r="3.6"/></g></svg></span>
       <div class="card-body">
         <div class="card-title">Color Vision</div>
         <div class="card-desc">8 Ishihara-style dot plates, drawn fresh each time. A digit hides in the dots — screens for red-green and blue-yellow (tritan) color deficiency, per eye.</div>
@@ -282,9 +302,20 @@ footer {
       <div class="card-arrow" aria-hidden="true">→</div>
     </a>
 
+    <a href="/anomal/" class="test-card"
+       aria-label="Anomaloscope lite — mix red and green to match a yellow reference, the clinical gold-standard color test, in your browser.">
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><defs><linearGradient id="anom" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3aa030"/><stop offset="0.5" stop-color="#c8b000"/><stop offset="1" stop-color="#e23012"/></linearGradient></defs><path d="M26,26 m-24,0 a24,24 0 0,1 48,0 Z" fill="#D8C400"/><path d="M2,26 a24,24 0 0,0 48,0 Z" fill="url(#anom)"/><rect x="2" y="25" width="48" height="2" fill="rgba(0,0,0,.28)"/></svg></span>
+      <div class="card-body">
+        <div class="card-title">Anomaloscope<span class="origin-badge">New</span></div>
+        <div class="card-desc">Mix red and green light until the bottom half matches a yellow reference — how eye clinics settle red-green vision for real. Where you land reveals your cone balance.</div>
+        <div class="card-meta">Rayleigh match · 3 rounds · Protan / deutan lean · Screen approximation</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
     <a href="/d15/" class="test-card"
        aria-label="Farnsworth D-15 Hue Sort — drag 15 color caps into order. Richer than plate tests. About 5 minutes.">
-      <div class="card-icon icon-amber" aria-hidden="true">D15</div>
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><rect width="52" height="52" fill="#F0EDE6"/><g><circle cx="8" cy="26" r="5" fill="#C05840"/><circle cx="18" cy="26" r="5" fill="#C8A040"/><circle cx="28" cy="26" r="5" fill="#8FB840"/><circle cx="38" cy="26" r="5" fill="#38A8B8"/><circle cx="47" cy="26" r="4.5" fill="#8878C8"/></g></svg></span>
       <div class="card-body">
         <div class="card-title">Farnsworth D-15</div>
         <div class="card-desc">Drag 15 color caps into hue order. Richer data than plate recognition — catches mild anomalous trichromacy that Ishihara plates miss.</div>
@@ -295,7 +326,7 @@ footer {
 
     <a href="/sat/" class="test-card"
        aria-label="Saturation Threshold Test — finds your color detection threshold across 4 hue axes. About 4 minutes.">
-      <div class="card-icon icon-green" aria-hidden="true">ST</div>
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><defs><linearGradient id="satg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4A8C3F"/><stop offset="1" stop-color="#B4B0A8"/></linearGradient></defs><rect width="52" height="52" fill="url(#satg)"/></svg></span>
       <div class="card-body">
         <div class="card-title">Saturation Threshold</div>
         <div class="card-desc">How faded is too faded? Finds the minimum saturation you can detect across red, green, blue, and yellow axes. Catches mild CVD that plates miss.</div>
@@ -304,9 +335,63 @@ footer {
       <div class="card-arrow" aria-hidden="true">→</div>
     </a>
 
+  </nav>
+
+  <div class="group-label">Sharpness, speed &amp; perception</div>
+  <nav class="test-grid" aria-label="Perception tests" role="navigation">
+
+    <a href="/contrast/" class="test-card"
+       aria-label="Contrast Sensitivity — read a letter as it fades into the background. Finds the faintest contrast you can resolve.">
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><rect width="52" height="52" fill="#808080"/><text x="26" y="38" text-anchor="middle" font-family="Georgia, serif" font-weight="600" font-size="34" fill="#6E6E6E">R</text></svg></span>
+      <div class="card-body">
+        <div class="card-title">Contrast Sensitivity<span class="origin-badge">New</span></div>
+        <div class="card-desc">Eye charts test sharpness; this tests the <em>faint</em> — a letter fading toward the background until it nearly vanishes. A different axis of vision, and often the first to slip.</div>
+        <div class="card-meta">Fading letters · Adaptive staircase · Log contrast · This-screen baseline</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
+    <a href="/vernier/" class="test-card"
+       aria-label="Vernier Acuity — is the lower line nudged left or right? Measures your alignment hyperacuity.">
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><rect width="52" height="52" fill="#fff"/><line x1="24" y1="7" x2="24" y2="24" stroke="#1A1A1A" stroke-width="3"/><line x1="30" y1="28" x2="30" y2="45" stroke="#1A1A1A" stroke-width="3"/></svg></span>
+      <div class="card-body">
+        <div class="card-title">Vernier Acuity<span class="origin-badge">New</span></div>
+        <div class="card-desc">Two short lines; the lower is nudged a hair left or right. Call the direction. Humans detect misalignments finer than a single cone — this finds your hyperacuity limit.</div>
+        <div class="card-meta">2AFC staircase · Sub-pixel offsets · Arc-second estimate</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
+    <a href="/reaction/" class="test-card"
+       aria-label="Reaction Time — tap the instant the field turns green. Five trials, best and average in milliseconds.">
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><rect width="52" height="52" fill="#fff"/><path d="M26,26 m-22,0 a22,22 0 0,1 44,0 Z" fill="#E8431A"/><path d="M4,26 a22,22 0 0,0 44,0 Z" fill="#4A8C3F"/><path d="M28,10 L18,29 L25,29 L23,42 L34,22 L27,22 Z" fill="#fff"/></svg></span>
+      <div class="card-body">
+        <div class="card-title">Reaction Time<span class="origin-badge">New</span></div>
+        <div class="card-desc">Red field, then — the instant it flashes green — tap. We measure the gap five times and report your best and average in milliseconds. Tap early and the trial resets.</div>
+        <div class="card-meta">5 trials · Millisecond timing · Best + average</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
+    <a href="/flicker/" class="test-card"
+       aria-label="Flicker Fusion — raise the flicker until it looks steady. Estimates your critical flicker fusion threshold in hertz.">
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><rect width="52" height="52" fill="#fff"/><circle cx="26" cy="26" r="22" fill="#000"/><circle cx="26" cy="26" r="16" fill="#fff"/><circle cx="26" cy="26" r="10" fill="#000"/><circle cx="26" cy="26" r="4" fill="#fff"/></svg></span>
+      <div class="card-body">
+        <div class="card-title">Flicker Fusion<span class="origin-badge">New</span></div>
+        <div class="card-desc">A dot flickers black-to-bright. Slow, you see it blink; fast enough, it fuses to a steady glow. The speed where blinking vanishes is your critical flicker fusion threshold.</div>
+        <div class="card-meta">Slider staircase · Refresh-aware cap · Threshold in Hz</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
+  </nav>
+
+  <div class="group-label">Eye health &amp; optics</div>
+  <nav class="test-grid" aria-label="Eye health tests" role="navigation">
+
     <a href="/amsler/" class="test-card"
        aria-label="Amsler Grid — central vision and macular screening, each eye separately, about 2 minutes.">
-      <div class="card-icon icon-green" aria-hidden="true">AG</div>
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><rect width="52" height="52" fill="#fff"/><g stroke="#6B6B6B" stroke-width="0.7"><line x1="10" y1="4" x2="10" y2="48"/><line x1="18" y1="4" x2="18" y2="48"/><line x1="26" y1="4" x2="26" y2="48"/><line x1="34" y1="4" x2="34" y2="48"/><line x1="42" y1="4" x2="42" y2="48"/><line x1="4" y1="10" x2="48" y2="10"/><line x1="4" y1="18" x2="48" y2="18"/><line x1="4" y1="26" x2="48" y2="26"/><line x1="4" y1="34" x2="48" y2="34"/><line x1="4" y1="42" x2="48" y2="42"/></g><circle cx="26" cy="26" r="2.4" fill="#E8431A"/></svg></span>
       <div class="card-body">
         <div class="card-title">Amsler Grid</div>
         <div class="card-desc">Screens for wavy, missing, or distorted areas in central vision. Associated with macular changes including age-related macular degeneration.</div>
@@ -317,11 +402,22 @@ footer {
 
     <a href="/astig/" class="test-card"
        aria-label="Astigmatism Fan — radial line clarity test, each eye separately, about 2 minutes.">
-      <div class="card-icon icon-red" aria-hidden="true">AF</div>
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><rect width="52" height="52" fill="#fff"/><g stroke="#1A1A1A" stroke-width="1.1"><line x1="26" y1="26" x2="26" y2="4"/><line x1="26" y1="26" x2="42" y2="10"/><line x1="26" y1="26" x2="48" y2="26"/><line x1="26" y1="26" x2="42" y2="42"/><line x1="26" y1="26" x2="26" y2="48"/><line x1="26" y1="26" x2="10" y2="42"/><line x1="26" y1="26" x2="4" y2="26"/><line x1="26" y1="26" x2="10" y2="10"/></g><circle cx="26" cy="26" r="2" fill="#E8431A"/></svg></span>
       <div class="card-body">
         <div class="card-title">Astigmatism Fan</div>
         <div class="card-desc">Radial line wheel. Reports which directions appear blurrier or darker, suggesting a possible astigmatic axis. SVG-generated — no images needed.</div>
         <div class="card-meta">Both eyes · ~2 min · Axis detection · SVG inline</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
+    <a href="/blindspot/" class="test-card"
+       aria-label="Blind Spot Mapper — find and measure your eye's natural blind spot where the optic nerve exits.">
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><rect width="52" height="52" fill="#fff"/><g stroke="#1A1A1A" stroke-width="2.2"><line x1="12" y1="20" x2="12" y2="32"/><line x1="6" y1="26" x2="18" y2="26"/></g><circle cx="38" cy="26" r="7.5" fill="none" stroke="#D4D0C8" stroke-width="1.2" stroke-dasharray="3 2.5"/><circle cx="38" cy="26" r="4" fill="#E8431A"/></svg></span>
+      <div class="card-body">
+        <div class="card-title">Blind Spot Mapper<span class="origin-badge">New</span></div>
+        <div class="card-desc">Everyone has a hole in their vision where the optic nerve exits the eye. Cover one eye, stare at the cross, watch a dot vanish — and we locate and size your blind spot.</div>
+        <div class="card-meta">Per eye · Distance-calibrated · Locates + sizes the optic disc</div>
       </div>
       <div class="card-arrow" aria-hidden="true">→</div>
     </a>
@@ -349,7 +445,7 @@ footer {
 </main>
 
 <footer role="contentinfo">
-  www.zengine.site &nbsp;|&nbsp; © 2025 Zengine™ &nbsp;|&nbsp; OpticQuiz — educational use only, not a medical diagnostic
+  www.zengine.site &nbsp;|&nbsp; © 2026 Zengine™ &nbsp;|&nbsp; OpticQuiz — educational use only, not a medical diagnostic
 </footer>
 
 </body>
