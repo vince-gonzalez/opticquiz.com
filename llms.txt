@@ -1,0 +1,42 @@
+# OpticQuiz
+
+> Fourteen free, honest, browser-based vision and perception tests, plus plain-English guides. No account, no paywall, and no ads during a test; your answers and scores are computed in your browser and never uploaded. Educational only — never a medical diagnosis — and every test states plainly what a screen can and cannot measure.
+
+OpticQuiz is an independent, open-source project by Vince Gonzalez (source: https://github.com/zengineco/opticquiz.com). Its governing rule is honesty: stimuli are generated procedurally (canvas/SVG), scoring is transparent, and screen-calibration limits are disclosed on every page. It never claims to diagnose. A result that worries a user is framed as a reason to see a licensed optometrist or ophthalmologist, not as a verdict. Where a screen genuinely cannot do something — separate protanopia from deuteranopia, measure flicker beyond half the display refresh, or produce a glasses prescription — the test says so.
+
+## Vision & perception tests
+- [Color Vision Test](https://opticquiz.com/color/): Procedurally generated Ishihara-style "vanishing" plates. Screens red-green and blue-yellow (tritan) color deficiency, per eye. Cannot reliably separate protan from deutan.
+- [Visual Acuity Test](https://opticquiz.com/acuity/): Tumbling-E chart calibrated with a credit card (85.6 mm) for true-size letters plus a viewing distance, giving an approximate Snellen result per eye. Not a refraction and not a prescription.
+- [Anomaloscope](https://opticquiz.com/anomal/): Rayleigh red/green-to-yellow match, the clinical gold standard for red-green vision, approximated on a broadband screen. Suggests a protan or deutan lean; not a diagnosis.
+- [Contrast Sensitivity Test](https://opticquiz.com/contrast/): Fading-letter adaptive staircase measuring the faintest contrast you can read. A relative log-CS on your (uncalibrated) screen, not a Pelli-Robson score.
+- [Vernier Acuity Test](https://opticquiz.com/vernier/): Alignment hyperacuity via a two-alternative staircase; reports a sub-pixel offset threshold and an arc-second estimate.
+- [Reaction Time Test](https://opticquiz.com/reaction/): Simple visual reaction time over five trials, in milliseconds. Display refresh and input lag add a small fixed offset.
+- [Flicker Fusion Test](https://opticquiz.com/flicker/): Critical flicker fusion threshold in Hz, honestly capped at half the display's refresh rate (which the page detects).
+- [Blind Spot Mapper](https://opticquiz.com/blindspot/): Locates and roughly sizes your eye's natural blind spot (optic disc), distance-calibrated. A demonstration, not a disease screen.
+- [Dominant Eye Test](https://opticquiz.com/dominance/): Guided Miles triangle test for sighting dominance; useful for photography, archery, and shooting.
+- [Farnsworth D-15](https://opticquiz.com/d15/): Color-cap arrangement test; scores total error plus the confusion axis (deutan/protan/tritan).
+- [Saturation Threshold Test](https://opticquiz.com/sat/): Adaptive staircase for the faintest color you can detect versus gray, across four hue axes.
+- [Hue Discrimination (Blue vs Purple)](https://opticquiz.com/hue/): Just-noticeable hue difference across seven color-neighbor pairs.
+- [Amsler Grid](https://opticquiz.com/amsler/): At-home central-vision distortion check associated with macular changes (e.g. AMD). Monitoring screen, not a diagnosis.
+- [Astigmatism Fan](https://opticquiz.com/astig/): Radial-line dial suggesting a possible astigmatic axis. Cannot measure a prescription.
+
+## Guides — direct answers to common questions
+- [Am I Colorblind?](https://opticquiz.com/learn/am-i-colorblind/): The everyday signs and how to check.
+- [Can Color Blindness Be Cured?](https://opticquiz.com/learn/can-color-blindness-be-cured/): Why inherited color blindness is permanent, and what color-boosting glasses actually do.
+- [What Does a Dominant Eye Mean?](https://opticquiz.com/learn/what-does-a-dominant-eye-mean/): Eye dominance explained.
+- [How to Test for Astigmatism at Home](https://opticquiz.com/learn/how-to-test-astigmatism-at-home/): The fan test and its limits.
+- [What Is the Eye's Blind Spot?](https://opticquiz.com/learn/what-is-the-eye-blind-spot/): Why every eye has one and why you never notice it.
+- [How Far Should You Sit From Your Screen?](https://opticquiz.com/learn/screen-distance-and-eye-strain/): Monitor distance, the 20-20-20 rule, and eye strain.
+- [Why Is My Night Vision Getting Worse?](https://opticquiz.com/learn/night-vision-and-contrast/): The contrast-sensitivity connection.
+- [Color Blindness, Explained](https://opticquiz.com/learn/color-blindness-explained/): Types, causes, and prevalence.
+- [How Ishihara Plates Work](https://opticquiz.com/learn/how-ishihara-plates-work/): The colorimetry behind the hidden-number test.
+- [What 20/20 Vision Actually Means](https://opticquiz.com/learn/visual-acuity-and-20-20/): Snellen fractions decoded.
+- [Contrast Sensitivity vs. Sharpness](https://opticquiz.com/learn/contrast-sensitivity-vs-acuity/): Why 20/20 can still struggle in fog and dim light.
+
+## Reference
+- [Vision & Eye Test Glossary](https://opticquiz.com/learn/glossary/): Plain-English definitions of every term used across the site, each linked to its test.
+- [About & Honesty Policy](https://opticquiz.com/about/): Who builds OpticQuiz and the rule that every test states what a screen can and cannot measure.
+
+## Optional
+- [Full site text for ingestion](https://opticquiz.com/llms-full.txt)
+- [XML sitemap](https://opticquiz.com/sitemap.xml)

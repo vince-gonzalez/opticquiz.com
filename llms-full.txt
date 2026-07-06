@@ -1,0 +1,1542 @@
+# OpticQuiz — Full Text
+
+> Complete text of opticquiz.com for language-model ingestion. Fourteen free, honest, browser-based vision and perception tests plus plain-English guides. No paywall, no account; test results are computed on-device and never uploaded. Educational only, never a diagnosis. Source: https://github.com/zengineco/opticquiz.com
+
+---
+
+# OpticQuiz — Eye Wellness Screening
+URL: https://opticquiz.com/
+
+OpticQuiz — 14 free browser-based eye and vision tests. Visual acuity (eye chart), color blindness, dominant eye, contrast sensitivity, anomaloscope, blind spot, Amsler grid, astigmatism, and more. Educational, on-device, no account.
+
+Eye & Vision Tests
+CAN
+YOU
+SEE
+THIS?
+
+Fourteen free browser-based tests for color, sharpness, speed, and the eye itself — plus plain-English guides to how it all works. No account. Your test answers and scores are computed in your browser and never uploaded. Educational use only — not a medical diagnostic.
+
+14Vision tests
+
+$0Always free
+
+<5 minPer test
+
+### Choose a screening
+
+Color vision
+
+Blue / PurpleOrigin
+
+Can you tell blue from purple? Finds your just-noticeable hue difference across 7 color pairs including red/orange, green/yellow, pink/gray, and more.
+
+7 hue pairs · Both eyes · Adaptive staircase · JND threshold
+
+→
+
+Color Vision
+
+8 Ishihara-style dot plates, drawn fresh each time. A digit hides in the dots — screens for red-green and blue-yellow (tritan) color deficiency, per eye.
+
+8 plates · Both eyes · ~2 min · Red-green + tritan
+
+→
+
+-
+
+AnomaloscopeNew
+
+Mix red and green light until the bottom half matches a yellow reference — how eye clinics settle red-green vision for real. Where you land reveals your cone balance.
+
+Rayleigh match · 3 rounds · Protan / deutan lean · Screen approximation
+
+→
+
+Farnsworth D-15
+
+Drag 15 color caps into hue order. Richer data than plate recognition — catches mild anomalous trichromacy that Ishihara plates miss.
+
+Drag-sort · Both eyes · Confusion axis scoring
+
+→
+
+-
+
+Saturation Threshold
+
+How faded is too faded? Finds the minimum saturation you can detect across red, green, blue, and yellow axes. Catches mild CVD that plates miss.
+
+4 axes · Both eyes · Adaptive staircase · Per-axis JND
+
+→
+
+Sharpness, speed & perception
+
+E
+
+Visual AcuityNew
+
+A real tumbling-E eye chart in your browser. Calibrate the screen with any bank card and the letters are rendered true-to-size — an honest approximate 20/20 check, per eye.
+
+Card-calibrated · Tumbling E · Snellen per eye · ~3 min
+
+→
+
+R
+
+Contrast SensitivityNew
+
+Eye charts test sharpness; this tests the faint — a letter fading toward the background until it nearly vanishes. A different axis of vision, and often the first to slip.
+
+Fading letters · Adaptive staircase · Log contrast · This-screen baseline
+
+→
+
+-
+-
+
+Vernier AcuityNew
+
+Two short lines; the lower is nudged a hair left or right. Call the direction. Humans detect misalignments finer than a single cone — this finds your hyperacuity limit.
+
+2AFC staircase · Sub-pixel offsets · Arc-second estimate
+
+→
+
+Reaction TimeNew
+
+Red field, then — the instant it flashes green — tap. We measure the gap five times and report your best and average in milliseconds. Tap early and the trial resets.
+
+5 trials · Millisecond timing · Best + average
+
+→
+
+Flicker FusionNew
+
+A dot flickers black-to-bright. Slow, you see it blink; fast enough, it fuses to a steady glow. The speed where blinking vanishes is your critical flicker fusion threshold.
+
+Slider staircase · Refresh-aware cap · Threshold in Hz
+
+→
+
+Eye health & optics
+
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+
+Amsler Grid
+
+Screens for wavy, missing, or distorted areas in central vision. Associated with macular changes including age-related macular degeneration.
+
+Both eyes · ~2 min · Tappable grid · Central vision
+
+→
+
+-
+-
+-
+-
+-
+-
+-
+-
+
+Astigmatism Fan
+
+Radial line wheel. Reports which directions appear blurrier or darker, suggesting a possible astigmatic axis. SVG-generated — no images needed.
+
+Both eyes · ~2 min · Axis detection · SVG inline
+
+→
+
+-
+-
+
+Blind Spot MapperNew
+
+Everyone has a hole in their vision where the optic nerve exits the eye. Cover one eye, stare at the cross, watch a dot vanish — and we locate and size your blind spot.
+
+Per eye · Distance-calibrated · Locates + sizes the optic disc
+
+→
+
+Dominant EyeNew
+
+Which eye does your brain aim with? The guided Miles triangle test finds your sighting-dominant eye in a minute — handy for photography, archery, shooting, and darts.
+
+Guided steps · No equipment · ~1 min · Sighting dominance
+
+→
+
+### Learn how vision works
+
+-
+-
+-
+
+Learn
+
+Plain-English answers to the real questions: am I colorblind, what 20/20 means, how to test astigmatism at home, why night vision fades — plus a full glossary. Each links to a test.
+
+12 guides + glossary · Direct answers · Linked to tests
+
+→
+
+i
+
+About & Honesty Policy
+
+One person, honest tests, and a strict rule: every test says exactly what a screen can and cannot measure. No fake precision, no diagnosis cosplay.
+
+Who's behind this · The honesty policy · Open source
+
+→
+
+Important — Read Before Using
+
+OpticQuiz is an educational wellness screening tool, not a medical device, diagnostic instrument, or licensed healthcare service.
+Results are probabilistic estimates based on population-level statistical models intended for personal informational and educational purposes only.
+
+OpticQuiz does not diagnose any medical condition.
+OpticQuiz does not provide medical advice, clinical guidance, or treatment recommendations.
+OpticQuiz is not a substitute for examination by a licensed optometrist or ophthalmologist.
+Screen-based tests are fundamentally limited by display calibration, color profile, ambient lighting, and viewing distance.
+
+If you are concerned about your vision or eye health, consult a licensed eye care professional.
+Use of this tool constitutes acceptance that results are for personal educational reference only and carry no clinical weight.
+
+---
+
+# Color Blindness Test — Free Online Ishihara Plates — OpticQuiz
+URL: https://opticquiz.com/color/
+
+OpticQuiz Color Vision Test — procedurally generated Ishihara-style plates. Screens for red-green and blue-yellow color vision deficiency. Free, on-device, educational only.
+
+## About this color blindness test
+
+This free online color blindness test uses Ishihara-style dot plates — the hidden-number design used in eye clinics for over a century. Each plate is generated fresh in your browser: a digit is drawn in dots that differ from the background only in hue, along a red-green or blue-yellow confusion line, while dot size and brightness are randomized so you can't cheat by shape or shading. If your color vision separates those hues, the number pops out; if it doesn't, you see a uniform field.
+
+You'll see 8 plates per eye — five red-green, two blue-yellow (tritan), and one lightness-only control that everyone can read. Scoring is a plain count of how many you read correctly on each axis, not a black-box "AI" verdict. The result is an honest screen: it can flag a likely red-green or tritan deficiency, but a screen cannot separate protanopia from deuteranopia, and it is never a diagnosis.
+
+Read: Color Blindness, Explained →
+Read: How Ishihara Plates Work →
+Try: the Anomaloscope red-green matching test →
+
+## Frequently asked questions
+
+How accurate is an online color blindness test?
+
+It's a useful screen, not a diagnosis. Uncalibrated screens shift results between devices, but a plate test built from real confusion-axis colors can reliably flag a likely deficiency. Confirm anything meaningful with an eye-care professional.
+
+Can this test tell if I'm protan or deutan?
+
+No — it detects the shared red-green confusion pattern, but separating protan from deutan needs a clinician's anomaloscope or diagnostic plates.
+
+Why test each eye separately?
+
+Inherited color blindness is the same in both eyes, but a one-eye difference can point to an acquired change worth examining — and per-eye testing improves reliability.
+
+Is this test free?
+
+Yes — free, no account, and it runs entirely on your device. Nothing is uploaded or stored.
+
+---
+
+# Visual Acuity Test — Free Online Eye Chart (Tumbling E) — OpticQuiz
+URL: https://opticquiz.com/acuity/
+
+OpticQuiz Visual Acuity Test — a real tumbling-E eye chart in your browser, calibrated with a credit card so letters are true-to-size. Approximate 20/20 check, per eye. Free, educational only.
+
+## About this visual acuity test
+
+This is a real tumbling-E eye chart that runs in your browser — and unlike most online eye tests, the letters are rendered true-to-size. A 20/20 optotype is defined by physics: its critical detail subtends 5 arc-minutes of visual angle. To honor that on your screen, you first calibrate with any bank card (a globally standard 85.6 mm wide), which tells us your display's true pixels-per-millimeter. Combined with your viewing distance, every E is drawn at a genuinely correct visual angle.
+
+You identify which way each E's prongs point, one eye at a time, down a level ladder from 20/200 toward 20/16. Wear your usual glasses or contacts — the result reflects your corrected vision. Two honest limits apply: very small optotypes hit your screen's pixel floor at close range (we compute and show that limit rather than fake it), and this estimates functional sharpness — it is not a refraction and cannot produce a prescription.
+
+Read: What 20/20 Vision Actually Means →
+Read: Contrast Sensitivity vs. Sharpness →
+Try: the Contrast Sensitivity test →
+
+## Frequently asked questions
+
+Can you test visual acuity online accurately?
+
+A useful estimate, yes — if letters are calibrated to real size (we use a credit card) and your distance is known. It's not a clinical exam or a prescription.
+
+Why do I need a credit card for the eye test?
+
+Screens vary in pixel density, so a card — a standard 85.6 mm everywhere — acts as a ruler to make the letters true-to-size at your screen's real scale.
+
+What is the tumbling E test?
+
+An eye chart of the letter E rotated four ways; you report the direction. It measures acuity with no reading needed, so it works for any language or young children.
+
+Does this replace an eye exam?
+
+No — it estimates current sharpness at a set distance, but can't refract, detect disease, or prescribe. A surprising result is a reason to book an exam.
+
+---
+
+# Anomaloscope Test Online — Red-Green Color Match (Rayleigh) — OpticQuiz
+URL: https://opticquiz.com/anomal/
+
+OpticQuiz Anomaloscope (lite) — mix red and green to match a yellow reference, the way the clinical gold-standard color test works. Screen approximation, educational only.
+
+## About the anomaloscope test
+
+The anomaloscope is the clinical gold standard for red-green color vision. You build the lower half of a split disc by mixing red and green light until it matches a fixed yellow reference — the classic Rayleigh match. Where you set the mix reveals how your red and green cones balance: needing extra red points toward a protan (red-weak) lean, extra green toward a deutan (green-weak) lean.
+
+A real anomaloscope uses pure single-wavelength lights and careful calibration. A screen only has broadband red, green, and blue phosphors and no calibration, so this is a flavour of the instrument, not the instrument. It can suggest a lean and show a wide matching range, but a clean match here does not rule a deficiency out. Anything suggestive should be confirmed by a clinician.
+
+/learn/color-blindness-explained/
+/color/
+
+## Frequently asked questions
+
+What is an anomaloscope?
+
+A clinical instrument for red-green color vision. The subject mixes red and green light to match a yellow reference (the Rayleigh match); the settings they accept reveal the type and severity of any red-green deficiency.
+
+Can a screen replace a real anomaloscope?
+
+No. Screens use broadband RGB and aren't color-calibrated, so this is an approximation. It can hint at a protan or deutan lean but cannot diagnose or grade a deficiency.
+
+What does needing more red or more green mean?
+
+Protan (red-weak) observers perceive red as dimmer and tend to add more red to match. Deutan (green-weak) observers tend to add more green. A balanced match near the middle is typical of normal red-green vision.
+
+Is this better than an Ishihara plate test?
+
+It's a different tool. In clinic the anomaloscope grades red-green vision precisely; this screen version is a curiosity companion to plate tests, not a replacement for either.
+
+---
+
+# Contrast Sensitivity Test Online — Fading Letters — OpticQuiz
+URL: https://opticquiz.com/contrast/
+
+OpticQuiz Contrast Sensitivity — read the letter as it fades into the background. Finds the faintest contrast you can resolve, a different axis than letter-chart sharpness.
+
+## About the contrast sensitivity test
+
+Eye charts test sharpness with bold black letters. This tests the opposite end — the faint. A letter fades toward the background until it nearly disappears, and an adaptive staircase finds the lowest contrast at which you can still read it. That is your contrast sensitivity, a different axis of vision from acuity and one that matters for fog, glare, dusk, and dim rooms.
+
+Contrast sensitivity can soften with age and can dip early in conditions like cataracts and glaucoma, sometimes before letter acuity changes. The honest limit: your screen's brightness and gamma are unknown and uncalibrated, so this is not a Pelli-Robson score and can't be compared between devices. It's most useful tracked against your own past results on the same screen.
+
+/learn/contrast-sensitivity-vs-acuity/
+/acuity/
+
+## Frequently asked questions
+
+What is contrast sensitivity?
+
+Your ability to detect faint differences in lightness between an object and its background — the 'how faint' axis of vision, as opposed to acuity's 'how small'.
+
+Can I have 20/20 vision and poor contrast sensitivity?
+
+Yes. They're separate abilities. You can read the sharpest letters yet still struggle with faces in dim light or road edges at dusk.
+
+Is the online contrast number clinical?
+
+No. An uncalibrated screen means it isn't a Pelli-Robson value. Use it as a personal baseline and track it against your own results on the same display.
+
+What lowers contrast sensitivity?
+
+Age, cataracts, glaucoma, diabetic eye disease, and macular degeneration among others — and it can change before letter acuity does.
+
+---
+
+# Vernier Acuity Test — Hyperacuity Alignment — OpticQuiz
+URL: https://opticquiz.com/vernier/
+
+OpticQuiz Vernier Acuity — is the lower line nudged left or right? Measures your alignment hyperacuity, one of the sharpest things human vision can do.
+
+## About the vernier acuity test
+
+Vernier acuity is a hyperacuity — the ability to detect that two line segments are misaligned, at a scale finer than a single cone in your retina. This test shows two short vertical lines with the lower one nudged a hair left or right; you call the direction, and a two-alternative staircase narrows the offset until you reach your limit.
+
+The pixel offset at your threshold is measured directly; the arc-second figure is estimated from the viewing distance you enter and an assumed screen pixel size, so it's approximate. What makes sub-pixel offsets possible at all is anti-aliasing, which lets the browser draw a line between pixels — your visual system then averages across receptors to resolve alignment below the pixel grid. It's a genuinely different measure from letter-chart sharpness.
+
+## Frequently asked questions
+
+What is vernier acuity?
+
+The ability to detect a small misalignment between line segments. It's called a hyperacuity because people resolve offsets far finer than the spacing of the cones sampling the image.
+
+How is it different from 20/20 acuity?
+
+Letter acuity measures the smallest detail you can resolve; vernier measures the smallest offset you can detect — typically many times finer.
+
+Are the arc-second numbers exact?
+
+The pixel threshold is measured directly, but the arc-second conversion depends on the distance you entered and an assumed pixel size, so treat it as an estimate.
+
+How can I detect an offset smaller than one pixel?
+
+Anti-aliasing renders lines at sub-pixel positions, and your visual system averages across many receptors, letting you resolve alignment below the physical pixel spacing.
+
+---
+
+# Reaction Time Test — Visual Reflex Speed (ms) — OpticQuiz
+URL: https://opticquiz.com/reaction/
+
+OpticQuiz Visual Reaction Time — tap when the screen turns green. Measures your simple visual reaction time over 5 trials. Free, on-device, for fun.
+
+## About the reaction time test
+
+This measures your simple visual reaction time: how fast you perceive a change and move in response. The field stays red, then flips to green after a random delay so you can't anticipate it, and we time the gap until you tap. Five valid trials run, tap too early and the trial resets, and your slowest is dropped before averaging.
+
+Typical simple visual reaction time on a screen is roughly 250 to 350 milliseconds; anything under about 200 usually means you jumped the gun. Your display's refresh rate and input lag add a small fixed delay, so a browser reads about 20 to 50 ms slower than a lab button — which is why the honest use of this number is comparing it against your own runs, not other people or devices. It's a fun perception-and-motor measure, not a medical or fitness assessment.
+
+## Frequently asked questions
+
+What is a good visual reaction time?
+
+On a screen, roughly 250 to 350 ms is typical for simple visual reaction time. Consistently under 200 ms usually means you anticipated the flash rather than reacted to it.
+
+Why is my online reaction time slower than a lab test?
+
+Your monitor's refresh rate and input latency add a small fixed delay that a browser can't remove, typically 20 to 50 ms on top of a dedicated button setup.
+
+How is reaction time measured here?
+
+We time the gap between the green flash and your tap across five valid trials, drop the slowest, and report your average and best in milliseconds.
+
+Does this measure reflexes or health?
+
+It's a fun measure of perception plus movement speed, not a reflex exam or a medical or fitness assessment. Fatigue, caffeine, and screen lag all move it.
+
+---
+
+# Flicker Fusion Test — Critical Flicker Frequency (CFF, Hz) — OpticQuiz
+URL: https://opticquiz.com/flicker/
+
+OpticQuiz Flicker Fusion — raise the flicker until it looks steady. Estimates your critical flicker fusion threshold in Hz, capped honestly by your screen's refresh rate.
+
+## About the flicker fusion test
+
+A dot flickers between black and bright. Slow, you see it blink; fast enough, the blinking fuses into a steady glow. The frequency where flicker becomes steady is your critical flicker fusion (CFF) threshold — a genuine measure of how your visual system handles change over time.
+
+There's a hard physical limit worth understanding: a display can only flicker up to half its refresh rate, so a 60 Hz screen caps this test around 30 Hz. We probe your display's refresh and disclose the ceiling; if you reach it, your true threshold is simply higher than the screen can show. CFF also rises with brighter light and a larger stimulus and falls when you're tired, so it's a fun perceptual measure, not a medical test.
+
+## Frequently asked questions
+
+What is critical flicker fusion?
+
+The frequency at which a flickering light stops looking like it's blinking and appears steady. It reflects the temporal resolution of your visual system.
+
+What is a normal flicker fusion threshold?
+
+Roughly 20 to 40 Hz for most people, rising with brightness and stimulus size and falling with fatigue. There's a wide normal range.
+
+Why is the test capped by my screen?
+
+A screen can only flicker up to half its refresh rate, so a 60 Hz display caps the test near 30 Hz. We detect your refresh and tell you the ceiling.
+
+Does flicker fusion mean anything about my health?
+
+It's a fun perceptual measure that shifts with lighting, stimulus size, and tiredness. It is not a medical or diagnostic test.
+
+---
+
+# Blind Spot Test — Find Your Eye's Blind Spot — OpticQuiz
+URL: https://opticquiz.com/blindspot/
+
+OpticQuiz Blind Spot Mapper — find your eye's natural blind spot and measure roughly where it sits and how big it is. Free, on-device, educational.
+
+## About the blind spot test
+
+Every healthy eye has a blind spot — a small patch of retina where the optic nerve leaves the eye, containing no light-sensing cells. Anything whose image lands there simply isn't seen, yet you never notice it in daily life because your brain fills the gap from the surrounding pattern and from your other eye. This test lets you find and roughly measure yours: cover one eye, fixate the cross, and a moving dot vanishes as it crosses that gap, then reappears.
+
+Using the viewing distance you enter and your screen's pixel size, we estimate where your blind spot sits (typically about 12–15° toward your temple) and how wide it appears. Those angles are approximate — they scale with your distance — so treat this as a fascinating demonstration of your own anatomy, not a clinical visual-field test. A genuinely new blank area in your central vision is different and worth an eye exam.
+
+## Frequently asked questions
+
+What is the eye's blind spot?
+
+The point where the optic nerve exits the retina — it has no photoreceptors, so images landing there aren't seen. Everyone has one per eye.
+
+Why does the dot disappear?
+
+As it crosses the optic-disc gap while you fixate the cross, its image falls on receptor-free retina and briefly vanishes, then returns on the far side.
+
+Where is the blind spot located?
+
+About 12–15° toward your temple from where you look, slightly below the horizontal, in each eye.
+
+Is having a blind spot normal?
+
+Completely — it's normal anatomy in every eye. A new, persistent blank area in central vision is different and should be examined.
+
+---
+
+# Dominant Eye Test — Which Eye Is Dominant? — OpticQuiz
+URL: https://opticquiz.com/dominance/
+
+OpticQuiz Dominant Eye Test — find which eye is dominant with the guided Miles triangle test. Useful for photography, archery, and shooting. Free, takes one minute.
+
+## About the dominant eye test
+
+Just as you have a dominant hand, you have a dominant eye — the one your brain leans on to aim and judge direction. This test uses the Miles test, the standard quick procedure: you frame a distant object through a small triangle made with both hands, then close each eye in turn. Whichever eye keeps the object centered is your sighting-dominant eye. About two-thirds of people are right-eye dominant, and dominance doesn't have to match your handedness — "cross-dominance" is common.
+
+Knowing yours is genuinely useful for anything you aim: put your dominant eye to the camera viewfinder, and in archery, rifle and pistol shooting, darts, or golf putting, set your stance to the dominant-eye side. It says nothing about eye health or which eye sees more sharply — it's about alignment, not acuity.
+
+## Frequently asked questions
+
+How do I find my dominant eye?
+
+Make a small triangle with both hands, frame a distant object with both eyes open, then close each eye. The eye that keeps it framed is dominant — that's the Miles test this page guides you through.
+
+What does a dominant eye mean?
+
+It's the eye your brain favors for aiming, like handedness. It doesn't indicate eye health or sharpness. Roughly two-thirds of people are right-eye dominant.
+
+Why does eye dominance matter?
+
+Mainly for aiming sports and photography — it tells you which eye to sight with and which side to set your stance.
+
+Can your dominant eye change?
+
+It's usually stable, though it can seem to shift with gaze direction, and some people have weak or mixed dominance. Unclear result? Retry with a smaller triangle and a farther target.
+
+---
+
+# Farnsworth D-15 Test Online — Color Arrangement — OpticQuiz
+URL: https://opticquiz.com/d15/
+
+OpticQuiz Farnsworth D-15 — drag color caps into hue order. Richer than plate tests. Screens for deutan, protan, and tritan confusion axes. Educational use only.
+
+## About the Farnsworth D-15 test
+
+The Farnsworth D-15 is a classic color arrangement test: you drag 15 colored caps into a smooth hue order starting from a fixed reference. People with normal color vision produce a near-perfect circle of hues; people with a color deficiency make characteristic crossings that trace their confusion axis — deutan, protan, or tritan.
+
+Because it reads the pattern of your errors rather than a single hidden number, the D-15 gives richer information than plate recognition and can flag milder or blue-yellow deficiencies that plates miss. Scoring here combines your total arrangement error with which confusion axis those errors line up along. The usual caveat applies: on-screen cap colors are approximate and uncalibrated, so this is a useful screen, not a clinical D-15.
+
+/learn/color-blindness-explained/
+/color/
+
+## Frequently asked questions
+
+What is the Farnsworth D-15 test?
+
+An arrangement test where you order 15 colored caps by hue. The way your ordering deviates from the correct sequence reveals the type and rough severity of any color vision deficiency.
+
+What does the D-15 detect that Ishihara plates don't?
+
+It gives a confusion axis and can catch milder anomalous trichromacy and blue-yellow deficiencies. The arrangement pattern carries more information than pass/fail plate recognition.
+
+How is the D-15 scored?
+
+By your total transposition error (how far caps sit from their correct positions) plus which confusion axis your crossings align with — deutan, protan, or tritan.
+
+Is an online D-15 accurate?
+
+Screen colors aren't calibrated, so it's a screening approximation. A clinical D-15 uses standardized physical caps under controlled lighting.
+
+---
+
+# Color Saturation Test — Detection Threshold by Hue — OpticQuiz
+URL: https://opticquiz.com/sat/
+
+OpticQuiz Saturation Threshold — finds the minimum saturation you can detect across red, green, blue, and yellow. Catches mild color vision deficiency that Ishihara plates miss.
+
+## About the saturation threshold test
+
+This test finds your saturation threshold — the faintest, least-colorful version of a hue you can still tell apart from gray. A patch of color and a patch of gray appear side by side; the color's saturation drops step by step via an adaptive staircase until you can no longer pick which is which. That crossover is your detection threshold for that hue.
+
+Four axes are tested — red, green, blue, and yellow — because each leans on different cone contributions, so a weakness shows up as a raised threshold on a specific axis. A lower threshold is better (you detected very faint color). It can surface mild color deficiencies that high-contrast plates miss. Because a screen's sRGB range can't reach clinical saturations, the result is relative to your display, not a calibrated clinical value.
+
+/learn/color-blindness-explained/
+/color/
+
+## Frequently asked questions
+
+What is a saturation threshold?
+
+The least-saturated version of a color you can still distinguish from gray. It measures how sensitive your color vision is on a given hue axis.
+
+What does this reveal about my color vision?
+
+A raised threshold on one axis — say red — points toward reduced sensitivity there, which can accompany that type of color deficiency. It complements plate testing.
+
+Why test four color axes?
+
+Red, green, blue, and yellow probe different cone contributions, so testing each separately localizes where any weakness lies.
+
+Is the on-screen result accurate?
+
+It's relative to your display. Consumer screens can't render the full saturation range used clinically, so treat it as a personal, on-screen measure rather than a clinical threshold.
+
+---
+
+# Blue vs Purple Test — Hue Discrimination (JND) — OpticQuiz
+URL: https://opticquiz.com/hue/
+
+OpticQuiz Hue Neighbor Test — can you tell blue from purple? Find your just-noticeable difference across 7 hue neighborhoods. Catches color confusion Ishihara plates miss.
+
+## About the hue discrimination test
+
+This test measures your just-noticeable difference (JND) in hue: the smallest change in color angle you can still tell apart. Two patches from the same color neighborhood are shown, their difference narrowing via an adaptive staircase until you can no longer separate them. That crossover point is your discrimination threshold for that pair.
+
+Seven neighborhoods are tested, starting with the classic blue versus purple — a region where many people and many screens struggle. Because it measures thresholds rather than reading hidden numbers, it can catch mild anomalous trichromacy that plate tests miss. A smaller angle is better. Note that a consumer screen's limited sRGB color range caps how fine the test can push, so treat it as a relative measure, not a clinical one.
+
+/learn/color-blindness-explained/
+/color/
+
+## Frequently asked questions
+
+Why is it hard to tell blue from purple?
+
+Blue and purple sit close together in hue, and the difference relies on your short-wavelength (blue) cones. Some people — and many uncalibrated screens — compress that region, making the two genuinely harder to separate.
+
+What is a just-noticeable difference (JND)?
+
+The smallest change in a stimulus you can reliably detect. Here it's the smallest hue-angle gap at which you can still tell two colors apart — a direct measure of your color discrimination.
+
+Does this test color blindness?
+
+It's a discrimination-threshold test that complements plate tests. Elevated thresholds on a specific axis can hint at a color deficiency and can catch mild cases plates miss, but it isn't a diagnosis.
+
+Is a smaller number better?
+
+Yes. A smaller angle means you distinguished two very close colors — finer discrimination. A larger required gap means that hue pair was harder for you to separate.
+
+---
+
+# Amsler Grid Test Online — Macular & Central Vision Check — OpticQuiz
+URL: https://opticquiz.com/amsler/
+
+OpticQuiz Amsler Grid — free central vision screening for wavy lines, missing areas, and distortion. Educational use only, not a medical diagnostic.
+
+## About the Amsler grid test
+
+The Amsler grid is a simple square grid with a central dot, used to check your central vision for distortion. Fixing your gaze on the center dot, one eye at a time, you watch for lines that look wavy, blurry, dim, or missing. Those distortions can signal changes in the macula, the small central part of the retina responsible for fine detail.
+
+It's widely used to monitor conditions such as age-related macular degeneration (AMD), and many people with macular risk check it regularly at home. To use it well: wear your usual reading glasses, hold the screen at comfortable reading distance, cover one eye, and stare only at the center dot while noticing the rest with your peripheral attention. This is an at-home monitoring screen, not a diagnosis — any new wave, blur, or gap is a reason to contact an eye-care professional promptly.
+
+## Frequently asked questions
+
+What does the Amsler grid test for?
+
+Distortions or gaps in your central vision — wavy, blurry, dim, or missing lines — that can accompany macular problems such as age-related macular degeneration.
+
+How do I use the Amsler grid correctly?
+
+Wear reading glasses, hold the grid at comfortable reading distance, cover one eye, and fixate the center dot while noticing whether the surrounding lines look straight and complete.
+
+What do wavy or missing lines mean?
+
+They can indicate a macular change (metamorphopsia). It isn't a diagnosis, but new distortion should be checked by an eye-care professional promptly.
+
+Can the Amsler grid replace a retina exam?
+
+No. It's a monitoring screen you can use at home between exams, not a substitute for a dilated retinal examination.
+
+---
+
+# Astigmatism Test Online — Fan / Clock-Dial Chart — OpticQuiz
+URL: https://opticquiz.com/astig/
+
+OpticQuiz Astigmatism Fan — free browser-based astigmatism screening. Identify blurry or dark line directions per eye. Educational use only.
+
+## About the astigmatism test
+
+This astigmatism screen shows a fan of radial lines pointing in every direction. An eye with astigmatism focuses one orientation more sharply than others, so some spokes look darker, sharper, or bolder while the perpendicular ones look fainter or blurrier. Which directions stand out points to a possible astigmatic axis, tested one eye at a time.
+
+Astigmatism comes from the cornea or lens being shaped more like a football than a sphere, which is extremely common and easily corrected with glasses or contacts. This test can suggest its presence and rough orientation, but it can't measure your prescription — only an optometrist's refraction can. Try it both with and without your usual correction: if a direction still stands out with your glasses on, that can hint at under-correction worth mentioning at your next exam.
+
+## Frequently asked questions
+
+How does an astigmatism test work?
+
+You view a fan of radial lines. If some directions look darker or sharper than the perpendicular ones, it suggests your eye focuses one orientation better — the signature of astigmatism.
+
+Why do some lines look darker than others?
+
+An astigmatic eye brings one meridian into sharper focus, so lines in that direction look crisper and darker while the perpendicular lines look fainter or blurred.
+
+Can I really test astigmatism online?
+
+Only as a suggestion. This can hint at astigmatism and its rough axis, but it can't measure the amount or give a prescription — that needs an optometrist's refraction.
+
+Should I wear my glasses for this test?
+
+Try it both ways. With correction the lines should look even; if a direction still stands out with your glasses on, it can hint at under-correction to raise at your exam.
+
+---
+
+# About OpticQuiz — The Honesty Policy
+URL: https://opticquiz.com/about/
+
+About OpticQuiz — who builds it, how the tests work, and the honesty policy: every test states exactly what a screen can and cannot measure. Educational only, never a diagnosis.
+
+About
+WHO'S
+BEHIND
+THIS?
+
+Hi — I'm Vince Gonzalez, and OpticQuiz is a one-person project. I build browser tools, and this site exists because I got curious about which online vision tests were real and which were theater. The answer bothered me enough to build the honest version.
+
+## THE HONESTY POLICY
+
+Every test on this site states exactly what a screen can and cannot measure. No invented precision, no fake confidence percentages, no diagnosis cosplay.
+
+Concretely, that means: the color plates are generated fresh from real confusion-axis colorimetry instead of scraped images; scoring is transparent counts and thresholds you can see, not black-box "AI analysis"; and where a screen genuinely can't do something — separate protanopia from deuteranopia, measure flicker beyond half your refresh rate, produce a prescription — the test says so, on the page, in plain language.
+
+## WHAT THESE TESTS ARE
+
+Educational screening and honest curiosity tools. Some map to real clinical procedures (the tumbling-E chart, the Amsler grid, the D-15 arrangement, the Rayleigh anomaloscope match); others measure genuine perceptual thresholds that are simply interesting (flicker fusion, vernier hyperacuity, your blind spot). All of them run entirely in your browser — no account, and your test answers and scores are never uploaded or stored anywhere.
+
+One honest footnote so this claim stays true: the site itself uses Google Analytics and Google AdSense, which — like most of the web — set cookies and see standard visit data (page, device, rough location). That's separate from your test results, which are computed on your device and never sent to me or anyone else. If you'd rather block even that, any content blocker or private window handles it.
+
+## WHAT THEY ARE NOT
+
+- Not a diagnosis. A consumer screen has unknown brightness, gamma, and color calibration. Real diagnostics use controlled instruments.
+
+- Not a substitute for an eye exam. If any result here worries you — or your vision has changed — book an optometrist or ophthalmologist. That's the correct move every time.
+
+- Not for medical, employment, or safety decisions. Occupational color-vision and acuity requirements are tested clinically, full stop.
+
+## HOW THE TESTS ARE BUILT
+
+Each test is a single self-contained page: the stimuli are drawn procedurally (canvas or SVG), the psychophysics use standard methods — adaptive staircases, forced-choice trials, level ladders — and every scoring rule is readable in the page source. The whole site is open to inspection on GitHub; found a bug or a dishonest claim, open an issue and I'll fix it.
+
+— Vince, your friendly neighborhood vision-test builder
+
+← All Tests
+
+---
+
+# Learn — How Vision Tests Work — OpticQuiz
+URL: https://opticquiz.com/learn/
+
+Learn about color blindness, visual acuity, contrast sensitivity, the Amsler grid, and how eye tests actually work — plain-English guides from OpticQuiz, each linked to a free test.
+
+Learn
+HOW
+VISION
+WORKS
+
+Plain-English guides to how your eyes work, what the tests measure, and how to read your results. Each one links to a free test you can try right now.
+
+Start here
+
+Am I Colorblind?
+
+The everyday signs of color blindness — and how to check for yourself in two minutes.
+
+→
+
+How to Test for Astigmatism at Home
+
+The radial-line fan test, why some directions look darker, and what a home check can and can't tell you.
+
+→
+
+Why Is My Night Vision Getting Worse?
+
+Why night and fog get harder even with 20/20 vision — the contrast-sensitivity connection.
+
+→
+
+How Far Should You Sit From Your Screen?
+
+The right monitor distance, the 20-20-20 rule, and why distance matters for any eye test.
+
+→
+
+Color vision
+
+Color Blindness, Explained
+
+The types (protan, deutan, tritan), what causes it, who has it, and how it actually looks day to day.
+
+→
+
+How Ishihara Plates Work
+
+Why a hidden number appears — or vanishes — in a field of colored dots, and what online plate tests can tell you.
+
+→
+
+Can Color Blindness Be Cured?
+
+Why inherited color blindness is permanent, and what color-boosting glasses actually do.
+
+→
+
+Sharpness & the eye
+
+What 20/20 Vision Actually Means
+
+Snellen fractions decoded, why 20/20 isn't the maximum, and whether you can really test acuity on a screen.
+
+→
+
+Contrast Sensitivity vs. Sharpness
+
+Why you can have "perfect" 20/20 and still struggle in fog, glare, and dim light — and what the difference reveals.
+
+→
+
+What Does a Dominant Eye Mean?
+
+Eye dominance explained — what it is, why it matters for aiming, and how to find yours.
+
+→
+
+What Is the Eye's Blind Spot?
+
+Why every eye has a receptor-free gap, where it sits, and why your brain hides it from you.
+
+→
+
+Reference
+
+Vision & Eye Test Glossary
+
+Every term used across OpticQuiz — acuity, contrast, JND, Ishihara, hyperacuity — in plain English, each linked to its test.
+
+→
+
+← All Tests
+
+---
+
+# Am I Colorblind? Signs and How to Check — OpticQuiz
+URL: https://opticquiz.com/learn/am-i-colorblind/
+
+Am I colorblind? Common signs include confusing reds, greens and browns, muddy traffic lights, and not seeing numbers others see in dot images. Take a free color vision test to check.
+
+Home › Learn › Am I Colorblind?
+
+Am I Colorblind?
+
+You can’t be certain without a test, but common signs of color blindness include confusing reds, greens and browns, seeing traffic-light reds as dim or muddy, struggling with color-coded charts, and not seeing numbers that others read in dot-pattern images. A quick Ishihara-style test flags a likely deficiency in about two minutes; an eye-care professional confirms it.
+
+Take the free color vision test →
+
+## Everyday signs to watch for
+
+Color blindness rarely feels like “missing” color — more often it’s specific confusions you’ve lived with so long they seem normal. The most common signs of red-green deficiency are:
+
+Confusing reds with greens and browns, especially in dim light; traffic-light reds looking dim or grayish; trouble with color-coded maps, charts, and wires; picking clothes others call mismatched; and not seeing the number in a field of colored dots that friends read instantly. Blue-yellow confusion (rare) shows up as blues looking green and yellows washing out.
+
+## How to check — and what a result means
+
+The fastest self-check is an Ishihara-style plate test: a number hides in colored dots along a confusion line, visible to normal color vision and invisible to a matching deficiency. If you miss several plates that others read easily, that’s a genuine signal.
+
+A screen test is a screen, not a diagnosis — displays aren’t color-calibrated. But it’s a solid first step. If it flags a likely deficiency, or if your color vision seems to have changed recently, see an optometrist, who can confirm the type and severity with calibrated plates or an anomaloscope.
+
+Related
+
+/color/
+/learn/color-blindness-explained/
+/learn/can-color-blindness-be-cured/
+
+## Frequently asked questions
+
+How do I know if I am colorblind?
+
+Look for consistent color confusions — reds with greens and browns, dim traffic-light reds, trouble with color-coded charts — then take an Ishihara-style plate test. Missing plates others read easily is a strong sign; an eye doctor confirms it.
+
+Do colorblind people see in black and white?
+
+Almost never. That’s total color blindness (achromatopsia), which is extremely rare. The vast majority of colorblind people see plenty of color but confuse specific pairs, usually reds and greens.
+
+Can you suddenly become colorblind?
+
+Inherited color blindness is present from birth. A sudden change in color vision is different — it can follow eye disease, some medications, or optic-nerve problems — and should be checked by an eye-care professional promptly.
+
+Is there a free test for color blindness?
+
+Yes. OpticQuiz’s color vision test is free, needs no account, and runs in your browser. It’s an educational screen, not a diagnosis.
+
+Educational only. This article and the OpticQuiz color test are for general information and are not a diagnosis. If you’re concerned about your color vision, see a licensed optometrist or ophthalmologist.
+
+← More guides
+
+---
+
+# Can Color Blindness Be Cured or Corrected? — OpticQuiz
+URL: https://opticquiz.com/learn/can-color-blindness-be-cured/
+
+Can color blindness be cured? Inherited color blindness is permanent and cannot be cured. Color-boosting glasses help some people tell confusing colors apart but don't restore normal vision.
+
+Home › Learn › Can It Be Cured?
+
+Can Color Blindness Be Cured?
+
+Inherited color blindness cannot be cured — it’s genetic and permanent, because the cone photoreceptors involved are altered or missing. Special tinted “color-boosting” glasses can increase the contrast between confused colors for some people, making certain colors easier to tell apart, but they do not restore normal color vision. Acquired color changes may improve if the underlying cause is treated.
+
+Test your color vision →
+
+## Why inherited color blindness is permanent
+
+Most color blindness comes from an inherited difference in the genes that build your cone photoreceptors — the cells that detect red, green, or blue light. If a cone type is shifted or absent, the wiring of your color vision is set from birth and doesn’t change. There is currently no cure and no medication that restores normal cone function in inherited color vision deficiency.
+
+Experimental gene therapies have restored color vision in animal studies, and research continues, but nothing is an approved treatment for people today.
+
+## What color-blind glasses actually do
+
+Tinted lenses such as EnChroma-style glasses work by filtering specific wavelengths to exaggerate the difference between colors a red-green eye tends to confuse. For some wearers this makes certain colors “pop” more and feels striking; for others the effect is subtle or absent, and it doesn’t work for everyone or for every type.
+
+Crucially, they boost contrast, they don’t add a missing channel — you’re still color-deficient with them off, and they can distort other colors. They’re an aid, not a correction. Acquired color vision loss (from cataracts, diabetes, or medication) is different: treating the cause can sometimes recover color vision.
+
+Related
+
+/color/
+/learn/color-blindness-explained/
+/anomal/
+
+## Frequently asked questions
+
+Can colorblind glasses cure color blindness?
+
+No. They can raise the contrast between confused colors for some people, but they don’t restore normal color vision — take them off and you’re still color-deficient.
+
+Is color blindness permanent?
+
+Inherited color blindness is permanent. Color vision loss that appears later in life can sometimes improve if its cause (such as a medication or eye disease) is treated.
+
+Will color blindness get worse over time?
+
+Inherited red-green color blindness is generally stable through life. A noticeable change is unusual and worth an eye exam, since it may be acquired.
+
+Is there a gene therapy for color blindness?
+
+Gene therapy has restored color vision in animal research, but there is no approved gene-therapy treatment for inherited color blindness in humans yet.
+
+Educational only. General information only, not medical advice. For questions about treatment or color-correcting lenses, consult a licensed eye-care professional.
+
+← More guides
+
+---
+
+# What Does a Dominant Eye Mean? — OpticQuiz
+URL: https://opticquiz.com/learn/what-does-a-dominant-eye-mean/
+
+Your dominant eye is the one your brain favors for aiming and judging direction, like handedness. About two-thirds of people are right-eye dominant. Find yours with a quick guided test.
+
+Home › Learn › Dominant Eye
+
+What Does a Dominant Eye Mean?
+
+Your dominant eye is the one your brain relies on to aim and judge direction — similar to being right- or left-handed. About two-thirds of people are right-eye dominant. It says nothing about eye health or which eye sees more sharply; it simply anchors where things are. Knowing yours matters most for photography, archery, shooting, darts, and other aiming tasks.
+
+Find your dominant eye →
+
+## What eye dominance actually is
+
+When both eyes are open, your brain leans on one eye’s view to pin down direction and alignment — that’s your sighting-dominant eye. It’s a normal, built-in preference, not a strength or weakness. Roughly two in three people are right-eye dominant, the rest left, and a small minority show weak or mixed dominance.
+
+Eye dominance and handedness usually match but don’t have to. Being right-handed and left-eye dominant is called cross-dominance, and it’s common.
+
+## Why it matters, and how to find yours
+
+Anywhere you aim, your dominant eye should lead: put it to the camera viewfinder, and in archery, rifle and pistol shooting, darts, or golf putting, set your stance to the dominant-eye side. Cross-dominant shooters often learn to shoot from their eye-dominant side rather than their handed side.
+
+The quickest way to find yours is the Miles triangle test: frame a distant object through a small triangle made with both hands, then close each eye — whichever eye keeps it framed is dominant.
+
+Related
+
+/dominance/
+
+## Frequently asked questions
+
+How do I know which eye is dominant?
+
+Make a small triangle with both hands, center a distant object through it with both eyes open, then close each eye. The eye that keeps the object framed is your dominant eye.
+
+Can you be right-handed and left-eye dominant?
+
+Yes. That’s cross-dominance, and it’s common. Eye dominance and handedness often match but don’t have to.
+
+Does your dominant eye ever change?
+
+Sighting dominance is usually stable, though it can appear to shift with gaze direction in some people, and a minority have weak or mixed dominance.
+
+Why does dominant eye matter for shooting?
+
+You aim along your dominant eye’s line of sight. Matching your stance and sighting to the dominant eye keeps the target and sights aligned; cross-dominant shooters often adapt their stance.
+
+Educational only. Eye dominance is normal and says nothing about eye health. This is educational information, not a medical assessment.
+
+← More guides
+
+---
+
+# How to Test for Astigmatism at Home — OpticQuiz
+URL: https://opticquiz.com/learn/how-to-test-astigmatism-at-home/
+
+To check for astigmatism at home, view a fan of radial lines: if some directions look darker or sharper than others, it suggests astigmatism. It can hint but can't measure your prescription.
+
+Home › Learn › Astigmatism at Home
+
+How to Test for Astigmatism at Home
+
+To screen for astigmatism at home, look at a fan or dial of radial lines pointing in all directions, one eye at a time. If some line directions look darker, sharper, or bolder than the ones perpendicular to them, that suggests astigmatism along that axis. A home test can hint at astigmatism and its rough orientation, but it can’t measure your prescription — only an optometrist’s refraction can.
+
+Try the astigmatism fan test →
+
+## Why the fan test works
+
+Astigmatism means the cornea or lens is shaped more like a rugby ball than a sphere, so the eye focuses one orientation more sharply than the one at right angles to it. On a radial-line fan, that shows up directly: lines along the sharply-focused meridian look crisper and darker, while the perpendicular lines look fainter or blurred.
+
+Which lines stand out points to your astigmatic axis — the orientation your eye focuses best. Test each eye separately, since astigmatism can differ between them.
+
+## What a home test can and can’t do
+
+A home fan test is a screening suggestion only. It can raise a flag and hint at the axis, but it can’t measure how much astigmatism you have or produce a prescription — that needs an optometrist’s refraction with proper instruments.
+
+Try it both with and without your usual glasses or contacts. If the lines look even with your correction on, good; if a direction still stands out, that can hint at under-correction worth mentioning at your next exam. Astigmatism is extremely common and easily corrected, so a positive screen is a reason to book an eye test, not to worry.
+
+Related
+
+/astig/
+/acuity/
+
+## Frequently asked questions
+
+How do you check for astigmatism at home?
+
+View a fan of radial lines one eye at a time. If some directions look darker or sharper than the perpendicular ones, it suggests astigmatism along that axis.
+
+What does astigmatism look like?
+
+Vision can be blurred or slightly doubled at all distances, with lights streaking or flaring at night. On a line fan, some orientations look sharper and darker than others.
+
+Can astigmatism go away on its own?
+
+Astigmatism usually stays fairly stable and doesn’t simply disappear, though the amount can change over time. It’s easily corrected with glasses, contacts, or surgery.
+
+Is astigmatism serious?
+
+It’s very common and rarely serious — mostly it just needs correcting. A large or changing astigmatism should be checked by an eye-care professional.
+
+Educational only. A home screen can suggest astigmatism but cannot measure it or replace a refraction. See a licensed optometrist for diagnosis and correction.
+
+← More guides
+
+---
+
+# What Is the Eye's Blind Spot? — OpticQuiz
+URL: https://opticquiz.com/learn/what-is-the-eye-blind-spot/
+
+The eye's blind spot is a small area of the retina where the optic nerve exits, with no light receptors, so images there aren't seen. Everyone has one; the brain fills the gap. Find yours.
+
+Home › Learn › The Blind Spot
+
+What Is the Eye’s Blind Spot?
+
+The blind spot is a small area of each eye’s retina where the optic nerve exits. It has no light-sensing cells, so anything whose image lands there simply isn’t seen. Everyone has one in each eye, sitting about 12 to 15 degrees toward the temple from where you’re looking. You never notice it in daily life because your brain fills the gap from the surrounding scene and your other eye.
+
+Find your blind spot →
+
+## Where it comes from
+
+Your retina is lined with photoreceptors — except at one spot, the optic disc, where roughly a million nerve fibers gather and leave the eye as the optic nerve, and blood vessels enter. There’s no room for receptors there, so that patch is genuinely blind. It sits on the nasal side of each retina, which is why the blind spot appears in your vision toward the temple side, a little below eye level.
+
+## Why you never notice it
+
+Two reasons. First, your two eyes overlap: what one eye misses, the other sees, so with both eyes open there’s no gap. Second, even with one eye closed, your brain fills in the missing patch using the surrounding pattern — a process you can catch in the act with a blind spot test, where a dot vanishes and reappears as it crosses the spot.
+
+The physiological blind spot is completely normal anatomy in every healthy eye. A different thing — a new blank or missing area in your central vision that doesn’t fill in — is not normal and is worth an eye exam.
+
+Related
+
+/blindspot/
+/amsler/
+
+## Frequently asked questions
+
+Where is the blind spot located?
+
+About 12 to 15 degrees toward your temple from where you’re looking, slightly below the horizontal, in each eye. It corresponds to the optic disc on the retina.
+
+Why don't we notice our blind spot?
+
+Your two eyes overlap so one covers the other’s gap, and even one-eyed your brain fills the missing patch from the surrounding scene.
+
+Does everyone have a blind spot?
+
+Yes — every healthy eye has one where the optic nerve exits. It’s normal anatomy, not a defect.
+
+Is a blind spot in your eye bad?
+
+The natural physiological blind spot is harmless. A new, persistent blank area in your central vision is different and should be examined by an eye doctor.
+
+Educational only. The physiological blind spot is normal. A new or growing blank area in your vision is not — see a licensed eye-care professional promptly.
+
+← More guides
+
+---
+
+# How Far Should You Sit From Your Screen? — OpticQuiz
+URL: https://opticquiz.com/learn/screen-distance-and-eye-strain/
+
+Sit about an arm's length (50-70 cm) from a monitor with the top at or just below eye level, and follow the 20-20-20 rule to ease eye strain. Viewing distance also affects on-screen vision tests.
+
+Home › Learn › Screen Distance
+
+How Far Should You Sit From Your Screen?
+
+For a computer monitor, sit about an arm’s length away — roughly 50 to 70 cm — with the top of the screen at or just below eye level so your gaze tilts slightly down. To ease eye strain, follow the 20-20-20 rule: every 20 minutes, look at something about 20 feet away for 20 seconds. Viewing distance also matters for any on-screen vision test, since it sets how large letters appear to your eye.
+
+Test your acuity (distance-aware) →
+
+## The comfortable setup
+
+A good default is an arm’s length from a laptop or monitor (about 50–70 cm), a bit farther for a large screen, with the top of the display at or just below eye level. Phones are naturally closer, around 30–40 cm. There’s nothing magic about the exact number — comfort and a slightly downward gaze angle matter more than precision.
+
+“Computer eye strain” (digital eye strain) comes mostly from reduced blinking, glare, and long unbroken focus, not from the screen damaging your eyes. The fixes are boring and effective: the 20-20-20 rule, decent lighting to cut glare, and blinking on purpose.
+
+## Why distance matters for a vision test
+
+A letter’s difficulty depends on the angle it makes at your eye, which depends on both its physical size and how far away you are. That’s why a trustworthy on-screen visual acuity test asks for your viewing distance and calibrates letter sizes to match — sit closer and letters are easier, farther and they’re harder. Getting the distance right is what makes the result meaningful.
+
+Related
+
+/acuity/
+/contrast/
+
+## Frequently asked questions
+
+How far should I sit from my monitor?
+
+About an arm’s length — roughly 50 to 70 cm — with the top of the screen at or just below eye level, and a little farther for large displays.
+
+What is the 20-20-20 rule?
+
+Every 20 minutes, look at something about 20 feet away for 20 seconds. It relaxes your focusing muscles and reduces digital eye strain.
+
+Does screen time permanently damage your eyes?
+
+There’s no strong evidence that normal screen use permanently damages adult eyes. It commonly causes temporary eye strain from reduced blinking, glare, and sustained focus.
+
+Why do my eyes hurt after looking at screens?
+
+Usually digital eye strain: you blink less, focus at one distance for long stretches, and battle glare. Breaks, lighting, and the 20-20-20 rule help.
+
+Educational only. General wellness information, not medical advice. Persistent eye pain, headaches, or blurred vision deserve an eye exam.
+
+← More guides
+
+---
+
+# Why Is My Night Vision Getting Worse? — OpticQuiz
+URL: https://opticquiz.com/learn/night-vision-and-contrast/
+
+Trouble seeing at night or in fog is often a contrast-sensitivity issue rather than sharpness, and can come with age, cataracts, or dry eye. Learn what to check and test your contrast.
+
+Home › Learn › Night Vision
+
+Why Is My Night Vision Getting Worse?
+
+Struggling to see at night, in fog, or against glare is often a contrast-sensitivity problem rather than a sharpness one — which is why you can have crisp 20/20 vision and still find dusk driving hard. It tends to increase with age and can accompany cataracts, dry eye, or an outdated glasses prescription. If daytime detail is fine but low light isn’t, contrast sensitivity is the axis to check.
+
+Test your contrast sensitivity →
+
+## Sharpness vs. seeing in the dark
+
+Eye charts measure sharpness with bold black letters on white — maximum contrast. But night, fog, and dusk are low-contrast worlds, and detecting faint differences is a separate ability called contrast sensitivity. It can soften while your letter acuity still reads 20/20, which is exactly why “my eyes are fine but I hate night driving” is such a common, real complaint.
+
+## Common causes and when to act
+
+Reduced night vision and contrast can come with normal aging, cataracts (which scatter light and gray-out contrast, adding glare and halos), dry eye, or simply an out-of-date prescription. Less commonly, difficulty in truly dim conditions (night blindness) can relate to retinal conditions.
+
+You can screen the contrast axis with an on-screen contrast test, but the real move is an eye exam: if night driving has genuinely gotten worse, an optometrist can check for cataracts, update your prescription, and rule out other causes. Worsening night vision is a common and very treatable reason to get checked.
+
+Related
+
+/contrast/
+/learn/contrast-sensitivity-vs-acuity/
+/acuity/
+
+## Frequently asked questions
+
+Why is my night vision getting worse?
+
+Often it’s reduced contrast sensitivity rather than sharpness, which can come with aging, cataracts, dry eye, or an outdated prescription. An eye exam can pin down the cause.
+
+Can night vision be improved?
+
+Sometimes, yes — updating your glasses, treating dry eye, or removing a cataract can noticeably improve night and low-contrast vision. It depends on the cause.
+
+Is poor night vision a sign of cataracts?
+
+It can be. Cataracts scatter light, reducing contrast and adding glare and halos around lights at night. It’s worth an eye exam to check.
+
+What is night blindness?
+
+Difficulty seeing in low light. It ranges from everyday reduced night vision to specific retinal conditions, so persistent trouble in the dark should be examined.
+
+Educational only. Educational only. Worsening night vision is common and often treatable — see a licensed optometrist or ophthalmologist to find the cause.
+
+← More guides
+
+---
+
+# Color Blindness Explained — Types, Causes & What It's Like — OpticQuiz
+URL: https://opticquiz.com/learn/color-blindness-explained/
+
+Color blindness explained in plain English: the types (protanopia, deuteranopia, tritanopia), what causes it, how common it is, and how it looks in daily life. Test your color vision free.
+
+Home › Learn › Color Blindness Explained
+
+Color Blindness, Explained
+
+Color blindness is a reduced ability to tell certain colors apart, caused when one type of cone in the retina is missing or shifted. The common form is red-green (affecting about 1 in 12 men); a rare form is blue-yellow. It's almost always inherited, permanent, and does not affect how sharply you see — only which colors you can distinguish.
+
+Take the free color vision test →
+
+## The three axes of color vision
+
+Normal color vision is trichromatic: three cone types in your retina respond to roughly long (red), medium (green), and short (blue) wavelengths. Your brain compares their signals to build every color you see. Color blindness happens when one of those channels is weakened (anomalous) or absent (dichromatic).
+
+### Red-green deficiency — by far the most common
+
+- Deuteranomaly / deuteranopia — the green channel is shifted or missing. The single most common type.
+
+- Protanomaly / protanopia — the red channel is shifted or missing. Reds also look dimmer than normal.
+
+In everyday life this shows up as confusing reds with greens and browns, muddy traffic-light reds, and struggling with color-coded charts. Because both types share the red-green confusion pattern, a screen test can flag "red-green deficiency" but generally can't reliably tell protan from deutan — that needs a clinician's anomaloscope.
+
+### Blue-yellow deficiency — rare
+
+Tritanomaly / tritanopia affects the blue channel. Blues can look greenish and yellows can wash out. It's uncommon, not sex-linked, and more often acquired than inherited.
+
+### Total color blindness — very rare
+
+Achromatopsia means little or no color perception at all, usually with light sensitivity and reduced sharpness. It affects roughly 1 in 30,000 people.
+
+## What causes it, and who has it
+
+Most color blindness is inherited. The genes for red and green cones sit on the X chromosome, so a single altered copy affects men (who have one X) far more than women (who have two). That's why about 8% of men but only about 0.5% of women have red-green deficiency. Color vision can also be acquired — from diabetes, glaucoma, macular or optic-nerve disease, or some medications — and acquired changes are often blue-yellow.
+
+## What it's actually like
+
+Most people with color blindness see plenty of color — they just confuse specific pairs. A deuteranomalous person isn't living in grayscale; they might just find a ripe-vs-unripe tomato ambiguous, or read a red LED on gray as barely-there. Many don't discover it until a test, because your brain learns the world with whatever cones you have.
+
+Test it yourself
+
+Color Vision Test — Ishihara-style plates →
+Anomaloscope — the red-green matching test →
+Blue / Purple hue discrimination →
+
+## Frequently asked questions
+
+What are the main types of color blindness?
+
+Red-green (protanopia and deuteranopia, plus the milder -anomaly forms) is by far the most common. Blue-yellow (tritan) is rare. Total color blindness (achromatopsia) is extremely rare.
+
+What causes color blindness?
+
+Usually an inherited change to one cone type, carried on the X chromosome — which is why it's much more common in men. It can also be acquired from eye disease, some drugs, or optic-nerve damage.
+
+How common is color blindness?
+
+About 1 in 12 men and 1 in 200 women, almost all of it red-green type.
+
+Can color blindness be cured?
+
+Inherited color blindness can't be cured. Tinted "color-boosting" glasses help some people tell confusing colors apart but don't restore normal color vision.
+
+Educational only. This article and the OpticQuiz tests are for general information and are not a diagnosis. If you're concerned about your color vision, see a licensed optometrist or ophthalmologist.
+
+← More guides
+
+---
+
+# How Ishihara Plates Work — The Hidden-Number Test — OpticQuiz
+URL: https://opticquiz.com/learn/how-ishihara-plates-work/
+
+How Ishihara plates work: why a hidden number appears or vanishes in a field of colored dots, the different plate designs, and what an online plate test can and cannot tell you.
+
+Home › Learn › How Ishihara Plates Work
+
+How Ishihara Plates Work
+
+An Ishihara plate hides a number drawn in dots that differ from the surrounding dots only in hue — along a color-vision confusion line — while dot size and brightness are randomized so they can't be used as shortcuts. Normal color vision reads the number; a matching color deficiency sees a blank field or a different figure. It's a fast, clever screen for red-green color blindness.
+
+Try the color vision test →
+
+## The trick: separate figure from ground using only color
+
+Invented by Dr. Shinobu Ishihara in 1917, each plate is a mosaic of dots in varied sizes and brightness. A number is embedded by giving its dots a different hue than the background — but a hue chosen to sit on a confusion line, the set of colors that a specific type of color blindness can't tell apart.
+
+The genius is what's removed as a clue. If the number were simply darker or bigger, anyone could trace it by brightness or shape. So the dots are randomized in size and lightness. That leaves hue as the only reliable signal. If your eyes separate those hues, the number pops. If they don't, the figure melts into the background.
+
+## The plate designs
+
+- Vanishing plates — a number visible to normal vision that disappears for the color-deficient. The most common design.
+
+- Transformation plates — normal and color-deficient viewers see different numbers.
+
+- Hidden-digit plates — only color-deficient viewers see a number; normal vision sees nothing.
+
+- Diagnostic plates — tuned to lean toward protan vs deutan classification.
+
+## Why online plate tests are a screen, not a diagnosis
+
+The whole method depends on precise color. But your screen isn't color-calibrated: two phones side by side render the same image with different brightness, gamma, and color profiles. Night mode, low brightness, or a blue-light filter can each hide or reveal a number for the wrong reason.
+
+So a well-built online test — one that generates plates from real confusion-axis colors and randomizes brightness, like ours — can flag a likely red-green or blue-yellow deficiency. What it can't do is grade severity precisely or reliably separate protanopia from deuteranopia. That's what clinically calibrated plates and an anomaloscope are for.
+
+Related tests
+
+Color Vision Test — procedural Ishihara plates →
+Anomaloscope — the clinical gold standard →
+Read: Color Blindness, Explained →
+
+## Frequently asked questions
+
+How does the Ishihara test work?
+
+A number made of dots differs from the background only in hue, along a color-confusion axis, with size and brightness randomized. Normal color vision sees it; a matching deficiency doesn't.
+
+Are online Ishihara tests accurate?
+
+They're a useful screen, not a diagnosis — uncalibrated screens shift results between devices. Good for flagging a likely deficiency; confirmation needs clinical tools.
+
+Why can't I see the number in a plate?
+
+Your eye may not separate the figure and background hues, which sit on a confusion line — or it's low brightness, night mode, or an uncalibrated screen.
+
+What is a vanishing plate?
+
+The common design: normal vision sees a number that disappears for people with a color deficiency.
+
+Educational only. Not a diagnosis. If you're concerned about your color vision, see a licensed optometrist or ophthalmologist.
+
+← More guides
+
+---
+
+# What 20/20 Vision Actually Means — Acuity Explained — OpticQuiz
+URL: https://opticquiz.com/learn/visual-acuity-and-20-20/
+
+What 20/20 vision actually means: Snellen fractions decoded, why 20/20 isn't perfect vision, what 20/40 or 20/15 mean, and whether you can test visual acuity accurately on a screen.
+
+Home › Learn › What 20/20 Means
+
+What 20/20 Vision Actually Means
+
+20/20 means you can read at 20 feet the line a normally-sighted person reads at 20 feet — it's the benchmark for normal sharpness, not perfect or maximum vision. The first number is your distance from the chart; the second is the distance at which a normal eye could read that same line. Many healthy eyes exceed it, reaching 20/16 or 20/12.
+
+Test your acuity (card-calibrated) →
+
+## Reading the fraction
+
+Snellen notation is a ratio, not a percentage. Test distance ÷ "normal" distance for that line.
+
+- 20/20 — at 20 ft you read what a normal eye reads at 20 ft. Normal.
+
+- 20/40 — at 20 ft you read only what a normal eye reads at 40 ft. Half the sharpness; often the driving-license threshold.
+
+- 20/15 or 20/16 — you read at 20 ft what a normal eye needs 15–16 ft for. Sharper than the standard.
+
+- 20/200 — the top big letter; in the US, 20/200 or worse in your better eye with correction is the threshold for legal blindness.
+
+Outside the US the same idea is written in meters (6/6 instead of 20/20) or as a logMAR score, where 0.0 equals 20/20 and lower is sharper. It's the same measurement in different clothing.
+
+## Why 20/20 isn't "perfect"
+
+20/20 was set as the average normal for a healthy adult eye — a practical reference, not a biological ceiling. A 20/20 letter is built so its critical detail (a gap or stroke) subtends 5 arc-minutes of visual angle, with each stroke one-fifth of that. Plenty of young, healthy eyes resolve finer detail and score 20/16 or better. So "I have 20/20" means "normal," not "flawless."
+
+## Acuity is only one dimension of vision
+
+You can have crisp 20/20 acuity and still struggle to see in fog, at dusk, or against glare — because those depend on contrast sensitivity, a separate axis. Acuity asks "how small can it be?"; contrast asks "how faint can it be?". Both matter, and the second often changes first. (More on that in contrast vs. sharpness.)
+
+## Can you really test acuity on a screen?
+
+Yes — with one condition. A letter's difficulty is set by the angle it makes at your eye, which depends on its real physical size and your distance. A raw pixel size means nothing until you calibrate. That's why a trustworthy online acuity test asks you to size a standard object (a credit card is 85.6 mm everywhere) to learn your screen's true pixels-per-millimeter, then asks your viewing distance. With both, it can render optotypes at genuinely correct visual angles.
+
+The honest caveats: a screen has limited resolution (very small letters hit a pixel floor at close range — a good test tells you the limit instead of faking it), and this measures your current functional vision, not a refraction. It will never replace an eye exam or produce a prescription.
+
+Related tests
+
+Visual Acuity Test — tumbling E, card-calibrated →
+Contrast Sensitivity Test →
+Read: Contrast vs. Sharpness →
+
+## Frequently asked questions
+
+What does 20/20 vision mean?
+
+You read at 20 feet what a normal eye reads at 20 feet — normal sharpness, not perfect vision.
+
+Is 20/20 the best possible vision?
+
+No — it's the normal reference. Many healthy eyes reach 20/16 or 20/12.
+
+What does 20/40 vision mean?
+
+At 20 ft you read only what a normal eye reads at 40 ft — about half the sharpness; often the driving minimum.
+
+Can you test visual acuity online?
+
+A useful estimate, yes, if letters are calibrated to real size and your distance is known — but not a clinical exam or a prescription.
+
+Educational only. Not a diagnosis or a prescription. For a real measurement of your vision, see a licensed optometrist or ophthalmologist.
+
+← More guides
+
+---
+
+# Contrast Sensitivity vs. Sharpness — OpticQuiz
+URL: https://opticquiz.com/learn/contrast-sensitivity-vs-acuity/
+
+Contrast sensitivity vs visual acuity: why you can have 20/20 and still struggle in fog, glare, and dim light, what contrast sensitivity measures, and why it can change first.
+
+Home › Learn › Contrast vs. Sharpness
+
+Contrast Sensitivity vs. Sharpness
+
+Visual acuity measures the smallest high-contrast detail you can resolve; contrast sensitivity measures the faintest difference in lightness you can detect. They're separate abilities — you can have crisp 20/20 acuity and still lose objects in fog, glare, or dim light because that's the contrast axis at work. Contrast sensitivity sometimes fades before sharpness does, which is why it's worth knowing.
+
+Test your contrast sensitivity →
+
+## Two different questions your eyes answer
+
+Think of any object as having two properties your visual system judges independently:
+
+- Acuity — "how small?" The eye chart uses bold black letters on stark white. It asks how tiny the detail can get before you lose it. That's your 20/20.
+
+- Contrast sensitivity — "how faint?" Real life isn't black on white. A gray car in fog, a face across a dim room, the edge of a curb at dusk — these are low-contrast. This asks how subtle a lightness difference you can still detect.
+
+A standard eye chart only ever tests the first at maximum contrast. So it can hand you a clean 20/20 while completely missing a genuine, disabling contrast problem.
+
+## Why it matters in daily life
+
+Contrast sensitivity is what you lean on for night driving, foggy or rainy conditions, reading low-contrast screens, recognizing faces in dim light, and spotting steps or curbs. People with reduced contrast sensitivity often describe vision that's "fine on the chart" but "washed out," "hazy," or "hard at night" — a mismatch that makes sense once you know the two axes are separate.
+
+## What can lower it
+
+Contrast sensitivity naturally softens with age, and can be reduced by cataracts (which scatter light and gray-out contrast), glaucoma, diabetic eye disease, macular degeneration, and some optic-nerve conditions. Because it can decline before letter acuity in several of these, a drop in contrast sensitivity is sometimes an early nudge to get examined — even if your chart acuity still reads 20/20.
+
+## How it's tested — and the screen caveat
+
+Clinically it's measured with a Pelli-Robson chart (letters that fade group by group) or sine-wave gratings, and you report the faintest you can still see. A screen-based version can approximate this by fading a letter toward the background — but your display's brightness and gamma are uncalibrated and unknown, so the number is a relative estimate on your screen, best tracked against your own past results rather than compared between devices or to clinical charts.
+
+Related tests
+
+Contrast Sensitivity Test →
+Visual Acuity Test →
+Read: What 20/20 Actually Means →
+
+## Frequently asked questions
+
+What is contrast sensitivity?
+
+Your ability to detect faint lightness differences between an object and its background — the "how faint?" axis, versus acuity's "how small?".
+
+Can you have 20/20 and poor contrast sensitivity?
+
+Yes — they're separate. You can ace the chart yet struggle with faces in dim light or edges at dusk.
+
+What reduces contrast sensitivity?
+
+Age, cataracts, glaucoma, diabetic eye disease, and macular degeneration, among others — sometimes before chart acuity changes.
+
+How is contrast sensitivity tested?
+
+With fading-letter charts (Pelli-Robson) or gratings clinically; screen versions give a relative, uncalibrated estimate.
+
+Educational only. Not a diagnosis. Persistent trouble seeing in low light, fog, or glare is worth an exam with a licensed optometrist or ophthalmologist.
+
+← More guides
+
+---
+
+# Vision & Eye Test Glossary — Terms Explained — OpticQuiz
+URL: https://opticquiz.com/learn/glossary/
+
+A plain-English glossary of vision and eye-test terms: visual acuity, Snellen, logMAR, contrast sensitivity, JND, Ishihara, protan/deutan/tritan, anomaloscope, hyperacuity, flicker fusion, and more.
+
+Home › Learn › Glossary
+
+Vision & Eye Test Glossary
+
+Every term used across OpticQuiz, in plain English — each linked to the test or guide where it lives.
+
+**Visual acuity**
+The smallest high-contrast detail your eye can resolve — “how sharp is your vision.” Measured with an eye chart. Acuity test · guide
+
+**Snellen fraction (20/20)**
+The eye-chart notation for acuity. 20/20 means you read at 20 feet what a normal eye reads at 20 feet — normal, not maximum. What 20/20 means
+
+**logMAR**
+A precise acuity scale used clinically and in research, where 0.0 equals 20/20 and lower numbers are sharper. The metric cousin of the Snellen fraction.
+
+**Contrast sensitivity**
+Your ability to detect faint differences in lightness — “how faint can it be,” the axis that matters in fog and dim light. Contrast test · guide
+
+**Just-noticeable difference (JND)**
+The smallest change in a stimulus you can reliably detect — for color, the smallest hue gap you can still tell apart. Hue test
+
+**Adaptive staircase**
+A testing method that makes each trial easier or harder based on your last answer, homing in efficiently on your threshold. Used in the contrast, hue, saturation, and vernier tests.
+
+**Threshold**
+The level at which you can just barely perform a task — the faintest color, smallest offset, or highest flicker you can still detect. The number most perception tests are chasing.
+
+**Ishihara plate**
+A dot-pattern image hiding a number visible to normal color vision but not to a matching color deficiency. The classic color-blindness screen. Color test · how they work
+
+**Confusion line**
+A set of colors that a specific color deficiency can’t tell apart. Ishihara plates and the D-15 test are built along these lines. D-15 test
+
+**Protanopia / protanomaly**
+Red-channel color deficiency — reds look dimmer and are confused with greens and browns. “-opia” is the strong form, “-anomaly” the mild. Color blindness explained
+
+**Deuteranopia / deuteranomaly**
+Green-channel color deficiency — the most common type of color blindness, with red-green confusions. guide
+
+**Tritanopia / tritanomaly**
+Blue-yellow (blue-channel) color deficiency — rare, not sex-linked, often acquired. Blues look greenish, yellows wash out.
+
+**Anomaloscope / Rayleigh match**
+The clinical gold-standard color test: you mix red and green light to match a yellow reference. Where you settle reveals your red-green balance. Anomaloscope
+
+**Hyperacuity / vernier acuity**
+The ability to detect misalignment between lines at a scale finer than a single cone — one of the sharpest things human vision does. Vernier test
+
+**Critical flicker fusion (CFF)**
+The frequency at which a flickering light stops looking like it’s blinking and appears steady — a measure of temporal vision. Flicker test
+
+**Amsler grid**
+A grid used to check central vision for wavy, blurry, or missing areas linked to macular problems such as AMD. Amsler grid
+
+**Metamorphopsia**
+Distortion of vision that makes straight lines look wavy or bent — a key sign the Amsler grid is designed to catch.
+
+**Astigmatism**
+A cornea or lens shaped more like a rugby ball than a sphere, focusing one orientation better than another and blurring vision. Astigmatism test · home test
+
+**Blind spot / optic disc**
+The receptor-free patch where the optic nerve exits each eye, so images there aren’t seen. Everyone has one. Blind spot mapper · guide
+
+**Dominant eye**
+The eye your brain favors for aiming and judging direction, like handedness. Dominant eye test · guide
+
+**Achromatopsia**
+Total or near-total color blindness — seeing little or no color — usually with light sensitivity and reduced sharpness. Extremely rare.
+
+**Saturation**
+How vivid or “colorful” a hue is versus gray. The saturation test finds the faintest color you can still detect. Saturation test
+
+**Visual reaction time**
+How fast you perceive a visual change and respond — perception plus motor delay, measured in milliseconds. Reaction test
+
+← More guides
+
+---
