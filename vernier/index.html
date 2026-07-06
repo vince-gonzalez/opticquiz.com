@@ -27,7 +27,7 @@
 <meta property="og:url" content="https://opticquiz.com/vernier/">
 <link rel="canonical" href="https://opticquiz.com/vernier/">
 <link rel="icon" href="/opticquiz_icon.png" type="image/png">
-<title>Vernier Acuity — OpticQuiz</title>
+<title>Vernier Acuity Test — Hyperacuity Alignment — OpticQuiz</title>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
@@ -106,6 +106,22 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
 .backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
 @media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
 </style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is vernier acuity?", "acceptedAnswer": {"@type": "Answer", "text": "The ability to detect a small misalignment between line segments. It's called a hyperacuity because people resolve offsets far finer than the spacing of the cones sampling the image."}}, {"@type": "Question", "name": "How is it different from 20/20 acuity?", "acceptedAnswer": {"@type": "Answer", "text": "Letter acuity measures the smallest detail you can resolve; vernier measures the smallest offset you can detect — typically many times finer."}}, {"@type": "Question", "name": "Are the arc-second numbers exact?", "acceptedAnswer": {"@type": "Answer", "text": "The pixel threshold is measured directly, but the arc-second conversion depends on the distance you entered and an assumed pixel size, so treat it as an estimate."}}, {"@type": "Question", "name": "How can I detect an offset smaller than one pixel?", "acceptedAnswer": {"@type": "Answer", "text": "Anti-aliasing renders lines at sub-pixel positions, and your visual system averages across many receptors, letting you resolve alignment below the physical pixel spacing."}}]}
+</script>
+<style>
+.seo{max-width:560px;margin:0 auto;padding:8px 20px 0;}
+.seo h2{font-family:"Bebas Neue",Impact,fantasy;font-size:clamp(24px,6vw,32px);color:#1A1A1A;line-height:1;letter-spacing:.02em;margin:26px 0 12px;}
+.seo p{font-size:15px;color:#6B6B6B;line-height:1.8;margin-bottom:14px;}
+.seo p strong{color:#1A1A1A;}
+.seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
+.seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
+.seo a{color:#E8431A;}
+.seo .learn-links{background:#fff;border:1px solid #D4D0C8;border-radius:8px;padding:14px 16px;margin:18px 0;}
+.seo .learn-links a{display:block;padding:5px 0;text-decoration:none;color:#1A1A1A;border-bottom:1px solid #D4D0C8;font-size:14px;}
+.seo .learn-links a:last-child{border-bottom:none;}
+.seo .learn-links a:hover{color:#E8431A;}
+</style>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to main content</a>
@@ -171,6 +187,21 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
   </div>
 </div>
 </main>
+<section class="seo" aria-label="About this test">
+  <h2>About the vernier acuity test</h2>
+  <p>Vernier acuity is a <strong>hyperacuity</strong> — the ability to detect that two line segments are misaligned, at a scale <em>finer than a single cone</em> in your retina. This test shows two short vertical lines with the lower one nudged a hair left or right; you call the direction, and a <strong>two-alternative staircase</strong> narrows the offset until you reach your limit.</p>
+  <p>The pixel offset at your threshold is measured directly; the arc-second figure is estimated from the viewing distance you enter and an assumed screen pixel size, so it's approximate. What makes sub-pixel offsets possible at all is anti-aliasing, which lets the browser draw a line between pixels — your visual system then averages across receptors to resolve alignment below the pixel grid. It's a genuinely different measure from letter-chart sharpness.</p>
+  <h2>Frequently asked questions</h2>
+  <div class="faq-q">What is vernier acuity?</div>
+  <div class="faq-a">The ability to detect a small misalignment between line segments. It's called a hyperacuity because people resolve offsets far finer than the spacing of the cones sampling the image.</div>
+  <div class="faq-q">How is it different from 20/20 acuity?</div>
+  <div class="faq-a">Letter acuity measures the smallest detail you can resolve; vernier measures the smallest offset you can detect — typically many times finer.</div>
+  <div class="faq-q">Are the arc-second numbers exact?</div>
+  <div class="faq-a">The pixel threshold is measured directly, but the arc-second conversion depends on the distance you entered and an assumed pixel size, so treat it as an estimate.</div>
+  <div class="faq-q">How can I detect an offset smaller than one pixel?</div>
+  <div class="faq-a">Anti-aliasing renders lines at sub-pixel positions, and your visual system averages across many receptors, letting you resolve alignment below the physical pixel spacing.</div>
+</section>
+
 <footer role="contentinfo">© 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
 
 <script>
