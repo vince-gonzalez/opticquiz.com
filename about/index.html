@@ -51,6 +51,13 @@ li strong{color:var(--black);}
 footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
 .backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
 </style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About OpticQuiz">
+<meta name="twitter:description" content="One person, fourteen honest vision tests, and a strict rule: say exactly what a screen can and can't measure.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
 </head>
 <body>
 <header class="site-header" role="banner">
@@ -89,5 +96,6 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
   <a href="/" class="backlink">← All Tests</a>
 </main>
 <footer role="contentinfo">© 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

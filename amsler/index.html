@@ -355,6 +355,19 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
 .seo .learn-links a:last-child{border-bottom:none;}
 .seo .learn-links a:hover{color:#E8431A;}
 </style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz — Amsler Grid Test">
+<meta name="twitter:description" content="Interactive Amsler grid. Screen each eye for central vision distortion. Free, no account, results on-device only.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Amsler Grid Test Online — Macular & Central Vision Check", "url": "https://opticquiz.com/amsler/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz Amsler Grid — free central vision screening for wavy lines, missing areas, and distortion. Educational use only, not a medical diagnostic."}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "HowTo", "name": "How to Use the Amsler Grid", "step": [{"@type": "HowToStep", "position": 1, "text": "Wear your usual reading glasses and cover one eye. Hold the grid at comfortable reading distance."}, {"@type": "HowToStep", "position": 2, "text": "Stare only at the center dot; do not let your gaze wander across the grid."}, {"@type": "HowToStep", "position": 3, "text": "Note any lines that look wavy, blurry, dim, or missing, and repeat with the other eye. Report new distortion to an eye-care professional."}]}
+</script>
 </head>
 <body>
 
@@ -933,5 +946,6 @@ function shareResults() {
   }
 }
 </script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

@@ -248,6 +248,16 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
 </style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz — Color Vision Screening">
+<meta name="twitter:description" content="8 Ishihara-style plates, drawn fresh each time. Screens red-green and blue-yellow color vision. Free. No account. Results stay on your device.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Color Blindness Test — Free Online Ishihara Plates", "url": "https://opticquiz.com/color/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz Color Vision Test — procedurally generated Ishihara-style plates. Screens for red-green and blue-yellow color vision deficiency. Free, on-device, educational only."}
+</script>
 </head>
 <body>
 
@@ -930,5 +940,6 @@ function shareResults() {
   }
 }
 </script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

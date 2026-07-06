@@ -129,6 +129,16 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
 .seo .learn-links a:last-child{border-bottom:none;}
 .seo .learn-links a:hover{color:#E8431A;}
 </style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz — Anomaloscope (lite)">
+<meta name="twitter:description" content="Mix red and green light to match a yellow. The clinical gold-standard color test, in your browser.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Anomaloscope Test Online — Red-Green Color Match (Rayleigh)", "url": "https://opticquiz.com/anomal/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz Anomaloscope (lite) — mix red and green to match a yellow reference, the way the clinical gold-standard color test works. Screen approximation, educational only."}
+</script>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to main content</a>
@@ -339,5 +349,6 @@ function announce(msg){
   el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
 }
 </script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

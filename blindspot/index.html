@@ -122,6 +122,19 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
 .backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
 @media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
 </style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz — Blind Spot Mapper">
+<meta name="twitter:description" content="Everyone has a blind spot where the optic nerve leaves the eye. Find yours and measure it.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Blind Spot Test — Find Your Eye's Blind Spot", "url": "https://opticquiz.com/blindspot/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz Blind Spot Mapper — find your eye's natural blind spot and measure roughly where it sits and how big it is. Free, on-device, educational."}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "HowTo", "name": "How to Find Your Eye's Blind Spot", "step": [{"@type": "HowToStep", "position": 1, "text": "Cover or close one eye and stare steadily at the fixation cross — never look directly at the moving dot."}, {"@type": "HowToStep", "position": 2, "text": "Watch the dot at the edge of your vision as it moves across the screen."}, {"@type": "HowToStep", "position": 3, "text": "Note where the dot disappears and reappears; that gap is your natural blind spot (the optic disc)."}]}
+</script>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to main content</a>
@@ -368,5 +381,6 @@ function announce(msg){
   el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
 }
 </script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

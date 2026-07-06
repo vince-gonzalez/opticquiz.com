@@ -338,6 +338,16 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
 .seo .learn-links a:last-child{border-bottom:none;}
 .seo .learn-links a:hover{color:#E8431A;}
 </style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz — Saturation Threshold Test">
+<meta name="twitter:description" content="Adaptive staircase color test. Finds your hue detection threshold across 4 axes. Catches anomalous trichromacy plates miss. Free, no account.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Color Saturation Test — Detection Threshold by Hue", "url": "https://opticquiz.com/sat/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz Saturation Threshold — finds the minimum saturation you can detect across red, green, blue, and yellow. Catches mild color vision deficiency that Ishihara plates miss."}
+</script>
 </head>
 <body>
 
@@ -1085,5 +1095,6 @@ function shareResults() {
   }
 }
 </script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

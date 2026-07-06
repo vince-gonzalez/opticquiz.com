@@ -256,6 +256,9 @@ footer {
   *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
 </style>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
 </head>
 <body>
 
@@ -508,5 +511,6 @@ footer {
   © 2026 opticquiz.com &nbsp;|&nbsp; OpticQuiz — educational use only, not a medical diagnostic
 </footer>
 
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

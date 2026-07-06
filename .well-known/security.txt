@@ -1,0 +1,5 @@
+# Security contact for opticquiz.com
+Contact: https://github.com/zengineco/opticquiz.com/issues
+Expires: 2027-01-01T00:00:00Z
+Preferred-Languages: en
+Canonical: https://opticquiz.com/.well-known/security.txt

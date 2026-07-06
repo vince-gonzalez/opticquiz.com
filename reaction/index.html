@@ -125,6 +125,16 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
 .seo .learn-links a:last-child{border-bottom:none;}
 .seo .learn-links a:hover{color:#E8431A;}
 </style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz — Visual Reaction Time">
+<meta name="twitter:description" content="How fast can you react? Tap when the field turns green. 5 trials, best and average in milliseconds.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Reaction Time Test — Visual Reflex Speed (ms)", "url": "https://opticquiz.com/reaction/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz Visual Reaction Time — tap when the screen turns green. Measures your simple visual reaction time over 5 trials. Free, on-device, for fun."}
+</script>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to main content</a>
@@ -328,5 +338,6 @@ function announce(msg){
   el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
 }
 </script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

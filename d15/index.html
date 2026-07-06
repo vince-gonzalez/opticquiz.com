@@ -312,6 +312,16 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
 .seo .learn-links a:last-child{border-bottom:none;}
 .seo .learn-links a:hover{color:#E8431A;}
 </style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz — Farnsworth D-15 Hue Sort">
+<meta name="twitter:description" content="Drag 15 color caps into hue order. Maps your errors to color confusion axes. Richer data than Ishihara plates. Free, no account.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Farnsworth D-15 Test Online — Color Arrangement", "url": "https://opticquiz.com/d15/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz Farnsworth D-15 — drag color caps into hue order. Richer than plate tests. Screens for deutan, protan, and tritan confusion axes. Educational use only."}
+</script>
 </head>
 <body>
 
@@ -1097,5 +1107,6 @@ function shareResults() {
   } catch(e) { try { if (navigator.clipboard) navigator.clipboard.writeText(text); } catch(e2) {} }
 }
 </script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

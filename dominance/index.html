@@ -110,6 +110,19 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
 .instr-s{font-size:13px;color:var(--gray);line-height:1.5;}
 @media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
 </style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz — Dominant Eye Test">
+<meta name="twitter:description" content="Which eye does your brain aim with? Find out in one minute with the guided triangle test.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Dominant Eye Test — Which Eye Is Dominant?", "url": "https://opticquiz.com/dominance/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz Dominant Eye Test — find which eye is dominant with the guided Miles triangle test. Useful for photography, archery, and shooting. Free, takes one minute."}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "HowTo", "name": "How to Find Your Dominant Eye", "step": [{"@type": "HowToStep", "position": 1, "text": "Extend both arms and overlap your hands to make a small triangle between your thumbs and index fingers."}, {"@type": "HowToStep", "position": 2, "text": "With both eyes open, center a distant object (3+ metres away) inside the triangle."}, {"@type": "HowToStep", "position": 3, "text": "Close one eye, then the other. The eye that keeps the object framed is your dominant (sighting) eye."}]}
+</script>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to main content</a>
@@ -314,5 +327,6 @@ function announce(msg){
   el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
 }
 </script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

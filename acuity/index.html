@@ -138,6 +138,16 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
 .backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
 @media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
 </style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz — Visual Acuity Test (Tumbling E)">
+<meta name="twitter:description" content="Check your approximate visual acuity online. Credit-card calibration makes the letters true-to-size on your screen.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Visual Acuity Test — Free Online Eye Chart (Tumbling E)", "url": "https://opticquiz.com/acuity/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz Visual Acuity Test — a real tumbling-E eye chart in your browser, calibrated with a credit card so letters are true-to-size. Approximate 20/20 check, per eye. Free, educational only."}
+</script>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to main content</a>
@@ -464,5 +474,6 @@ function announce(msg){
 // keep floor note live as distance changes
 document.getElementById("dist-input").addEventListener("input", updateFloorNote);
 </script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>
