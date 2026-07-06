@@ -197,6 +197,7 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
 
 <footer role="contentinfo">© 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
 
+<script src="/assets/oq-psy.js"></script>
 <script>
 // ── CONFIG ──
 var MAX_TRIALS = 24;
@@ -208,13 +209,13 @@ var STEP = 0.8;          // geometric staircase factor
 var BG = 128;            // mid-gray background luminance (0-255)
 
 // ── STATE ──
-var STATE = { trial:0, contrast:START_C, target:"", choices:[], consecCorrect:0,
-              prevWasCorrect:null, reversals:[], done:false };
+// Adaptive staircase lives in the shared OQ engine (assets/oq-psy.js).
+var STATE = { trial:0, contrast:START_C, target:"", choices:[], stair:null, done:false };
 
 // ── ENGINE ──
 function startTest(){
-  STATE.trial=0; STATE.contrast=START_C; STATE.consecCorrect=0;
-  STATE.prevWasCorrect=null; STATE.reversals=[]; STATE.done=false;
+  STATE.trial=0; STATE.contrast=START_C; STATE.done=false;
+  STATE.stair = OQ.Staircase({ value:START_C, min:MIN_C, max:START_C, factor:STEP });
   showScreen("screen-test");
   nextTrial();
 }
@@ -270,21 +271,10 @@ function renderChoices(){
 }
 
 function answer(choice){
-  // READS: STATE.target  WRITES: staircase
+  // READS: STATE.target  WRITES: STATE.stair, STATE.contrast
   try{
     var correct = choice!==null && choice===STATE.target;
-    if(correct){
-      STATE.consecCorrect++;
-      if(STATE.consecCorrect>=2){
-        if(STATE.prevWasCorrect===false){ STATE.reversals.push(STATE.contrast); }
-        STATE.contrast=Math.max(MIN_C, STATE.contrast*STEP);
-        STATE.consecCorrect=0; STATE.prevWasCorrect=true;
-      }
-    } else {
-      if(STATE.prevWasCorrect===true){ STATE.reversals.push(STATE.contrast); }
-      STATE.contrast=Math.min(START_C, STATE.contrast/STEP);
-      STATE.consecCorrect=0; STATE.prevWasCorrect=false;
-    }
+    STATE.contrast = STATE.stair.record(correct);  // 1-up/2-down handled by OQ engine
     nextTrial();
   }catch(err){ console.error("answer:",err); }
 }
@@ -293,11 +283,7 @@ function finish(){ STATE.done=true; renderResults(); showScreen("screen-results"
 
 // ── RESULTS ──
 function renderResults(){
-  var revs=STATE.reversals.slice();
-  var thr;
-  if(revs.length>=4){ thr=revs.slice(-4).reduce(function(s,x){return s+x;},0)/4; }
-  else if(revs.length>0){ thr=revs.reduce(function(s,x){return s+x;},0)/revs.length; }
-  else { thr=STATE.contrast; }
+  var thr = STATE.stair.threshold(4);      // mean of last 4 reversals (OQ engine)
 
   var sensitivity = 1/thr;                 // contrast sensitivity (relative)
   var logCS = Math.log(sensitivity)/Math.LN10;
@@ -322,8 +308,7 @@ function retakeTest(){ showScreen("screen-intro"); }
 
 function shareResults(){
   try{
-    var revs=STATE.reversals.slice();
-    var thr = revs.length>=4 ? revs.slice(-4).reduce(function(s,x){return s+x;},0)/4 : STATE.contrast;
+    var thr = STATE.stair.threshold(4);
     var logCS=(Math.log(1/thr)/Math.LN10).toFixed(2);
     var text="My OpticQuiz contrast sensitivity — log "+logCS+" on my screen. Test yours: opticquiz.com/contrast/";
     if(navigator.share){ navigator.share({title:"OpticQuiz Contrast Sensitivity",text:text,url:"https://opticquiz.com/contrast/"}); }

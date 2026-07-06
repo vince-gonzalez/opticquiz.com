@@ -259,9 +259,10 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
 
 <footer role="contentinfo">© 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
 
+<script src="/assets/oq-calib.js"></script>
 <script>
 // ── CONFIG ──
-var CARD_MM = 85.6;                 // ISO/IEC 7810 ID-1 card width
+var CARD_MM = OQ.Calib.CARD_MM;     // ISO/IEC 7810 ID-1 card width (shared calibration layer)
 var ES_PER_LEVEL = 4;               // optotypes shown per level
 var PASS_NEEDED = 3;                // 3 of 4 correct passes a level
 var MIN_RENDER_PX = 8;              // below this the E can't render honestly
@@ -292,17 +293,15 @@ function onCal(v){
   // READS: v  WRITES: STATE.pxPerMm, DOM
   var px=parseInt(v,10);
   document.getElementById("card-box").style.width=px+"px";
-  STATE.pxPerMm = px / CARD_MM;
+  STATE.pxPerMm = OQ.Calib.pxPerMm(px);
   document.getElementById("cal-note").textContent =
     "Box: "+px+" px = "+CARD_MM+" mm → "+STATE.pxPerMm.toFixed(2)+" px/mm";
   updateFloorNote();
 }
 
 function optotypePx(logmar){
-  // 20/20 optotype subtends 5 arcmin; height scales by 10^logMAR
-  var rad = (5/60) * (Math.PI/180) * Math.pow(10, logmar);
-  var mm = 2 * (STATE.distCm*10) * Math.tan(rad/2);
-  return mm * STATE.pxPerMm;
+  // shared calibration layer: true-size optotype from logMAR + distance + px/mm
+  return OQ.Calib.optotypePx(logmar, STATE.distCm, STATE.pxPerMm);
 }
 
 function measurableFloor(){
