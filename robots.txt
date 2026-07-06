@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /oldfiles/
+
+Sitemap: https://opticquiz.com/sitemap.xml

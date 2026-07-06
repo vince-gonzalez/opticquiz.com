@@ -7,10 +7,11 @@
   Domain:       opticquiz.com
   Repo:         zengineco/opticquiz.com
   Author:       Vince Gonzalez
-  Version:      v1.4.0
-  Change:       Added 6 new tests (anomaloscope, contrast, vernier,
-                reaction, flicker, blind spot). Every card now carries an
-                inline-SVG sample thumbnail. Cards grouped into 3 sections.
+  Version:      v1.5.0
+  Change:       Added Visual Acuity (card-calibrated tumbling E) and
+                Dominant Eye tests -> 14 tests. Added /about/ and /learn/
+                (hub + 4 SEO articles w/ FAQ schema). sitemap.xml + robots.txt.
+                Prior v1.4.0: 6 perception tests + per-card SVG sample thumbnails.
   Sub-pages:
     /color/     Color Vision (procedural Ishihara vanishing plates, red-green + tritan)
     /anomal/    Anomaloscope lite (Rayleigh red-green match)          [NEW]
@@ -36,10 +37,10 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="OpticQuiz — 12 free browser-based eye and vision tools. Color vision, anomaloscope, contrast sensitivity, vernier acuity, reaction time, flicker fusion, blind spot, Amsler grid, astigmatism, D-15, saturation, hue. Educational use only.">
+<meta name="description" content="OpticQuiz — 14 free browser-based eye and vision tests. Visual acuity (eye chart), color blindness, dominant eye, contrast sensitivity, anomaloscope, blind spot, Amsler grid, astigmatism, and more. Educational, on-device, no account.">
 <meta name="theme-color" content="#F8F6F2">
-<meta property="og:title" content="OpticQuiz — Eye &amp; Vision Tests">
-<meta property="og:description" content="12 free browser-based vision tests. Color vision, anomaloscope, contrast, vernier hyperacuity, reaction time, flicker fusion, blind spot, and more. No account. Results stay on your device.">
+<meta property="og:title" content="OpticQuiz — Free Online Eye &amp; Vision Tests">
+<meta property="og:description" content="14 free browser vision tests: visual acuity eye chart, color blindness, dominant eye, contrast, blind spot, and more. No account. Results stay on your device.">
 <meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
 <meta property="og:url" content="https://opticquiz.com">
 <meta property="og:type" content="website">
@@ -256,7 +257,7 @@ footer {
     <img src="/opticquiz_icon.png" alt="OpticQuiz — Ishihara-style dot logo" width="44" height="44">
     <div class="logo-name">OPTIC<span>QUIZ</span></div>
   </a>
-  <div class="ver-badge" aria-label="Version 1.4.0">v1.4.0</div>
+  <div class="ver-badge" aria-label="Version 1.5.0">v1.5.0</div>
 </header>
 
 <main id="main" class="wrap" role="main">
@@ -264,11 +265,11 @@ footer {
   <section class="hero" aria-labelledby="hero-heading">
     <span class="eyebrow" aria-hidden="true">Eye &amp; Vision Tests</span>
     <h1 id="hero-heading">CAN<br>YOU<br><em>SEE</em><br>THIS?</h1>
-    <p class="hero-body">Twelve free browser-based tests for color, sharpness, speed, and the eye itself. No account. No data collected. Results never leave your device. Educational use only — not a medical diagnostic.</p>
+    <p class="hero-body">Fourteen free browser-based tests for color, sharpness, speed, and the eye itself — plus plain-English guides to how it all works. No account. No data collected. Results never leave your device. Educational use only — not a medical diagnostic.</p>
   </section>
 
   <div class="stats" role="list" aria-label="Quick stats">
-    <div class="stat" role="listitem"><span class="stat-val">12</span><span class="stat-lbl">Vision tests</span></div>
+    <div class="stat" role="listitem"><span class="stat-val">14</span><span class="stat-lbl">Vision tests</span></div>
     <div class="stat" role="listitem"><span class="stat-val">0</span><span class="stat-lbl">Data collected</span></div>
     <div class="stat" role="listitem"><span class="stat-val">&lt;5<span style="font-size:18px"> min</span></span><span class="stat-lbl">Per test</span></div>
   </div>
@@ -339,6 +340,17 @@ footer {
 
   <div class="group-label">Sharpness, speed &amp; perception</div>
   <nav class="test-grid" aria-label="Perception tests" role="navigation">
+
+    <a href="/acuity/" class="test-card"
+       aria-label="Visual Acuity Test — a real tumbling-E eye chart, calibrated with a credit card so letters are true-to-size. Approximate 20/20 check, per eye.">
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><rect width="52" height="52" fill="#fff"/><text x="26" y="41" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-weight="900" font-size="40" fill="#1A1A1A">E</text></svg></span>
+      <div class="card-body">
+        <div class="card-title">Visual Acuity<span class="origin-badge">New</span></div>
+        <div class="card-desc">A real tumbling-E eye chart in your browser. Calibrate the screen with any bank card and the letters are rendered true-to-size — an honest approximate 20/20 check, per eye.</div>
+        <div class="card-meta">Card-calibrated · Tumbling E · Snellen per eye · ~3 min</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
 
     <a href="/contrast/" class="test-card"
        aria-label="Contrast Sensitivity — read a letter as it fades into the background. Finds the faintest contrast you can resolve.">
@@ -422,6 +434,44 @@ footer {
       <div class="card-arrow" aria-hidden="true">→</div>
     </a>
 
+    <a href="/dominance/" class="test-card"
+       aria-label="Dominant Eye Test — find which eye is dominant with the guided Miles triangle test. Useful for photography, archery, and shooting.">
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><rect width="52" height="52" fill="#fff"/><ellipse cx="26" cy="26" rx="22" ry="13" fill="none" stroke="#1A1A1A" stroke-width="2.2"/><circle cx="26" cy="26" r="7" fill="#E8431A"/><circle cx="26" cy="26" r="2.4" fill="#fff"/></svg></span>
+      <div class="card-body">
+        <div class="card-title">Dominant Eye<span class="origin-badge">New</span></div>
+        <div class="card-desc">Which eye does your brain aim with? The guided Miles triangle test finds your sighting-dominant eye in a minute — handy for photography, archery, shooting, and darts.</div>
+        <div class="card-meta">Guided steps · No equipment · ~1 min · Sighting dominance</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
+  </nav>
+
+  <div class="divider" role="separator"></div>
+
+  <h3>Learn how vision works</h3>
+  <nav class="test-grid" aria-label="Articles and about" role="navigation">
+    <a href="/learn/" class="test-card"
+       aria-label="Learn hub — plain-English guides to color blindness, acuity, contrast, and how eye tests work.">
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><rect width="52" height="52" fill="#F0EDE6"/><g stroke="#6B6B6B" stroke-width="3" stroke-linecap="round"><line x1="13" y1="16" x2="39" y2="16"/><line x1="13" y1="24" x2="39" y2="24"/><line x1="13" y1="32" x2="33" y2="32"/></g><rect x="13" y="39" width="16" height="4" rx="2" fill="#E8431A"/></svg></span>
+      <div class="card-body">
+        <div class="card-title">Learn</div>
+        <div class="card-desc">Plain-English guides: color blindness explained, how Ishihara plates work, what 20/20 really means, and contrast vs. sharpness. Each links to a test.</div>
+        <div class="card-meta">4 guides · Plain English · Linked to tests</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
+
+    <a href="/about/" class="test-card"
+       aria-label="About OpticQuiz — who builds it and the honesty policy behind every test.">
+      <span class="card-thumb" aria-hidden="true"><svg viewBox="0 0 52 52"><rect width="52" height="52" fill="#fff"/><circle cx="26" cy="26" r="17" fill="none" stroke="#1A1A1A" stroke-width="2.4"/><text x="26" y="35" text-anchor="middle" font-family="Georgia, serif" font-weight="700" font-size="24" fill="#E8431A">i</text></svg></span>
+      <div class="card-body">
+        <div class="card-title">About &amp; Honesty Policy</div>
+        <div class="card-desc">One person, honest tests, and a strict rule: every test says exactly what a screen can and cannot measure. No fake precision, no diagnosis cosplay.</div>
+        <div class="card-meta">Who's behind this · The honesty policy · Open source</div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">→</div>
+    </a>
   </nav>
 
   <div class="divider" role="separator"></div>

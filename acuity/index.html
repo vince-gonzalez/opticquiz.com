@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ============================================================
+  OPTICQUIZ — Visual Acuity Test  v1.0.0
+  Tumbling-E acuity with credit-card screen calibration.
+  opticquiz.com
+  ============================================================
+  WORKFLOW STACK: CONFIG -> calibration(card 85.6mm -> px/mm) ->
+                  distance -> per-eye level ladder (4 Es per level,
+                  3/4 to pass) -> Snellen/logMAR result
+  ASSET MANIFEST: /opticquiz_icon.png ; Google Fonts ; GA4 ; AdSense (head)
+  BOOT ORDER: DOM -> calibrate -> distance -> right eye -> left eye -> results
+  HONESTY: a 20/20 optotype subtends 5 arc-minutes. With true px/mm from
+           card calibration and a user-entered distance, we render optotypes
+           at genuinely correct visual angles. Two disclosed limits: (1) at
+           close distances small optotypes fall below the pixel render floor —
+           we compute that floor and SAY so instead of pretending; (2) this
+           estimates uncorrected/current-correction acuity, it is NOT a
+           refraction and cannot produce a prescription.
+  ============================================================ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz Visual Acuity Test — a real tumbling-E eye chart in your browser, calibrated with a credit card so letters are true-to-size. Approximate 20/20 check, per eye. Free, educational only.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Visual Acuity Test (Tumbling E)">
+<meta property="og:description" content="Check your approximate visual acuity online. Credit-card calibration makes the letters true-to-size on your screen.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/acuity/">
+<link rel="canonical" href="https://opticquiz.com/acuity/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Visual Acuity Test — Free Online Eye Chart (Tumbling E) — OpticQuiz</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can you test visual acuity online accurately?","acceptedAnswer":{"@type":"Answer","text":"You can get a useful estimate if the letters are rendered at the correct real-world size. This test calibrates your screen with a standard credit card (85.6 mm wide) to learn its true pixels-per-millimeter, then uses your viewing distance to draw optotypes at correct visual angles. It is not a clinical exam and cannot produce a glasses prescription."}},
+{"@type":"Question","name":"Why do I need a credit card for the eye test?","acceptedAnswer":{"@type":"Answer","text":"A letter's difficulty depends on the angle it makes at your eye, which needs its true physical size. Screens vary in pixel density, so a credit card — a globally standard 85.6 mm wide — is used as a ruler to convert pixels to millimeters, making the letters true-to-size."}},
+{"@type":"Question","name":"What is the tumbling E test?","acceptedAnswer":{"@type":"Answer","text":"The tumbling E is an eye chart that shows the letter E rotated in one of four directions. You report which way the prongs point. It measures the same visual acuity as a letter chart but needs no reading ability, so it works for any language or for young children."}},
+{"@type":"Question","name":"Does this replace an eye exam?","acceptedAnswer":{"@type":"Answer","text":"No. It estimates your current functional sharpness at a set distance, but it is not a refraction, cannot detect eye disease, and cannot produce a prescription. If it suggests your vision is worse than expected, that is a reason to book an eye exam."}}
+]}
+</script>
+<style>
+.seo{max-width:560px;margin:0 auto;padding:8px 20px 0;}
+.seo h2{font-family:"Bebas Neue",Impact,fantasy;font-size:clamp(24px,6vw,32px);color:#1A1A1A;line-height:1;letter-spacing:.02em;margin:26px 0 12px;}
+.seo p{font-size:15px;color:#6B6B6B;line-height:1.8;margin-bottom:14px;}
+.seo p strong{color:#1A1A1A;}
+.seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
+.seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
+.seo a{color:#E8431A;}
+.seo .learn-links{background:#fff;border:1px solid #D4D0C8;border-radius:8px;padding:14px 16px;margin:18px 0;}
+.seo .learn-links a{display:block;padding:5px 0;text-decoration:none;color:#1A1A1A;border-bottom:1px solid #D4D0C8;font-size:14px;}
+.seo .learn-links a:last-child{border-bottom:none;}
+.seo .learn-links a:hover{color:#E8431A;}
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--redd:#C23410;--green:#4A8C3F;--greend:#38692F;--redbg:#FDF1EE;--amber:#D4820A;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:9999;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:12px;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:var(--r);}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.wrap{max-width:560px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:560px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.screen{display:none;}
+.screen.active{display:block;animation:fadein .2s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+.eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.14em;color:var(--red);text-transform:uppercase;display:block;margin-bottom:10px;}
+h1{font-family:var(--fd);font-size:clamp(48px,12vw,72px);color:var(--black);line-height:.92;letter-spacing:.02em;margin-bottom:16px;}
+h2{font-family:var(--fd);font-size:clamp(32px,8vw,48px);color:var(--black);line-height:.94;letter-spacing:.02em;margin-bottom:16px;}
+h3{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+p{font-size:15px;color:var(--gray);line-height:1.7;}
+.btn{display:block;width:100%;padding:16px 20px;font-family:var(--fs);font-size:16px;font-weight:600;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;text-align:center;transition:border-color .12s,background .12s,transform .08s;min-height:52px;-webkit-tap-highlight-color:transparent;}
+.btn:hover{border-color:var(--black);background:var(--cream);}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--red);color:#fff;border-color:transparent;}
+.btn-primary:hover{background:var(--redd);}
+.btn-secondary{background:var(--green);color:#fff;border-color:transparent;}
+.btn-secondary:hover{background:var(--greend);}
+.btn+.btn{margin-top:10px;}
+.divider{height:1px;background:var(--lgray);margin:24px 0;}
+.instr{margin:18px 0;}
+.instr-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--lgray);}
+.instr-item:last-child{border-bottom:none;}
+.instr-n{font-family:var(--fd);font-size:20px;color:var(--red);min-width:22px;}
+.instr-t{font-size:14px;color:var(--black);font-weight:600;}
+.instr-s{font-size:13px;color:var(--gray);line-height:1.5;}
+.field{margin:16px 0;}
+.field label{font-size:13px;color:var(--black);font-weight:600;display:block;margin-bottom:6px;}
+.field input[type=number]{width:100%;padding:12px 14px;font-family:var(--fm);font-size:16px;border:1.5px solid var(--lgray);border-radius:var(--r);background:#fff;color:var(--black);}
+.field .sub{font-size:12px;color:var(--gray);margin-top:6px;line-height:1.5;}
+/* calibration */
+.card-box{background:#fff;border:2px dashed var(--red);border-radius:6px;height:120px;margin:14px auto;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:8px;}
+.slider-row{display:flex;align-items:center;gap:12px;margin:14px 0;}
+.slider-row input[type=range]{flex:1;height:34px;accent-color:var(--red);}
+.slider-cap{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;}
+.cal-note{font-family:var(--fm);font-size:11px;color:var(--gray);text-align:center;letter-spacing:.04em;}
+/* test stage */
+.prog-wrap{margin-bottom:18px;}
+.prog-meta{display:flex;justify-content:space-between;margin-bottom:8px;}
+.prog-meta span{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.06em;}
+.prog-track{height:3px;background:var(--lgray);border-radius:2px;}
+.prog-fill{height:100%;background:var(--red);border-radius:2px;transition:width .35s cubic-bezier(.4,0,.2,1);}
+.e-stage{display:flex;justify-content:center;align-items:center;background:#fff;border:2px solid var(--lgray);border-radius:var(--rc);height:min(46vh,300px);margin:14px 0;}
+.stage-hint{font-size:13px;color:var(--gray);line-height:1.6;text-align:center;margin:6px 0 10px;}
+.arrow-pad{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;max-width:280px;margin:0 auto;}
+.arrow-btn{padding:16px 8px;font-size:22px;background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;min-height:58px;transition:border-color .12s,background .1s;color:var(--black);}
+.arrow-btn:hover{border-color:var(--red);background:var(--redbg);}
+.pad-blank{visibility:hidden;}
+.cant-btn{margin-top:10px;font-family:var(--fm);font-size:13px;color:var(--gray);}
+/* results */
+.big-stat{background:#fff;border:1.5px solid var(--lgray);border-top:4px solid var(--red);border-radius:var(--rc);padding:22px;margin-bottom:16px;text-align:center;}
+.big-stat-val{font-family:var(--fd);font-size:clamp(40px,12vw,64px);color:var(--black);line-height:1;}
+.big-stat-lbl{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.mini{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:14px;text-align:center;}
+.mini-val{font-family:var(--fd);font-size:26px;color:var(--black);}
+.mini-lbl{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;}
+.interp-card{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:16px 0;}
+.interp-text{font-size:14px;color:var(--gray);line-height:1.8;}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:18px 18px 18px 20px;margin-top:24px;}
+.disclaimer-title{font-family:var(--fm);font-size:11px;letter-spacing:.1em;color:var(--red);text-transform:uppercase;margin-bottom:8px;}
+.disclaimer-body{font-size:12px;color:var(--gray);line-height:1.8;}
+.disclaimer-body strong{color:var(--black);font-weight:600;}
+.share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+@media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">ACUITY</div>
+</header>
+<main id="main" class="wrap" role="main">
+
+<div id="screen-intro" class="screen active">
+  <div style="padding-top:32px">
+    <span class="eyebrow">Sharpness</span>
+    <h1>VISUAL<br>ACUITY</h1>
+    <p>A real tumbling-E eye chart, in your browser, with letters rendered <strong>true to size</strong> — you calibrate the screen with a bank card first, so a "20/20 letter" genuinely subtends 5 arc-minutes at your distance. Tell us which way each E points until they get too small.</p>
+    <div class="divider"></div>
+    <h3>How it works</h3>
+    <div class="instr">
+      <div class="instr-item"><div class="instr-n">1</div><div><div class="instr-t">Calibrate with any bank card</div><div class="instr-s">Every card on Earth is 85.6 mm wide — that's our ruler.</div></div></div>
+      <div class="instr-item"><div class="instr-n">2</div><div><div class="instr-t">Step back &amp; measure your distance</div><div class="instr-s">Farther is better — 100+ cm lets the test measure sharper vision.</div></div></div>
+      <div class="instr-item"><div class="instr-n">3</div><div><div class="instr-t">One eye at a time</div><div class="instr-s">Cover the other with your palm. Wear your usual glasses/contacts — the result reflects your corrected vision.</div></div></div>
+    </div>
+    <button class="btn btn-primary" onclick="showScreen('screen-cal')">Start — Calibrate Screen</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<div id="screen-cal" class="screen">
+  <div style="padding-top:24px">
+    <span class="eyebrow">Step 1 of 2</span>
+    <h2>CARD<br>CALIBRATION</h2>
+    <p>Hold any standard card (credit, debit, ID, library) flat against the screen and drag the slider until the box is <strong>exactly as wide as the card</strong>.</p>
+    <div class="card-box" id="card-box" style="width:320px">MATCH THIS BOX<br>TO YOUR CARD'S WIDTH</div>
+    <div class="slider-row">
+      <span class="slider-cap">Smaller</span>
+      <input type="range" id="cal-slider" min="150" max="520" step="1" value="320" aria-label="Adjust box width to match card" oninput="onCal(this.value)">
+      <span class="slider-cap">Larger</span>
+    </div>
+    <div class="cal-note" id="cal-note">Box: 320 px → screen scale pending</div>
+    <div class="field">
+      <label for="dist-input">Step 2 — how far will your eyes be from the screen? (cm)</label>
+      <input type="number" id="dist-input" value="100" min="40" max="300" inputmode="numeric">
+      <div class="sub">Measure or pace it out — accuracy here directly scales your result. 100–200 cm recommended.</div>
+    </div>
+    <div class="cal-note" id="floor-note" style="margin-bottom:12px"></div>
+    <button class="btn btn-primary" onclick="startTest()">Begin — Right Eye</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<div id="screen-test" class="screen">
+  <div style="padding-top:20px">
+    <div class="prog-wrap">
+      <div class="prog-meta"><span id="prog-label">LEVEL 20/200</span><span id="prog-eye">RIGHT EYE</span></div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+    <p class="stage-hint">Which way do the <strong>prongs</strong> of the E point?</p>
+    <div class="e-stage"><canvas id="e-canvas" role="img" aria-label="A tumbling E optotype; identify which direction its prongs point"></canvas></div>
+    <div class="arrow-pad" role="group" aria-label="Answer: direction of the E">
+      <span class="pad-blank"></span>
+      <button class="arrow-btn" onclick="answer('up')" aria-label="Prongs point up">▲</button>
+      <span class="pad-blank"></span>
+      <button class="arrow-btn" onclick="answer('left')" aria-label="Prongs point left">◀</button>
+      <button class="arrow-btn" onclick="answer('down')" aria-label="Prongs point down">▼</button>
+      <button class="arrow-btn" onclick="answer('right')" aria-label="Prongs point right">▶</button>
+    </div>
+    <button class="btn cant-btn" onclick="answer(null)">Can't tell</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<div id="screen-switch" class="screen">
+  <div style="padding-top:40px;text-align:center">
+    <span class="eyebrow">Eye complete</span>
+    <h2>NOW<br>LEFT<br>EYE</h2>
+    <p style="margin-bottom:28px">Right eye done. Cover your right eye with your palm, keep the same distance, and continue.</p>
+    <button class="btn btn-primary" onclick="startSecondEye()">Continue — Left Eye</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<div id="screen-results" class="screen">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Results</span>
+    <h2>YOUR<br>ACUITY</h2>
+    <div id="result-detail"></div>
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()">Share</button>
+      <button class="btn btn-secondary" onclick="retakeTest()">Retake</button>
+    </div>
+    <a href="/" class="backlink">← All Tests</a>
+    <div class="disclaimer" role="note">
+      <div class="disclaimer-title">Note</div>
+      <div class="disclaimer-body">This estimates the acuity of your vision <strong>as it is right now</strong> (with whatever correction you're wearing) at the distance you entered. It is <strong>not a refraction and cannot produce a prescription</strong> — that requires an optometrist with controlled optics. Card calibration makes letter sizes honest, but lighting, screen sharpness, and distance-measuring error all move the result. If this test suggests your vision is worse than you expected, that's a reason to book an eye exam, not a diagnosis.</div>
+    </div>
+  </div>
+</div>
+</main>
+
+<section class="seo" aria-label="About the visual acuity test">
+  <h2>About this visual acuity test</h2>
+  <p>This is a real <strong>tumbling-E eye chart</strong> that runs in your browser — and unlike most online eye tests, the letters are rendered <strong>true-to-size</strong>. A 20/20 optotype is defined by physics: its critical detail subtends 5 arc-minutes of visual angle. To honor that on your screen, you first calibrate with any bank card (a globally standard 85.6 mm wide), which tells us your display's true pixels-per-millimeter. Combined with your viewing distance, every E is drawn at a genuinely correct visual angle.</p>
+  <p>You identify which way each E's prongs point, one eye at a time, down a level ladder from 20/200 toward 20/16. Wear your usual glasses or contacts — the result reflects your <strong>corrected</strong> vision. Two honest limits apply: very small optotypes hit your screen's pixel floor at close range (we compute and show that limit rather than fake it), and this estimates functional sharpness — it is <strong>not a refraction and cannot produce a prescription</strong>.</p>
+  <div class="learn-links">
+    <a href="/learn/visual-acuity-and-20-20/">Read: What 20/20 Vision Actually Means →</a>
+    <a href="/learn/contrast-sensitivity-vs-acuity/">Read: Contrast Sensitivity vs. Sharpness →</a>
+    <a href="/contrast/">Try: the Contrast Sensitivity test →</a>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq-q">Can you test visual acuity online accurately?</div>
+  <div class="faq-a">A useful estimate, yes — if letters are calibrated to real size (we use a credit card) and your distance is known. It's not a clinical exam or a prescription.</div>
+  <div class="faq-q">Why do I need a credit card for the eye test?</div>
+  <div class="faq-a">Screens vary in pixel density, so a card — a standard 85.6 mm everywhere — acts as a ruler to make the letters true-to-size at your screen's real scale.</div>
+  <div class="faq-q">What is the tumbling E test?</div>
+  <div class="faq-a">An eye chart of the letter E rotated four ways; you report the direction. It measures acuity with no reading needed, so it works for any language or young children.</div>
+  <div class="faq-q">Does this replace an eye exam?</div>
+  <div class="faq-a">No — it estimates current sharpness at a set distance, but can't refract, detect disease, or prescribe. A surprising result is a reason to book an exam.</div>
+</section>
+
+<footer role="contentinfo">© 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
+
+<script>
+// ── CONFIG ──
+var CARD_MM = 85.6;                 // ISO/IEC 7810 ID-1 card width
+var ES_PER_LEVEL = 4;               // optotypes shown per level
+var PASS_NEEDED = 3;                // 3 of 4 correct passes a level
+var MIN_RENDER_PX = 8;              // below this the E can't render honestly
+// Level ladder: logMAR + Snellen label, large -> small
+var LEVELS = [
+  { logmar:1.0, label:"20/200" },
+  { logmar:0.9, label:"20/160" },
+  { logmar:0.8, label:"20/125" },
+  { logmar:0.7, label:"20/100" },
+  { logmar:0.6, label:"20/80"  },
+  { logmar:0.5, label:"20/63"  },
+  { logmar:0.4, label:"20/50"  },
+  { logmar:0.3, label:"20/40"  },
+  { logmar:0.2, label:"20/32"  },
+  { logmar:0.1, label:"20/25"  },
+  { logmar:0.0, label:"20/20"  },
+  { logmar:-0.1,label:"20/16"  }
+];
+var DIRS = ["up","right","down","left"];
+
+// ── STATE ──
+var STATE = { pxPerMm:0, distCm:100, currentEye:"right",
+              levelIdx:0, subTrial:0, levelCorrect:0, curDir:"up",
+              results:{ right:null, left:null }, floorLabel:null };
+
+// ── CALIBRATION ──
+function onCal(v){
+  // READS: v  WRITES: STATE.pxPerMm, DOM
+  var px=parseInt(v,10);
+  document.getElementById("card-box").style.width=px+"px";
+  STATE.pxPerMm = px / CARD_MM;
+  document.getElementById("cal-note").textContent =
+    "Box: "+px+" px = "+CARD_MM+" mm → "+STATE.pxPerMm.toFixed(2)+" px/mm";
+  updateFloorNote();
+}
+
+function optotypePx(logmar){
+  // 20/20 optotype subtends 5 arcmin; height scales by 10^logMAR
+  var rad = (5/60) * (Math.PI/180) * Math.pow(10, logmar);
+  var mm = 2 * (STATE.distCm*10) * Math.tan(rad/2);
+  return mm * STATE.pxPerMm;
+}
+
+function measurableFloor(){
+  // smallest level whose E renders >= MIN_RENDER_PX; returns level or null
+  for(var i=LEVELS.length-1;i>=0;i--){
+    if(optotypePx(LEVELS[i].logmar) >= MIN_RENDER_PX) return LEVELS[i];
+  }
+  return null;
+}
+
+function updateFloorNote(){
+  try{
+    var d=parseFloat(document.getElementById("dist-input").value);
+    STATE.distCm=(isFinite(d)&&d>=40&&d<=300)?d:100;
+    if(STATE.pxPerMm<=0){ document.getElementById("floor-note").textContent=""; return; }
+    var f=measurableFloor();
+    document.getElementById("floor-note").textContent = f
+      ? "At "+STATE.distCm+" cm on this screen, the test can measure down to "+f.label+"."
+      : "Screen/distance combination too coarse — increase distance.";
+    STATE.floorLabel = f ? f.label : null;
+  }catch(err){ console.error("updateFloorNote:",err); }
+}
+
+// ── ENGINE ──
+function startTest(){
+  // READS: calibration inputs  WRITES: STATE (reset)
+  onCal(document.getElementById("cal-slider").value);
+  updateFloorNote();
+  if(STATE.pxPerMm<=0){ announce("Calibrate the card box first."); return; }
+  STATE.currentEye="right";
+  STATE.results={right:null,left:null};
+  beginEye();
+}
+
+function beginEye(){
+  STATE.levelIdx=0; STATE.subTrial=0; STATE.levelCorrect=0;
+  showScreen("screen-test");
+  document.getElementById("prog-eye").textContent=STATE.currentEye.toUpperCase()+" EYE";
+  nextOptotype();
+}
+
+function nextOptotype(){
+  // READS: STATE.levelIdx/subTrial  WRITES: canvas, STATE.curDir
+  var lvl=LEVELS[STATE.levelIdx];
+  var px=optotypePx(lvl.logmar);
+  if(px<MIN_RENDER_PX){ finishEye(true); return; } // hit honest render floor
+  STATE.curDir=DIRS[Math.floor(Math.random()*4)];
+  drawE(px, STATE.curDir);
+  document.getElementById("prog-label").textContent="LEVEL "+lvl.label+" · E "+(STATE.subTrial+1)+"/"+ES_PER_LEVEL;
+  document.getElementById("prog-fill").style.width=Math.round((STATE.levelIdx/LEVELS.length)*100)+"%";
+}
+
+function drawE(sizePx, dir){
+  // Draws a proper 5x5-grid tumbling E: stroke = size/5.
+  try{
+    var cv=document.getElementById("e-canvas");
+    var dpr=window.devicePixelRatio||1;
+    var pad=20;
+    var cssS=Math.max(sizePx+pad*2, 60);
+    cv.width=cssS*dpr; cv.height=cssS*dpr;
+    cv.style.width=cssS+"px"; cv.style.height=cssS+"px";
+    var ctx=cv.getContext("2d");
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.fillStyle="#FFFFFF"; ctx.fillRect(0,0,cssS,cssS);
+    ctx.translate(cssS/2, cssS/2);
+    var rot={right:0, down:Math.PI/2, left:Math.PI, up:-Math.PI/2}[dir];
+    ctx.rotate(rot);
+    var s=sizePx, u=s/5;
+    ctx.fillStyle="#1A1A1A";
+    // E opens right in local coords: spine at left + 3 bars
+    ctx.fillRect(-s/2, -s/2, u, s);            // spine
+    ctx.fillRect(-s/2, -s/2, s, u);            // top bar
+    ctx.fillRect(-s/2, -u/2, s, u);            // middle bar
+    ctx.fillRect(-s/2, s/2-u, s, u);           // bottom bar
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }catch(err){ console.error("drawE:",err); }
+}
+
+function answer(dir){
+  // READS: STATE.curDir  WRITES: level progression
+  try{
+    var correct = dir===STATE.curDir;
+    if(correct) STATE.levelCorrect++;
+    STATE.subTrial++;
+    if(STATE.subTrial>=ES_PER_LEVEL){
+      var passed = STATE.levelCorrect>=PASS_NEEDED;
+      if(passed){
+        if(STATE.levelIdx>=LEVELS.length-1){ finishEye(false); return; } // passed the whole ladder
+        STATE.levelIdx++; STATE.subTrial=0; STATE.levelCorrect=0;
+      } else {
+        finishEye(false); return; // failed this level -> best is previous
+      }
+    }
+    nextOptotype();
+  }catch(err){ console.error("answer:",err); }
+}
+
+function finishEye(hitFloor){
+  // READS: STATE  WRITES: STATE.results
+  var passedIdx = STATE.levelIdx - (STATE.subTrial===0 && STATE.levelCorrect===0 && !hitFloor ? 1 : 0);
+  // If we failed level N, best passed is N-1. If we hit floor or completed ladder, best passed is current-1 or last.
+  var best;
+  if(hitFloor){ best = STATE.levelIdx>0 ? LEVELS[STATE.levelIdx-1] : null; }
+  else if(STATE.levelIdx>=LEVELS.length-1 && STATE.levelCorrect>=PASS_NEEDED){ best=LEVELS[LEVELS.length-1]; }
+  else { best = STATE.levelIdx>0 ? LEVELS[STATE.levelIdx-1] : null; }
+  STATE.results[STATE.currentEye]={ best:best, hitFloor:!!hitFloor, floorLabel:STATE.floorLabel };
+
+  if(STATE.currentEye==="right"){ showScreen("screen-switch"); announce("Right eye complete."); }
+  else { renderResults(); showScreen("screen-results"); }
+}
+
+function startSecondEye(){ STATE.currentEye="left"; beginEye(); }
+function retakeTest(){ showScreen("screen-intro"); }
+
+// ── RESULTS ──
+function eyeLine(eye){
+  var r=STATE.results[eye];
+  if(!r) return {val:"—",note:""};
+  if(!r.best) return {val:"< 20/200", note:"Could not read the largest letters at this distance — worth a professional exam."};
+  var note = r.hitFloor
+    ? "You read everything this screen could render at your distance ("+r.best.label+"). Your true acuity may be better — retake from farther away to measure beyond it."
+    : (r.best.label==="20/16" ? "You cleared the entire ladder — sharper than 20/20 on this setup." : "");
+  return { val:r.best.label, note:note };
+}
+
+function renderResults(){
+  var R=eyeLine("right"), L=eyeLine("left");
+  var h='<div class="mini-row">'+
+    '<div class="mini"><div class="mini-val">'+R.val+'</div><div class="mini-lbl">Right eye</div></div>'+
+    '<div class="mini"><div class="mini-val">'+L.val+'</div><div class="mini-lbl">Left eye</div></div></div>';
+  var notes=[];
+  if(R.note) notes.push("Right: "+R.note);
+  if(L.note) notes.push("Left: "+L.note);
+  var interp="Snellen notation compares you to a reference eye: 20/40 means you read at 20 feet what a typical eye reads at 40. 20/20 is the conventional \"normal,\" not the human maximum — many people resolve 20/16 or better. Measured at "+STATE.distCm+" cm with card-calibrated letter sizes."+(notes.length?" "+notes.join(" "):"");
+  h+='<div class="interp-card"><div class="interp-text">'+interp+'</div></div>';
+  document.getElementById("result-detail").innerHTML=h;
+}
+
+function shareResults(){
+  try{
+    var R=eyeLine("right"), L=eyeLine("left");
+    var text="My OpticQuiz visual acuity — R: "+R.val+" | L: "+L.val+" (card-calibrated, educational). Try it: opticquiz.com/acuity/";
+    if(navigator.share){ navigator.share({title:"OpticQuiz Visual Acuity",text:text,url:"https://opticquiz.com/acuity/"}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){announce("Copied");}); }
+    else { prompt("Copy your result:",text); }
+  }catch(err){ console.error("shareResults:",err); }
+}
+
+// ── UTIL ──
+function showScreen(id){
+  var s=document.querySelectorAll(".screen");
+  for(var i=0;i<s.length;i++) s[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+function announce(msg){
+  var el=document.getElementById("a11y-live"); if(!el)return;
+  el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
+}
+// keep floor note live as distance changes
+document.getElementById("dist-input").addEventListener("input", updateFloorNote);
+</script>
+</body>
+</html>

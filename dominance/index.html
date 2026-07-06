@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ============================================================
+  OPTICQUIZ — Dominant Eye Test  v1.0.0
+  Guided Miles test: which eye does your brain aim with?
+  opticquiz.com
+  ============================================================
+  WORKFLOW STACK: CONFIG -> STATE -> guided physical steps (triangle,
+                  cover each eye) -> answers -> dominance verdict
+  ASSET MANIFEST: /opticquiz_icon.png ; Google Fonts ; GA4 ; AdSense (head)
+  BOOT ORDER: DOM -> step-through -> two cover questions -> verdict
+  HONESTY: eye dominance is real and the Miles test is the standard quick
+           procedure — but it's a PHYSICAL test. The page guides you through
+           it and interprets your answers; the screen can't observe you, so
+           the result is only as good as your honest report. Ambiguous
+           answers get an honest "unclear — retry with a smaller triangle,"
+           not a forced verdict.
+  ============================================================ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz Dominant Eye Test — find which eye is dominant with the guided Miles triangle test. Useful for photography, archery, and shooting. Free, takes one minute.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Dominant Eye Test">
+<meta property="og:description" content="Which eye does your brain aim with? Find out in one minute with the guided triangle test.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/dominance/">
+<link rel="canonical" href="https://opticquiz.com/dominance/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Dominant Eye Test — Which Eye Is Dominant? — OpticQuiz</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I find my dominant eye?","acceptedAnswer":{"@type":"Answer","text":"Extend both arms and make a small triangle with your hands. With both eyes open, center a distant object inside it. Close one eye, then the other. The eye that keeps the object framed is your dominant (sighting) eye. This is the Miles test, and it takes under a minute."}},
+{"@type":"Question","name":"What does a dominant eye mean?","acceptedAnswer":{"@type":"Answer","text":"Your dominant eye is the one your brain favors for aiming and judging direction, similar to being right- or left-handed. It says nothing about eye health or which eye sees more sharply. About two-thirds of people are right-eye dominant."}},
+{"@type":"Question","name":"Why does eye dominance matter?","acceptedAnswer":{"@type":"Answer","text":"It matters most for aiming and alignment: photography (which eye to put to the viewfinder), archery, rifle and pistol shooting, darts, and golf putting. Knowing yours helps you set up stance and equipment on the correct side."}},
+{"@type":"Question","name":"Can your dominant eye change?","acceptedAnswer":{"@type":"Answer","text":"Sighting dominance is usually stable, but it can appear to vary with gaze direction in some people, and a minority show weak or mixed dominance. If your result is unclear, retry with a smaller triangle and a more distant target."}}
+]}
+</script>
+<style>
+.seo{max-width:560px;margin:0 auto;padding:8px 20px 0;}
+.seo h2{font-family:"Bebas Neue",Impact,fantasy;font-size:clamp(24px,6vw,32px);color:#1A1A1A;line-height:1;letter-spacing:.02em;margin:26px 0 12px;}
+.seo p{font-size:15px;color:#6B6B6B;line-height:1.8;margin-bottom:14px;}
+.seo p strong{color:#1A1A1A;}
+.seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
+.seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
+.seo a{color:#E8431A;}
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--redd:#C23410;--green:#4A8C3F;--greend:#38692F;--redbg:#FDF1EE;--amber:#D4820A;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:9999;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:12px;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:var(--r);}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.wrap{max-width:560px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:560px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.screen{display:none;}
+.screen.active{display:block;animation:fadein .2s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+.eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.14em;color:var(--red);text-transform:uppercase;display:block;margin-bottom:10px;}
+h1{font-family:var(--fd);font-size:clamp(48px,12vw,72px);color:var(--black);line-height:.92;letter-spacing:.02em;margin-bottom:16px;}
+h2{font-family:var(--fd);font-size:clamp(32px,8vw,48px);color:var(--black);line-height:.94;letter-spacing:.02em;margin-bottom:16px;}
+h3{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+p{font-size:15px;color:var(--gray);line-height:1.7;}
+.btn{display:block;width:100%;padding:16px 20px;font-family:var(--fs);font-size:16px;font-weight:600;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;text-align:center;transition:border-color .12s,background .12s,transform .08s;min-height:52px;-webkit-tap-highlight-color:transparent;}
+.btn:hover{border-color:var(--black);background:var(--cream);}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--red);color:#fff;border-color:transparent;}
+.btn-primary:hover{background:var(--redd);}
+.btn-secondary{background:var(--green);color:#fff;border-color:transparent;}
+.btn-secondary:hover{background:var(--greend);}
+.btn+.btn{margin-top:10px;}
+.divider{height:1px;background:var(--lgray);margin:24px 0;}
+.step-illus{display:flex;justify-content:center;margin:18px 0;}
+.step-illus svg{width:min(70vw,260px);height:auto;}
+.step-num{font-family:var(--fm);font-size:11px;letter-spacing:.12em;color:var(--red);text-transform:uppercase;display:block;margin-bottom:8px;text-align:center;}
+.step-title{font-family:var(--fd);font-size:clamp(28px,7vw,40px);color:var(--black);line-height:1;text-align:center;margin-bottom:10px;}
+.step-body{font-size:15px;color:var(--gray);line-height:1.7;text-align:center;max-width:420px;margin:0 auto 20px;}
+.step-body strong{color:var(--black);}
+.big-stat{background:#fff;border:1.5px solid var(--lgray);border-top:4px solid var(--red);border-radius:var(--rc);padding:22px;margin-bottom:16px;text-align:center;}
+.big-stat-val{font-family:var(--fd);font-size:clamp(34px,9vw,52px);color:var(--black);line-height:1.05;}
+.big-stat-lbl{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+.interp-card{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:16px 0;}
+.interp-text{font-size:14px;color:var(--gray);line-height:1.8;}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:18px 18px 18px 20px;margin-top:24px;}
+.disclaimer-title{font-family:var(--fm);font-size:11px;letter-spacing:.1em;color:var(--red);text-transform:uppercase;margin-bottom:8px;}
+.disclaimer-body{font-size:12px;color:var(--gray);line-height:1.8;}
+.disclaimer-body strong{color:var(--black);font-weight:600;}
+.share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+.instr{margin:18px 0;}
+.instr-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--lgray);}
+.instr-item:last-child{border-bottom:none;}
+.instr-n{font-family:var(--fd);font-size:20px;color:var(--red);min-width:22px;}
+.instr-t{font-size:14px;color:var(--black);font-weight:600;}
+.instr-s{font-size:13px;color:var(--gray);line-height:1.5;}
+@media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">DOMINANCE</div>
+</header>
+<main id="main" class="wrap" role="main">
+
+<div id="screen-intro" class="screen active">
+  <div style="padding-top:32px">
+    <span class="eyebrow">Aim &amp; Alignment</span>
+    <h1>DOMINANT<br>EYE<br>TEST</h1>
+    <p>One of your eyes is the one your brain <em>aims</em> with — it anchors where things are, while the other supports. Knowing yours matters for photography, archery, shooting, darts, even golf putting. This is the classic <strong>Miles triangle test</strong>, guided step by step. Takes one minute, no equipment.</p>
+    <div class="divider"></div>
+    <h3>What you'll do</h3>
+    <div class="instr">
+      <div class="instr-item"><div class="instr-n">1</div><div><div class="instr-t">Make a small triangle with your hands</div><div class="instr-s">Arms fully extended, thumbs and index fingers overlapped.</div></div></div>
+      <div class="instr-item"><div class="instr-n">2</div><div><div class="instr-t">Frame a distant object through it</div><div class="instr-s">A doorknob, a light switch — something 3+ meters away. Both eyes open.</div></div></div>
+      <div class="instr-item"><div class="instr-n">3</div><div><div class="instr-t">Close one eye, then the other</div><div class="instr-s">Whichever eye keeps the object framed is your dominant eye.</div></div></div>
+    </div>
+    <button class="btn btn-primary" onclick="startTest()">Start</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<!-- STEP 1: setup -->
+<div id="screen-step1" class="screen">
+  <div style="padding-top:28px">
+    <span class="step-num">Step 1 of 3</span>
+    <div class="step-title">FRAME THE TARGET</div>
+    <div class="step-illus" aria-hidden="true">
+      <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+        <rect width="260" height="160" fill="#FFFFFF" rx="8"/>
+        <!-- two hands forming a triangle (stylized) -->
+        <path d="M70,150 L118,70 L142,70 L190,150 Z" fill="none" stroke="#1A1A1A" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M118,70 L130,52 L142,70" fill="none" stroke="#1A1A1A" stroke-width="5" stroke-linejoin="round"/>
+        <!-- target seen through the triangle -->
+        <circle cx="130" cy="100" r="10" fill="#E8431A"/>
+        <circle cx="130" cy="100" r="17" fill="none" stroke="#E8431A" stroke-width="2" opacity="0.4"/>
+        <text x="130" y="146" text-anchor="middle" font-family="Courier New, monospace" font-size="9" fill="#6B6B6B" letter-spacing="1">BOTH EYES OPEN</text>
+      </svg>
+    </div>
+    <p class="step-body">Extend both arms. Overlap your hands to make a <strong>small triangle</strong> between thumbs and index fingers. With <strong>both eyes open</strong>, center a distant object inside the triangle — pick something small, 3 or more meters away. Keep your arms exactly where they are for the next two steps.</p>
+    <button class="btn btn-primary" onclick="showScreen('screen-step2')">It's Centered — Next</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<!-- STEP 2: cover left -->
+<div id="screen-step2" class="screen">
+  <div style="padding-top:28px">
+    <span class="step-num">Step 2 of 3</span>
+    <div class="step-title">CLOSE YOUR LEFT EYE</div>
+    <div class="step-illus" aria-hidden="true">
+      <svg viewBox="0 0 260 120" xmlns="http://www.w3.org/2000/svg">
+        <rect width="260" height="120" fill="#FFFFFF" rx="8"/>
+        <!-- left eye closed, right open -->
+        <path d="M55,60 q25,-8 50,0" fill="none" stroke="#1A1A1A" stroke-width="4" stroke-linecap="round"/>
+        <ellipse cx="180" cy="60" rx="26" ry="15" fill="none" stroke="#1A1A1A" stroke-width="4"/>
+        <circle cx="180" cy="60" r="7" fill="#1A1A1A"/>
+        <text x="80" y="95" text-anchor="middle" font-family="Courier New, monospace" font-size="9" fill="#6B6B6B" letter-spacing="1">LEFT CLOSED</text>
+        <text x="180" y="95" text-anchor="middle" font-family="Courier New, monospace" font-size="9" fill="#6B6B6B" letter-spacing="1">RIGHT OPEN</text>
+      </svg>
+    </div>
+    <p class="step-body">Keep your arms still. Close (or cover) your <strong>left</strong> eye, looking with your <strong>right eye only</strong>. Is the object still centered in the triangle — or did it jump out of frame?</p>
+    <button class="btn btn-primary" onclick="answerStep('right', true)">Still Centered</button>
+    <button class="btn" onclick="answerStep('right', false)">It Jumped Out of Frame</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<!-- STEP 3: cover right -->
+<div id="screen-step3" class="screen">
+  <div style="padding-top:28px">
+    <span class="step-num">Step 3 of 3</span>
+    <div class="step-title">NOW YOUR RIGHT EYE</div>
+    <div class="step-illus" aria-hidden="true">
+      <svg viewBox="0 0 260 120" xmlns="http://www.w3.org/2000/svg">
+        <rect width="260" height="120" fill="#FFFFFF" rx="8"/>
+        <ellipse cx="80" cy="60" rx="26" ry="15" fill="none" stroke="#1A1A1A" stroke-width="4"/>
+        <circle cx="80" cy="60" r="7" fill="#1A1A1A"/>
+        <path d="M155,60 q25,-8 50,0" fill="none" stroke="#1A1A1A" stroke-width="4" stroke-linecap="round"/>
+        <text x="80" y="95" text-anchor="middle" font-family="Courier New, monospace" font-size="9" fill="#6B6B6B" letter-spacing="1">LEFT OPEN</text>
+        <text x="180" y="95" text-anchor="middle" font-family="Courier New, monospace" font-size="9" fill="#6B6B6B" letter-spacing="1">RIGHT CLOSED</text>
+      </svg>
+    </div>
+    <p class="step-body">Re-center the object with both eyes open if you need to. Now close (or cover) your <strong>right</strong> eye, looking with your <strong>left eye only</strong>. Still centered, or did it jump?</p>
+    <button class="btn btn-primary" onclick="answerStep('left', true)">Still Centered</button>
+    <button class="btn" onclick="answerStep('left', false)">It Jumped Out of Frame</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<div id="screen-results" class="screen">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Result</span>
+    <h2>YOUR<br>DOMINANT<br>EYE</h2>
+    <div id="result-detail"></div>
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()">Share</button>
+      <button class="btn btn-secondary" onclick="retakeTest()">Test Again</button>
+    </div>
+    <a href="/" class="backlink">← All Tests</a>
+    <div class="disclaimer" role="note">
+      <div class="disclaimer-title">Note</div>
+      <div class="disclaimer-body">Eye dominance is normal — everyone has it, like handedness — and it says <strong>nothing about eye health or vision quality</strong>. The Miles test measures <em>sighting</em> dominance, which can occasionally differ from other forms of dominance and can vary with gaze direction in some people. If your result was unclear, retry with a smaller triangle and a more distant target.</div>
+    </div>
+  </div>
+</div>
+</main>
+
+<section class="seo" aria-label="About the dominant eye test">
+  <h2>About the dominant eye test</h2>
+  <p>Just as you have a dominant hand, you have a <strong>dominant eye</strong> — the one your brain leans on to aim and judge direction. This test uses the <strong>Miles test</strong>, the standard quick procedure: you frame a distant object through a small triangle made with both hands, then close each eye in turn. Whichever eye keeps the object centered is your <strong>sighting-dominant</strong> eye. About two-thirds of people are right-eye dominant, and dominance doesn't have to match your handedness — "cross-dominance" is common.</p>
+  <p>Knowing yours is genuinely useful for anything you aim: put your dominant eye to the <strong>camera viewfinder</strong>, and in <strong>archery, rifle and pistol shooting, darts, or golf putting</strong>, set your stance to the dominant-eye side. It says nothing about eye health or which eye sees more sharply — it's about alignment, not acuity.</p>
+  <h2>Frequently asked questions</h2>
+  <div class="faq-q">How do I find my dominant eye?</div>
+  <div class="faq-a">Make a small triangle with both hands, frame a distant object with both eyes open, then close each eye. The eye that keeps it framed is dominant — that's the Miles test this page guides you through.</div>
+  <div class="faq-q">What does a dominant eye mean?</div>
+  <div class="faq-a">It's the eye your brain favors for aiming, like handedness. It doesn't indicate eye health or sharpness. Roughly two-thirds of people are right-eye dominant.</div>
+  <div class="faq-q">Why does eye dominance matter?</div>
+  <div class="faq-a">Mainly for aiming sports and photography — it tells you which eye to sight with and which side to set your stance.</div>
+  <div class="faq-q">Can your dominant eye change?</div>
+  <div class="faq-a">It's usually stable, though it can seem to shift with gaze direction, and some people have weak or mixed dominance. Unclear result? Retry with a smaller triangle and a farther target.</div>
+</section>
+
+<footer role="contentinfo">© 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
+
+<script>
+// ── STATE ──
+var STATE = { rightKept:null, leftKept:null };
+
+// ── ENGINE ──
+function startTest(){
+  STATE.rightKept=null; STATE.leftKept=null;
+  showScreen("screen-step1");
+}
+
+function answerStep(eye, kept){
+  // READS: eye ('right'|'left' = eye still OPEN), kept  WRITES: STATE
+  try{
+    if(eye==="right"){ STATE.rightKept=kept; showScreen("screen-step3"); return; }
+    STATE.leftKept=kept;
+    renderResults();
+    showScreen("screen-results");
+  }catch(err){ console.error("answerStep:",err); }
+}
+
+function verdict(){
+  // The eye that keeps the target centered when viewing alone is dominant.
+  if(STATE.rightKept && !STATE.leftKept) return "right";
+  if(STATE.leftKept && !STATE.rightKept) return "left";
+  if(STATE.rightKept && STATE.leftKept) return "both";
+  return "neither";
+}
+
+function renderResults(){
+  var v=verdict();
+  var headline, interp;
+  if(v==="right"||v==="left"){
+    headline = v==="right" ? "RIGHT EYE DOMINANT" : "LEFT EYE DOMINANT";
+    var pct = v==="right" ? "about two-thirds of people" : "roughly a third of people";
+    var cross = "If you're "+(v==="right"?"left":"right")+"-handed, you're \"cross-dominant\" — common, and mostly relevant in aiming sports, where coaches often adapt stance or teach shooting from the dominant-eye side.";
+    interp="Your "+v+" eye kept the target framed when it looked alone — it's the eye your brain uses to anchor direction, shared by "+pct+". Practical upshots: put your "+v+" eye to the camera viewfinder; in archery or shooting, aim with the "+v+" side. "+cross;
+  } else if(v==="both"){
+    headline="UNCLEAR — TRY A SMALLER TRIANGLE";
+    interp="The target stayed framed for both eyes, which usually means the triangle was too large (both lines of sight fit through it) or the target too close. Make the gap between your hands smaller — barely bigger than the target — pick something farther away, and run it again. A small minority of people show weak or mixed dominance, but rule out the big-triangle problem first.";
+  } else {
+    headline="HMM — THE ARMS MOVED";
+    interp="The target jumped out of frame for both eyes, which usually means your hands drifted between steps, or the object wasn't centered with both eyes open to start. Re-run it: frame the target with both eyes open, freeze your arms completely, and only then start closing eyes.";
+  }
+  var h='<div class="big-stat"><div class="big-stat-val">'+headline+'</div><div class="big-stat-lbl">Miles sighting test</div></div>';
+  h+='<div class="interp-card"><div class="interp-text">'+interp+'</div></div>';
+  document.getElementById("result-detail").innerHTML=h;
+  announce(headline);
+}
+
+function retakeTest(){ showScreen("screen-intro"); }
+
+function shareResults(){
+  try{
+    var v=verdict();
+    var label = v==="right"?"right-eye dominant":v==="left"?"left-eye dominant":"still figuring out my dominant eye";
+    var text="I'm "+label+" — found out in a minute on OpticQuiz: opticquiz.com/dominance/";
+    if(navigator.share){ navigator.share({title:"OpticQuiz Dominant Eye",text:text,url:"https://opticquiz.com/dominance/"}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){announce("Copied");}); }
+    else { prompt("Copy:",text); }
+  }catch(err){ console.error("shareResults:",err); }
+}
+
+// ── UTIL ──
+function showScreen(id){
+  var s=document.querySelectorAll(".screen");
+  for(var i=0;i<s.length;i++) s[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+function announce(msg){
+  var el=document.getElementById("a11y-live"); if(!el)return;
+  el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
+}
+</script>
+</body>
+</html>
