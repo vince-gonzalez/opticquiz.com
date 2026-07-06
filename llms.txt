@@ -19,6 +19,7 @@ OpticQuiz is an independent, open-source project by Vince Gonzalez (source: http
 - [Hue Discrimination (Blue vs Purple)](https://opticquiz.com/hue/): Just-noticeable hue difference across seven color-neighbor pairs.
 - [Amsler Grid](https://opticquiz.com/amsler/): At-home central-vision distortion check associated with macular changes (e.g. AMD). Monitoring screen, not a diagnosis.
 - [Astigmatism Fan](https://opticquiz.com/astig/): Radial-line dial suggesting a possible astigmatic axis. Cannot measure a prescription.
+- [Digital Eye Strain Test](https://opticquiz.com/strain/): A 15-item digital-eye-strain (computer vision syndrome) symptom self-assessment inspired by the CVS-Q, scored on-device, with evidence-based guidance. Deliberately does not blame blue light.
 
 ## Guides — direct answers to common questions
 - [Am I Colorblind?](https://opticquiz.com/learn/am-i-colorblind/): The everyday signs and how to check.
@@ -32,6 +33,7 @@ OpticQuiz is an independent, open-source project by Vince Gonzalez (source: http
 - [How Ishihara Plates Work](https://opticquiz.com/learn/how-ishihara-plates-work/): The colorimetry behind the hidden-number test.
 - [What 20/20 Vision Actually Means](https://opticquiz.com/learn/visual-acuity-and-20-20/): Snellen fractions decoded.
 - [Contrast Sensitivity vs. Sharpness](https://opticquiz.com/learn/contrast-sensitivity-vs-acuity/): Why 20/20 can still struggle in fog and dim light.
+- [Is Blue Light Bad for Your Eyes?](https://opticquiz.com/learn/is-blue-light-bad-for-your-eyes/): The honest answer — no strong evidence screen blue light damages eyes, and blue-light glasses aren't proven to help; what really causes digital eye strain.
 
 ## Reference
 - [Vision & Eye Test Glossary](https://opticquiz.com/learn/glossary/): Plain-English definitions of every term used across the site, each linked to its test.

@@ -10,6 +10,7 @@
   <url><loc>https://opticquiz.com/flicker/</loc><priority>0.7</priority></url>
   <url><loc>https://opticquiz.com/blindspot/</loc><priority>0.8</priority></url>
   <url><loc>https://opticquiz.com/dominance/</loc><priority>0.8</priority></url>
+  <url><loc>https://opticquiz.com/strain/</loc><priority>0.8</priority></url>
   <url><loc>https://opticquiz.com/d15/</loc><priority>0.7</priority></url>
   <url><loc>https://opticquiz.com/sat/</loc><priority>0.7</priority></url>
   <url><loc>https://opticquiz.com/hue/</loc><priority>0.7</priority></url>
@@ -29,4 +30,5 @@
   <url><loc>https://opticquiz.com/learn/screen-distance-and-eye-strain/</loc><priority>0.7</priority></url>
   <url><loc>https://opticquiz.com/learn/night-vision-and-contrast/</loc><priority>0.7</priority></url>
   <url><loc>https://opticquiz.com/learn/glossary/</loc><priority>0.6</priority></url>
+  <url><loc>https://opticquiz.com/learn/is-blue-light-bad-for-your-eyes/</loc><priority>0.8</priority></url>
 </urlset>

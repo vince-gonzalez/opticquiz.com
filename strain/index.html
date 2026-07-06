@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ============================================================
+  OPTICQUIZ — Digital Eye Strain Self-Assessment  v1.0.0
+  Symptom screener inspired by the CVS-Q; scored 100% on-device.
+  opticquiz.com
+  ============================================================
+  HONESTY: this is a self-report screener inspired by the validated
+  Computer Vision Syndrome Questionnaire (CVS-Q, Segui et al. 2015).
+  It is NOT the licensed instrument and its bands are a reasonable
+  severity guide, not a clinical cut-off. It collects nothing —
+  answers are scored in your browser and never sent anywhere.
+  It also, deliberately, does not blame "blue light" (that's largely
+  a myth); it points at the real drivers — blinking, focus, dryness.
+  ============================================================ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Free Digital Eye Strain test — a short symptom self-assessment (inspired by the CVS-Q) scored on your device. Get an honest severity read plus what actually helps computer eye strain. No account, no data collected.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="Digital Eye Strain Test — OpticQuiz">
+<meta property="og:description" content="Do you have computer eye strain? A short, honest self-assessment scored on your device — plus what actually helps.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/strain/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Digital Eye Strain Test — OpticQuiz">
+<meta name="twitter:description" content="Do you have computer eye strain? A short, honest self-assessment scored on your device.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="canonical" href="https://opticquiz.com/strain/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<title>Digital Eye Strain Test — Do You Have Computer Vision Syndrome? — OpticQuiz</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Digital Eye Strain Test","url":"https://opticquiz.com/strain/","applicationCategory":"EducationalApplication","operatingSystem":"Any (web browser)","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"OpticQuiz"},"description":"A short digital eye strain symptom self-assessment inspired by the CVS-Q, scored on-device."}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is digital eye strain?","acceptedAnswer":{"@type":"Answer","text":"Digital eye strain (also called computer vision syndrome) is a group of eye and vision symptoms — burning, dryness, blurred vision, headaches, tired eyes — caused by prolonged screen use. It comes mainly from reduced blinking, sustained focus at one distance, glare, and dry eyes, not from blue light."}},
+{"@type":"Question","name":"Is blue light causing my eye strain?","acceptedAnswer":{"@type":"Answer","text":"Almost certainly not. The American Academy of Ophthalmology states that blue light from screens does not damage the eyes, and blue-light-blocking glasses have not been shown to reduce eye strain. The real drivers are blinking less, focusing at one distance for long periods, glare, and dryness."}},
+{"@type":"Question","name":"How do you fix computer eye strain?","acceptedAnswer":{"@type":"Answer","text":"The evidence-based fixes are simple: follow the 20-20-20 rule (every 20 minutes look 20 feet away for 20 seconds), blink deliberately, reduce glare, use artificial tears if your eyes feel dry, keep the screen an arm's length away and slightly below eye level, and make sure your glasses prescription is current. Symptoms that persist deserve an eye exam."}},
+{"@type":"Question","name":"When should I see a doctor about eye strain?","acceptedAnswer":{"@type":"Answer","text":"See an eye-care professional if eye strain is frequent or severe, doesn't ease with breaks and the usual measures, comes with persistent headaches or double vision, or if your vision has changed. Ongoing strain can also signal an outdated prescription, dry eye disease, or a focusing problem worth correcting."}}
+]}
+</script>
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--redd:#C23410;--green:#4A8C3F;--greend:#38692F;--redbg:#FDF1EE;--amber:#D4820A;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:9999;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:12px;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:var(--r);}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.wrap{max-width:600px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:600px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.screen{display:none;}
+.screen.active{display:block;animation:fadein .2s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+.eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.14em;color:var(--red);text-transform:uppercase;display:block;margin-bottom:10px;}
+h1{font-family:var(--fd);font-size:clamp(44px,11vw,66px);color:var(--black);line-height:.92;letter-spacing:.02em;margin-bottom:16px;}
+h2{font-family:var(--fd);font-size:clamp(30px,7vw,44px);color:var(--black);line-height:.96;letter-spacing:.02em;margin-bottom:16px;}
+h3{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+p{font-size:15px;color:var(--gray);line-height:1.7;}
+.btn{display:block;width:100%;padding:16px 20px;font-family:var(--fs);font-size:16px;font-weight:600;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;text-align:center;transition:border-color .12s,background .12s,transform .08s;min-height:52px;-webkit-tap-highlight-color:transparent;}
+.btn:hover{border-color:var(--black);background:var(--cream);}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--red);color:#fff;border-color:transparent;}
+.btn-primary:hover{background:var(--redd);}
+.btn-secondary{background:var(--green);color:#fff;border-color:transparent;}
+.btn-secondary:hover{background:var(--greend);}
+.btn+.btn{margin-top:10px;}
+.divider{height:1px;background:var(--lgray);margin:24px 0;}
+.q-row{padding:14px 0;border-bottom:1px solid var(--lgray);}
+.q-row:last-child{border-bottom:none;}
+.q-label{font-size:15px;color:var(--black);font-weight:600;margin-bottom:10px;}
+.q-opts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.q-opt{padding:10px 4px;font-family:var(--fm);font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--gray);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;text-align:center;transition:all .1s;-webkit-tap-highlight-color:transparent;min-height:44px;}
+.q-opt:hover{border-color:var(--red);}
+.q-opt.sel{background:var(--red);border-color:var(--red);color:#fff;}
+.prog-wrap{position:sticky;top:0;background:var(--bg);padding:12px 0 10px;z-index:5;}
+.prog-meta{display:flex;justify-content:space-between;margin-bottom:8px;}
+.prog-meta span{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.06em;}
+.prog-track{height:3px;background:var(--lgray);border-radius:2px;}
+.prog-fill{height:100%;background:var(--red);border-radius:2px;transition:width .3s;}
+.big-stat{background:#fff;border:1.5px solid var(--lgray);border-top:4px solid var(--red);border-radius:var(--rc);padding:22px;margin-bottom:16px;text-align:center;}
+.big-stat-val{font-family:var(--fd);font-size:clamp(30px,8vw,44px);color:var(--black);line-height:1.05;}
+.big-stat-lbl{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+.meter{height:12px;border-radius:6px;background:linear-gradient(90deg,#4A8C3F,#D4820A,#E8431A);position:relative;margin:6px 0 4px;}
+.meter-mark{position:absolute;top:-4px;width:4px;height:20px;background:var(--black);border-radius:2px;transform:translateX(-50%);}
+.meter-lbls{display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.05em;text-transform:uppercase;}
+.card{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:16px 0;}
+.card h3{margin-bottom:12px;}
+.card ul{margin:0 0 0 18px;}
+.card li{font-size:14px;color:var(--gray);line-height:1.7;margin-bottom:8px;}
+.card li strong{color:var(--black);}
+.interp-text{font-size:14px;color:var(--gray);line-height:1.8;}
+.myth{background:#fff;border:1px solid var(--lgray);border-left:4px solid var(--green);border-radius:var(--rc);padding:16px 18px;margin:16px 0;font-size:14px;color:var(--gray);line-height:1.8;}
+.myth strong{color:var(--black);}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:18px 18px 18px 20px;margin-top:24px;}
+.disclaimer-title{font-family:var(--fm);font-size:11px;letter-spacing:.1em;color:var(--red);text-transform:uppercase;margin-bottom:8px;}
+.disclaimer-body{font-size:12px;color:var(--gray);line-height:1.8;}
+.disclaimer-body strong{color:var(--black);}
+.share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.related{background:#fff;border:1px solid var(--lgray);border-radius:var(--rc);padding:14px 16px;margin:16px 0;}
+.related-t{font-family:var(--fm);font-size:11px;letter-spacing:.1em;color:var(--red);text-transform:uppercase;margin-bottom:8px;}
+.related a{display:block;color:var(--black);text-decoration:none;font-size:14px;padding:5px 0;border-bottom:1px solid var(--lgray);}
+.related a:last-child{border-bottom:none;}
+.related a:hover{color:var(--red);}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+@media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">EYE STRAIN</div>
+</header>
+<main id="main" class="wrap" role="main">
+
+<div id="screen-intro" class="screen active">
+  <div style="padding-top:32px">
+    <span class="eyebrow">Screen &amp; Comfort</span>
+    <h1>DIGITAL<br>EYE STRAIN<br>CHECK</h1>
+    <p>Burning, dry, tired eyes after a long day at the screen? This short self-assessment — inspired by the clinical <strong>Computer Vision Syndrome Questionnaire</strong> — rates how much digital eye strain you're carrying, then tells you what actually helps. Fifteen quick questions, scored on your device, nothing saved.</p>
+    <div class="myth"><strong>Straight answer up front:</strong> it's almost certainly not "blue light." The American Academy of Ophthalmology says screen blue light doesn't damage your eyes, and blue-light glasses aren't shown to help. Real eye strain comes from blinking less, focusing at one distance for hours, glare, and dryness — all fixable.</div>
+    <button class="btn btn-primary" onclick="startTest()">Start — 15 Questions</button>
+    <a href="/" class="backlink">← All Tests</a>
+  </div>
+</div>
+
+<div id="screen-test" class="screen">
+  <div class="prog-wrap">
+    <div class="prog-meta"><span id="prog-label">0 / 15 answered</span><span>How often lately?</span></div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div id="q-list"></div>
+  <button class="btn btn-primary" id="see-btn" onclick="finish()">See My Result</button>
+  <a href="/" class="backlink">← All Tests</a>
+</div>
+
+<div id="screen-results" class="screen">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Result</span>
+    <h2>YOUR<br>EYE STRAIN</h2>
+    <div id="result-detail"></div>
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()">Share</button>
+      <button class="btn btn-secondary" onclick="retakeTest()">Retake</button>
+    </div>
+    <a href="/" class="backlink">← All Tests</a>
+    <div class="disclaimer" role="note">
+      <div class="disclaimer-title">Note</div>
+      <div class="disclaimer-body">This is a <strong>self-report screener inspired by the CVS-Q</strong>, not the licensed clinical instrument, and its severity bands are a reasonable guide rather than a diagnosis. It collects nothing — your answers are scored in your browser. <strong>Persistent or severe eye strain, new headaches, double vision, or any change in your vision deserve an eye exam</strong>, since strain can also flag dry eye disease, an outdated prescription, or a focusing problem worth correcting.</div>
+    </div>
+  </div>
+</div>
+</main>
+<footer role="contentinfo">© 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
+
+<script>
+// ── CONFIG ── symptoms inspired by the CVS-Q (Segui et al. 2015)
+var SYMPTOMS = [
+  "Burning eyes",
+  "Itchy eyes",
+  "A gritty feeling, like something's in your eye",
+  "Watery / teary eyes",
+  "Dry eyes",
+  "Red eyes",
+  "Eye pain or aching",
+  "Heavy eyelids / tired eyes",
+  "Blurred vision",
+  "Double vision",
+  "Trouble refocusing between near and far",
+  "Sensitivity to bright light",
+  "Headache around or behind the eyes",
+  "Blinking less / having to force blinks",
+  "Symptoms getting worse the longer you use screens"
+];
+var OPTS = ["Never","Sometimes","Often","Always"]; // 0..3
+var MAXSCORE = SYMPTOMS.length * 3;                // 45
+
+// ── STATE ──
+var STATE = { answers: [] };
+
+// ── ENGINE ──
+function startTest(){
+  STATE.answers = [];
+  for (var i=0;i<SYMPTOMS.length;i++) STATE.answers.push(-1);
+  renderList();
+  showScreen("screen-test");
+  updateProgress();
+}
+
+function renderList(){
+  var h="";
+  for (var i=0;i<SYMPTOMS.length;i++){
+    h += '<div class="q-row"><div class="q-label">'+(i+1)+'. '+SYMPTOMS[i]+'</div><div class="q-opts" role="group" aria-label="'+SYMPTOMS[i]+'">';
+    for (var j=0;j<OPTS.length;j++){
+      h += '<button class="q-opt" id="q'+i+'o'+j+'" onclick="pick('+i+','+j+')" aria-label="'+SYMPTOMS[i]+': '+OPTS[j]+'">'+OPTS[j]+'</button>';
+    }
+    h += '</div></div>';
+  }
+  document.getElementById("q-list").innerHTML = h;
+}
+
+function pick(i, j){
+  // READS: i,j  WRITES: STATE.answers, DOM
+  STATE.answers[i] = j;
+  for (var k=0;k<OPTS.length;k++){
+    var el=document.getElementById("q"+i+"o"+k);
+    if (el) el.classList.toggle("sel", k===j);
+  }
+  updateProgress();
+}
+
+function answeredCount(){
+  var n=0;
+  for (var i=0;i<STATE.answers.length;i++) if (STATE.answers[i]>=0) n++;
+  return n;
+}
+
+function updateProgress(){
+  var n=answeredCount();
+  document.getElementById("prog-label").textContent = n+" / "+SYMPTOMS.length+" answered";
+  document.getElementById("prog-fill").style.width = Math.round((n/SYMPTOMS.length)*100)+"%";
+}
+
+function finish(){
+  // unanswered count as 0 (Never), but nudge if many blank
+  var n=answeredCount();
+  if (n < SYMPTOMS.length){
+    var missing = SYMPTOMS.length - n;
+    announce(missing+" questions left blank; counting them as Never.");
+  }
+  renderResults();
+  showScreen("screen-results");
+}
+
+// ── RESULTS ──
+function score(){
+  var s=0;
+  for (var i=0;i<STATE.answers.length;i++){ if (STATE.answers[i]>0) s+=STATE.answers[i]; }
+  return s;
+}
+
+function band(s){
+  if (s<=6)  return {key:"minimal",  title:"Minimal eye strain"};
+  if (s<=15) return {key:"mild",     title:"Mild eye strain"};
+  if (s<=25) return {key:"moderate", title:"Moderate eye strain"};
+  return {key:"significant", title:"Significant eye strain"};
+}
+
+var GUIDANCE = {
+  minimal:"Your symptoms are light. Whatever you're doing — decent breaks, blinking, sane screen distance — keep it up. If anything flares on a long day, the habits below are the fix.",
+  mild:"You're carrying some digital eye strain. It's common and very treatable with habits, not gadgets. Work the basics below for a week or two and it usually eases noticeably.",
+  moderate:"That's a meaningful amount of eye strain. The habits below genuinely help, but at this level it's also worth ruling out an outdated prescription or dry eye — both are common and easily corrected.",
+  significant:"You're reporting a lot of eye strain. Do the basics below, and book an eye exam: at this level an outdated prescription, dry eye disease, or a focusing problem is often part of the picture, and each is fixable."
+};
+
+function renderResults(){
+  var s=score();
+  var b=band(s);
+  var pct=Math.round((s/MAXSCORE)*100);
+  var h='<div class="big-stat"><div class="big-stat-val">'+b.title+'</div><div class="big-stat-lbl">score '+s+' / '+MAXSCORE+'</div></div>';
+  h+='<div class="meter"><div class="meter-mark" style="left:'+Math.max(1,Math.min(99,pct))+'%"></div></div>';
+  h+='<div class="meter-lbls"><span>None</span><span>Mild</span><span>Moderate</span><span>High</span></div>';
+  h+='<div class="card" style="margin-top:18px"><div class="interp-text">'+GUIDANCE[b.key]+'</div></div>';
+  h+='<div class="card"><h3>What actually helps (evidence-based)</h3><ul>'+
+     '<li><strong>20-20-20 rule:</strong> every 20 minutes, look ~20 feet away for 20 seconds. Relaxes the focusing muscles.</li>'+
+     '<li><strong>Blink on purpose.</strong> You blink up to 60% less at a screen, which dries the eyes. Full, deliberate blinks help most.</li>'+
+     '<li><strong>Kill glare, ease brightness.</strong> Match your screen to the room; avoid a bright window behind or in front of it.</li>'+
+     '<li><strong>Arm\'s length, slightly down.</strong> Screen ~50–70 cm away, top at or just below eye level.</li>'+
+     '<li><strong>Artificial tears</strong> if your eyes feel dry — the most common single cause of screen discomfort.</li>'+
+     '<li><strong>Check your prescription.</strong> An out-of-date or missing correction quietly drives a lot of strain.</li>'+
+     '</ul></div>';
+  h+='<div class="myth"><strong>Not on that list: blue-light glasses.</strong> The evidence doesn\'t support them for eye strain, and screen blue light isn\'t damaging your eyes. Spend the money on a lamp that kills glare and a bottle of artificial tears instead. <a href="/learn/is-blue-light-bad-for-your-eyes/">Why blue light is mostly a myth →</a></div>';
+  h+='<div class="related"><div class="related-t">Go deeper</div>'+
+     '<a href="/learn/is-blue-light-bad-for-your-eyes/">Is blue light bad for your eyes? →</a>'+
+     '<a href="/learn/screen-distance-and-eye-strain/">How far to sit from your screen →</a>'+
+     '<a href="/contrast/">Test your contrast sensitivity →</a></div>';
+  document.getElementById("result-detail").innerHTML=h;
+  announce("Result: "+b.title+", score "+s+" of "+MAXSCORE);
+}
+
+function retakeTest(){ showScreen("screen-intro"); }
+
+function shareResults(){
+  try{
+    var s=score(); var b=band(s);
+    var text="My OpticQuiz digital eye strain check — "+b.title+" ("+s+"/"+MAXSCORE+"). Check yours (and the blue-light truth): opticquiz.com/strain/";
+    if(navigator.share){ navigator.share({title:"OpticQuiz Eye Strain",text:text,url:"https://opticquiz.com/strain/"}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){announce("Copied");}); }
+    else { prompt("Copy your result:",text); }
+  }catch(err){ console.error("shareResults:",err); }
+}
+
+// ── UTIL ──
+function showScreen(id){
+  var s=document.querySelectorAll(".screen");
+  for (var i=0;i<s.length;i++) s[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+function announce(msg){
+  var el=document.getElementById("a11y-live"); if(!el)return;
+  el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
+}
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+</body>
+</html>
