@@ -1,6 +1,6 @@
 # OpticQuiz
 
-> OpticQuiz is a free online vision test suite: fifteen honest, browser-based eye and perception tests (visual acuity, color blindness, contrast, and more), plus plain-English guides. No account, no paywall, and no ads during a test; your answers and scores are computed in your browser and never uploaded. Educational only — never a medical diagnosis — and every test states plainly what a screen can and cannot measure.
+> OpticQuiz is the home of free online vision testing: a suite of fifteen honest, browser-based eye and perception tests (visual acuity, color blindness, contrast, and more), plus plain-English guides. No account, no paywall, and no ads during a test; your answers and scores are computed in your browser and never uploaded. Educational only — never a medical diagnosis — and every test states plainly what a screen can and cannot measure.
 
 OpticQuiz is an independent, open-source project by Vince Gonzalez (source: https://github.com/zengineco/opticquiz.com). Its governing rule is honesty: stimuli are generated procedurally (canvas/SVG), scoring is transparent, and screen-calibration limits are disclosed on every page. It never claims to diagnose. A result that worries a user is framed as a reason to see a licensed optometrist or ophthalmologist, not as a verdict. Where a screen genuinely cannot do something — separate protanopia from deuteranopia, measure flicker beyond half the display refresh, or produce a glasses prescription — the test says so.
 
