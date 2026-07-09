@@ -34,6 +34,7 @@ OpticQuiz is an independent, open-source project by Vince Gonzalez (source: http
 - [What 20/20 Vision Actually Means](https://opticquiz.com/learn/visual-acuity-and-20-20/): Snellen fractions decoded.
 - [Contrast Sensitivity vs. Sharpness](https://opticquiz.com/learn/contrast-sensitivity-vs-acuity/): Why 20/20 can still struggle in fog and dim light.
 - [Is Blue Light Bad for Your Eyes?](https://opticquiz.com/learn/is-blue-light-bad-for-your-eyes/): The honest answer — no strong evidence screen blue light damages eyes, and blue-light glasses aren't proven to help; what really causes digital eye strain.
+- [Are Online Vision Tests Worth It?](https://opticquiz.com/learn/are-online-vision-tests-worth-it/): A verified, fair comparison of the major online vision tests (ZEISS, ACUVUE, All About Vision, OneSight, personalEYES, Warby Parker, OpticQuiz) — what each does, whether it is truly free, the catch (email gates, sales funnels), and where each is genuinely the best choice.
 
 ## Reference
 - [Vision & Eye Test Glossary](https://opticquiz.com/learn/glossary/): Plain-English definitions of every term used across the site, each linked to its test.
