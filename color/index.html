@@ -55,6 +55,7 @@
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"How accurate is an online color blindness test?","acceptedAnswer":{"@type":"Answer","text":"An online color blindness test is a useful screen, not a diagnosis. Screens are not color-calibrated and vary in brightness and color profile, so results shift between devices. A well-built test with real confusion-axis colors can flag a likely red-green or blue-yellow deficiency, but confirmation needs clinically calibrated plates or an anomaloscope."}},
 {"@type":"Question","name":"Can this test tell if I'm protan or deutan?","acceptedAnswer":{"@type":"Answer","text":"No. This test detects the red-green confusion pattern that both protan (red-weak) and deutan (green-weak) types share, but a consumer screen cannot reliably separate the two. Distinguishing protanopia from deuteranopia requires a clinician's anomaloscope or diagnostic plates."}},
+{"@type":"Question","name":"Does this test show how severe my color blindness is?","acceptedAnswer":{"@type":"Answer","text":"Yes. It gives an honest severity read — none, borderline, mild, moderate, or strong — based on how many of the five red-green plates you missed, and it shows the exact count that band comes from. On five plates the band is coarse: one plate can shift it, and an uncalibrated screen can too, so it is an estimate, not a clinical grade. The saturation-threshold and red-green match tests grade finer, and a clinician's anomaloscope or Farnsworth D-15 grades severity properly."}},
 {"@type":"Question","name":"Why should I test each eye separately?","acceptedAnswer":{"@type":"Answer","text":"Inherited color blindness is the same in both eyes, but testing each eye separately can reveal an acquired change affecting only one eye, which may signal an eye-health issue worth examining. It also improves reliability by catching a lapse in attention on either side."}},
 {"@type":"Question","name":"Is this test free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every test on OpticQuiz is free, requires no account, and runs entirely in your browser. No results are uploaded or stored anywhere."}}
 ]}
@@ -406,6 +407,8 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
   <div class="faq-a">It's a useful screen, not a diagnosis. Uncalibrated screens shift results between devices, but a plate test built from real confusion-axis colors can reliably flag a likely deficiency. Confirm anything meaningful with an eye-care professional.</div>
   <div class="faq-q">Can this test tell if I'm protan or deutan?</div>
   <div class="faq-a">No — it detects the shared red-green confusion pattern, but separating protan from deutan needs a clinician's anomaloscope or diagnostic plates.</div>
+  <div class="faq-q">Does this test show how severe my color blindness is?</div>
+  <div class="faq-a">Yes — it gives an honest severity read (none, borderline, mild, moderate, or strong) from how many red-green plates you missed, and shows the exact count it's based on. On five plates that band is coarse: a single plate can shift it, and an uncalibrated screen can too. For a finer read, the saturation and red-green match tests grade further — and a clinician's anomaloscope grades it properly.</div>
   <div class="faq-q">Why test each eye separately?</div>
   <div class="faq-a">Inherited color blindness is the same in both eyes, but a one-eye difference can point to an acquired change worth examining — and per-eye testing improves reliability.</div>
   <div class="faq-q">Is this test free?</div>
@@ -437,6 +440,11 @@ var RESULT_INFO = {
     title: "Possible red-green deficiency",
     sub: "Mild red-green confusion pattern",
     interp: "You missed some red-green plates but not all. This is a mild red-green confusion pattern — the most common form of color vision deficiency, affecting roughly 8% of men and 0.5% of women. This test cannot distinguish protan (red-weak) from deutan (green-weak); both produce this pattern. Screen and lighting variation can also cause a plate or two to be missed, so treat a mild result as a prompt to test again in good light, not a conclusion."
+  },
+  rg_moderate: {
+    title: "Red-green deficiency pattern",
+    sub: "Moderate red-green confusion",
+    interp: "You missed about half of the red-green plates while reading the control clearly. This is a moderate red-green confusion pattern (protan or deutan type — this screen test cannot separate the two). Red-green deficiency is usually inherited, present from birth, and identical in both eyes. Because this sits between mild and strong on only five plates, treat the exact level as approximate and confirm it with a clinician's anomaloscope or D-15."
   },
   rg_strong: {
     title: "Red-green deficiency pattern",
@@ -635,6 +643,8 @@ function scoreEye(answers) {
     category = "low_overall";
   } else if (rgMiss >= 4) {
     category = "rg_strong";
+  } else if (rgMiss === 3) {
+    category = "rg_moderate";
   } else if (rgMiss >= 2) {
     category = "rg_mild";
   } else if (tMiss >= 1) {
@@ -810,7 +820,7 @@ function renderResults() {
 function shortLabel(category) {
   // READS: category  WRITES: nothing
   var map = {
-    normal: "Normal", rg_mild: "Red-green?", rg_strong: "Red-green",
+    normal: "Normal", rg_mild: "Red-green?", rg_moderate: "Red-green", rg_strong: "Red-green",
     tritan: "Blue-yellow", low_overall: "Low color", inconclusive: "Inconclusive"
   };
   return map[category] || "—";
@@ -836,6 +846,9 @@ function renderResultDetail(eye) {
   html += axisBar("Blue-yellow plates", r.tCorrect, r.tTotal, "#1A5CB8");
   html += axisBar("Control plate", r.ctrlOK ? 1 : 0, 1, r.ctrlOK ? "#4A8C3F" : "#E8431A");
   html += '</div>';
+
+  // Severity read — an honest band derived only from the miss count, with its own error bars stated.
+  html += severityRead(r);
 
   // Response-time histogram (information only — never scored)
   html += '<h3 style="margin-top:4px">Response time per plate</h3>';
@@ -881,6 +894,35 @@ function axisBar(name, correct, total, color) {
     '</div>' +
     '<div class="result-track"><div class="result-fill" style="width:0%;background:' + color + ';" data-target="' + pct + '"></div></div>' +
     '</div>';
+}
+
+function severityRead(r) {
+  // READS: result object  WRITES: nothing — returns an honest severity band that shows its work.
+  // An explicit band from the raw miss count, always paired with the count and its own error bars.
+  if (!r.ctrlOK) return ""; // control plate missed → conditions invalid, no severity read
+  var rgMiss = r.rgTotal - r.rgCorrect;
+  var tMiss = r.tTotal - r.tCorrect;
+  var band, color, desc;
+  if (rgMiss <= 0)       { band = "None";       color = "#4A8C3F"; desc = "no red-green deficiency to grade"; }
+  else if (rgMiss === 1) { band = "Borderline"; color = "#6B6B6B"; desc = "one missed plate is within normal variation, not a deficiency on its own"; }
+  else if (rgMiss === 2) { band = "Mild";       color = "#C98A00"; desc = "a mild red-green confusion pattern"; }
+  else if (rgMiss === 3) { band = "Moderate";   color = "#D2691E"; desc = "a moderate red-green confusion pattern"; }
+  else                   { band = "Strong";     color = "#C23410"; desc = "a strong red-green confusion pattern"; }
+
+  var html = '<h3>Severity read</h3><div class="interp-card">';
+  html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">' +
+    '<span style="display:inline-block;padding:4px 13px;border-radius:20px;background:' + color + ';color:#fff;font-weight:600;font-size:14px;letter-spacing:.02em;">' + band + '</span>' +
+    '<span style="color:var(--gray);font-size:14px;">red-green &mdash; missed ' + rgMiss + ' of ' + r.rgTotal + ' plates</span></div>';
+  html += '<div class="interp-text" style="margin-bottom:0;">This band comes only from how many plates you missed &mdash; ' + desc + '. ';
+  if (tMiss >= 1) {
+    html += 'On the blue-yellow (tritan) axis you missed ' + tMiss + ' of ' + r.tTotal + ' &mdash; two plates is too few to grade, so treat any blue-yellow signal as a flag to confirm, not a level. ';
+  }
+  html += 'On ' + r.rgTotal + ' plates a severity read is <strong>coarse</strong>: a single plate can shift the band, and an uncalibrated screen in poor light can too. Only a clinician&rsquo;s anomaloscope or Farnsworth D-15 grades severity properly &mdash; this is an honest estimate, not a clinical grade.</div>';
+  if (rgMiss >= 1 || tMiss >= 1) {
+    html += '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--lgray);font-size:13px;color:var(--gray);">Want a finer read? The <a href="/sat/" style="color:var(--red);">Saturation Threshold test</a> catches milder deficiencies these plates can miss, and the <a href="/anomal/" style="color:var(--red);">red-green match</a> narrows the type-lean. Neither is a diagnosis either &mdash; but together they triangulate.</div>';
+  }
+  html += '</div>';
+  return html;
 }
 
 function switchResultTab(eye) {
