@@ -6,7 +6,6 @@
 # Traditional search + everyone
 User-agent: *
 Allow: /
-Disallow: /oldfiles/
 
 # AI / generative-engine crawlers — explicitly welcome (many sites block these)
 User-agent: GPTBot
