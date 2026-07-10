@@ -6,6 +6,7 @@ OpticQuiz is an independent, open-source project by Vince Gonzalez (source: http
 
 ## Vision & perception tests
 - [Color Vision Test](https://opticquiz.com/color/): Procedurally generated Ishihara-style "vanishing" plates. Screens red-green and blue-yellow (tritan) color deficiency, per eye. Cannot reliably separate protan from deutan.
+- [Color Blindness Test for Kids](https://opticquiz.com/color/kids/): Shape-based (not number) color plates for young children (~age 3+) who can't read numbers — the child taps a hidden shape (star, heart, square). Screens red-green and blue-yellow deficiency in kids. Screening, not diagnosis.
 - [Visual Acuity Test](https://opticquiz.com/acuity/): Tumbling-E chart calibrated with a credit card (85.6 mm) for true-size letters plus a viewing distance, giving an approximate Snellen result per eye. Not a refraction and not a prescription.
 - [Anomaloscope](https://opticquiz.com/anomal/): Rayleigh red/green-to-yellow match, the clinical gold standard for red-green vision, approximated on a broadband screen. Suggests a protan or deutan lean; not a diagnosis.
 - [Contrast Sensitivity Test](https://opticquiz.com/contrast/): Fading-letter adaptive staircase measuring the faintest contrast you can read. A relative log-CS on your (uncalibrated) screen, not a Pelli-Robson score.
@@ -23,6 +24,7 @@ OpticQuiz is an independent, open-source project by Vince Gonzalez (source: http
 
 ## Guides — direct answers to common questions
 - [Am I Colorblind?](https://opticquiz.com/learn/am-i-colorblind/): The everyday signs and how to check.
+- [Color Blindness in Kids: How to Test a Child](https://opticquiz.com/learn/color-blind-test-for-kids/): How to test a young child (use shapes, not numbers), the signs, what age to test, how it affects school, and what to do next.
 - [Can Color Blindness Be Cured?](https://opticquiz.com/learn/can-color-blindness-be-cured/): Why inherited color blindness is permanent, and what color-boosting glasses actually do.
 - [What Does a Dominant Eye Mean?](https://opticquiz.com/learn/what-does-a-dominant-eye-mean/): Eye dominance explained.
 - [How to Test for Astigmatism at Home](https://opticquiz.com/learn/how-to-test-astigmatism-at-home/): The fan test and its limits.
