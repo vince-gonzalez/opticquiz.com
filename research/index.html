@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- OPTICQUIZ — Research / Published Method hub v1.0.0 | opticquiz.com -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The method behind OpticQuiz's online vision test is published open-access: a peer-verifiable procedural technique for generating color-blindness plates in the browser, with its calibration limits stated plainly. DOI + open source.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="The Published Method Behind OpticQuiz — Open, Cited, Verifiable">
+<meta property="og:description" content="OpticQuiz publishes its method. The procedural plate-generation technique and its calibration limits are an open-access preprint with a DOI and open-source code.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/research/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Published Method Behind OpticQuiz">
+<meta name="twitter:description" content="The only online vision test that publishes its method, open-access, with a DOI and open source.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="canonical" href="https://opticquiz.com/research/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<title>The Published Method Behind OpticQuiz — Online Vision Test Research</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8826956454892311" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ScholarlyArticle","headline":"A Procedural Method for Generating Pseudoisochromatic Plates in the Browser, and the Calibration Limits of Screen-Based Colour-Vision Screening","name":"A Procedural Method for Generating Pseudoisochromatic Plates in the Browser, and the Calibration Limits of Screen-Based Colour-Vision Screening","author":{"@type":"Person","name":"Vince Gonzalez","identifier":"https://orcid.org/0009-0005-3640-014X","url":"https://orcid.org/0009-0005-3640-014X"},"datePublished":"2026-07-11","identifier":"https://doi.org/10.5281/zenodo.21310578","sameAs":["https://doi.org/10.5281/zenodo.21310578","https://zenodo.org/records/21310578"],"license":"https://creativecommons.org/licenses/by/4.0/","publisher":{"@type":"Organization","name":"Zenodo"},"isBasedOn":"https://doi.org/10.5281/zenodo.21311369","url":"https://opticquiz.com/research/","about":["color vision deficiency","pseudoisochromatic plates","Ishihara test","color-confusion lines","screen calibration","observer metamerism"]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"OpticQuiz PPPG — Procedural Pseudoisochromatic Plate Generator","codeRepository":"https://github.com/zengineco/opticquiz.com","programmingLanguage":"JavaScript","license":"https://creativecommons.org/licenses/by/4.0/","identifier":"https://doi.org/10.5281/zenodo.21311369","author":{"@type":"Person","name":"Vince Gonzalez","identifier":"https://orcid.org/0009-0005-3640-014X"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://opticquiz.com/"},{"@type":"ListItem","position":2,"name":"Research","item":"https://opticquiz.com/research/"}]}
+</script>
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--redd:#C23410;--green:#4A8C3F;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:var(--r);}
+.wrap{max-width:640px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:640px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.crumbs{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.06em;margin:28px 0 14px;}
+.crumbs a{color:var(--gray);text-decoration:none;}.crumbs a:hover{color:var(--red);}
+.eyebrow{font-family:var(--fm);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);}
+h1{font-family:var(--fd);font-size:clamp(34px,8vw,56px);color:var(--black);line-height:.98;letter-spacing:.02em;margin:6px 0 16px;}
+.lede{font-size:17px;color:var(--black);line-height:1.7;margin-bottom:22px;}
+h2{font-family:var(--fd);font-size:clamp(24px,6vw,32px);color:var(--black);line-height:1;letter-spacing:.02em;margin:32px 0 12px;}
+p{font-size:16px;color:var(--gray);line-height:1.8;margin-bottom:14px;}
+p strong{color:var(--black);}
+a{color:var(--red);}
+.cite-card{background:#fff;border:1px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:18px 20px;margin:20px 0;}
+.cite-card .k{font-family:var(--fm);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:6px;}
+.cite-card .t{font-weight:600;color:var(--black);font-size:16px;line-height:1.5;margin-bottom:8px;}
+.cite-card .m{font-size:13px;color:var(--gray);line-height:1.7;}
+.cite-card .m a{word-break:break-all;}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px;}
+.pill{font-family:var(--fm);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--black);background:var(--cream);border:1px solid var(--lgray);border-radius:20px;padding:5px 12px;}
+.cluster{background:#fff;border:1px solid var(--lgray);border-radius:var(--rc);padding:8px 18px;margin:18px 0;}
+.cluster a{display:block;color:var(--black);text-decoration:none;font-size:15px;padding:10px 0;border-bottom:1px solid var(--lgray);}
+.cluster a:last-child{border-bottom:none;}.cluster a:hover{color:var(--red);}
+.cluster a span{display:block;font-size:13px;color:var(--gray);margin-top:2px;}
+.cta{display:block;background:var(--red);color:#fff;text-decoration:none;text-align:center;font-weight:600;padding:16px 20px;border-radius:var(--r);margin:22px 0;transition:background .12s;}
+.cta:hover{background:var(--redd);}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+</style>
+</head>
+<body>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">RESEARCH</div>
+</header>
+<main class="wrap" role="main">
+  <nav class="crumbs"><a href="/">Home</a> › Research</nav>
+  <span class="eyebrow">Published Method</span>
+  <h1>THE SCIENCE<br>BEHIND THE<br>TEST</h1>
+  <p class="lede">Most online vision tests reuse the same scanned plates and never say how they work. OpticQuiz does the opposite: the method behind our color vision test is <strong>published open-access, with a DOI, and the source code is open</strong> — including an honest account of exactly what a screen can and cannot measure.</p>
+
+  <div class="cite-card">
+    <div class="k">Open-access preprint</div>
+    <div class="t">A Procedural Method for Generating Pseudoisochromatic Plates in the Browser, and the Calibration Limits of Screen-Based Colour-Vision Screening</div>
+    <div class="m">Gonzalez, V. (2026). <a href="https://doi.org/10.5281/zenodo.21310578" rel="noopener">https://doi.org/10.5281/zenodo.21310578</a> · CC BY 4.0 · <a href="https://orcid.org/0009-0005-3640-014X" rel="noopener">ORCID 0009-0005-3640-014X</a></div>
+  </div>
+  <div class="cite-card">
+    <div class="k">Companion source code</div>
+    <div class="t">OpticQuiz PPPG — Procedural Pseudoisochromatic Plate Generator</div>
+    <div class="m">Software deposit: <a href="https://doi.org/10.5281/zenodo.21311369" rel="noopener">https://doi.org/10.5281/zenodo.21311369</a> · repository: <a href="https://github.com/zengineco/opticquiz.com" rel="noopener">github.com/zengineco/opticquiz.com</a></div>
+  </div>
+
+  <h2>What the method actually is</h2>
+  <p>Our color plates are not stored images. Each one is <strong>generated procedurally in your browser</strong> the moment you take the test: dots are packed live, the hidden figure is separated from the background only along a red-green or blue-yellow color-confusion axis, and every dot's brightness is randomized so that no lightness cue leaks the answer. No two runs are identical, so a plate can't be memorized or traced.</p>
+  <p>The paper specifies the full algorithm — figure masking, dot packing, palette construction, and scoring — reproducibly, and then does the thing most tools avoid: it states the limits. On an uncalibrated, three-primary screen, and under <em>observer metamerism</em>, a color test is an honest <strong>screen</strong>, not a measurement instrument. It can suggest a likely red-green deficiency; it cannot classify the type or grade severity. That boundary is the point.</p>
+  <div class="pills"><span class="pill">Procedural generation</span><span class="pill">Confusion-line color</span><span class="pill">sRGB / calibration limits</span><span class="pill">Observer metamerism</span><span class="pill">Screening ≠ diagnosis</span></div>
+
+  <h2>Why this matters for an online vision test</h2>
+  <p>Publishing the method is a claim anyone can check. It is the difference between "trust our score" and "here is exactly how the score is produced, here is where it breaks, and here is the code." For a free <strong>online vision test</strong>, that verifiability — not a bigger marketing claim — is what makes a result worth trusting.</p>
+
+  <h2>Explore the concepts in the paper</h2>
+  <p>Each idea the method builds on has a hands-on test or a plain-English guide here:</p>
+  <div class="cluster">
+    <a href="/color/">The color vision test the method powers <span>Take the procedurally generated screen, per eye.</span></a>
+    <a href="/color/kids/">Color test for kids (shapes, not numbers) <span>The same method with shape figures for pre-readers.</span></a>
+    <a href="/learn/how-ishihara-plates-work/">How Ishihara plates work <span>The pseudoisochromatic principle the method implements.</span></a>
+    <a href="/learn/how-accurate-are-online-color-blindness-tests/">How accurate are online color blindness tests? <span>The calibration problem, in plain English.</span></a>
+    <a href="/learn/which-color-vision-test-is-most-accurate/">Which color vision test is most accurate? <span>Ishihara vs D-15 vs anomaloscope vs online.</span></a>
+    <a href="/anomal/">The anomaloscope test <span>The clinical gold standard the paper cites for red-green.</span></a>
+    <a href="/d15/">The Farnsworth D-15 test <span>The arrangement test referenced for severity and axis.</span></a>
+    <a href="/learn/color-blindness-explained/">Color blindness, explained <span>Types, confusion lines, and prevalence.</span></a>
+  </div>
+
+  <a href="/color/" class="cta">Take the color vision test →</a>
+  <a href="/" class="backlink">← All free vision tests</a>
+</main>
+<footer role="contentinfo">The home of free online vision tests &nbsp;|&nbsp; © 2026 opticquiz.com &nbsp;|&nbsp; Method published open-access (CC BY 4.0) — educational, not a medical diagnostic</footer>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+</body>
+</html>
