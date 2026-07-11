@@ -67,6 +67,11 @@ p{font-size:16px;color:var(--gray);line-height:1.8;margin-bottom:14px;}
 p strong{color:var(--black);}
 a{color:var(--red);}
 .tool{background:#fff;border:1.5px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:8px 0 24px;}
+.dropzone{border:2px dashed var(--lgray);border-radius:var(--rc);padding:22px 16px;text-align:center;cursor:pointer;background:var(--bg);transition:border-color .12s,background .12s;}
+.dropzone:hover,.dropzone.drag{border-color:var(--red);background:var(--redbg);}
+.dropzone #dz-text{font-size:14px;color:var(--gray);line-height:1.6;}
+.dropzone #dz-text strong{color:var(--black);}
+.preview{max-width:100%;max-height:160px;border-radius:var(--r);margin:0 auto 10px;display:block;}
 .tool-label{font-family:var(--fm);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);margin-bottom:10px;}
 .addrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
 .addrow input[type=text]{flex:1;min-width:120px;font-family:var(--fm);font-size:14px;padding:9px 12px;border:1px solid var(--lgray);border-radius:var(--r);background:var(--bg);color:var(--black);}
@@ -127,7 +132,12 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
   <p class="lede">Paste your palette. See it the way people with each type of color blindness do — and get the exact color pairs that become hard to tell apart. Scored with a <a href="/research/">published, open-access method</a>, entirely in your browser.</p>
 
   <section id="tool" class="tool" aria-label="Palette checker">
-    <div class="tool-label">Your palette — add the colors you use together</div>
+    <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload, drop, or paste an image to extract its colors">
+      <input type="file" id="imgfile" accept="image/*" class="sr-only">
+      <img id="preview" class="preview" alt="Uploaded image preview" hidden>
+      <div id="dz-text">📷 <strong>Drop a screenshot or mockup</strong> — or <u>click to upload</u>, or paste — and we'll pull out its main colors</div>
+    </div>
+    <div class="tool-label" style="margin-top:16px;">…or add &amp; edit colors by hand</div>
     <div class="addrow">
       <input type="color" id="picker" value="#4a8c3f" aria-label="Pick a color">
       <input type="text" id="hexin" placeholder="#RRGGBB — or paste several" aria-label="Enter hex colors" autocomplete="off">
@@ -257,6 +267,52 @@ document.getElementById("picker").addEventListener("change", function(){ var n =
 document.getElementById("check").onclick = runCheck;
 document.getElementById("clear").onclick = function(){ STATE.palette = []; renderSwatches(); document.getElementById("results").innerHTML = ""; };
 document.getElementById("example").onclick = function(){ STATE.palette = ["#d7191c","#1a9641","#2166ac","#fdae61"]; renderSwatches(); runCheck(); };
+
+// ── image → palette extraction (quantize, then merge perceptually with our own dE) ──
+function toHex2(v){v=Math.max(0,Math.min(255,Math.round(v)));return (v<16?"0":"")+v.toString(16);}
+function rgbToHexLocal(c){return "#"+toHex2(c[0])+toHex2(c[1])+toHex2(c[2]);}
+function extractColors(img){
+  var maxd=110, sc=Math.min(1, maxd/Math.max(img.width,img.height));
+  var w=Math.max(1,Math.round(img.width*sc)), h=Math.max(1,Math.round(img.height*sc));
+  var cv=document.createElement("canvas"); cv.width=w; cv.height=h;
+  var ctx=cv.getContext("2d"); ctx.drawImage(img,0,0,w,h);
+  var data; try{ data=ctx.getImageData(0,0,w,h).data; }catch(e){ return []; }
+  var b={};
+  for(var i=0;i<data.length;i+=4){ if(data[i+3]<128) continue;
+    var key=(data[i]>>4)+"_"+(data[i+1]>>4)+"_"+(data[i+2]>>4);
+    if(!b[key]) b[key]={r:0,g:0,bl:0,n:0};
+    b[key].r+=data[i]; b[key].g+=data[i+1]; b[key].bl+=data[i+2]; b[key].n++;
+  }
+  var arr=[]; for(var k in b){ var e=b[k]; arr.push({hex:rgbToHexLocal([e.r/e.n,e.g/e.n,e.bl/e.n]),n:e.n}); }
+  arr.sort(function(x,y){return y.n-x.n;});
+  var out=[];
+  for(var j=0;j<arr.length && out.length<10;j++){
+    var dup=false; for(var m=0;m<out.length;m++){ if(OQCVD.deltaE(arr[j].hex,out[m])<9){dup=true;break;} }
+    if(!dup) out.push(arr[j].hex);
+  }
+  return out;
+}
+function handleImage(file){
+  if(!file || file.type.indexOf("image")!==0) return;
+  var rd=new FileReader();
+  rd.onload=function(){ var im=new Image(); im.onload=function(){
+    var cols=extractColors(im);
+    var pv=document.getElementById("preview"); pv.src=im.src; pv.hidden=false;
+    document.getElementById("dz-text").innerHTML= cols.length
+      ? "Pulled <strong>"+cols.length+" main colors</strong> — edit below if needed, then re-check. Drop another anytime."
+      : "Couldn't read colors from that image — try another, or add colors by hand.";
+    if(cols.length){ STATE.palette=cols; renderSwatches(); runCheck(); }
+  }; im.src=rd.result; };
+  rd.readAsDataURL(file);
+}
+var dz=document.getElementById("dropzone"), imgf=document.getElementById("imgfile");
+dz.onclick=function(e){ if(e.target.tagName!=="INPUT") imgf.click(); };
+dz.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){e.preventDefault();imgf.click();} };
+imgf.onchange=function(){ if(this.files[0]) handleImage(this.files[0]); };
+dz.addEventListener("dragover",function(e){ e.preventDefault(); dz.classList.add("drag"); });
+dz.addEventListener("dragleave",function(){ dz.classList.remove("drag"); });
+dz.addEventListener("drop",function(e){ e.preventDefault(); dz.classList.remove("drag"); if(e.dataTransfer.files[0]) handleImage(e.dataTransfer.files[0]); });
+document.addEventListener("paste",function(e){ var it=e.clipboardData&&e.clipboardData.items; if(!it)return; for(var i=0;i<it.length;i++){ if(it[i].type.indexOf("image")===0){ handleImage(it[i].getAsFile()); break; } } });
 
 renderSwatches();
 runCheck();

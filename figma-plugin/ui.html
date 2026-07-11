@@ -1,0 +1,77 @@
+<!-- OpticQuiz Colorblind-Safe Checker — Figma plugin UI.
+     The engine below is a copy of /assets/oq-cvd.js (keep in sync). Runs on-device. -->
+<style>
+  body{font-family:Inter,-apple-system,system-ui,sans-serif;margin:0;padding:14px;background:var(--figma-color-bg,#fff);color:var(--figma-color-text,#1a1a1a);font-size:12px;}
+  h1{font-size:13px;margin:0 0 2px;font-weight:700;}
+  .sub{color:var(--figma-color-text-secondary,#7f7f7f);margin:0 0 12px;font-size:11px;line-height:1.5;}
+  .verdict{border-radius:6px;padding:10px 12px;margin:10px 0;font-weight:600;font-size:13px;}
+  .verdict.pass{background:#e7f5e9;color:#227a34;}
+  .verdict.fail{background:#fdeee9;color:#c23410;}
+  .type{border:1px solid var(--figma-color-border,#e5e5e5);border-radius:6px;padding:10px 12px;margin:8px 0;}
+  .type h2{font-size:12px;margin:0 0 6px;display:flex;justify-content:space-between;align-items:center;}
+  .tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;}
+  .tag.ok{background:#e7f5e9;color:#227a34;}.tag.bad{background:#fdeee9;color:#c23410;}
+  .sim{display:flex;flex-wrap:wrap;gap:3px;margin:4px 0 6px;}
+  .sim .s{width:22px;height:22px;border-radius:4px;border:1px solid rgba(0,0,0,.12);}
+  .cf{display:flex;align-items:center;gap:6px;padding:5px 0;border-top:1px solid var(--figma-color-border,#eee);font-size:11px;color:var(--figma-color-text-secondary,#7f7f7f);flex-wrap:wrap;}
+  .cf .s{width:18px;height:18px;border-radius:4px;border:1px solid rgba(0,0,0,.12);}
+  .cf .sev{margin-left:auto;font-size:9px;font-weight:700;text-transform:uppercase;padding:1px 6px;border-radius:10px;}
+  .sev.risk{background:#fbf0dd;color:#b8770a;}.sev.severe{background:#fdeee9;color:#c23410;}
+  .row{display:flex;gap:8px;align-items:center;margin-top:10px;}
+  button{font-family:inherit;font-size:11px;font-weight:600;border:1px solid var(--figma-color-border,#ddd);background:var(--figma-color-bg-secondary,#f5f5f5);color:inherit;border-radius:6px;padding:7px 12px;cursor:pointer;}
+  button.primary{background:#e8431a;color:#fff;border-color:#e8431a;}
+  .foot{margin-top:12px;font-size:10px;color:var(--figma-color-text-secondary,#999);line-height:1.6;}
+  .foot a{color:#e8431a;text-decoration:none;}
+  .empty{color:var(--figma-color-text-secondary,#7f7f7f);font-size:11px;padding:8px 0;}
+</style>
+
+<h1>Colorblind-Safe Checker</h1>
+<p class="sub">Select frames or objects — this reads their fill &amp; stroke colors and checks them for protan / deutan / tritan conflicts. On-device; nothing leaves Figma.</p>
+<div id="out"><div class="empty">Select something with color to begin…</div></div>
+<div class="row">
+  <button class="primary" id="rescan">Re-scan selection</button>
+</div>
+<p class="foot">Method: Machado 2009 + CIEDE2000 · <a href="https://opticquiz.com/checker/" target="_blank">opticquiz.com/checker</a> · a screening aid, not a legal accessibility audit.</p>
+
+<script>
+/* ==== ENGINE (copy of /assets/oq-cvd.js — keep in sync) ==== */
+var OQCVD=(function(){
+  var M={protan:[[0.152286,1.052583,-0.204868],[0.114503,0.786281,0.099216],[-0.003882,-0.048116,1.051998]],
+    deutan:[[0.367322,0.860646,-0.227968],[0.280085,0.672501,0.047413],[-0.011820,0.042940,0.968881]],
+    tritan:[[1.255528,-0.076749,-0.178779],[-0.078411,0.930809,0.147602],[0.004733,0.691367,0.303900]]};
+  function cl(x){return x<0?0:x>1?1:x;}
+  function h2r(h){h=h.trim().replace(/^#/,"");if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];var n=parseInt(h,16);return[(n>>16)&255,(n>>8)&255,n&255];}
+  function r2h(r){return"#"+r.map(function(v){v=Math.round(cl(v/255)*255);return(v<16?"0":"")+v.toString(16);}).join("");}
+  function s2l(c){c/=255;return c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4);}
+  function l2s(c){c=c<=0.0031308?12.92*c:1.055*Math.pow(c,1/2.4)-0.055;return cl(c)*255;}
+  function simulate(hex,t){if(t==="normal"||!M[t])return hex.trim().toLowerCase();var rgb=h2r(hex),lin=[s2l(rgb[0]),s2l(rgb[1]),s2l(rgb[2])],m=M[t],o=[0,0,0];for(var i=0;i<3;i++)o[i]=cl(m[i][0]*lin[0]+m[i][1]*lin[1]+m[i][2]*lin[2]);return r2h([l2s(o[0]),l2s(o[1]),l2s(o[2])]);}
+  function r2x(rgb){var r=s2l(rgb[0]),g=s2l(rgb[1]),b=s2l(rgb[2]);return[(0.4124*r+0.3576*g+0.1805*b)*100,(0.2126*r+0.7152*g+0.0722*b)*100,(0.0193*r+0.1192*g+0.9505*b)*100];}
+  function x2lab(x){function f(t){return t>0.008856?Math.pow(t,1/3):(7.787*t+16/116);}var fx=f(x[0]/95.047),fy=f(x[1]/100),fz=f(x[2]/108.883);return[116*fy-16,500*(fx-fy),200*(fy-fz)];}
+  function h2lab(hex){return x2lab(r2x(h2r(hex)));}
+  function de00(l1,l2){var L1=l1[0],a1=l1[1],b1=l1[2],L2=l2[0],a2=l2[1],b2=l2[2];var aL=(L1+L2)/2,C1=Math.sqrt(a1*a1+b1*b1),C2=Math.sqrt(a2*a2+b2*b2),aC=(C1+C2)/2;var G=0.5*(1-Math.sqrt(Math.pow(aC,7)/(Math.pow(aC,7)+Math.pow(25,7))));var a1p=a1*(1+G),a2p=a2*(1+G),C1p=Math.sqrt(a1p*a1p+b1*b1),C2p=Math.sqrt(a2p*a2p+b2*b2),aCp=(C1p+C2p)/2;function hp(a,b){if(a===0&&b===0)return 0;var h=Math.atan2(b,a)*180/Math.PI;return h<0?h+360:h;}var h1=hp(a1p,b1),h2=hp(a2p,b2);var dL=L2-L1,dC=C2p-C1p,dh;if(C1p*C2p===0)dh=0;else{dh=h2-h1;if(dh>180)dh-=360;else if(dh<-180)dh+=360;}var dH=2*Math.sqrt(C1p*C2p)*Math.sin(dh*Math.PI/360);var ah;if(C1p*C2p===0)ah=h1+h2;else{if(Math.abs(h1-h2)>180)ah=(h1+h2+360)/2;else ah=(h1+h2)/2;}var T=1-0.17*Math.cos((ah-30)*Math.PI/180)+0.24*Math.cos(2*ah*Math.PI/180)+0.32*Math.cos((3*ah+6)*Math.PI/180)-0.20*Math.cos((4*ah-63)*Math.PI/180);var dT=30*Math.exp(-Math.pow((ah-275)/25,2));var Rc=2*Math.sqrt(Math.pow(aCp,7)/(Math.pow(aCp,7)+Math.pow(25,7)));var Sl=1+(0.015*Math.pow(aL-50,2))/Math.sqrt(20+Math.pow(aL-50,2)),Sc=1+0.045*aCp,Sh=1+0.015*aCp*T,Rt=-Math.sin(2*dT*Math.PI/180)*Rc;return Math.sqrt(Math.pow(dL/Sl,2)+Math.pow(dC/Sc,2)+Math.pow(dH/Sh,2)+Rt*(dC/Sc)*(dH/Sh));}
+  function deltaE(a,b){return de00(h2lab(a),h2lab(b));}
+  function checkPalette(hexes,opts){opts=opts||{};var distinct=opts.distinct!=null?opts.distinct:13,collapse=opts.collapse!=null?opts.collapse:10;var types=["protan","deutan","tritan"],rep={types:{}};types.forEach(function(t){rep.types[t]={conflicts:[]};});for(var i=0;i<hexes.length;i++)for(var j=i+1;j<hexes.length;j++){var a=hexes[i],b=hexes[j],dN=deltaE(a,b);types.forEach(function(t){if(dN<distinct)return;var dS=deltaE(simulate(a,t),simulate(b,t));if(dS<collapse)rep.types[t].conflicts.push({a:a,b:b,normal:+dN.toFixed(1),sim:+dS.toFixed(1),severity:dS<5?"severe":"risk"});});}types.forEach(function(t){rep.types[t].pass=rep.types[t].conflicts.length===0;});rep.pass=types.every(function(t){return rep.types[t].pass;});return rep;}
+  return{simulate:simulate,deltaE:deltaE,checkPalette:checkPalette};
+})();
+
+/* ==== UI ==== */
+var TYPES=[{k:"deutan",n:"Deuteranopia"},{k:"protan",n:"Protanopia"},{k:"tritan",n:"Tritanopia"}];
+function render(colors,fromSel){
+  var out=document.getElementById("out");
+  if(!colors||colors.length<2){ out.innerHTML='<div class="empty">'+(colors&&colors.length===1?"Found 1 color — select more colors to compare them.":"No colors found in the "+(fromSel?"selection":"page")+". Select frames or shapes with fills.")+'</div>'; return; }
+  var rep=OQCVD.checkPalette(colors);
+  var total=TYPES.reduce(function(a,t){return a+rep.types[t.k].conflicts.length;},0);
+  var h='<div class="verdict '+(rep.pass?"pass":"fail")+'">'+(rep.pass?"✓ Colorblind-safe — "+colors.length+" colors, no conflicts":total+" conflict"+(total===1?"":"s")+" across "+colors.length+" colors")+'</div>';
+  TYPES.forEach(function(t){
+    var r=rep.types[t.k];
+    h+='<div class="type"><h2>'+t.n+'<span class="tag '+(r.pass?"ok":"bad")+'">'+(r.pass?"OK":r.conflicts.length)+'</span></h2><div class="sim">';
+    colors.forEach(function(c){h+='<span class="s" title="'+c+' → '+OQCVD.simulate(c,t.k)+'" style="background:'+OQCVD.simulate(c,t.k)+'"></span>';});
+    h+='</div>';
+    r.conflicts.forEach(function(cf){h+='<div class="cf"><span class="s" style="background:'+cf.a+'"></span><span class="s" style="background:'+cf.b+'"></span>→<span class="s" style="background:'+OQCVD.simulate(cf.a,t.k)+'"></span><span class="s" style="background:'+OQCVD.simulate(cf.b,t.k)+'"></span><span>'+cf.normal+"→"+cf.sim+'</span><span class="sev '+cf.severity+'">'+cf.severity+'</span></div>';});
+    h+='</div>';
+  });
+  out.innerHTML=h;
+}
+onmessage=function(e){ var m=e.data.pluginMessage; if(m&&m.type==="colors") render(m.colors,m.fromSelection); };
+document.getElementById("rescan").onclick=function(){ parent.postMessage({pluginMessage:{type:"rescan"}},"*"); };
+</script>
