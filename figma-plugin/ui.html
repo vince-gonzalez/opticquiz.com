@@ -17,6 +17,11 @@
   .cf .s{width:18px;height:18px;border-radius:4px;border:1px solid rgba(0,0,0,.12);}
   .cf .sev{margin-left:auto;font-size:9px;font-weight:700;text-transform:uppercase;padding:1px 6px;border-radius:10px;}
   .sev.risk{background:#fbf0dd;color:#b8770a;}.sev.severe{background:#fdeee9;color:#c23410;}
+  .cf{cursor:pointer;transition:background .1s;border-radius:5px;margin:0 -6px;padding-left:6px;padding-right:6px;}
+  .cf:hover{background:var(--figma-color-bg-hover,#f2f2f2);}
+  .cf .hint{color:#e8431a;font-weight:600;font-size:10px;}
+  .sim .s{cursor:pointer;}
+  #status{font-size:11px;color:#227a34;min-height:15px;margin-top:8px;font-weight:600;}
   .row{display:flex;gap:8px;align-items:center;margin-top:10px;}
   button{font-family:inherit;font-size:11px;font-weight:600;border:1px solid var(--figma-color-border,#ddd);background:var(--figma-color-bg-secondary,#f5f5f5);color:inherit;border-radius:6px;padding:7px 12px;cursor:pointer;}
   button.primary{background:#e8431a;color:#fff;border-color:#e8431a;}
@@ -26,11 +31,12 @@
 </style>
 
 <h1>Colorblind-Safe Checker</h1>
-<p class="sub">Select frames or objects — this reads their fill &amp; stroke colors and checks them for protan / deutan / tritan conflicts. On-device; nothing leaves Figma.</p>
+<p class="sub">Select frames or objects — this reads their fill &amp; stroke colors and checks them for protan / deutan / tritan conflicts. <strong>Click any conflict to select those layers on the canvas.</strong> On-device; nothing leaves Figma.</p>
 <div id="out"><div class="empty">Select something with color to begin…</div></div>
 <div class="row">
   <button class="primary" id="rescan">Re-scan selection</button>
 </div>
+<div id="status" aria-live="polite"></div>
 <p class="foot">Method: Machado 2009 + CIEDE2000 · <a href="https://opticquiz.com/checker/" target="_blank">opticquiz.com/checker</a> · a screening aid, not a legal accessibility audit.</p>
 
 <script>
@@ -65,13 +71,17 @@ function render(colors,fromSel){
   TYPES.forEach(function(t){
     var r=rep.types[t.k];
     h+='<div class="type"><h2>'+t.n+'<span class="tag '+(r.pass?"ok":"bad")+'">'+(r.pass?"OK":r.conflicts.length)+'</span></h2><div class="sim">';
-    colors.forEach(function(c){h+='<span class="s" title="'+c+' → '+OQCVD.simulate(c,t.k)+'" style="background:'+OQCVD.simulate(c,t.k)+'"></span>';});
+    colors.forEach(function(c){h+='<span class="s" data-sel="'+c+'" title="'+c+' → '+OQCVD.simulate(c,t.k)+' — click to select layers" style="background:'+OQCVD.simulate(c,t.k)+'"></span>';});
     h+='</div>';
-    r.conflicts.forEach(function(cf){h+='<div class="cf"><span class="s" style="background:'+cf.a+'"></span><span class="s" style="background:'+cf.b+'"></span>→<span class="s" style="background:'+OQCVD.simulate(cf.a,t.k)+'"></span><span class="s" style="background:'+OQCVD.simulate(cf.b,t.k)+'"></span><span>'+cf.normal+"→"+cf.sim+'</span><span class="sev '+cf.severity+'">'+cf.severity+'</span></div>';});
+    r.conflicts.forEach(function(cf){h+='<div class="cf" data-sel="'+cf.a+','+cf.b+'" title="Select the layers using these two colors"><span class="s" style="background:'+cf.a+'"></span><span class="s" style="background:'+cf.b+'"></span>→<span class="s" style="background:'+OQCVD.simulate(cf.a,t.k)+'"></span><span class="s" style="background:'+OQCVD.simulate(cf.b,t.k)+'"></span><span>'+cf.normal+"→"+cf.sim+'</span><span class="hint">select ↗</span><span class="sev '+cf.severity+'">'+cf.severity+'</span></div>';});
     h+='</div>';
   });
   out.innerHTML=h;
 }
-onmessage=function(e){ var m=e.data.pluginMessage; if(m&&m.type==="colors") render(m.colors,m.fromSelection); };
-document.getElementById("rescan").onclick=function(){ parent.postMessage({pluginMessage:{type:"rescan"}},"*"); };
+onmessage=function(e){ var m=e.data.pluginMessage; if(!m)return;
+  if(m.type==="colors") render(m.colors,m.fromSelection);
+  else if(m.type==="selected"){ document.getElementById("status").textContent = m.count ? ("Selected "+m.count+" layer"+(m.count===1?"":"s")+" — jump to the canvas to fix them.") : "Those colors weren't in the current scan — try Re-scan."; }
+};
+document.getElementById("out").addEventListener("click",function(e){ var el=e.target.closest && e.target.closest("[data-sel]"); if(el){ parent.postMessage({pluginMessage:{type:"select",colors:el.getAttribute("data-sel").split(",")}},"*"); } });
+document.getElementById("rescan").onclick=function(){ document.getElementById("status").textContent=""; parent.postMessage({pluginMessage:{type:"rescan"}},"*"); };
 </script>
