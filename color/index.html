@@ -269,7 +269,10 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
     <img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38">
     <div class="logo-name">OPTIC<span>QUIZ</span></div>
   </a>
-  <div class="ver-badge">COLOR TEST</div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span data-oq-lang-switcher></span>
+    <div class="ver-badge" data-i18n="hdr.badge">COLOR TEST</div>
+  </div>
 </header>
 
 <main id="main" class="wrap" role="main">
@@ -277,50 +280,50 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
 <!-- ══ INTRO ══ -->
 <div id="screen-intro" class="screen active" role="region" aria-labelledby="intro-h1">
   <div style="padding-top:32px">
-    <span class="eyebrow">Color Vision Screening</span>
-    <h1 id="intro-h1">COLOR<br>VISION<br>TEST</h1>
-    <p>8 Ishihara-style dot plates, drawn fresh on your screen each time. A digit hides in the dots — normal color vision reads it, red-green or blue-yellow deficiency sees a blank field. Tests both eyes. Results stay on your device.</p>
+    <span class="eyebrow" data-i18n="intro.eyebrow">Color Vision Screening</span>
+    <h1 id="intro-h1" data-i18n-html="intro.h1">COLOR<br>VISION<br>TEST</h1>
+    <p data-i18n="intro.lede">8 Ishihara-style dot plates, drawn fresh on your screen each time. A digit hides in the dots — normal color vision reads it, red-green or blue-yellow deficiency sees a blank field. Tests both eyes. Results stay on your device.</p>
 
     <div class="divider"></div>
 
-    <h3 id="setup-heading">Before you begin</h3>
+    <h3 id="setup-heading" data-i18n="setup.heading">Before you begin</h3>
     <div class="check-list" id="check-list" role="list" aria-labelledby="setup-heading">
       <div class="check-item" id="ci-0" role="checkbox" aria-checked="false" tabindex="0"
            onclick="toggleCheck(0)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(0)">
         <div class="check-box" id="cb-0" aria-hidden="true"></div>
-        <div><div class="check-title">Maximize screen brightness</div><div class="check-sub">Low brightness shifts perceived hue and reduces plate accuracy.</div></div>
+        <div><div class="check-title" data-i18n="check.0.title">Maximize screen brightness</div><div class="check-sub" data-i18n="check.0.sub">Low brightness shifts perceived hue and reduces plate accuracy.</div></div>
       </div>
       <div class="check-item" id="ci-1" role="checkbox" aria-checked="false" tabindex="0"
            onclick="toggleCheck(1)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(1)">
         <div class="check-box" id="cb-1" aria-hidden="true"></div>
-        <div><div class="check-title">Normal indoor or diffuse light</div><div class="check-sub">Direct sunlight on screen or strong colored ambient light will skew results.</div></div>
+        <div><div class="check-title" data-i18n="check.1.title">Normal indoor or diffuse light</div><div class="check-sub" data-i18n="check.1.sub">Direct sunlight on screen or strong colored ambient light will skew results.</div></div>
       </div>
       <div class="check-item" id="ci-2" role="checkbox" aria-checked="false" tabindex="0"
            onclick="toggleCheck(2)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(2)">
         <div class="check-box" id="cb-2" aria-hidden="true"></div>
-        <div><div class="check-title">Remove tinted glasses or lenses</div><div class="check-sub">Prescription lenses are fine. Tinted, photochromic, or colored lenses are not.</div></div>
+        <div><div class="check-title" data-i18n="check.2.title">Remove tinted glasses or lenses</div><div class="check-sub" data-i18n="check.2.sub">Prescription lenses are fine. Tinted, photochromic, or colored lenses are not.</div></div>
       </div>
     </div>
 
     <div class="divider"></div>
 
-    <h3>Select which eye to test first</h3>
+    <h3 data-i18n="eye.heading">Select which eye to test first</h3>
     <div class="eye-selector" role="group" aria-label="Eye selection">
       <div class="eye-btn selected" id="eye-right" role="radio" aria-checked="true" tabindex="0"
            onclick="selectEye('right')" onkeydown="if(event.key==='Enter'||event.key===' ')selectEye('right')">
-        <span class="eye-btn-label">Right</span>
-        <span class="eye-btn-sub">Start here</span>
+        <span class="eye-btn-label" data-i18n="eye.right">Right</span>
+        <span class="eye-btn-sub" data-i18n="eye.right.sub">Start here</span>
       </div>
       <div class="eye-btn" id="eye-left" role="radio" aria-checked="false" tabindex="0"
            onclick="selectEye('left')" onkeydown="if(event.key==='Enter'||event.key===' ')selectEye('left')">
-        <span class="eye-btn-label">Left</span>
-        <span class="eye-btn-sub">Or here</span>
+        <span class="eye-btn-label" data-i18n="eye.left">Left</span>
+        <span class="eye-btn-sub" data-i18n="eye.left.sub">Or here</span>
       </div>
     </div>
-    <p style="font-size:13px;color:var(--gray);margin-bottom:20px;">You will test both eyes — the other eye follows automatically. Cover the non-testing eye with your palm, not a lens.</p>
+    <p style="font-size:13px;color:var(--gray);margin-bottom:20px;" data-i18n="eye.note">You will test both eyes — the other eye follows automatically. Cover the non-testing eye with your palm, not a lens.</p>
 
-    <button class="btn btn-primary" onclick="startTest()" aria-label="Start the color vision test">Start Test</button>
-    <a href="/" style="display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;" aria-label="Back to OpticQuiz home">← All free vision tests</a>
+    <button class="btn btn-primary" onclick="startTest()" data-i18n="btn.start" data-i18n-attr="aria-label:btn.start.aria" aria-label="Start the color vision test">Start Test</button>
+    <a href="/" style="display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;" aria-label="Back to OpticQuiz home" data-i18n="link.alltests">← All free vision tests</a>
   </div>
 </div>
 
@@ -986,6 +989,8 @@ function shareResults() {
   }
 }
 </script>
+<script src="/assets/oq-i18n-color.js"></script>
+<script src="/assets/oq-i18n.js"></script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>
