@@ -41,6 +41,9 @@ OpticQuiz is an independent, open-source project by Vince Gonzalez (source: http
 - [Which Color Vision Test Is Most Accurate?](https://opticquiz.com/learn/which-color-vision-test-is-most-accurate/): Plain-English comparison of Ishihara plates, the Farnsworth D-15, the anomaloscope (the clinical gold standard), and online tests — what each is for and how precise each is.
 - [What Is an Anomaloscope?](https://opticquiz.com/learn/what-is-an-anomaloscope/): The gold-standard red-green color vision test explained — how the Rayleigh match (mixing red and green light to match a fixed yellow) reveals the type and severity of a deficiency, why it beats plate tests for precision, and why a screen can only approximate it.
 
+## Tools for designers & developers
+- [Colorblind-Safe Palette Checker](https://opticquiz.com/checker/): A free tool that checks any colour palette for colour-vision-deficiency accessibility. Paste hex colours; it simulates protanopia, deuteranopia and tritanopia (Machado 2009) and flags the pairs whose perceptual difference (CIEDE2000) collapses under simulation — the same colour-vision science as the published OpticQuiz method (DOI 10.5281/zenodo.21310578). Runs in-browser; states plainly it is a screening aid, not a legal ADA/WCAG audit. This is OpticQuiz extending from testing vision to certifying colour accessibility.
+
 ## Research
 - [The Published Method Behind OpticQuiz](https://opticquiz.com/research/): On-site hub for the open-access preprint (DOI 10.5281/zenodo.21310578) and companion source code (DOI 10.5281/zenodo.21311369) — the procedural plate-generation method and its calibration limits, with links to every related test and guide. The verifiable, citable basis for OpticQuiz being the home of honest online vision testing.
 

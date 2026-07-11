@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- OPTICQUIZ — Colorblind-Safe Palette Checker v1.0.0 | opticquiz.com/checker/
+     Runs the published OpticQuiz CVD method (Machado 2009 + CIEDE2000) client-side. -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Free colorblind-safe palette checker. Paste your colors — it simulates protanopia, deuteranopia and tritanopia and flags the pairs that become hard to tell apart, using a published, open-access method. Runs in your browser.">
+<meta name="theme-color" content="#F8F6F2">
+<meta name="keywords" content="colorblind safe checker, color blindness accessibility, accessible color palette, protanopia deuteranopia tritanopia, colorblind palette test, WCAG color, color contrast accessibility">
+<meta property="og:title" content="Colorblind-Safe Palette Checker — Free, Published Method">
+<meta property="og:description" content="Paste your palette. See it through protan, deutan and tritan color blindness, and get the exact pairs that collapse — scored by a published, open-access method.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/checker/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Colorblind-Safe Palette Checker — OpticQuiz">
+<meta name="twitter:description" content="Check any color palette for colorblind accessibility. Simulates all three CVD types, flags the conflicts, cites its method.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="canonical" href="https://opticquiz.com/checker/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<title>Colorblind-Safe Palette Checker — Free CVD Accessibility Test | OpticQuiz</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"OpticQuiz Colorblind-Safe Palette Checker","url":"https://opticquiz.com/checker/","applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"description":"A free tool that checks a color palette for color-vision-deficiency accessibility by simulating protanopia, deuteranopia and tritanopia and flagging pairs whose perceptual difference collapses under simulation.","featureList":["Protan, deutan and tritan simulation (Machado 2009)","CIEDE2000 perceptual difference","Per-pair conflict detection with severity","Runs entirely in the browser, no upload"],"isBasedOn":{"@type":"ScholarlyArticle","name":"A Procedural Method for Generating Pseudoisochromatic Plates in the Browser, and the Calibration Limits of Screen-Based Colour-Vision Screening","identifier":"https://doi.org/10.5281/zenodo.21310578"},"author":{"@type":"Person","name":"Vince Gonzalez","identifier":"https://orcid.org/0009-0005-3640-014X"},"publisher":{"@type":"Organization","name":"OpticQuiz","url":"https://opticquiz.com/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a colorblind-safe palette?","acceptedAnswer":{"@type":"Answer","text":"A colorblind-safe palette is a set of colors that remain distinguishable to people with color vision deficiency (CVD). Because red-green deficiency is common (about 8% of men), palettes that rely on red-versus-green to carry meaning can become ambiguous. A palette is colorblind-safe when every pair that needs to be told apart stays perceptually distinct after simulating protan, deutan and tritan vision."}},
+{"@type":"Question","name":"How does this colorblind checker work?","acceptedAnswer":{"@type":"Answer","text":"It simulates how each color appears under protanopia, deuteranopia and tritanopia using the Machado et al. (2009) model in linear RGB, then measures the perceptual difference between every color pair with CIEDE2000, before and after simulation. If a pair is clearly distinct to normal vision but collapses under a CVD simulation, it is flagged as a conflict. Everything runs in your browser."}},
+{"@type":"Question","name":"Does passing this checker mean my design is ADA compliant?","acceptedAnswer":{"@type":"Answer","text":"No. This tool checks one specific thing — whether colors stay distinguishable under simulated color-vision deficiency. It is not a legal accessibility audit and does not certify ADA, Section 508, WCAG or EU Accessibility Act compliance, which cover far more than color. Use it to catch color conflicts early; use a full accessibility review for compliance."}},
+{"@type":"Question","name":"Is the color-blindness simulation accurate?","acceptedAnswer":{"@type":"Answer","text":"It uses a peer-reviewed, widely used model (Machado, Oliveira & Fernandes, 2009) and a standard perceptual metric (CIEDE2000). Like any model it is an approximation of a diverse population, and results depend on your uncalibrated screen. It reliably catches classic red-green and blue-yellow conflicts, but it simulates a model, not any single person's vision."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://opticquiz.com/"},{"@type":"ListItem","position":2,"name":"Colorblind-Safe Palette Checker","item":"https://opticquiz.com/checker/"}]}
+</script>
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--redd:#C23410;--green:#4A8C3F;--gbg:#EEF5ED;--redbg:#FDF1EE;--amber:#D4820A;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:2px;border-radius:var(--r);}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:99;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:12px;}
+.wrap{max-width:660px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:660px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.crumbs{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.06em;margin:26px 0 12px;}
+.crumbs a{color:var(--gray);text-decoration:none;}.crumbs a:hover{color:var(--red);}
+.eyebrow{font-family:var(--fm);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);}
+h1{font-family:var(--fd);font-size:clamp(34px,8vw,56px);color:var(--black);line-height:.98;letter-spacing:.02em;margin:6px 0 14px;}
+.lede{font-size:17px;color:var(--black);line-height:1.65;margin-bottom:22px;}
+h2{font-family:var(--fd);font-size:clamp(24px,6vw,32px);color:var(--black);line-height:1;letter-spacing:.02em;margin:30px 0 12px;}
+p{font-size:16px;color:var(--gray);line-height:1.8;margin-bottom:14px;}
+p strong{color:var(--black);}
+a{color:var(--red);}
+.tool{background:#fff;border:1.5px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:8px 0 24px;}
+.tool-label{font-family:var(--fm);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);margin-bottom:10px;}
+.addrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
+.addrow input[type=text]{flex:1;min-width:120px;font-family:var(--fm);font-size:14px;padding:9px 12px;border:1px solid var(--lgray);border-radius:var(--r);background:var(--bg);color:var(--black);}
+.addrow input[type=color]{width:42px;height:40px;border:1px solid var(--lgray);border-radius:var(--r);background:none;cursor:pointer;padding:2px;}
+.btn{font-family:var(--fs);font-weight:600;font-size:15px;border:none;border-radius:var(--r);padding:10px 16px;cursor:pointer;}
+.btn-primary{background:var(--red);color:#fff;}.btn-primary:hover{background:var(--redd);}
+.btn-ghost{background:var(--cream);color:var(--black);border:1px solid var(--lgray);}
+.swatches{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px;}
+.chip{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--lgray);border-radius:20px;padding:4px 6px 4px 4px;font-family:var(--fm);font-size:12px;}
+.chip .sw{width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.15);}
+.chip button{background:none;border:none;color:var(--gray);cursor:pointer;font-size:15px;line-height:1;padding:0 2px;}
+.chip button:hover{color:var(--red);}
+.actions{display:flex;gap:8px;flex-wrap:wrap;}
+.verdict{border-radius:var(--rc);padding:16px 18px;margin:22px 0 10px;font-weight:600;font-size:17px;display:flex;align-items:center;gap:10px;}
+.verdict.pass{background:var(--gbg);border:1.5px solid var(--green);color:var(--green);}
+.verdict.fail{background:var(--redbg);border:1.5px solid var(--red);color:var(--redd);}
+.verdict .big{font-family:var(--fd);font-size:26px;letter-spacing:.02em;}
+.typecard{background:#fff;border:1px solid var(--lgray);border-radius:var(--rc);padding:16px 18px;margin:14px 0;}
+.typehead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.typename{font-family:var(--fd);font-size:22px;letter-spacing:.02em;color:var(--black);}
+.typename small{display:block;font-family:var(--fs);font-size:12px;font-weight:400;color:var(--gray);letter-spacing:0;}
+.tag{font-family:var(--fm);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:20px;}
+.tag.ok{background:var(--gbg);color:var(--green);border:1px solid var(--green);}
+.tag.bad{background:var(--redbg);color:var(--redd);border:1px solid var(--red);}
+.simrow{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 12px;}
+.simrow .s{width:34px;height:34px;border-radius:6px;border:1px solid rgba(0,0,0,.12);}
+.conflict{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--lgray);font-size:13px;color:var(--gray);flex-wrap:wrap;}
+.pairsw{display:flex;align-items:center;gap:3px;}
+.pairsw .s{width:26px;height:26px;border-radius:5px;border:1px solid rgba(0,0,0,.12);}
+.arrow{color:var(--gray);font-family:var(--fm);}
+.sev{font-family:var(--fm);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:20px;margin-left:auto;}
+.sev.risk{background:#FBF0DD;color:var(--amber);border:1px solid var(--amber);}
+.sev.severe{background:var(--redbg);color:var(--redd);border:1px solid var(--red);}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:16px 18px;margin:22px 0;font-size:13px;color:var(--gray);line-height:1.8;}
+.disclaimer strong{color:var(--black);}
+.method{font-size:13px;color:var(--gray);line-height:1.8;background:#fff;border:1px solid var(--lgray);border-radius:var(--rc);padding:14px 16px;margin:16px 0;}
+.method a{word-break:break-word;}
+.faq-q{font-family:var(--fs);font-weight:600;font-size:16px;color:var(--black);margin:18px 0 4px;}
+.faq-a{font-size:15px;color:var(--gray);line-height:1.8;}
+.related{background:#fff;border:1px solid var(--lgray);border-radius:var(--rc);padding:8px 18px;margin:22px 0;}
+.related a{display:block;color:var(--black);text-decoration:none;font-size:15px;padding:9px 0;border-bottom:1px solid var(--lgray);}
+.related a:last-child{border-bottom:none;}.related a:hover{color:var(--red);}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+</style>
+</head>
+<body>
+<a href="#tool" class="skip-link">Skip to the checker</a>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">CHECKER</div>
+</header>
+<main class="wrap" role="main">
+  <nav class="crumbs"><a href="/">Home</a> › Colorblind-Safe Checker</nav>
+  <span class="eyebrow">Accessibility · Published Method</span>
+  <h1>COLORBLIND-SAFE<br>PALETTE CHECKER</h1>
+  <p class="lede">Paste your palette. See it the way people with each type of color blindness do — and get the exact color pairs that become hard to tell apart. Scored with a <a href="/research/">published, open-access method</a>, entirely in your browser.</p>
+
+  <section id="tool" class="tool" aria-label="Palette checker">
+    <div class="tool-label">Your palette — add the colors you use together</div>
+    <div class="addrow">
+      <input type="color" id="picker" value="#4a8c3f" aria-label="Pick a color">
+      <input type="text" id="hexin" placeholder="#RRGGBB — or paste several" aria-label="Enter hex colors" autocomplete="off">
+      <button class="btn btn-primary" id="add" type="button">Add</button>
+    </div>
+    <div class="swatches" id="swatches" aria-live="polite"></div>
+    <div class="actions">
+      <button class="btn btn-primary" id="check" type="button">Check palette</button>
+      <button class="btn btn-ghost" id="example" type="button">Load example</button>
+      <button class="btn btn-ghost" id="clear" type="button">Clear</button>
+    </div>
+  </section>
+
+  <div id="results" aria-live="polite"></div>
+
+  <div class="disclaimer" role="note">
+    <strong>What this is — and isn't.</strong> This checks one specific thing: whether your colors stay distinguishable under simulated color-vision deficiency. It is <strong>not a legal accessibility audit</strong> and does not certify ADA, Section 508, WCAG, or EU Accessibility Act compliance — those cover far more than color. It simulates a <em>model</em> of color blindness on your uncalibrated screen, not any single person's vision. Use it to catch color conflicts early; use a full review for compliance.
+  </div>
+
+  <div class="method">
+    <strong>Method.</strong> Simulation uses Machado, Oliveira &amp; Fernandes (2009) severity-1 matrices in linear RGB; perceptual difference uses CIEDE2000. A pair is flagged when it is clearly distinct to normal vision but collapses under a CVD simulation. This is the same color-vision science behind the OpticQuiz published paper — <a href="https://doi.org/10.5281/zenodo.21310578" rel="noopener">doi.org/10.5281/zenodo.21310578</a>. The engine is open source: <a href="https://github.com/zengineco/opticquiz.com" rel="noopener">github.com/zengineco/opticquiz.com</a>.
+  </div>
+
+  <h2>What a colorblind-safe palette is</h2>
+  <p>A <strong>colorblind-safe palette</strong> is a set of colors that stay distinguishable to people with color vision deficiency. Red-green deficiency alone affects roughly <strong>1 in 12 men</strong>, so any design that uses red-versus-green to carry meaning — chart series, status colors, maps, wayfinding — risks becoming ambiguous. This checker simulates all three deficiency types (protan, deutan, tritan) and reports the specific pairs that need attention, so you can fix them before they ship.</p>
+
+  <h2>How the checker works</h2>
+  <p>For every pair of colors that is clearly distinct to normal vision, the tool simulates how the pair looks under each type of color blindness and re-measures the perceptual gap with CIEDE2000. If that gap collapses, the pair is flagged — as a <em>risk</em> (hard to tell apart) or <em>severe</em> (effectively the same). It never invents a grade: you see the exact before-and-after difference for every conflict.</p>
+
+  <h2>What the result means</h2>
+  <p>A <strong>pass</strong> means no clearly-distinct pair collapses under simulation — a good sign your palette carries its meaning by more than just hue. A <strong>fail</strong> lists exactly which pairs to fix: nudge one color's lightness, add a non-color cue (labels, patterns, icons), or swap to a hue that survives the confusion axis. Re-run until it passes. It is a screening aid, not a guarantee, and it never claims legal compliance.</p>
+
+  <div class="related">
+    <a href="/research/">The published method behind this checker →</a>
+    <a href="/color/">Test your own color vision (the OpticQuiz color test) →</a>
+    <a href="/learn/color-blindness-explained/">Color blindness explained — types, causes, prevalence →</a>
+    <a href="/learn/how-accurate-are-online-color-blindness-tests/">The calibration problem with on-screen color →</a>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq-q">What is a colorblind-safe palette?</div>
+  <div class="faq-a">A set of colors that stay distinguishable to people with color vision deficiency. Because red-green deficiency is common (~8% of men), palettes that rely on red-vs-green can become ambiguous; a colorblind-safe palette keeps every meaningful pair distinct after simulating protan, deutan and tritan vision.</div>
+  <div class="faq-q">Does passing mean my design is ADA compliant?</div>
+  <div class="faq-a">No. This checks color distinguishability only. It is not a legal audit and does not certify ADA, Section 508, WCAG, or EU Accessibility Act compliance, which cover much more than color. Use it to catch color conflicts; use a full review for compliance.</div>
+  <div class="faq-q">How accurate is the simulation?</div>
+  <div class="faq-a">It uses a peer-reviewed model (Machado et al., 2009) and a standard perceptual metric (CIEDE2000). It reliably catches classic red-green and blue-yellow conflicts, but it models a diverse population on an uncalibrated screen — an approximation, not any one person's vision.</div>
+
+  <a href="/" class="backlink">← All free vision tests</a>
+</main>
+<footer role="contentinfo">The home of free online vision tests &nbsp;|&nbsp; © 2026 opticquiz.com &nbsp;|&nbsp; Method published open-access (CC BY 4.0) — screening aid, not a legal accessibility audit</footer>
+
+<script src="/assets/oq-cvd.js"></script>
+<script>
+// ── STATE ──
+var STATE = { palette: ["#d7191c", "#1a9641", "#2166ac", "#fdae61"] };
+var TYPES = [
+  { key: "deutan", name: "Deuteranopia", sub: "green-weak — the most common type" },
+  { key: "protan", name: "Protanopia", sub: "red-weak" },
+  { key: "tritan", name: "Tritanopia", sub: "blue-yellow — rare" }
+];
+
+function normHex(s) {
+  if (!s) return null;
+  s = s.trim().replace(/^#/, "");
+  if (/^[0-9a-fA-F]{3}$/.test(s)) s = s[0]+s[0]+s[1]+s[1]+s[2]+s[2];
+  if (/^[0-9a-fA-F]{6}$/.test(s)) return "#" + s.toLowerCase();
+  return null;
+}
+function esc(h){ return h.replace(/[^#0-9a-fA-F]/g,""); }
+
+function renderSwatches() {
+  var el = document.getElementById("swatches");
+  if (!STATE.palette.length) { el.innerHTML = '<span style="font-size:13px;color:var(--gray);font-family:var(--fm)">No colors yet — add a few.</span>'; return; }
+  var h = "";
+  for (var i = 0; i < STATE.palette.length; i++) {
+    var c = STATE.palette[i];
+    h += '<span class="chip"><span class="sw" style="background:'+esc(c)+'"></span>'+esc(c)+'<button type="button" aria-label="Remove '+esc(c)+'" data-i="'+i+'">×</button></span>';
+  }
+  el.innerHTML = h;
+  var btns = el.querySelectorAll("button[data-i]");
+  for (var k = 0; k < btns.length; k++) btns[k].onclick = function(){ STATE.palette.splice(+this.getAttribute("data-i"),1); renderSwatches(); };
+}
+
+function addFromInput() {
+  var v = document.getElementById("hexin").value;
+  var parts = v.split(/[\s,;]+/);
+  var added = 0;
+  for (var i = 0; i < parts.length; i++) { var n = normHex(parts[i]); if (n && STATE.palette.indexOf(n) === -1) { STATE.palette.push(n); added++; } }
+  if (!added) { var p = normHex(document.getElementById("picker").value); if (p && STATE.palette.indexOf(p) === -1) STATE.palette.push(p); }
+  document.getElementById("hexin").value = "";
+  renderSwatches();
+}
+
+function runCheck() {
+  var res = document.getElementById("results");
+  if (STATE.palette.length < 2) { res.innerHTML = '<div class="verdict fail"><span>Add at least two colors to check them against each other.</span></div>'; return; }
+  var rep = OQCVD.checkPalette(STATE.palette);
+  var totalConflicts = TYPES.reduce(function(a,t){ return a + rep.types[t.key].conflicts.length; }, 0);
+  var h = "";
+  if (rep.pass) {
+    h += '<div class="verdict pass"><span class="big">✓ COLORBLIND-SAFE</span><span>No clearly-distinct pair collapses under protan, deutan or tritan simulation.</span></div>';
+  } else {
+    h += '<div class="verdict fail"><span class="big">'+totalConflicts+' CONFLICT'+(totalConflicts===1?"":"S")+'</span><span>Some color pairs become hard to tell apart under simulation. Details below.</span></div>';
+  }
+  for (var i = 0; i < TYPES.length; i++) {
+    var t = TYPES[i], r = rep.types[t.key];
+    h += '<div class="typecard"><div class="typehead"><div class="typename">'+t.name+'<small>'+t.sub+'</small></div><span class="tag '+(r.pass?"ok":"bad")+'">'+(r.pass?"No conflicts":r.conflicts.length+" conflict"+(r.conflicts.length===1?"":"s"))+'</span></div>';
+    h += '<div class="sr-only">Your palette as simulated for '+t.name+'</div><div class="simrow" aria-hidden="true">';
+    for (var j = 0; j < STATE.palette.length; j++) h += '<span class="s" title="'+esc(STATE.palette[j])+' → '+OQCVD.simulate(STATE.palette[j],t.key)+'" style="background:'+OQCVD.simulate(STATE.palette[j],t.key)+'"></span>';
+    h += '</div>';
+    for (var c = 0; c < r.conflicts.length; c++) {
+      var cf = r.conflicts[c];
+      h += '<div class="conflict"><span class="pairsw"><span class="s" style="background:'+esc(cf.a)+'"></span><span class="s" style="background:'+esc(cf.b)+'"></span></span>'
+        + '<span class="arrow">→ as seen</span>'
+        + '<span class="pairsw"><span class="s" style="background:'+OQCVD.simulate(cf.a,t.key)+'"></span><span class="s" style="background:'+OQCVD.simulate(cf.b,t.key)+'"></span></span>'
+        + '<span>'+esc(cf.a)+' / '+esc(cf.b)+' — difference '+cf.normal+' → <strong>'+cf.sim+'</strong></span>'
+        + '<span class="sev '+cf.severity+'">'+cf.severity+'</span></div>';
+    }
+    h += '</div>';
+  }
+  res.innerHTML = h;
+}
+
+document.getElementById("add").onclick = addFromInput;
+document.getElementById("hexin").addEventListener("keydown", function(e){ if (e.key === "Enter") { e.preventDefault(); addFromInput(); } });
+document.getElementById("picker").addEventListener("change", function(){ var n = normHex(this.value); if (n && STATE.palette.indexOf(n) === -1) { STATE.palette.push(n); renderSwatches(); } });
+document.getElementById("check").onclick = runCheck;
+document.getElementById("clear").onclick = function(){ STATE.palette = []; renderSwatches(); document.getElementById("results").innerHTML = ""; };
+document.getElementById("example").onclick = function(){ STATE.palette = ["#d7191c","#1a9641","#2166ac","#fdae61"]; renderSwatches(); runCheck(); };
+
+renderSwatches();
+runCheck();
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+</body>
+</html>
