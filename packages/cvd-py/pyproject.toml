@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "opticquiz-cvd"
+version = "1.0.0"
+description = "Check color palettes for colorblind-safety (protan/deutan/tritan, Machado 2009 + CIEDE2000). Zero dependencies; drops into any matplotlib/plotly workflow."
+readme = "README.md"
+requires-python = ">=3.7"
+license = { text = "MIT" }
+authors = [{ name = "Vince Gonzalez" }]
+keywords = ["colorblind", "color-blindness", "accessibility", "a11y", "matplotlib",
+    "plotly", "data-visualization", "cvd", "ciede2000", "protanopia", "deuteranopia", "tritanopia"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Multimedia :: Graphics",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+]
+
+[project.urls]
+Homepage = "https://opticquiz.com/checker/"
+Paper = "https://doi.org/10.5281/zenodo.21310578"
+Repository = "https://github.com/zengineco/opticquiz.com"
+
+[tool.setuptools]
+packages = ["opticquiz_cvd"]
