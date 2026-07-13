@@ -1,0 +1,14 @@
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+const transport = new StdioClientTransport({ command: "node", args: ["server.js"] });
+const client = new Client({ name: "test", version: "1.0.0" });
+await client.connect(transport);
+const tools = await client.listTools();
+console.log("TOOLS:", tools.tools.map(t => t.name).join(", "));
+const r1 = await client.callTool({ name: "check_palette", arguments: { colors: ["#d7191c","#1a9641","#2166ac"] } });
+console.log("UNSAFE  ->", r1.content[0].text.split("\n").slice(0,2).join(" | "));
+const r2 = await client.callTool({ name: "check_palette", arguments: { colors: ["#0072b2","#e69f00","#009e73","#cc79a7"] } });
+console.log("OKABE   ->", r2.content[0].text.split("\n")[0]);
+const r3 = await client.callTool({ name: "simulate_color", arguments: { color: "#ff0000", type: "deutan" } });
+console.log("SIM     ->", r3.content[0].text);
+await client.close();
