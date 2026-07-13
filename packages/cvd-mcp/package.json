@@ -3,14 +3,33 @@
   "version": "1.0.0",
   "description": "MCP server that exposes the OpticQuiz colorblind-safe palette checker as callable tools for LLMs (Claude, Cursor, etc.).",
   "type": "module",
-  "bin": { "opticquiz-cvd-mcp": "server.js" },
+  "bin": {
+    "opticquiz-cvd-mcp": "server.js"
+  },
   "main": "server.js",
-  "files": ["server.js", "README.md", "LICENSE"],
-  "keywords": ["mcp", "model-context-protocol", "colorblind", "accessibility", "a11y", "llm", "tool", "opticquiz", "cvd"],
+  "files": [
+    "server.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "colorblind",
+    "accessibility",
+    "a11y",
+    "llm",
+    "tool",
+    "opticquiz",
+    "cvd"
+  ],
   "author": "Vince Gonzalez",
   "license": "MIT",
   "homepage": "https://opticquiz.com/checker/",
-  "repository": { "type": "git", "url": "https://github.com/zengineco/opticquiz.com" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zengineco/opticquiz.com"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "opticquiz-cvd": "^1.0.0",
