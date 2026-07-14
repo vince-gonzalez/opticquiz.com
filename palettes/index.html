@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- OPTICQUIZ — Colorblind-Safe Palette Benchmark v1.0.0 | opticquiz.com/palettes/
+     Every verdict is computed live by the OpticQuiz engine (Machado 2009 + CIEDE2000),
+     the same published method as /checker/. No hand-entered results. -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Is viridis, jet, Tableau, D3, Material or ColorBrewer colorblind-safe? A computed scorecard: every common default palette checked for color-vision-deficiency safety, with the exact conflicts and an auto-generated safe fix.">
+<meta name="theme-color" content="#F8F6F2">
+<meta name="keywords" content="colorblind safe palette, is viridis colorblind safe, is jet colorblind safe, colorblind friendly colors, accessible color palette, tableau colorblind, d3 category10 colorblind, colorbrewer colorblind, okabe ito">
+<meta property="og:title" content="Colorblind-Safe Palette Benchmark — Which Defaults Pass?">
+<meta property="og:description" content="Every common default palette (viridis, jet, Tableau, D3, Material, ColorBrewer, Okabe–Ito) checked for colorblind-safety by a published method — with the exact conflicts and a generated fix.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/palettes/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Colorblind-Safe Palette Benchmark — OpticQuiz">
+<meta name="twitter:description" content="Is your default palette colorblind-safe? A computed scorecard of viridis, jet, Tableau, D3, Material, ColorBrewer and more.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="canonical" href="https://opticquiz.com/palettes/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<title>Is Your Palette Colorblind-Safe? A Computed Benchmark | OpticQuiz</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Dataset","name":"OpticQuiz Colorblind-Safe Palette Benchmark","url":"https://opticquiz.com/palettes/","description":"A computed scorecard of common default color palettes (viridis, jet, Tableau, D3 category10, Material Design, ColorBrewer, Okabe–Ito) evaluated for color-vision-deficiency safety using the Machado (2009) simulation and CIEDE2000 perceptual difference.","creator":{"@type":"Person","name":"Vince Gonzalez","identifier":"https://orcid.org/0009-0005-3640-014X"},"isBasedOn":{"@type":"ScholarlyArticle","identifier":"https://doi.org/10.5281/zenodo.21310578"},"license":"https://opensource.org/licenses/MIT"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is viridis colorblind-safe?","acceptedAnswer":{"@type":"Answer","text":"Yes, for its intended use. viridis is a sequential colormap read by lightness, and its perceived lightness stays monotonic under protan, deutan and tritan simulation (zero lightness reversal), so order is preserved for colorblind viewers. It is not meant to be used as a set of distinct categorical colors."}},
+{"@type":"Question","name":"Is jet colorblind-safe?","acceptedAnswer":{"@type":"Answer","text":"No. jet's perceived lightness is strongly non-monotonic under color-vision-deficiency simulation (about a 37-point L* reversal), so different data values map to indistinguishable brightness. This is the long-standing reason jet is discouraged for scientific visualization."}},
+{"@type":"Question","name":"Which default categorical palettes are colorblind-safe?","acceptedAnswer":{"@type":"Answer","text":"In this benchmark, Okabe–Ito and Tableau's Colorblind 10 pass with zero conflicts. Common defaults including Tableau 10, D3 category10, Material Design, and ColorBrewer Set1/Dark2 each contain pairs that collapse under simulated color-vision deficiency, mostly for deuteranopia."}},
+{"@type":"Question","name":"How are these verdicts computed?","acceptedAnswer":{"@type":"Answer","text":"Each palette is run through the published OpticQuiz method: colors are simulated under protan, deutan and tritan vision (Machado 2009) and every pair is scored with CIEDE2000. Categorical palettes are judged on whether any distinct pair collapses; sequential and diverging colormaps are judged on whether perceived lightness stays monotonic. Nothing is hand-entered."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://opticquiz.com/"},{"@type":"ListItem","position":2,"name":"Colorblind-Safe Palette Benchmark","item":"https://opticquiz.com/palettes/"}]}
+</script>
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--redd:#C23410;--green:#4A8C3F;--gbg:#EEF5ED;--redbg:#FDF1EE;--amber:#D4820A;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:2px;border-radius:var(--r);}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:720px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.crumbs{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.06em;margin:26px 0 12px;}
+.crumbs a{color:var(--gray);text-decoration:none;}.crumbs a:hover{color:var(--red);}
+.eyebrow{font-family:var(--fm);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);}
+h1{font-family:var(--fd);font-size:clamp(34px,8vw,58px);color:var(--black);line-height:.98;letter-spacing:.02em;margin:6px 0 14px;}
+.lede{font-size:17px;color:var(--black);line-height:1.65;margin-bottom:20px;}
+h2{font-family:var(--fd);font-size:clamp(24px,6vw,34px);color:var(--black);line-height:1;letter-spacing:.02em;margin:34px 0 6px;}
+.sub{font-size:14px;color:var(--gray);line-height:1.7;margin-bottom:14px;}
+p{font-size:16px;color:var(--gray);line-height:1.8;margin-bottom:14px;}
+p strong{color:var(--black);}
+a{color:var(--red);}
+.card{background:#fff;border:1.5px solid var(--lgray);border-radius:var(--rc);padding:16px 18px;margin:12px 0;}
+.card.fail{border-left:4px solid var(--red);}
+.card.pass{border-left:4px solid var(--green);}
+.chead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.cname{font-family:var(--fd);font-size:22px;letter-spacing:.02em;color:var(--black);}
+.cnote{font-size:12px;color:var(--gray);}
+.tag{font-family:var(--fm);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:20px;white-space:nowrap;}
+.tag.ok{background:var(--gbg);color:var(--green);border:1px solid var(--green);}
+.tag.bad{background:var(--redbg);color:var(--redd);border:1px solid var(--red);}
+.strip{display:flex;flex-wrap:wrap;gap:0;margin:10px 0 4px;border-radius:var(--r);overflow:hidden;border:1px solid rgba(0,0,0,.1);width:fit-content;max-width:100%;}
+.strip .sw{width:30px;height:30px;}
+.detail{font-size:13px;color:var(--gray);line-height:1.7;margin-top:6px;}
+.detail code{font-family:var(--fm);color:var(--black);}
+.fixrow{margin-top:12px;padding-top:12px;border-top:1px dashed var(--lgray);}
+.fixlabel{font-family:var(--fm);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--green);margin-bottom:6px;}
+.method{font-size:13px;color:var(--gray);line-height:1.8;background:#fff;border:1px solid var(--lgray);border-radius:var(--rc);padding:14px 16px;margin:16px 0;}
+.method strong{color:var(--black);}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:16px 18px;margin:22px 0;font-size:13px;color:var(--gray);line-height:1.8;}
+.disclaimer strong{color:var(--black);}
+.cta{background:var(--black);color:#fff;border-radius:var(--rc);padding:18px 20px;margin:24px 0;}
+.cta a{color:#fff;font-weight:600;}
+.related{background:#fff;border:1px solid var(--lgray);border-radius:var(--rc);padding:8px 18px;margin:22px 0;}
+.related a{display:block;color:var(--black);text-decoration:none;font-size:15px;padding:9px 0;border-bottom:1px solid var(--lgray);}
+.related a:last-child{border-bottom:none;}.related a:hover{color:var(--red);}
+.faq-q{font-family:var(--fs);font-weight:600;font-size:16px;color:var(--black);margin:18px 0 4px;}
+.faq-a{font-size:15px;color:var(--gray);line-height:1.8;}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+</style>
+</head>
+<body>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">BENCHMARK</div>
+</header>
+<main class="wrap" role="main">
+  <nav class="crumbs"><a href="/">Home</a> › Colorblind-Safe Palette Benchmark</nav>
+  <span class="eyebrow">Computed · Published Method</span>
+  <h1>IS YOUR PALETTE<br>COLORBLIND-SAFE?</h1>
+  <p class="lede">The default palettes in your charting library were mostly not designed for color-vision deficiency. Here is every common one, checked by the same <a href="/research/">published method</a> behind our tools — with the exact conflicts, and a generated safe version of each one that fails.</p>
+
+  <h2>CATEGORICAL PALETTES</h2>
+  <p class="sub">Discrete categories — every color must stay tellable-apart from every other. Flagged when a pair that's distinct to normal vision collapses under simulated protan, deutan or tritan vision (CIEDE2000). Failing palettes show an auto-generated colorblind-safe fix.</p>
+  <div id="cat"></div>
+
+  <h2>COLORMAPS</h2>
+  <p class="sub">Sequential and diverging ramps are read by lightness, not by telling swatches apart — so the right test is different: does perceived lightness stay monotonic under CVD? A big reversal means two data values map to the same brightness.</p>
+  <div id="cmap"></div>
+
+  <div class="method">
+    <strong>How this is computed.</strong> Every verdict on this page is produced live in your browser by <a href="https://www.npmjs.com/package/opticquiz-cvd"><code>opticquiz-cvd</code></a> — the same engine as the <a href="/checker/">checker</a>, method published at <a href="/research/">DOI 10.5281/zenodo.21310578</a>. Nothing is hand-entered. As a cross-check, a second independent model (Brettel 1997) agrees with the primary model (Machado 2009) on <strong id="agree"></strong> of the categorical palettes; the lone difference is a single borderline tritan pair in Okabe–Ito.
+  </div>
+
+  <div class="disclaimer" role="note">
+    <strong>Honest limits.</strong> This is a screening measure on an uncalibrated screen at full worst-case severity, not a legal accessibility audit and not a statement about any individual's vision. "Fixed" palettes are a starting point — they preserve hue where possible and separate conflicts in lightness, but always sanity-check them for your context. Colormaps here are judged only on lightness monotonicity, one of several properties that matter.
+  </div>
+
+  <div class="cta">
+    <strong>Your palette isn't listed?</strong><br>
+    <a href="/checker/">Paste it into the checker →</a> to see its conflicts and get a fix, or <a href="/contrast-checker/">check text contrast →</a>.
+  </div>
+
+  <h2>QUESTIONS</h2>
+  <div class="faq-q">Is viridis colorblind-safe?</div>
+  <p class="faq-a">Yes, used as intended. viridis is a sequential colormap read by lightness, and its lightness stays monotonic under all three CVD types (zero reversal here) — so order survives. Don't use it as a set of distinct categorical colors.</p>
+  <div class="faq-q">Is jet colorblind-safe?</div>
+  <p class="faq-a">No. jet's lightness is strongly non-monotonic under simulation (~37-point L* reversal), so different values collapse to the same brightness. That's the long-standing case against jet.</p>
+  <div class="faq-q">What should I use instead?</div>
+  <p class="faq-a">For categories: Okabe–Ito or Tableau Colorblind 10 (both pass here). For continuous data: viridis and its siblings. Or paste your brand colors into the <a href="/checker/">checker</a> and use the generated fix.</p>
+
+  <div class="related">
+    <a href="/checker/">Check your own palette → conflicts + a fix</a>
+    <a href="/contrast-checker/">WCAG contrast checker → the legibility axis</a>
+    <a href="/research/">The published method →</a>
+  </div>
+
+  <footer>OpticQuiz · every verdict computed in-browser by opticquiz-cvd · © opticquiz.com</footer>
+</main>
+
+<script src="/assets/oq-cvd.js"></script>
+<script>
+window.BENCH={"categorical":[{"id":"okabe-ito","name":"Okabe–Ito","note":"Designed for CVD-safety","n":8,"colors":["#000000","#E69F00","#56B4E9","#009E73","#F0E442","#0072B2","#D55E00","#CC79A7"],"pass":true,"conflicts":0,"perType":{"protan":0,"deutan":0,"tritan":0},"brettelPass":false,"fixed":["#000000","#E69F00","#56B4E9","#009E73","#F0E442","#0072B2","#D55E00","#CC79A7"],"fixDrift":null,"fixPass":true},{"id":"tableau-cb","name":"Tableau Colorblind 10","note":"Tableau's own CVD-safe set","n":10,"colors":["#1170aa","#fc7d0b","#a3acb9","#57606c","#5fa2ce","#c85200","#7b848f","#a3cce9","#ffbc79","#c8d0d9"],"pass":true,"conflicts":0,"perType":{"protan":0,"deutan":0,"tritan":0},"brettelPass":true,"fixed":["#1170aa","#fc7d0b","#a3acb9","#57606c","#5fa2ce","#c85200","#7b848f","#a3cce9","#ffbc79","#c8d0d9"],"fixDrift":null,"fixPass":true},{"id":"red-green","name":"Red / Green status","note":"The classic pass/fail pair","n":2,"colors":["#D7191C","#1A9641"],"pass":false,"conflicts":1,"perType":{"protan":0,"deutan":1,"tritan":0},"brettelPass":false,"fixed":["#c80011","#2da24c"],"fixDrift":"4.1","fixPass":true},{"id":"cb-set1","name":"ColorBrewer Set1","note":"Very common categorical set","n":9,"colors":["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33","#a65628","#f781bf","#999999"],"pass":false,"conflicts":7,"perType":{"protan":2,"deutan":4,"tritan":1},"brettelPass":false,"fixed":["#ae0000","#02649c","#319733","#580e65","#ffac3f","#ffff3d","#520d00","#dc69a7","#7a7a7a"],"fixDrift":"24.8","fixPass":true},{"id":"material","name":"Material Design 500","note":"Google Material primary swatches","n":10,"colors":["#F44336","#E91E63","#9C27B0","#673AB7","#3F51B5","#2196F3","#009688","#4CAF50","#FFEB3B","#FF9800"],"pass":false,"conflicts":8,"perType":{"protan":2,"deutan":3,"tritan":3},"brettelPass":false,"fixed":["#ea392f","#b5003d","#b643c9","#562ba6","#163998","#47aaff","#009688","#7bdd7a","#ffff53","#f18c00"],"fixDrift":"12.7","fixPass":true},{"id":"d3-cat10","name":"D3 category10","note":"D3.js / Plotly / Observable default","n":10,"colors":["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"],"pass":false,"conflicts":9,"perType":{"protan":4,"deutan":4,"tritan":1},"brettelPass":false,"fixed":["#004178","#ffac44","#209824","#a60006","#8054a8","#8c564b","#d66bb6","#7f7f7f","#ffff6a","#52e0f1"],"fixDrift":"19.0","fixPass":true},{"id":"cb-dark2","name":"ColorBrewer Dark2","note":"Common categorical set","n":8,"colors":["#1b9e77","#d95f02","#7570b3","#e7298a","#66a61e","#e6ab02","#a6761d","#666666"],"pass":false,"conflicts":9,"perType":{"protan":3,"deutan":4,"tritan":2},"brettelPass":false,"fixed":["#29a67f","#d45b00","#7570b3","#b0005d","#87c742","#fff463","#734b00","#464646"],"fixDrift":"19.8","fixPass":true},{"id":"tableau10","name":"Tableau 10","note":"Tableau / many BI tools default","n":10,"colors":["#4E79A7","#F28E2B","#E15759","#76B7B2","#59A14F","#EDC948","#B07AA1","#FF9DA7","#9C755F","#BAB0AC"],"pass":false,"conflicts":16,"perType":{"protan":6,"deutan":7,"tritan":3},"brettelPass":false,"fixed":["#285883","#ed8a27","#670000","#76b7b2","#398132","#f6d150","#a46f95","#ffe3ec","#6c4935","#e8ded9"],"fixDrift":"31.3","fixPass":true}],"colormaps":[{"id":"viridis","name":"viridis","kind":"sequential","note":"matplotlib default","colors":["#440154","#472d7b","#3b528b","#2c728e","#21918c","#28ae80","#5ec962","#fde725"],"safe":true,"worstReversal":0},{"id":"rdylgn","name":"RdYlGn","kind":"diverging","note":"traffic-light diverging","colors":["#a50026","#d73027","#f46d43","#fdae61","#fee08b","#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"],"safe":false,"worstReversal":17.5},{"id":"jet","name":"jet","kind":"sequential","note":"old MATLAB/matplotlib default","colors":["#00007F","#0000FF","#007FFF","#00FFFF","#7FFF7F","#FFFF00","#FF7F00","#FF0000","#7F0000"],"safe":false,"worstReversal":36.8}],"modelAgreement":"7/8"};
+
+(function(){
+  function strip(colors){ return '<div class="strip">'+colors.map(function(c){return '<span class="sw" style="background:'+c+'" title="'+c+'"></span>';}).join("")+'</div>'; }
+  var cat=document.getElementById("cat"), html="";
+  window.BENCH.categorical.forEach(function(p){
+    html+='<div class="card '+(p.pass?"pass":"fail")+'">';
+    html+='<div class="chead"><div><span class="cname">'+p.name+'</span></div>'+
+          '<span class="tag '+(p.pass?"ok":"bad")+'">'+(p.pass?"colorblind-safe":p.conflicts+" conflict"+(p.conflicts>1?"s":""))+'</span></div>';
+    html+='<div class="cnote">'+p.note+'</div>';
+    html+=strip(p.colors);
+    if(!p.pass){
+      html+='<div class="detail">Collapses for: '+["protan","deutan","tritan"].filter(function(t){return p.perType[t]>0;}).map(function(t){return t+" ("+p.perType[t]+")";}).join(", ")+'.</div>';
+      html+='<div class="fixrow"><div class="fixlabel">Generated safe version · max drift '+p.fixDrift+' ΔE</div>'+strip(p.fixed)+'</div>';
+    }
+    html+='</div>';
+  });
+  cat.innerHTML=html;
+
+  var cmap=document.getElementById("cmap"), h2="";
+  window.BENCH.colormaps.forEach(function(p){
+    h2+='<div class="card '+(p.safe?"pass":"fail")+'">';
+    h2+='<div class="chead"><div><span class="cname">'+p.name+'</span></div>'+
+        '<span class="tag '+(p.safe?"ok":"bad")+'">'+(p.safe?"order preserved":"unsafe")+'</span></div>';
+    h2+='<div class="cnote">'+p.kind+' · '+p.note+'</div>';
+    h2+=strip(p.colors);
+    h2+='<div class="detail">Worst lightness reversal under CVD: <code>'+p.worstReversal+' L*</code>'+(p.safe?' — monotonic, so colorblind viewers still read the order.':' — different values map to the same brightness.')+'</div>';
+    h2+='</div>';
+  });
+  cmap.innerHTML=h2;
+
+  document.getElementById("agree").textContent=window.BENCH.modelAgreement;
+})();
+</script>
+</body>
+</html>
