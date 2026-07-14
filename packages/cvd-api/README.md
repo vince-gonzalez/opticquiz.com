@@ -7,6 +7,8 @@ is one source of truth for the engine. Edge-hosted, no server to maintain.
 
 ## Endpoints
 - `POST /api/check` — body `{ "colors": ["#d7191c","#1a9641","#2166ac"] }` → the full report (`pass`, per-type conflicts with ΔE).
+- `POST /api/fix` — body `{ "colors": ["#d7191c","#1a9641"] }` → a colorblind-safe version that stays near the originals (`colors`, `drift`, `pass`).
+- `POST /api/contrast` — body `{ "foreground": "#767676", "background": "#ffffff", "large": false }` → WCAG contrast ratio + AA/AAA.
 - `POST /api/simulate` — body `{ "color": "#d7191c" }` → protan/deutan/tritan sims; add `"type": "deutan"` for just one.
 - `GET /api` — usage + method + DOI.
 

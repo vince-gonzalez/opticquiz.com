@@ -14,7 +14,7 @@ accessibility (ADA/WCAG) audit. MIT licensed.
 """
 import math
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 TYPES = ["protan", "deutan", "tritan"]
 
 _M = {

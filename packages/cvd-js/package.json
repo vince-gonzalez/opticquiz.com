@@ -1,6 +1,6 @@
 {
   "name": "opticquiz-cvd",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Color accessibility engine. Checks palettes for colorblind-safety (protan/deutan/tritan, Machado 2009, scored with CIEDE2000), fixes failing palettes, and checks WCAG contrast. Zero dependencies.",
   "main": "index.js",
   "types": "index.d.ts",
