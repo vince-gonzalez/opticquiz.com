@@ -1,0 +1,73 @@
+{
+  "name": "opticquiz-colorblind-check",
+  "displayName": "OpticQuiz — Colorblind-Safe Colors",
+  "description": "Flags color pairs that collapse for colorblind viewers as you code, and fixes them with one click. Published method (DOI).",
+  "version": "0.1.0",
+  "publisher": "opticquiz",
+  "license": "MIT",
+  "icon": "icon.png",
+  "engines": { "vscode": "^1.75.0" },
+  "categories": ["Linters", "Formatters", "Other"],
+  "keywords": ["colorblind", "color blindness", "accessibility", "a11y", "color", "cvd", "wcag", "palette", "deuteranopia"],
+  "homepage": "https://opticquiz.com/checker/",
+  "repository": { "type": "git", "url": "https://github.com/zengineco/opticquiz.com" },
+  "bugs": { "url": "https://github.com/zengineco/opticquiz.com/issues" },
+  "galleryBanner": { "color": "#1A1A1A", "theme": "dark" },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "opticquiz.checkFile",
+        "title": "Check colors for colorblind-safety",
+        "category": "OpticQuiz"
+      },
+      {
+        "command": "opticquiz.fixFile",
+        "title": "Fix colors to be colorblind-safe",
+        "category": "OpticQuiz"
+      }
+    ],
+    "configuration": {
+      "title": "OpticQuiz",
+      "properties": {
+        "opticquiz.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Underline color pairs that collapse under color-vision-deficiency simulation."
+        },
+        "opticquiz.severity": {
+          "type": "number",
+          "default": 1,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "CVD severity to check against (1 = full dichromacy / worst case, 0.5 = moderate anomalous trichromacy)."
+        },
+        "opticquiz.model": {
+          "type": "string",
+          "enum": ["machado", "brettel"],
+          "default": "machado",
+          "description": "Simulation model."
+        },
+        "opticquiz.collapse": {
+          "type": "number",
+          "default": 10,
+          "description": "A simulated CIEDE2000 difference below this flags a conflict."
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "opticquiz-cvd": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.75.0",
+    "@vscode/vsce": "^2.24.0"
+  },
+  "scripts": {
+    "package": "vsce package",
+    "publish": "vsce publish"
+  }
+}
