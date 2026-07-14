@@ -1,6 +1,7 @@
 name = "opticquiz-cvd-api"
 main = "worker.js"
 compatibility_date = "2024-11-01"
+workers_dev = true
 
 # Optional: serve from your own domain at opticquiz.com/api/*.
 # Leave commented to just use the free *.workers.dev URL wrangler gives you.
