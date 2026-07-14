@@ -29,7 +29,24 @@ export function deltaE(hex1: string, hex2: string): number;
 /** Check a palette: flags pairs distinct to normal vision that collapse under a CVD simulation. */
 export function checkPalette(hexes: string[], opts?: { distinct?: number; collapse?: number }): Report;
 
+export interface FixReport {
+  /** The adjusted, colorblind-safe hex colors, in input order. */
+  colors: string[];
+  /** Per-color CIEDE2000 distance moved from the original. */
+  drift: number[];
+  /** Whether the returned palette passes checkPalette. */
+  pass: boolean;
+  /** Conflicts remaining (nonzero only if the drift budget prevented a full fix). */
+  residual: number;
+}
+
+/** Return a colorblind-safe version of a palette, staying as near the originals as the drift budget allows. */
+export function fixPalette(hexes: string[], opts?: { distinct?: number; collapse?: number; margin?: number; maxDrift?: number; maxIter?: number }): FixReport;
+
 export function hexToLab(hex: string): [number, number, number];
+
+/** Inverse of hexToLab: CIELAB (D65) back to a #rrggbb hex string. */
+export function labToHex(L: number, a: number, b: number): string;
 
 export interface ContrastReport {
   ratio: number;

@@ -49,6 +49,19 @@
   }
   function hexToLab(hex) { return xyzToLab(rgbToXyz(hexToRgb(hex))); }
 
+  // Inverse: CIELAB (D65) -> hex. floor(x+0.5) rounding matches the npm/PyPI engine.
+  function labToHex(L, a, b) {
+    var fy = (L + 16) / 116, fx = fy + a / 500, fz = fy - b / 200;
+    function fi(t) { var t3 = t * t * t; return t3 > 0.008856 ? t3 : (t - 16 / 116) / 7.787; }
+    var X = fi(fx) * 95.047 / 100, Y = fi(fy) * 100 / 100, Z = fi(fz) * 108.883 / 100;
+    var lin = [3.2406 * X - 1.5372 * Y - 0.4986 * Z, -0.9689 * X + 1.8758 * Y + 0.0415 * Z, 0.0557 * X - 0.2040 * Y + 1.0570 * Z];
+    return "#" + lin.map(function (c) {
+      c = c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(clamp01(c), 1 / 2.4) - 0.055;
+      var v = Math.floor(clamp01(c) * 255 + 0.5);
+      return (v < 16 ? "0" : "") + v.toString(16);
+    }).join("");
+  }
+
   function ciede2000(lab1, lab2) {
     var L1 = lab1[0], a1 = lab1[1], b1 = lab1[2], L2 = lab2[0], a2 = lab2[1], b2 = lab2[2];
     var avgLp = (L1 + L2) / 2;
@@ -126,5 +139,40 @@
     return report;
   }
 
-  window.OQCVD = { simulate: simulate, deltaE: deltaE, checkPalette: checkPalette, hexToLab: hexToLab, relLuminance: relLuminance, contrastRatio: contrastRatio, checkContrast: checkContrast, TYPES: ["protan", "deutan", "tritan"] };
+  // fixPalette — return a colorblind-safe version of a failing palette, staying near
+  // the originals by separating conflicting pairs in lightness (the axis CVD preserves).
+  function fixPalette(hexes, opts) {
+    opts = opts || {};
+    var distinct = opts.distinct != null ? opts.distinct : 13;
+    var collapse = opts.collapse != null ? opts.collapse : 10;
+    var target = collapse + (opts.margin != null ? opts.margin : 2);
+    var maxDrift = opts.maxDrift != null ? opts.maxDrift : 32;
+    var step = 1.5, maxIter = opts.maxIter != null ? opts.maxIter : 600, T = ["protan", "deutan", "tritan"];
+    var cur = hexes.map(hexToLab);
+    function driftAt(i) { return deltaE(hexes[i], labToHex(cur[i][0], cur[i][1], cur[i][2])); }
+    function worstPair() {
+      var min = Infinity, wp = null, h = cur.map(function (l) { return labToHex(l[0], l[1], l[2]); });
+      for (var i = 0; i < h.length; i++) for (var j = i + 1; j < h.length; j++) {
+        if (deltaE(h[i], h[j]) < distinct) continue;
+        for (var k = 0; k < T.length; k++) { var d = deltaE(simulate(h[i], T[k]), simulate(h[j], T[k])); if (d < min) { min = d; wp = [i, j]; } }
+      }
+      return { min: min === Infinity ? 99 : min, wp: wp };
+    }
+    for (var it = 0; it < maxIter; it++) {
+      var s = worstPair();
+      if (s.min >= target || !s.wp) break;
+      var i = s.wp[0], j = s.wp[1], hi = cur[i][0] >= cur[j][0] ? i : j, lo = hi === i ? j : i, moved = false;
+      [[hi, step], [lo, -step]].forEach(function (m) {
+        var k = m[0], save = cur[k][0];
+        cur[k][0] = Math.max(0, Math.min(100, cur[k][0] + m[1]));
+        if (driftAt(k) > maxDrift) cur[k][0] = save; else if (cur[k][0] !== save) moved = true;
+      });
+      if (!moved) break;
+    }
+    var out = cur.map(function (l) { return labToHex(l[0], l[1], l[2]); });
+    var report = checkPalette(out, { distinct: distinct, collapse: collapse });
+    return { colors: out, drift: out.map(function (h, i) { return +driftAt(i).toFixed(1); }), pass: report.pass, residual: T.reduce(function (a, t) { return a + report.types[t].conflicts.length; }, 0) };
+  }
+
+  window.OQCVD = { simulate: simulate, deltaE: deltaE, checkPalette: checkPalette, fixPalette: fixPalette, hexToLab: hexToLab, labToHex: labToHex, relLuminance: relLuminance, contrastRatio: contrastRatio, checkContrast: checkContrast, TYPES: ["protan", "deutan", "tritan"] };
 })();

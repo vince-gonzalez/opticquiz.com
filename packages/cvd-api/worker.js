@@ -22,6 +22,7 @@ export default {
         note: "Screening aid, not a legal accessibility audit.",
         endpoints: {
           "POST /api/check": '{ "colors": ["#d7191c","#1a9641","#2166ac"] }',
+          "POST /api/fix": '{ "colors": ["#d7191c","#1a9641"] }',
           "POST /api/simulate": '{ "color": "#d7191c", "type": "deutan" }',
           "POST /api/contrast": '{ "foreground": "#767676", "background": "#ffffff", "large": false }'
         }
@@ -35,6 +36,10 @@ export default {
     if (path.endsWith("/check")) {
       if (!Array.isArray(body.colors)) return json({ error: 'Expected { "colors": ["#hex", ...] }.' }, 400);
       return json(cvd.checkPalette(body.colors));
+    }
+    if (path.endsWith("/fix")) {
+      if (!Array.isArray(body.colors)) return json({ error: 'Expected { "colors": ["#hex", ...] }.' }, 400);
+      return json(cvd.fixPalette(body.colors));
     }
     if (path.endsWith("/simulate")) {
       if (!body.color) return json({ error: 'Expected { "color": "#hex", "type"?: "protan|deutan|tritan" }.' }, 400);
@@ -50,6 +55,6 @@ export default {
       if (!body.foreground || !body.background) return json({ error: 'Expected { "foreground": "#hex", "background": "#hex", "large"?: bool }.' }, 400);
       return json(cvd.checkContrast(body.foreground, body.background, { large: !!body.large }));
     }
-    return json({ error: "Unknown endpoint.", endpoints: ["/api/check", "/api/simulate", "/api/contrast"] }, 404);
+    return json({ error: "Unknown endpoint.", endpoints: ["/api/check", "/api/fix", "/api/simulate", "/api/contrast"] }, 404);
   }
 };

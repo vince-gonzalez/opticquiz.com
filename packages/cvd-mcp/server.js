@@ -46,6 +46,24 @@ server.registerTool(
 );
 
 server.registerTool(
+  "fix_palette",
+  {
+    title: "Fix a palette to be colorblind-safe",
+    description:
+      "Take a set of colors that fails the colorblind-safety check and return an adjusted set that passes, staying as close to the originals as possible. Conflicting colors are separated in lightness (the axis color-vision deficiency preserves). Returns the new colors, how far each moved, and whether it fully passes.",
+    inputSchema: {
+      colors: z.array(z.string()).describe('Hex colors to fix, e.g. ["#d7191c","#1a9641"]')
+    }
+  },
+  async ({ colors }) => {
+    const r = cvd.fixPalette(colors);
+    const lines = [r.pass ? "Fixed — now colorblind-safe." : `Partial fix — ${r.residual} conflict(s) remain within the drift budget.`];
+    lines.push(colors.map((c, i) => `${c} -> ${r.colors[i]} (moved ${r.drift[i]})`).join("\n"));
+    return { content: [{ type: "text", text: lines.join("\n") + "\n\n" + JSON.stringify(r) }] };
+  }
+);
+
+server.registerTool(
   "check_contrast",
   {
     title: "Check text/background contrast against WCAG",

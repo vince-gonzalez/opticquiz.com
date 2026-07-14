@@ -89,6 +89,31 @@ def _lab(color):
     return _xyz_to_lab(_rgb_to_xyz(_to_rgb255(color)))
 
 
+def _lab_to_xyz(L, a, b):
+    fy = (L + 16) / 116.0
+    fx = fy + a / 500.0
+    fz = fy - b / 200.0
+
+    def fi(t):
+        t3 = t * t * t
+        return t3 if t3 > 0.008856 else (t - 16.0 / 116.0) / 7.787
+    return [fi(fx) * 95.047, fi(fy) * 100.0, fi(fz) * 108.883]
+
+
+def _lab_to_hex(L, a, b):
+    xyz = _lab_to_xyz(L, a, b)
+    X, Y, Z = xyz[0] / 100.0, xyz[1] / 100.0, xyz[2] / 100.0
+    lin = [3.2406 * X - 1.5372 * Y - 0.4986 * Z,
+           -0.9689 * X + 1.8758 * Y + 0.0415 * Z,
+           0.0557 * X - 0.2040 * Y + 1.0570 * Z]
+    out = []
+    for c in lin:
+        c = _clamp01(c)
+        c = 12.92 * c if c <= 0.0031308 else 1.055 * (c ** (1 / 2.4)) - 0.055
+        out.append(int(math.floor(_clamp01(c) * 255 + 0.5)))
+    return "#%02x%02x%02x" % tuple(out)
+
+
 def _ciede2000(lab1, lab2):
     L1, a1, b1 = lab1
     L2, a2, b2 = lab2
@@ -201,3 +226,61 @@ def check_palette(colors, distinct=13, collapse=10):
         report["types"][t]["pass"] = len(report["types"][t]["conflicts"]) == 0
     report["pass"] = all(report["types"][t]["pass"] for t in TYPES)
     return report
+
+
+def fix_palette(colors, distinct=13, collapse=10, margin=2, max_drift=32, max_iter=600):
+    """Nudge a failing palette into a colorblind-safe one, staying near the originals.
+
+    Conflicting pairs are separated along LIGHTNESS (the axis color-vision deficiency
+    preserves), capped by a per-color drift budget in CIEDE2000. Deterministic. The
+    returned palette is re-checked, so 'pass' reflects reality.
+
+    Returns {'colors': [...], 'drift': [...], 'pass': bool, 'residual': int}.
+    """
+    step = 1.5
+    target = collapse + margin
+    hexes = [to_hex(c) for c in colors]
+    cur = [_lab(h) for h in hexes]
+
+    def hex_at(i):
+        return _lab_to_hex(cur[i][0], cur[i][1], cur[i][2])
+
+    def drift_at(i):
+        return delta_e(hexes[i], hex_at(i))
+
+    def worst_pair():
+        h = [_lab_to_hex(l[0], l[1], l[2]) for l in cur]
+        best, wp = float("inf"), None
+        for i in range(len(h)):
+            for j in range(i + 1, len(h)):
+                if delta_e(h[i], h[j]) < distinct:
+                    continue
+                for t in TYPES:
+                    d = delta_e(simulate(h[i], t), simulate(h[j], t))
+                    if d < best:
+                        best, wp = d, (i, j)
+        return (99 if best == float("inf") else best), wp
+
+    for _ in range(max_iter):
+        mn, wp = worst_pair()
+        if mn >= target or wp is None:
+            break
+        i, j = wp
+        hi = i if cur[i][0] >= cur[j][0] else j
+        lo = j if hi == i else i
+        moved = False
+        for k, d_l in ((hi, step), (lo, -step)):
+            save = cur[k][0]
+            cur[k][0] = max(0.0, min(100.0, cur[k][0] + d_l))
+            if drift_at(k) > max_drift:
+                cur[k][0] = save
+            elif cur[k][0] != save:
+                moved = True
+        if not moved:
+            break
+
+    out = [_lab_to_hex(l[0], l[1], l[2]) for l in cur]
+    report = check_palette(out, distinct=distinct, collapse=collapse)
+    residual = sum(len(report["types"][t]["conflicts"]) for t in TYPES)
+    return {"colors": out, "drift": [round(drift_at(i), 1) for i in range(len(out))],
+            "pass": report["pass"], "residual": residual}
