@@ -1,7 +1,7 @@
 {
   "name": "opticquiz-cvd-mcp",
-  "version": "1.0.0",
-  "description": "MCP server that exposes the OpticQuiz colorblind-safe palette checker as callable tools for LLMs (Claude, Cursor, etc.).",
+  "version": "1.1.0",
+  "description": "MCP server exposing the OpticQuiz color-accessibility engine as callable tools for LLMs (Claude, Cursor, etc.): colorblind-safe palette checks, color simulation, and WCAG contrast.",
   "type": "module",
   "bin": {
     "opticquiz-cvd-mcp": "server.js"
@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "opticquiz-cvd": "^1.0.0",
+    "opticquiz-cvd": "^1.1.0",
     "zod": "^3.23.0"
   }
 }

@@ -31,4 +31,22 @@ export function checkPalette(hexes: string[], opts?: { distinct?: number; collap
 
 export function hexToLab(hex: string): [number, number, number];
 
+export interface ContrastReport {
+  ratio: number;
+  large: boolean;
+  AA: boolean;
+  AAA: boolean;
+  ui: boolean;
+  pass: boolean;
+}
+
+/** WCAG 2.x relative luminance (0-1) of a hex color. */
+export function relLuminance(hex: string): number;
+
+/** WCAG contrast ratio between two hex colors (1.0 to 21.0). */
+export function contrastRatio(hex1: string, hex2: string): number;
+
+/** Check foreground/background legibility against WCAG AA/AAA thresholds. */
+export function checkContrast(fg: string, bg: string, opts?: { large?: boolean }): ContrastReport;
+
 export const TYPES: CVDType[];

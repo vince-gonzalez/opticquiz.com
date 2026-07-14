@@ -80,6 +80,22 @@
 
   function deltaE(hex1, hex2) { return ciede2000(hexToLab(hex1), hexToLab(hex2)); }
 
+  // --- WCAG 2.x contrast (the legibility axis, independent of color-vision type) ---
+  function relLuminance(hex) {
+    var rgb = hexToRgb(hex);
+    return 0.2126 * sToLin(rgb[0]) + 0.7152 * sToLin(rgb[1]) + 0.0722 * sToLin(rgb[2]);
+  }
+  function contrastRatio(hex1, hex2) {
+    var l1 = relLuminance(hex1), l2 = relLuminance(hex2);
+    var hi = l1 > l2 ? l1 : l2, lo = l1 > l2 ? l2 : l1;
+    return (hi + 0.05) / (lo + 0.05);
+  }
+  function checkContrast(fg, bg, opts) {
+    opts = opts || {};
+    var large = !!opts.large, r = contrastRatio(fg, bg);
+    return { ratio: +r.toFixed(2), large: large, AA: r >= (large ? 3 : 4.5), AAA: r >= (large ? 4.5 : 7), ui: r >= 3, pass: r >= (large ? 3 : 4.5) };
+  }
+
   // Check a palette: for every pair distinguishable to normal vision (deNormal >= distinct),
   // flag it if a CVD simulation collapses the difference below `collapse`.
   function checkPalette(hexes, opts) {
@@ -110,5 +126,5 @@
     return report;
   }
 
-  window.OQCVD = { simulate: simulate, deltaE: deltaE, checkPalette: checkPalette, hexToLab: hexToLab, TYPES: ["protan", "deutan", "tritan"] };
+  window.OQCVD = { simulate: simulate, deltaE: deltaE, checkPalette: checkPalette, hexToLab: hexToLab, relLuminance: relLuminance, contrastRatio: contrastRatio, checkContrast: checkContrast, TYPES: ["protan", "deutan", "tritan"] };
 })();

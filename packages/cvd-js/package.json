@@ -1,7 +1,7 @@
 {
   "name": "opticquiz-cvd",
-  "version": "1.0.0",
-  "description": "Check color palettes for colorblind-safety. Simulates protan/deutan/tritan (Machado 2009) and flags pairs whose distinction collapses, scored with CIEDE2000. Zero dependencies.",
+  "version": "1.1.0",
+  "description": "Color accessibility engine. Checks palettes for colorblind-safety (protan/deutan/tritan, Machado 2009, scored with CIEDE2000) and text/UI for WCAG contrast. Zero dependencies.",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {

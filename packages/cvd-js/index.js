@@ -73,6 +73,29 @@ function ciede2000(lab1, lab2) {
 }
 function deltaE(hex1, hex2) { return ciede2000(hexToLab(hex1), hexToLab(hex2)); }
 
+// WCAG 2.x relative luminance and contrast — the OTHER axis of color accessibility:
+// legibility of text/UI against its background, independent of color-vision type.
+function relLuminance(hex) {
+  var rgb = hexToRgb(hex);
+  return 0.2126 * sToLin(rgb[0]) + 0.7152 * sToLin(rgb[1]) + 0.0722 * sToLin(rgb[2]);
+}
+function contrastRatio(hex1, hex2) {
+  var l1 = relLuminance(hex1), l2 = relLuminance(hex2);
+  var hi = l1 > l2 ? l1 : l2, lo = l1 > l2 ? l2 : l1;
+  return (hi + 0.05) / (lo + 0.05);
+}
+// fg vs bg → WCAG pass/fail. `large` = text >=18pt (or 14pt bold). `ui` = the 3:1
+// bar for UI components/graphics (WCAG 1.4.11). Reports the ratio, not just a verdict.
+function checkContrast(fg, bg, opts) {
+  opts = opts || {};
+  var large = !!opts.large, r = contrastRatio(fg, bg);
+  return {
+    ratio: +r.toFixed(2), large: large,
+    AA: r >= (large ? 3 : 4.5), AAA: r >= (large ? 4.5 : 7),
+    ui: r >= 3, pass: r >= (large ? 3 : 4.5)
+  };
+}
+
 function checkPalette(hexes, opts) {
   opts = opts || {};
   var distinct = opts.distinct != null ? opts.distinct : 13;
@@ -94,4 +117,8 @@ function checkPalette(hexes, opts) {
   return report;
 }
 
-module.exports = { simulate: simulate, deltaE: deltaE, checkPalette: checkPalette, hexToLab: hexToLab, TYPES: TYPES };
+module.exports = {
+  simulate: simulate, deltaE: deltaE, checkPalette: checkPalette, hexToLab: hexToLab,
+  relLuminance: relLuminance, contrastRatio: contrastRatio, checkContrast: checkContrast,
+  TYPES: TYPES
+};

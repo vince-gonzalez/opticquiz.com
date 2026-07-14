@@ -4,7 +4,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import cvd from "opticquiz-cvd";
 
-const server = new McpServer({ name: "opticquiz-cvd", version: "1.0.0" });
+const server = new McpServer({ name: "opticquiz-cvd", version: "1.1.0" });
 
 server.registerTool(
   "check_palette",
@@ -43,6 +43,25 @@ server.registerTool(
   async ({ color, type }) => ({
     content: [{ type: "text", text: `${color} -> ${cvd.simulate(color, type)} (as seen with ${type})` }]
   })
+);
+
+server.registerTool(
+  "check_contrast",
+  {
+    title: "Check text/background contrast against WCAG",
+    description:
+      "Check whether a foreground color is legible on a background color per WCAG 2.x contrast ratios. Returns the ratio (1-21) and whether it passes AA and AAA. Set large=true for text >=18pt (or 14pt bold). This is the legibility axis, separate from color-blindness.",
+    inputSchema: {
+      foreground: z.string().describe("Text/foreground hex color, e.g. #767676"),
+      background: z.string().describe("Background hex color, e.g. #ffffff"),
+      large: z.boolean().optional().describe("True if text is >=18pt or 14pt bold (default false)")
+    }
+  },
+  async ({ foreground, background, large }) => {
+    const r = cvd.checkContrast(foreground, background, { large: !!large });
+    const verdict = `${r.ratio}:1 — AA ${r.AA ? "pass" : "FAIL"}, AAA ${r.AAA ? "pass" : "FAIL"}${large ? " (large text)" : ""}.`;
+    return { content: [{ type: "text", text: verdict + "\n\n" + JSON.stringify(r) }] };
+  }
 );
 
 const transport = new StdioServerTransport();

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- OPTICQUIZ — WCAG Color Contrast Checker v1.0.0 | opticquiz.com/contrast-checker/
+     Computes WCAG 2.x relative-luminance contrast client-side via the OpticQuiz engine.
+     NOTE: distinct from /contrast/ (the contrast-SENSITIVITY vision test). This is the
+     design-accessibility tool: text vs background contrast ratio for AA/AAA. -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Free WCAG color contrast checker. Enter a text and background color — get the exact contrast ratio and whether it passes WCAG AA and AAA for normal text, large text, and UI. Runs in your browser.">
+<meta name="theme-color" content="#F8F6F2">
+<meta name="keywords" content="wcag contrast checker, color contrast checker, contrast ratio, wcag aa, wcag aaa, accessible text color, contrast ratio calculator, a11y contrast">
+<meta property="og:title" content="WCAG Color Contrast Checker — Free, Exact Ratios">
+<meta property="og:description" content="Enter a text and background color. Get the WCAG contrast ratio and AA/AAA pass or fail for normal text, large text and UI — computed in your browser.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/contrast-checker/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WCAG Color Contrast Checker — OpticQuiz">
+<meta name="twitter:description" content="Check any text/background color pair against WCAG AA and AAA. Exact contrast ratio, live preview, cites its method.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="canonical" href="https://opticquiz.com/contrast-checker/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/opticquiz_icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<title>WCAG Color Contrast Checker — Free AA / AAA Ratio Test | OpticQuiz</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"OpticQuiz WCAG Color Contrast Checker","url":"https://opticquiz.com/contrast-checker/","applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"description":"A free tool that computes the WCAG 2.x contrast ratio between a text and background color and reports whether it passes AA and AAA for normal text, large text, and user-interface components.","featureList":["Exact WCAG 2.x relative-luminance contrast ratio","AA and AAA thresholds for normal text, large text, and UI","Live preview of the color pair","Runs entirely in the browser, no upload"],"author":{"@type":"Person","name":"Vince Gonzalez","identifier":"https://orcid.org/0009-0005-3640-014X"},"publisher":{"@type":"Organization","name":"OpticQuiz","url":"https://opticquiz.com/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a good WCAG contrast ratio?","acceptedAnswer":{"@type":"Answer","text":"WCAG 2.x sets 4.5:1 as the AA minimum for normal text and 7:1 for AAA. Large text (at least 18pt, or 14pt bold) needs 3:1 for AA and 4.5:1 for AAA. User-interface components and meaningful graphics need at least 3:1. A higher ratio is always more legible; 21:1 is the maximum, black on white."}},
+{"@type":"Question","name":"How is the contrast ratio calculated?","acceptedAnswer":{"@type":"Answer","text":"Each color is converted to its WCAG relative luminance by linearizing the sRGB channels and weighting them 0.2126 red, 0.7152 green, 0.0722 blue. The contrast ratio is (Llighter + 0.05) / (Ldarker + 0.05), giving a value from 1:1 (identical) to 21:1 (black on white). This tool computes that exact formula in your browser."}},
+{"@type":"Question","name":"Does passing contrast mean my site is WCAG compliant?","acceptedAnswer":{"@type":"Answer","text":"No. Contrast is one success criterion. Full WCAG conformance also covers keyboard access, focus order, alternative text, semantics, motion, and much more. This tool checks the color-contrast requirement exactly, but it is not a complete accessibility audit."}},
+{"@type":"Question","name":"What is the difference between contrast and colorblind-safety?","acceptedAnswer":{"@type":"Answer","text":"Contrast is about legibility: is the lightness difference between text and its background enough to read? Colorblind-safety is about whether two colors used to carry meaning stay distinguishable to someone with color-vision deficiency. They are different axes, and a design needs both. OpticQuiz has a separate colorblind-safe palette checker for the second."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://opticquiz.com/"},{"@type":"ListItem","position":2,"name":"WCAG Contrast Checker","item":"https://opticquiz.com/contrast-checker/"}]}
+</script>
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--redd:#C23410;--green:#4A8C3F;--gbg:#EEF5ED;--redbg:#FDF1EE;--amber:#D4820A;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:2px;border-radius:var(--r);}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:99;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:12px;}
+.wrap{max-width:660px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:660px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.crumbs{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.06em;margin:26px 0 12px;}
+.crumbs a{color:var(--gray);text-decoration:none;}.crumbs a:hover{color:var(--red);}
+.eyebrow{font-family:var(--fm);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);}
+h1{font-family:var(--fd);font-size:clamp(34px,8vw,56px);color:var(--black);line-height:.98;letter-spacing:.02em;margin:6px 0 14px;}
+.lede{font-size:17px;color:var(--black);line-height:1.65;margin-bottom:22px;}
+h2{font-family:var(--fd);font-size:clamp(24px,6vw,32px);color:var(--black);line-height:1;letter-spacing:.02em;margin:30px 0 12px;}
+p{font-size:16px;color:var(--gray);line-height:1.8;margin-bottom:14px;}
+p strong{color:var(--black);}
+a{color:var(--red);}
+.tool{background:#fff;border:1.5px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:8px 0 24px;}
+.inputs{display:flex;gap:14px;flex-wrap:wrap;}
+.field{flex:1;min-width:200px;}
+.field label{display:block;font-family:var(--fm);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gray);margin-bottom:6px;}
+.pickrow{display:flex;gap:8px;align-items:center;}
+.pickrow input[type=color]{width:46px;height:44px;border:1px solid var(--lgray);border-radius:var(--r);background:none;cursor:pointer;padding:2px;flex:none;}
+.pickrow input[type=text]{flex:1;min-width:0;font-family:var(--fm);font-size:15px;padding:11px 12px;border:1px solid var(--lgray);border-radius:var(--r);background:var(--bg);color:var(--black);text-transform:uppercase;}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.btn{font-family:var(--fs);font-weight:600;font-size:15px;border:none;border-radius:var(--r);padding:10px 16px;cursor:pointer;}
+.btn-ghost{background:var(--cream);color:var(--black);border:1px solid var(--lgray);}
+.btn-ghost:hover{background:var(--lgray);}
+.preview{border-radius:var(--rc);border:1px solid var(--lgray);padding:26px 22px;margin:18px 0 0;text-align:center;overflow:hidden;}
+.preview .big{font-family:var(--fd);font-size:30px;letter-spacing:.02em;line-height:1.1;}
+.preview .norm{font-size:15px;line-height:1.6;margin-top:8px;}
+.ratio{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-radius:var(--rc);padding:18px 20px;margin:22px 0 8px;background:#fff;border:1.5px solid var(--lgray);}
+.ratio .num{font-family:var(--fd);font-size:54px;line-height:.9;letter-spacing:.01em;color:var(--black);}
+.ratio .lab{font-family:var(--fm);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 4px;}
+.lvl{border:1px solid var(--lgray);border-radius:var(--rc);padding:12px 14px;background:#fff;}
+.lvl .k{font-family:var(--fm);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gray);}
+.lvl .k small{text-transform:none;letter-spacing:0;}
+.lvl .v{display:flex;align-items:center;gap:8px;margin-top:6px;font-weight:600;font-size:16px;}
+.lvl.pass{border-color:var(--green);background:var(--gbg);}
+.lvl.pass .v{color:var(--green);}
+.lvl.fail{border-color:var(--red);background:var(--redbg);}
+.lvl.fail .v{color:var(--redd);}
+.dot{width:11px;height:11px;border-radius:50%;flex:none;}
+.lvl.pass .dot{background:var(--green);}.lvl.fail .dot{background:var(--redd);}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:16px 18px;margin:22px 0;font-size:13px;color:var(--gray);line-height:1.8;}
+.disclaimer strong{color:var(--black);}
+.method{font-size:13px;color:var(--gray);line-height:1.8;background:#fff;border:1px solid var(--lgray);border-radius:var(--rc);padding:14px 16px;margin:16px 0;}
+.method a{word-break:break-word;}
+.faq-q{font-family:var(--fs);font-weight:600;font-size:16px;color:var(--black);margin:18px 0 4px;}
+.faq-a{font-size:15px;color:var(--gray);line-height:1.8;}
+.related{background:#fff;border:1px solid var(--lgray);border-radius:var(--rc);padding:8px 18px;margin:22px 0;}
+.related a{display:block;color:var(--black);text-decoration:none;font-size:15px;padding:9px 0;border-bottom:1px solid var(--lgray);}
+.related a:last-child{border-bottom:none;}.related a:hover{color:var(--red);}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+@media(max-width:480px){.grid{grid-template-columns:1fr;}.ratio .num{font-size:44px;}}
+</style>
+</head>
+<body>
+<a href="#tool" class="skip-link">Skip to the checker</a>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">CONTRAST · WCAG</div>
+</header>
+<main class="wrap" role="main">
+  <nav class="crumbs"><a href="/">Home</a> › WCAG Contrast Checker</nav>
+  <span class="eyebrow">Accessibility · WCAG 2.x</span>
+  <h1>WCAG COLOR<br>CONTRAST CHECKER</h1>
+  <p class="lede">Enter a text color and a background color. You get the exact WCAG contrast ratio and whether it passes <strong>AA</strong> and <strong>AAA</strong> — for normal text, large text, and UI — with a live preview. Runs entirely in your browser.</p>
+
+  <section id="tool" class="tool" aria-label="Contrast checker">
+    <div class="inputs">
+      <div class="field">
+        <label for="fghex">Text / foreground</label>
+        <div class="pickrow">
+          <input type="color" id="fgpick" value="#767676" aria-label="Pick foreground color">
+          <input type="text" id="fghex" value="#767676" spellcheck="false" autocomplete="off" aria-label="Foreground hex color">
+        </div>
+      </div>
+      <div class="field">
+        <label for="bghex">Background</label>
+        <div class="pickrow">
+          <input type="color" id="bgpick" value="#ffffff" aria-label="Pick background color">
+          <input type="text" id="bghex" value="#FFFFFF" spellcheck="false" autocomplete="off" aria-label="Background hex color">
+        </div>
+      </div>
+    </div>
+    <div class="btnrow">
+      <button class="btn btn-ghost" id="swap" type="button">⇄ Swap</button>
+      <button class="btn btn-ghost" id="ex1" type="button">Passing example</button>
+      <button class="btn btn-ghost" id="ex2" type="button">Failing example</button>
+    </div>
+    <div class="preview" id="preview">
+      <div class="big" id="pvBig">Large heading text</div>
+      <div class="norm" id="pvNorm">The quick brown fox jumps over the lazy dog. Body text at a normal reading size.</div>
+    </div>
+  </section>
+
+  <div class="ratio" id="ratioBox" aria-live="polite">
+    <div class="num" id="ratioNum">21:1</div>
+    <div class="lab" id="ratioLab">contrast ratio · 1:1 to 21:1</div>
+  </div>
+
+  <div class="grid" id="grid" aria-live="polite"></div>
+
+  <div class="disclaimer" role="note">
+    <strong>What this is — and isn't.</strong> This computes the WCAG 2.x contrast ratio exactly, the same formula browsers and auditors use. It checks <strong>one</strong> success criterion — color contrast. It is <strong>not a full accessibility audit</strong>: WCAG conformance also covers keyboard access, focus, alt text, semantics and more. Contrast is also a different axis from <a href="/checker/">colorblind-safety</a> — a design needs both.
+  </div>
+
+  <div class="method">
+    <strong>Method.</strong> Contrast ratio = (L<sub>lighter</sub> + 0.05) / (L<sub>darker</sub> + 0.05), where L is WCAG relative luminance from linearized sRGB (0.2126 R + 0.7152 G + 0.0722 B). Thresholds: normal text AA 4.5, AAA 7; large text (≥18pt or 14pt bold) AA 3, AAA 4.5; UI &amp; graphics 3. Same engine as our published <a href="/research/">colorblind-safe method</a> — <a href="https://www.npmjs.com/package/opticquiz-cvd"><code>opticquiz-cvd</code></a> on npm and PyPI.
+  </div>
+
+  <h2>QUESTIONS</h2>
+  <div class="faq-q">What is a good WCAG contrast ratio?</div>
+  <p class="faq-a">AA wants at least 4.5:1 for normal text and 7:1 for AAA. Large text (≥18pt, or 14pt bold) needs 3:1 for AA and 4.5:1 for AAA. UI components and meaningful graphics need at least 3:1. Higher is always more legible; 21:1 is the max — black on white.</p>
+  <div class="faq-q">How is it calculated?</div>
+  <p class="faq-a">Each color is linearized from sRGB and weighted 0.2126 red, 0.7152 green, 0.0722 blue to get its relative luminance. The ratio is (lighter + 0.05) / (darker + 0.05). This page runs that exact formula on your device — nothing is uploaded.</p>
+  <div class="faq-q">Does passing contrast make my site WCAG compliant?</div>
+  <p class="faq-a">No. Contrast is one criterion among many. Use this to fix color legibility early, and a full review for conformance.</p>
+  <div class="faq-q">Is this the same as the contrast sensitivity test?</div>
+  <p class="faq-a">No. This is a design tool for text/background legibility. The <a href="/contrast/">contrast sensitivity test</a> measures your own eyes' ability to detect faint letters — a different thing entirely.</p>
+
+  <div class="related">
+    <a href="/checker/">Colorblind-Safe Palette Checker → the other color axis</a>
+    <a href="/research/">The published method behind the engine →</a>
+    <a href="/">All OpticQuiz vision &amp; color tests →</a>
+  </div>
+
+  <footer>OpticQuiz · WCAG contrast computed in-browser · © opticquiz.com</footer>
+</main>
+
+<script src="/assets/oq-cvd.js"></script>
+<script>
+(function(){
+  var fgHex=document.getElementById("fghex"), bgHex=document.getElementById("bghex");
+  var fgPick=document.getElementById("fgpick"), bgPick=document.getElementById("bgpick");
+  var preview=document.getElementById("preview"), pvBig=document.getElementById("pvBig"), pvNorm=document.getElementById("pvNorm");
+  var ratioNum=document.getElementById("ratioNum"), grid=document.getElementById("grid");
+
+  function norm(h){ h=String(h).trim().replace(/^#/,""); if(h.length===3) h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2]; if(/^[0-9a-fA-F]{6}$/.test(h)) return "#"+h.toLowerCase(); return null; }
+
+  function levels(r){
+    return [
+      {k:"Normal text", sub:"AA · 4.5", pass:r>=4.5},
+      {k:"Normal text", sub:"AAA · 7", pass:r>=7},
+      {k:"Large text", sub:"AA · 3", pass:r>=3},
+      {k:"Large text", sub:"AAA · 4.5", pass:r>=4.5},
+      {k:"UI & graphics", sub:"3", pass:r>=3}
+    ];
+  }
+
+  function render(){
+    var fg=norm(fgHex.value), bg=norm(bgHex.value);
+    if(!fg||!bg) return;
+    fgPick.value=fg; bgPick.value=bg;
+    var r=window.OQCVD.contrastRatio(fg,bg);
+    preview.style.background=bg; pvBig.style.color=fg; pvNorm.style.color=fg;
+    ratioNum.textContent=r.toFixed(2).replace(/\.00$/,"")+":1";
+    grid.innerHTML="";
+    levels(r).forEach(function(l){
+      var d=document.createElement("div");
+      d.className="lvl "+(l.pass?"pass":"fail");
+      d.innerHTML='<div class="k">'+l.k+' <small>('+l.sub+')</small></div><div class="v"><span class="dot"></span>'+(l.pass?"Pass":"Fail")+'</div>';
+      grid.appendChild(d);
+    });
+  }
+
+  function bindHex(hexEl, pickEl){
+    hexEl.addEventListener("input", render);
+    pickEl.addEventListener("input", function(){ hexEl.value=pickEl.value.toUpperCase(); render(); });
+  }
+  bindHex(fgHex, fgPick); bindHex(bgHex, bgPick);
+
+  document.getElementById("swap").onclick=function(){ var t=fgHex.value; fgHex.value=bgHex.value; bgHex.value=t; render(); };
+  document.getElementById("ex1").onclick=function(){ fgHex.value="#1A1A1A"; bgHex.value="#F8F6F2"; render(); };
+  document.getElementById("ex2").onclick=function(){ fgHex.value="#9AA7B0"; bgHex.value="#FFFFFF"; render(); };
+
+  render();
+})();
+</script>
+</body>
+</html>

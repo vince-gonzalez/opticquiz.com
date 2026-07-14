@@ -14,7 +14,7 @@ accessibility (ADA/WCAG) audit. MIT licensed.
 """
 import math
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 TYPES = ["protan", "deutan", "tritan"]
 
 _M = {
@@ -143,6 +143,34 @@ def _ciede2000(lab1, lab2):
 def delta_e(c1, c2):
     """CIEDE2000 perceptual difference between two colors."""
     return _ciede2000(_lab(c1), _lab(c2))
+
+
+def rel_luminance(color):
+    """WCAG 2.x relative luminance (0-1) of a color."""
+    rgb = _to_rgb255(color)
+    return 0.2126 * _s2l(rgb[0]) + 0.7152 * _s2l(rgb[1]) + 0.0722 * _s2l(rgb[2])
+
+
+def contrast_ratio(c1, c2):
+    """WCAG contrast ratio between two colors (1.0 to 21.0)."""
+    l1, l2 = rel_luminance(c1), rel_luminance(c2)
+    hi, lo = (l1, l2) if l1 > l2 else (l2, l1)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+def check_contrast(fg, bg, large=False):
+    """Check foreground/background legibility against WCAG thresholds.
+
+    `large` = text >=18pt (or 14pt bold). `ui` is the 3:1 bar for UI components and
+    graphics (WCAG 1.4.11). Returns the ratio and per-level pass booleans — this is
+    the legibility axis, distinct from the color-vision axis of check_palette.
+    """
+    r = contrast_ratio(fg, bg)
+    return {
+        "ratio": round(r, 2), "large": large,
+        "AA": r >= (3 if large else 4.5), "AAA": r >= (4.5 if large else 7),
+        "ui": r >= 3, "pass": r >= (3 if large else 4.5),
+    }
 
 
 def check_palette(colors, distinct=13, collapse=10):

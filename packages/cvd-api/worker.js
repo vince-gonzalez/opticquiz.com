@@ -22,7 +22,8 @@ export default {
         note: "Screening aid, not a legal accessibility audit.",
         endpoints: {
           "POST /api/check": '{ "colors": ["#d7191c","#1a9641","#2166ac"] }',
-          "POST /api/simulate": '{ "color": "#d7191c", "type": "deutan" }'
+          "POST /api/simulate": '{ "color": "#d7191c", "type": "deutan" }',
+          "POST /api/contrast": '{ "foreground": "#767676", "background": "#ffffff", "large": false }'
         }
       });
     }
@@ -45,6 +46,10 @@ export default {
         tritan: cvd.simulate(body.color, "tritan")
       });
     }
-    return json({ error: "Unknown endpoint.", endpoints: ["/api/check", "/api/simulate"] }, 404);
+    if (path.endsWith("/contrast")) {
+      if (!body.foreground || !body.background) return json({ error: 'Expected { "foreground": "#hex", "background": "#hex", "large"?: bool }.' }, 400);
+      return json(cvd.checkContrast(body.foreground, body.background, { large: !!body.large }));
+    }
+    return json({ error: "Unknown endpoint.", endpoints: ["/api/check", "/api/simulate", "/api/contrast"] }, 404);
   }
 };
