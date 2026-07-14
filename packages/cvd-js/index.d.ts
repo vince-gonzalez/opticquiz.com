@@ -13,21 +13,29 @@ export interface TypeReport {
   pass: boolean;
 }
 
+export type CVDModel = "machado" | "brettel";
+
 export interface Report {
   distinct: number;
   collapse: number;
+  severity: number;
+  model: CVDModel;
   pass: boolean;
   types: Record<CVDType, TypeReport>;
 }
 
-/** Simulate how a hex color appears under a color-vision deficiency (Machado 2009). */
-export function simulate(hex: string, type: CVDType | "normal"): string;
+/**
+ * Simulate how a hex color appears under a color-vision deficiency.
+ * `severity` 0..1 (default 1) models anomalous trichromacy below full dichromacy.
+ * `model` selects the simulation: "machado" (2009, default) or "brettel" (1997).
+ */
+export function simulate(hex: string, type: CVDType | "normal", severity?: number, model?: CVDModel): string;
 
 /** CIEDE2000 perceptual difference between two hex colors. */
 export function deltaE(hex1: string, hex2: string): number;
 
 /** Check a palette: flags pairs distinct to normal vision that collapse under a CVD simulation. */
-export function checkPalette(hexes: string[], opts?: { distinct?: number; collapse?: number }): Report;
+export function checkPalette(hexes: string[], opts?: { distinct?: number; collapse?: number; severity?: number; model?: CVDModel }): Report;
 
 export interface FixReport {
   /** The adjusted, colorblind-safe hex colors, in input order. */

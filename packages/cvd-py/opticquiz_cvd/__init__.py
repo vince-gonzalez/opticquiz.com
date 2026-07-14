@@ -23,6 +23,21 @@ _M = {
     "tritan": [[1.255528, -0.076749, -0.178779], [-0.078411, 0.930809, 0.147602], [0.004733, 0.691367, 0.303900]],
 }
 
+# Brettel, Vienot & Mollon (1997), on linear RGB. Two projection planes per type; the
+# sign of (rgb . normal) selects which. Transcribed from the public-domain reference
+# libDaltonLens (Nicolas Burrus). A second, independent model to cross-check Machado.
+_B = {
+    "protan": {"p1": [[0.14980, 1.19548, -0.34528], [0.10764, 0.84864, 0.04372], [0.00384, -0.00540, 1.00156]],
+               "p2": [[0.14570, 1.16172, -0.30742], [0.10816, 0.85291, 0.03892], [0.00386, -0.00524, 1.00139]],
+               "n": [0.00048, 0.00393, -0.00441]},
+    "deutan": {"p1": [[0.36477, 0.86381, -0.22858], [0.26294, 0.64245, 0.09462], [-0.02006, 0.02728, 0.99278]],
+               "p2": [[0.37298, 0.88166, -0.25464], [0.25954, 0.63506, 0.10540], [-0.01980, 0.02784, 0.99196]],
+               "n": [-0.00281, -0.00611, 0.00892]},
+    "tritan": {"p1": [[1.01277, 0.13548, -0.14826], [-0.01243, 0.86812, 0.14431], [0.07589, 0.80500, 0.11911]],
+               "p2": [[0.93678, 0.18979, -0.12657], [0.06154, 0.81526, 0.12320], [-0.37562, 1.12767, 0.24796]],
+               "n": [0.03901, -0.02788, -0.01113]},
+}
+
 
 def _clamp01(x):
     return 0.0 if x < 0 else 1.0 if x > 1 else x
@@ -60,14 +75,27 @@ def to_hex(color):
     return _rgb_to_hex(_to_rgb255(color))
 
 
-def simulate(color, cvd_type):
-    """Return the hex color as seen under `cvd_type` ('protan'|'deutan'|'tritan'|'normal')."""
+def simulate(color, cvd_type, severity=1.0, model="machado"):
+    """Return the hex color as seen under `cvd_type` ('protan'|'deutan'|'tritan'|'normal').
+
+    severity 0..1: 1 = full dichromacy (Machado severity-1 matrices); values below 1
+    blend toward the original in linear light to approximate anomalous trichromacy
+    (mild/moderate CVD) — a disclosed approximation, not Machado's per-severity matrices.
+    model: 'machado' (default) or 'brettel' — a second, independent dichromat model.
+    """
     rgb = _to_rgb255(color)
     if cvd_type == "normal" or cvd_type not in _M:
         return _rgb_to_hex(rgb)
     lin = [_s2l(rgb[0]), _s2l(rgb[1]), _s2l(rgb[2])]
-    m = _M[cvd_type]
+    if model == "brettel":
+        b = _B[cvd_type]
+        dot = lin[0] * b["n"][0] + lin[1] * b["n"][1] + lin[2] * b["n"][2]
+        m = b["p1"] if dot >= 0 else b["p2"]
+    else:
+        m = _M[cvd_type]
     o = [_clamp01(m[i][0] * lin[0] + m[i][1] * lin[1] + m[i][2] * lin[2]) for i in range(3)]
+    if severity < 1:
+        o = [lin[k] * (1 - severity) + o[k] * severity for k in range(3)]
     return _rgb_to_hex([_l2s(o[0]), _l2s(o[1]), _l2s(o[2])])
 
 
@@ -198,16 +226,18 @@ def check_contrast(fg, bg, large=False):
     }
 
 
-def check_palette(colors, distinct=13, collapse=10):
+def check_palette(colors, distinct=13, collapse=10, severity=1.0, model="machado"):
     """Check a palette for colorblind conflicts.
 
-    Returns a dict: {'pass': bool, 'distinct', 'collapse',
+    Returns a dict: {'pass': bool, 'distinct', 'collapse', 'severity', 'model',
     'types': {'protan'|'deutan'|'tritan': {'conflicts': [...], 'pass': bool}}}.
     A pair is flagged when it is clearly distinct to normal vision (>= `distinct`)
     but its simulated difference drops below `collapse` ('severe' below 5).
+    `severity` (0..1) checks against milder anomalous trichromacy instead of full
+    dichromacy; 1.0 (default) is the worst case. `model` is 'machado' or 'brettel'.
     """
     hexes = [to_hex(c) for c in colors]
-    report = {"distinct": distinct, "collapse": collapse,
+    report = {"distinct": distinct, "collapse": collapse, "severity": severity, "model": model,
               "types": {t: {"conflicts": [], "pass": True} for t in TYPES}}
     n = len(hexes)
     for i in range(n):
@@ -217,7 +247,7 @@ def check_palette(colors, distinct=13, collapse=10):
             if de_n < distinct:
                 continue
             for t in TYPES:
-                de_s = delta_e(simulate(a, t), simulate(b, t))
+                de_s = delta_e(simulate(a, t, severity, model), simulate(b, t, severity, model))
                 if de_s < collapse:
                     report["types"][t]["conflicts"].append({
                         "a": a, "b": b, "normal": round(de_n, 1),

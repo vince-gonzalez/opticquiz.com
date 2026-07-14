@@ -12,6 +12,15 @@
     tritan: [[1.255528, -0.076749, -0.178779], [-0.078411, 0.930809, 0.147602], [0.004733, 0.691367, 0.303900]]
   };
 
+  // Brettel, Vienot & Mollon (1997) on linear RGB — a second, independent model to
+  // cross-check Machado. Two planes per type; sign of (rgb . n) selects. Transcribed
+  // from the public-domain reference libDaltonLens (Nicolas Burrus).
+  var B = {
+    protan: { p1: [[0.14980, 1.19548, -0.34528], [0.10764, 0.84864, 0.04372], [0.00384, -0.00540, 1.00156]], p2: [[0.14570, 1.16172, -0.30742], [0.10816, 0.85291, 0.03892], [0.00386, -0.00524, 1.00139]], n: [0.00048, 0.00393, -0.00441] },
+    deutan: { p1: [[0.36477, 0.86381, -0.22858], [0.26294, 0.64245, 0.09462], [-0.02006, 0.02728, 0.99278]], p2: [[0.37298, 0.88166, -0.25464], [0.25954, 0.63506, 0.10540], [-0.01980, 0.02784, 0.99196]], n: [-0.00281, -0.00611, 0.00892] },
+    tritan: { p1: [[1.01277, 0.13548, -0.14826], [-0.01243, 0.86812, 0.14431], [0.07589, 0.80500, 0.11911]], p2: [[0.93678, 0.18979, -0.12657], [0.06154, 0.81526, 0.12320], [-0.37562, 1.12767, 0.24796]], n: [0.03901, -0.02788, -0.01113] }
+  };
+
   function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
   function hexToRgb(h) {
     h = h.trim().replace(/^#/, "");
@@ -25,10 +34,20 @@
   function sToLin(c) { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }
   function linToS(c) { c = c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055; return clamp01(c) * 255; }
 
-  function simulate(hex, type) {
+  // severity 0..1: 1 = full dichromacy (default); below 1 blends toward the original
+  // in linear light to approximate anomalous trichromacy (mild/moderate CVD).
+  function simulate(hex, type, severity, model) {
     if (type === "normal" || !M[type]) return hex.trim().toLowerCase();
-    var rgb = hexToRgb(hex), lin = [sToLin(rgb[0]), sToLin(rgb[1]), sToLin(rgb[2])], m = M[type], out = [0, 0, 0];
-    for (var i = 0; i < 3; i++) out[i] = clamp01(m[i][0] * lin[0] + m[i][1] * lin[1] + m[i][2] * lin[2]);
+    if (severity == null) severity = 1;
+    var rgb = hexToRgb(hex), lin = [sToLin(rgb[0]), sToLin(rgb[1]), sToLin(rgb[2])], out = [0, 0, 0], i, m;
+    if (model === "brettel") {
+      var b = B[type], dot = lin[0] * b.n[0] + lin[1] * b.n[1] + lin[2] * b.n[2];
+      m = dot >= 0 ? b.p1 : b.p2;
+    } else {
+      m = M[type];
+    }
+    for (i = 0; i < 3; i++) out[i] = clamp01(m[i][0] * lin[0] + m[i][1] * lin[1] + m[i][2] * lin[2]);
+    if (severity < 1) for (var k = 0; k < 3; k++) out[k] = lin[k] * (1 - severity) + out[k] * severity;
     return rgbToHex([linToS(out[0]), linToS(out[1]), linToS(out[2])]);
   }
 
@@ -115,8 +134,10 @@
     opts = opts || {};
     var distinct = opts.distinct != null ? opts.distinct : 13; // pair is INTENDED to be distinct (clearly different at a glance)
     var collapse = opts.collapse != null ? opts.collapse : 10;  // simulated dE below this = hard to tell apart (severe below 5)
+    var severity = opts.severity != null ? opts.severity : 1;   // 1 = full dichromacy; <1 = anomalous trichromacy
+    var model = opts.model || "machado";                        // 'machado' or 'brettel'
     var types = ["protan", "deutan", "tritan"];
-    var report = { distinct: distinct, collapse: collapse, types: {} };
+    var report = { distinct: distinct, collapse: collapse, severity: severity, model: model, types: {} };
     types.forEach(function (t) { report.types[t] = { conflicts: [], pairsChecked: 0 }; });
     for (var i = 0; i < hexes.length; i++) {
       for (var j = i + 1; j < hexes.length; j++) {
@@ -125,7 +146,7 @@
           var r = report.types[t];
           if (deN < distinct) return; // not distinct even to normal vision — not a CVD-specific failure
           r.pairsChecked++;
-          var deS = deltaE(simulate(a, t), simulate(b, t));
+          var deS = deltaE(simulate(a, t, severity, model), simulate(b, t, severity, model));
           if (deS < collapse) r.conflicts.push({ a: a, b: b, normal: +deN.toFixed(1), sim: +deS.toFixed(1), severity: deS < 5 ? "severe" : "risk" });
         });
       }
