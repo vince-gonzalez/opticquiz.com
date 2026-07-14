@@ -245,6 +245,7 @@ function runCheck() {
     h += '<div class="verdict pass"><span class="big">✓ COLORBLIND-SAFE</span><span>No clearly-distinct pair collapses under protan, deutan or tritan simulation.</span></div>';
   } else {
     h += '<div class="verdict fail"><span class="big">'+totalConflicts+' CONFLICT'+(totalConflicts===1?"":"S")+'</span><span>Some color pairs become hard to tell apart under simulation. Details below.</span></div>';
+    h += '<div id="fixwrap" style="margin:0 0 6px;"><button class="btn btn-primary" id="fixbtn" type="button">Fix this palette →</button><span style="font-size:13px;color:var(--gray);margin-left:10px;">Separates the clashing colors in lightness, staying as close to your originals as possible.</span></div><div id="fixresult" aria-live="polite"></div>';
   }
   for (var i = 0; i < TYPES.length; i++) {
     var t = TYPES[i], r = rep.types[t.key];
@@ -263,6 +264,21 @@ function runCheck() {
     h += '</div>';
   }
   res.innerHTML = h;
+  var fb = document.getElementById("fixbtn");
+  if (fb) fb.onclick = renderFix;
+}
+
+function renderFix() {
+  var f = OQCVD.fixPalette(STATE.palette);
+  var maxD = f.drift.reduce(function(a,b){ return b>a?b:a; }, 0);
+  var h = '<div class="typecard" style="border-left:4px solid var(--green);margin-top:8px;">';
+  h += '<div class="typehead"><div class="typename">Fixed palette<small>'+(f.pass?"colorblind-safe":"closest safe within the drift limit")+' — largest shift '+maxD.toFixed(1)+' ΔE</small></div><span class="tag ok">'+(f.pass?"passes":"improved")+'</span></div>';
+  h += '<div class="swatches">';
+  for (var i = 0; i < f.colors.length; i++) h += '<span class="chip"><span class="sw" style="background:'+f.colors[i]+'"></span>'+f.colors[i]+'</span>';
+  h += '</div><div class="actions"><button class="btn btn-primary" id="applyfix" type="button">Use these colors</button><button class="btn btn-ghost" id="copyfix" type="button">Copy hex</button></div></div>';
+  document.getElementById("fixresult").innerHTML = h;
+  document.getElementById("applyfix").onclick = function(){ STATE.palette = f.colors.slice(); renderSwatches(); runCheck(); };
+  document.getElementById("copyfix").onclick = function(){ if (navigator.clipboard) navigator.clipboard.writeText(f.colors.join(", ")); this.textContent = "Copied"; };
 }
 
 document.getElementById("add").onclick = addFromInput;
