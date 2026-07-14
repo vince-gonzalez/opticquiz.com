@@ -1,0 +1,16 @@
+{
+  "name": "opticquiz-cvd-api",
+  "private": true,
+  "type": "module",
+  "description": "Cloudflare Worker exposing the OpticQuiz colorblind-safe checker as a REST API.",
+  "dependencies": {
+    "opticquiz-cvd": "^1.0.0"
+  },
+  "devDependencies": {
+    "wrangler": "^3"
+  },
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  }
+}
