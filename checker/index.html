@@ -137,6 +137,8 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
       <img id="preview" class="preview" alt="Uploaded image preview" hidden>
       <div id="dz-text">📷 <strong>Drop a screenshot or mockup</strong> — or <u>click to upload</u>, or paste — and we'll pull out its main colors</div>
     </div>
+    <input type="file" id="camfile" accept="image/*" capture="environment" class="sr-only">
+    <button class="btn btn-ghost" id="takephoto" type="button" style="margin-top:12px;width:100%;">Take a photo</button>
     <div class="tool-label" style="margin-top:16px;">…or add &amp; edit colors by hand</div>
     <div class="addrow">
       <input type="color" id="picker" value="#4a8c3f" aria-label="Pick a color">
@@ -309,6 +311,9 @@ var dz=document.getElementById("dropzone"), imgf=document.getElementById("imgfil
 dz.onclick=function(e){ if(e.target.tagName!=="INPUT") imgf.click(); };
 dz.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){e.preventDefault();imgf.click();} };
 imgf.onchange=function(){ if(this.files[0]) handleImage(this.files[0]); };
+var cam=document.getElementById("camfile");
+document.getElementById("takephoto").onclick=function(){ cam.click(); };
+cam.onchange=function(){ if(this.files[0]) handleImage(this.files[0]); };
 dz.addEventListener("dragover",function(e){ e.preventDefault(); dz.classList.add("drag"); });
 dz.addEventListener("dragleave",function(){ dz.classList.remove("drag"); });
 dz.addEventListener("drop",function(e){ e.preventDefault(); dz.classList.remove("drag"); if(e.dataTransfer.files[0]) handleImage(e.dataTransfer.files[0]); });
