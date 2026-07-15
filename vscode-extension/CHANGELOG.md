@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+- **Borderline tier.** A passing palette now also surfaces its *tightest* pairs — any
+  that clear the fail line but sit in the close zone (ΔE 10–16) — called out in amber,
+  with the Okabe–Ito gold-standard's own closest pair (11.1) shown for scale. Three
+  honest states (safe / borderline / conflict) instead of a bare pass/fail.
+
 ## 0.3.0
 - Panel now offers **two ways to fix**: Option A nudges your existing colors the
   minimal amount (stays on-brand); Option B generates a **fresh colorblind-safe

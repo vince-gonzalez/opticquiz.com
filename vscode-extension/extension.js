@@ -152,8 +152,19 @@ function analyze(palette, o) {
   for (const t of cvd.TYPES) sims[t] = palette.map((h) => cvd.simulate(h, t, o.severity, o.model));
   const fix = cvd.fixPalette(palette, { severity: o.severity, model: o.model, collapse: o.collapse });
   const generated = generateSafePalette(palette.length, o);
+  // "Borderline" = clears the fail line (>= collapse) but is still tight (< 16).
+  // 16 sits just above Okabe-Ito's own tightest pair (11.1), so this surfaces the
+  // closest calls honestly without failing palettes that meet the gold standard.
+  const BORDER_MAX = 16, distinct = 13, borderline = [];
+  for (let i = 0; i < palette.length; i++) for (let j = i + 1; j < palette.length; j++) {
+    if (cvd.deltaE(palette[i], palette[j]) < distinct) continue;
+    for (const t of cvd.TYPES) {
+      const ds = cvd.deltaE(cvd.simulate(palette[i], t, o.severity, o.model), cvd.simulate(palette[j], t, o.severity, o.model));
+      if (ds >= o.collapse && ds < BORDER_MAX) borderline.push({ a: palette[i], b: palette[j], t, sim: +ds.toFixed(1) });
+    }
+  }
   const contrast = palette.map((h) => ({ hex: h, white: +cvd.contrastRatio(h, "#ffffff").toFixed(1), black: +cvd.contrastRatio(h, "#000000").toFixed(1) }));
-  return { palette, report, sims, fix, generated, contrast };
+  return { palette, report, sims, fix, generated, borderline, contrast };
 }
 
 async function applyGenerated(doc) {
@@ -178,8 +189,8 @@ function swatches(arr, labels) {
 }
 
 function renderHtml(d, o) {
-  const pass = d.report.pass, cc = conflictCount(d.report);
-  let h = '<h2>' + (pass ? '<span class="ok">✓ Colorblind-safe</span>' : '<span class="bad">' + cc + ' conflict' + (cc === 1 ? '' : 's') + '</span>') + '</h2>';
+  const pass = d.report.pass, cc = conflictCount(d.report), bl = d.borderline.length;
+  let h = '<h2>' + (pass ? '<span class="ok">✓ Colorblind-safe</span>' + (bl ? ' <span class="warnt">· ' + bl + ' borderline pair' + (bl === 1 ? '' : 's') + '</span>' : '') : '<span class="bad">' + cc + ' conflict' + (cc === 1 ? '' : 's') + '</span>') + '</h2>';
   h += '<div class="section"><div class="lbl">Your colors</div>' + swatches(d.palette, true) + '</div>';
   h += '<div class="section"><div class="lbl">As a colorblind viewer sees them</div>';
   for (const t of cvd.TYPES) h += '<div class="simlbl">' + TYPE_LABEL[t] + '</div>' + swatches(d.sims[t], false);
@@ -190,6 +201,11 @@ function renderHtml(d, o) {
     h += '<div class="section"><div class="lbl">What collapses</div>';
     for (const { t, c } of conflicts) h += '<div class="cf"><span class="sw sm" style="background:' + c.a + '"></span><span class="sw sm" style="background:' + c.b + '"></span> <code>' + c.a + '</code> / <code>' + c.b + '</code> — ' + t + ' (ΔE ' + c.normal + ' → ' + c.sim + ')</div>';
     h += '</div>';
+  }
+  if (d.borderline.length) {
+    h += '<div class="section warn"><div class="lbl">Borderline — distinct, but close</div>';
+    for (const bl2 of d.borderline) h += '<div class="cf"><span class="sw sm" style="background:' + bl2.a + '"></span><span class="sw sm" style="background:' + bl2.b + '"></span> <code>' + bl2.a + '</code> / <code>' + bl2.b + '</code> — ' + bl2.t + ' (ΔE ' + bl2.sim + ')</div>';
+    h += '<div class="muted">Above the fail line, but tighter than ideal. For scale, the Okabe–Ito gold-standard palette\'s own closest pair is 11.1.</div></div>';
   }
   if (!pass) {
     const maxD = d.fix.drift.reduce((a, b) => (b > a ? b : a), 0);
@@ -225,6 +241,8 @@ code{font-family:var(--vscode-editor-font-family,monospace);font-size:11px;opaci
 .cf{margin:5px 0;font-size:12px;}
 .fix{border:1px solid #3fb95055;background:rgba(63,185,80,.06);border-radius:6px;padding:12px;}
 .gen{border:1px solid rgba(88,166,255,.35);background:rgba(88,166,255,.06);border-radius:6px;padding:12px;}
+.warn{border:1px solid rgba(212,130,10,.45);background:rgba(212,130,10,.07);border-radius:6px;padding:12px;}
+.warnt{color:#d4820a;font-size:12px;font-weight:normal;}
 button{margin-top:12px;background:var(--vscode-button-background);color:var(--vscode-button-foreground);border:none;padding:8px 14px;border-radius:4px;cursor:pointer;font-size:13px;}
 button:hover{background:var(--vscode-button-hoverBackground);}
 table{border-collapse:collapse;font-size:12px;}
