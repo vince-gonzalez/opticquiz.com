@@ -155,7 +155,7 @@ function analyze(palette, o) {
   // "Borderline" = clears the fail line (>= collapse) but is still tight (< 16).
   // 16 sits just above Okabe-Ito's own tightest pair (11.1), so this surfaces the
   // closest calls honestly without failing palettes that meet the gold standard.
-  const BORDER_MAX = 16, distinct = 13, borderline = [];
+  const BORDER_MAX = 15, distinct = 13, borderline = [];
   for (let i = 0; i < palette.length; i++) for (let j = i + 1; j < palette.length; j++) {
     if (cvd.deltaE(palette[i], palette[j]) < distinct) continue;
     for (const t of cvd.TYPES) {
