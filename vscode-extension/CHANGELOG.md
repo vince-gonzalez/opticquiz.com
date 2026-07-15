@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0
+- Panel now offers **two ways to fix**: Option A nudges your existing colors the
+  minimal amount (stays on-brand); Option B generates a **fresh colorblind-safe
+  palette** built on the Okabe–Ito standard (and generated beyond 8 colors),
+  maximally distinct across protanopia, deuteranopia, and tritanopia at once.
+  Each has its own one-click Apply.
+
 ## 0.2.0
 - **Visual preview panel** (`OpticQuiz: Preview colors` — command palette or right-click).
   Shows your palette, the same palette as protan/deutan/tritan viewers see it, the

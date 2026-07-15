@@ -113,13 +113,63 @@ const TYPE_LABEL = { deutan: "Deuteranopia (most common)", protan: "Protanopia",
 
 function conflictCount(rep) { return cvd.TYPES.reduce((a, t) => a + rep.types[t].conflicts.length, 0); }
 
+// Okabe & Ito's colorblind-safe palette (the set color-vision scientists recommend),
+// ordered strong-first. A "fresh" safe palette starts here and, past 8 colors,
+// generates more by maximizing the minimum simulated difference across all CVD types.
+const OKABE = ["#0072B2", "#E69F00", "#009E73", "#CC79A7", "#56B4E9", "#D55E00", "#F0E442", "#000000"];
+
+function hslToHex(h, s, l) {
+  h /= 360;
+  const f = (p, q, t) => { if (t < 0) t += 1; if (t > 1) t -= 1; if (t < 1 / 6) return p + (q - p) * 6 * t; if (t < 1 / 2) return q; if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6; return p; };
+  let r, g, b;
+  if (s === 0) { r = g = b = l; } else { const q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q; r = f(p, q, h + 1 / 3); g = f(p, q, h); b = f(p, q, h - 1 / 3); }
+  const to = (x) => { const v = Math.round(x * 255); return (v < 16 ? "0" : "") + v.toString(16); };
+  return "#" + to(r) + to(g) + to(b);
+}
+
+// n maximally-distinguishable colorblind-safe colors. Okabe-Ito base; greedy max-min beyond 8.
+function generateSafePalette(n, o) {
+  if (n <= OKABE.length) return OKABE.slice(0, n);
+  const cand = [];
+  for (let h = 0; h < 360; h += 15) for (const s of [0.55, 0.78]) for (const l of [0.40, 0.55, 0.70]) cand.push(hslToHex(h, s, l));
+  const anchors = ["#ffffff", "#000000"], chosen = OKABE.slice();
+  const mind = (c, set) => {
+    let m = Infinity;
+    for (const x of set) { for (const t of cvd.TYPES) { const d = cvd.deltaE(cvd.simulate(c, t, o.severity, o.model), cvd.simulate(x, t, o.severity, o.model)); if (d < m) m = d; } const dn = cvd.deltaE(c, x); if (dn < m) m = dn; }
+    return m;
+  };
+  while (chosen.length < n) {
+    let best = null, bs = -1;
+    for (const c of cand) { if (chosen.indexOf(c) >= 0) continue; const sc = mind(c, chosen.concat(anchors)); if (sc > bs) { bs = sc; best = c; } }
+    chosen.push(best);
+  }
+  return chosen.slice(0, n);
+}
+
 function analyze(palette, o) {
   const report = cvd.checkPalette(palette, { severity: o.severity, model: o.model, collapse: o.collapse });
   const sims = {};
   for (const t of cvd.TYPES) sims[t] = palette.map((h) => cvd.simulate(h, t, o.severity, o.model));
   const fix = cvd.fixPalette(palette, { severity: o.severity, model: o.model, collapse: o.collapse });
+  const generated = generateSafePalette(palette.length, o);
   const contrast = palette.map((h) => ({ hex: h, white: +cvd.contrastRatio(h, "#ffffff").toFixed(1), black: +cvd.contrastRatio(h, "#000000").toFixed(1) }));
-  return { palette, report, sims, fix, contrast };
+  return { palette, report, sims, fix, generated, contrast };
+}
+
+async function applyGenerated(doc) {
+  const o = cfg();
+  const hexes = findHexes(doc);
+  const palette = Array.from(new Set(hexes.map((h) => h.hex)));
+  if (palette.length < 2) return false;
+  const gen = generateSafePalette(palette.length, o);
+  const remap = new Map();
+  palette.forEach((p, i) => { if (p !== gen[i]) remap.set(p, gen[i]); });
+  if (remap.size === 0) return false;
+  const edit = new vscode.WorkspaceEdit();
+  for (const h of hexes) { const to = remap.get(h.hex); if (to) edit.replace(doc.uri, h.range, to); }
+  await vscode.workspace.applyEdit(edit);
+  vscode.window.showInformationMessage(`OpticQuiz: replaced with a fresh colorblind-safe palette (${remap.size} color${remap.size === 1 ? "" : "s"}).`);
+  return true;
 }
 
 function swatches(arr, labels) {
@@ -143,8 +193,9 @@ function renderHtml(d, o) {
   }
   if (!pass) {
     const maxD = d.fix.drift.reduce((a, b) => (b > a ? b : a), 0);
-    h += '<div class="section fix"><div class="lbl">Suggested colorblind-safe palette <span class="muted">· largest shift ' + maxD.toFixed(1) + ' ΔE</span></div>' + swatches(d.fix.colors, true) + '<button id="apply">Apply this fix to the file</button></div>';
+    h += '<div class="section fix"><div class="lbl">Option A — nudge your colors (minimal change) <span class="muted">· largest shift ' + maxD.toFixed(1) + ' ΔE</span></div>' + swatches(d.fix.colors, true) + '<button id="apply">Apply this fix to the file</button></div>';
   }
+  h += '<div class="section gen"><div class="lbl">' + (pass ? 'Fresh colorblind-safe palette' : 'Option B — a fresh safe palette') + ' <span class="muted">· distinct for every CVD type</span></div>' + swatches(d.generated, true) + '<button id="applygen">Use this palette instead</button></div>';
   h += '<div class="section"><div class="lbl">Text contrast (WCAG)</div><table><tr><th></th><th>on white</th><th>on black</th></tr>';
   for (const c of d.contrast) {
     const w = c.white >= 4.5, b = c.black >= 4.5;
@@ -173,6 +224,7 @@ h2{font-size:15px;margin:0 0 14px;}
 code{font-family:var(--vscode-editor-font-family,monospace);font-size:11px;opacity:.85;}
 .cf{margin:5px 0;font-size:12px;}
 .fix{border:1px solid #3fb95055;background:rgba(63,185,80,.06);border-radius:6px;padding:12px;}
+.gen{border:1px solid rgba(88,166,255,.35);background:rgba(88,166,255,.06);border-radius:6px;padding:12px;}
 button{margin-top:12px;background:var(--vscode-button-background);color:var(--vscode-button-foreground);border:none;padding:8px 14px;border-radius:4px;cursor:pointer;font-size:13px;}
 button:hover{background:var(--vscode-button-hoverBackground);}
 table{border-collapse:collapse;font-size:12px;}
@@ -182,7 +234,7 @@ th{font-weight:normal;opacity:.6;font-size:11px;}
 .foot{margin-top:16px;opacity:.5;font-size:11px;}
 a{color:var(--vscode-textLink-foreground);}
 </style></head><body>${inner}
-<script nonce="${n}">const vscode=acquireVsCodeApi();const b=document.getElementById('apply');if(b)b.addEventListener('click',()=>vscode.postMessage({type:'apply'}));</script>
+<script nonce="${n}">const vscode=acquireVsCodeApi();const b=document.getElementById('apply');if(b)b.addEventListener('click',()=>vscode.postMessage({type:'apply'}));const g=document.getElementById('applygen');if(g)g.addEventListener('click',()=>vscode.postMessage({type:'applygen'}));</script>
 </body></html>`;
 }
 function nonce() { let s = ""; const c = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; for (let i = 0; i < 20; i++) s += c[Math.floor(Math.random() * c.length)]; return s; }
@@ -201,7 +253,10 @@ function renderPreview() {
     panel = vscode.window.createWebviewPanel("opticquizPreview", "OpticQuiz — Colorblind Check",
       { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true }, { enableScripts: true });
     panel.onDidDispose(() => { panel = undefined; });
-    panel.webview.onDidReceiveMessage(async (m) => { if (m.type === "apply") { if (await fixDocument(previewDoc)) renderPreview(); } });
+    panel.webview.onDidReceiveMessage(async (m) => {
+      if (m.type === "apply") { if (await fixDocument(previewDoc)) renderPreview(); }
+      else if (m.type === "applygen") { if (await applyGenerated(previewDoc)) renderPreview(); }
+    });
   }
   panel.webview.html = palette.length < 2
     ? wrapHtml('<h2>OpticQuiz</h2><p class="muted">Add at least two colors to this file to check them.</p>')

@@ -2,7 +2,7 @@
   "name": "opticquiz-colorblind-check",
   "displayName": "OpticQuiz — Colorblind-Safe Colors",
   "description": "Flags color pairs that collapse for colorblind viewers as you code, and fixes them with one click. Published method (DOI).",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "opticquiz",
   "license": "MIT",
   "icon": "icon.png",
