@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Add a colorblind accessibility mode to any website in one line. A floating eye lets visitors re-color your page live so they can distinguish colors — protanopia, deuteranopia, tritanopia, or a recommended all-types correction. Free, no tracking, published method.">
+<meta name="theme-color" content="#F8F6F2">
+<meta name="keywords" content="colorblind accessibility widget, add colorblind mode to website, color vision deficiency correction, colorblind friendly website, accessibility overlay color, daltonization widget">
+<meta property="og:title" content="OpticQuiz Eye — a one-line colorblind accessibility widget">
+<meta property="og:description" content="One script tag adds a floating eye that lets any visitor re-color your page for their type of color blindness. Free, private, published method.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/widget/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz Eye — colorblind accessibility widget">
+<meta name="twitter:description" content="One line of code adds live colorblind color-correction to your site.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="canonical" href="https://opticquiz.com/widget/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>OpticQuiz Eye — One-Line Colorblind Accessibility Widget</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"OpticQuiz Eye","applicationCategory":"DeveloperApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"description":"A one-line embeddable widget that lets website visitors re-color the page to distinguish colors for their type of color-vision deficiency.","url":"https://opticquiz.com/widget/","author":{"@type":"Person","name":"Vince Gonzalez","identifier":"https://orcid.org/0009-0005-3640-014X"},"isBasedOn":{"@type":"ScholarlyArticle","identifier":"https://doi.org/10.5281/zenodo.21310578"},"license":"https://opensource.org/licenses/MIT"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I add a colorblind mode to my website?","acceptedAnswer":{"@type":"Answer","text":"Add one script tag: <script src=\"https://opticquiz.com/widget/eye.js\" defer></script>. A floating eye appears; visitors open it and pick a color-correction mode for their type of color-vision deficiency. No account, no build step, no tracking."}},
+{"@type":"Question","name":"Does the widget simulate colorblindness or correct it?","acceptedAnswer":{"@type":"Answer","text":"It corrects — it re-colors the page so a colorblind visitor can distinguish colors that would otherwise collapse for them (daltonization), rather than simulating what colorblindness looks like. It is an aid that strongly improves separation, not a guarantee for every case."}},
+{"@type":"Question","name":"Does it track visitors?","acceptedAnswer":{"@type":"Answer","text":"No. Zero tracking, no network requests, no identifiers. The visitor's chosen mode is stored only in their own browser."}}
+]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--green:#4A8C3F;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);-webkit-font-smoothing:antialiased;}
+.wrap{max-width:680px;margin:0 auto;padding:0 20px 100px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:680px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;letter-spacing:.03em;}.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.crumbs{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.06em;margin:26px 0 12px;}
+.crumbs a{color:var(--gray);text-decoration:none;}
+.eyebrow{font-family:var(--fm);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);}
+h1{font-family:var(--fd);font-size:clamp(36px,9vw,64px);line-height:.96;letter-spacing:.02em;margin:6px 0 14px;}
+.lede{font-size:18px;line-height:1.6;margin-bottom:24px;}
+h2{font-family:var(--fd);font-size:clamp(24px,6vw,32px);line-height:1;letter-spacing:.02em;margin:34px 0 12px;}
+p{font-size:16px;color:var(--gray);line-height:1.8;margin-bottom:14px;}
+p strong{color:var(--black);}a{color:var(--red);}
+pre{background:#1A1A1A;color:#F4F1EA;border-radius:var(--rc);padding:16px 18px;overflow-x:auto;font-family:var(--fm);font-size:14px;line-height:1.6;margin:10px 0 18px;}
+.card{background:#fff;border:1.5px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:14px 0;}
+.steps{display:flex;gap:14px;flex-wrap:wrap;}
+.step{flex:1;min-width:160px;}.step .n{font-family:var(--fd);font-size:22px;color:var(--red);}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:16px 18px;margin:22px 0;font-size:13px;color:var(--gray);line-height:1.8;}
+.disclaimer strong{color:var(--black);}
+.related{background:#fff;border:1px solid var(--lgray);border-radius:var(--rc);padding:8px 18px;margin:22px 0;}
+.related a{display:block;color:var(--black);text-decoration:none;font-size:15px;padding:9px 0;border-bottom:1px solid var(--lgray);}
+.related a:last-child{border-bottom:none;}
+.faq-q{font-family:var(--fs);font-weight:600;font-size:16px;margin:18px 0 4px;}
+.faq-a{font-size:15px;color:var(--gray);line-height:1.8;}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.hint{font-size:13px;color:var(--gray);}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">EYE · WIDGET</div>
+</header>
+<main class="wrap">
+  <nav class="crumbs"><a href="/">Home</a> › Colorblind Accessibility Widget</nav>
+  <span class="eyebrow">Accessibility · One line of code</span>
+  <h1>ADD A COLORBLIND<br>MODE TO ANY SITE</h1>
+  <p class="lede">One script tag drops a floating eye on your page. A visitor opens it and re-colors your site live so they can <strong>tell colors apart</strong> — for their type of color blindness, or a recommended all-types correction. Free, private, and based on a <a href="/research/">published method</a>. <strong>This page is running it</strong> — look bottom-right. 👁</p>
+
+  <h2>ADD IT</h2>
+  <pre>&lt;script src="https://opticquiz.com/widget/eye.js" defer&gt;&lt;/script&gt;</pre>
+  <p class="hint">That's the whole install. No account, no build step, no configuration. Works on static HTML, WordPress, Shopify, React, anything that renders HTML.</p>
+
+  <h2>HOW IT WORKS</h2>
+  <div class="card">
+    <div class="steps">
+      <div class="step"><div class="n">1</div><p>A visitor clicks the eye and picks a mode — <strong>Recommended</strong> if they don't know their type, or a specific one.</p></div>
+      <div class="step"><div class="n">2</div><p>The page's colors are re-mapped so the differences their vision compresses become visible (<strong>daltonization</strong>, via an SVG color filter).</p></div>
+      <div class="step"><div class="n">3</div><p>Their choice is remembered in their browser. Nothing is sent anywhere.</p></div>
+    </div>
+  </div>
+  <p>It <strong>corrects</strong>, it doesn't simulate — the point is to help the visitor <em>see</em>, not to show sighted people what color blindness looks like. A red/green pair a deuteranope perceives at CIEDE2000 ΔE ~8 becomes ~29 after correction.</p>
+
+  <h2>PRIVATE BY DESIGN</h2>
+  <p><strong>Zero tracking. No network requests. No identifiers.</strong> The visitor's chosen mode lives only in their own browser's storage. An accessibility tool should never be a surveillance vector.</p>
+
+  <div class="disclaimer" role="note">
+    <strong>Honest scope.</strong> Correction is a powerful <strong>aid, not a guarantee</strong> — no single transform resolves every case, and it doesn't replace <a href="/checker/">designing with colorblind-safe colors</a> in the first place. <strong>Known v1 limits:</strong> it applies one filter to a wrapper, so pages that rely on <code>position:fixed</code>/<code>sticky</code> elements can shift while a mode is on, and it can't exempt individual images. Test on your site before production. A per-element strategy is the planned v2.
+  </div>
+
+  <div class="related">
+    <a href="/checker/">Check your palette is colorblind-safe (the other half) →</a>
+    <a href="/palettes/">Is your default palette safe? viridis, jet, Tableau… →</a>
+    <a href="/research/">The published method behind it →</a>
+  </div>
+
+  <h2>QUESTIONS</h2>
+  <div class="faq-q">How do I add a colorblind mode to my website?</div>
+  <p class="faq-a">Add the one script tag above. A floating eye appears; visitors open it and pick a correction mode. No account, no build step, no tracking.</p>
+  <div class="faq-q">Does it simulate colorblindness or correct it?</div>
+  <p class="faq-a">It corrects — re-coloring the page so colorblind visitors can distinguish colors that would otherwise collapse, rather than simulating the deficiency.</p>
+  <div class="faq-q">Will it slow down or break my site?</div>
+  <p class="faq-a">It's tiny and does nothing until a visitor turns it on. Its one real caveat is fixed/sticky layouts (see the note above) — test before shipping.</p>
+
+  <footer>OpticQuiz Eye · runs in-browser, tracks nothing · © opticquiz.com</footer>
+</main>
+<script src="/widget/eye.js" defer></script>
+</body>
+</html>
