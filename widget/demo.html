@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpticQuiz Eye — demo page</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#1a1a1a;background:#fff;line-height:1.5;}
+.wrap{max-width:720px;margin:0 auto;padding:32px 24px 120px;}
+h1{font-size:26px;margin-bottom:4px;}
+.sub{color:#666;margin-bottom:28px;}
+h2{font-size:15px;text-transform:uppercase;letter-spacing:.05em;color:#888;margin:28px 0 12px;}
+.card{border:1px solid #ddd;border-radius:10px;padding:18px;margin-bottom:16px;}
+table{width:100%;border-collapse:collapse;font-size:15px;}
+td,th{text-align:left;padding:8px 6px;border-bottom:1px solid #eee;}
+.up{color:#1a9641;font-weight:600;}
+.down{color:#d7191c;font-weight:600;}
+.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:600;color:#fff;}
+.b-stock{background:#1a9641;}
+.b-out{background:#d7191c;}
+.b-low{background:#fdae61;color:#1a1a1a;}
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:8px;}
+.legend span{display:flex;align-items:center;gap:7px;font-size:14px;}
+.dot{width:16px;height:16px;border-radius:50%;}
+.err{color:#d7191c;font-size:14px;margin-top:6px;}
+.ok{color:#1a9641;font-size:14px;margin-top:6px;}
+.chart{height:120px;display:flex;align-items:flex-end;gap:10px;margin-top:10px;}
+.bar{flex:1;border-radius:4px 4px 0 0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Northwind Metrics</h1>
+  <div class="sub">A pretend dashboard — the kind of page where red-vs-green carries the meaning.</div>
+
+  <h2>Today's movers</h2>
+  <div class="card">
+    <table>
+      <tr><th>Ticker</th><th>Price</th><th>Change</th></tr>
+      <tr><td>ACME</td><td>$142.10</td><td class="up">▲ +3.4%</td></tr>
+      <tr><td>GLOBEX</td><td>$88.05</td><td class="down">▼ −2.1%</td></tr>
+      <tr><td>INITECH</td><td>$61.77</td><td class="up">▲ +1.2%</td></tr>
+      <tr><td>UMBRELLA</td><td>$204.30</td><td class="down">▼ −5.8%</td></tr>
+    </table>
+  </div>
+
+  <h2>Inventory status</h2>
+  <div class="card">
+    <p style="margin-bottom:10px;">Widget A — <span class="badge b-stock">In stock</span></p>
+    <p style="margin-bottom:10px;">Widget B — <span class="badge b-out">Sold out</span></p>
+    <p>Widget C — <span class="badge b-low">Low</span></p>
+  </div>
+
+  <h2>Revenue by region</h2>
+  <div class="card">
+    <div class="chart">
+      <div class="bar" style="height:70%;background:#d7191c;"></div>
+      <div class="bar" style="height:90%;background:#1a9641;"></div>
+      <div class="bar" style="height:55%;background:#2166ac;"></div>
+      <div class="bar" style="height:80%;background:#fdae61;"></div>
+    </div>
+    <div class="legend">
+      <span><span class="dot" style="background:#d7191c;"></span>North</span>
+      <span><span class="dot" style="background:#1a9641;"></span>South</span>
+      <span><span class="dot" style="background:#2166ac;"></span>East</span>
+      <span><span class="dot" style="background:#fdae61;"></span>West</span>
+    </div>
+  </div>
+
+  <h2>Sign-up</h2>
+  <div class="card">
+    <p>Email: user@example.com</p>
+    <div class="err">✕ Password is too short</div>
+    <p>Confirm: ●●●●●●●●</p>
+    <div class="ok">✓ Passwords match</div>
+  </div>
+
+  <p style="color:#888;font-size:13px;margin-top:24px;">Click the eye at the bottom-right → cycle protan / deutan / tritan / balanced correction.</p>
+</div>
+
+<script src="eye.js" defer></script>
+</body>
+</html>
