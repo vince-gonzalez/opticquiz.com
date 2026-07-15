@@ -2,7 +2,7 @@
   "name": "opticquiz-colorblind-check",
   "displayName": "OpticQuiz — Colorblind-Safe Colors",
   "description": "Flags color pairs that collapse for colorblind viewers as you code, and fixes them with one click. Published method (DOI).",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "opticquiz",
   "license": "MIT",
   "icon": "icon.png",
@@ -20,6 +20,11 @@
   "contributes": {
     "commands": [
       {
+        "command": "opticquiz.preview",
+        "title": "Preview colors — simulate, fix, contrast",
+        "category": "OpticQuiz"
+      },
+      {
         "command": "opticquiz.checkFile",
         "title": "Check colors for colorblind-safety",
         "category": "OpticQuiz"
@@ -30,6 +35,11 @@
         "category": "OpticQuiz"
       }
     ],
+    "menus": {
+      "editor/context": [
+        { "command": "opticquiz.preview", "when": "editorTextFocus", "group": "1_modification@9" }
+      ]
+    },
     "configuration": {
       "title": "OpticQuiz",
       "properties": {
