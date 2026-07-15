@@ -1,10 +1,14 @@
-/* OpticQuiz test file.
-   Right-click anywhere in here  →  "OpticQuiz: Preview colors"
-   (the panel opens on the right). */
+/* OpticQuiz test file — right-click anywhere → "OpticQuiz: Preview colors".
+
+   This palette PASSES but has borderline pairs (you'll see them called out in
+   amber, with the Okabe-Ito gold-standard's own closest pair, 11.1, for scale).
+
+   Want to see it FAIL and get the fix + generate options instead?
+   Change  #00c231  to  #1a9641  and re-open the panel. */
 
 :root {
-  --danger: #d7191c;   /* red  */
-  --ok:     #1a9641;   /* green — collapses with the red for deuteranopia */
-  --info:   #2166ac;   /* blue */
-  --warn:   #fdae61;   /* amber */
+  --danger: #d7191c;   /* red   */
+  --ok:     #00c231;   /* green */
+  --info:   #2166ac;   /* blue  */
+  --warn:   #ffd788;   /* amber */
 }
