@@ -8,6 +8,21 @@ const CORS = {
 const json = (obj, status = 200) =>
   new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json", ...CORS } });
 
+// A self-verifying shields-style SVG badge. It RE-CHECKS the given colors live, so a
+// "pass" can't be faked — the honesty is the point (the badge is the certification seed).
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+function badge(label, value, ok) {
+  const lw = Math.round(6.4 * label.length + 12), vw = Math.round(6.4 * value.length + 14), w = lw + vw;
+  const color = ok ? "#3fb950" : "#e05d44";
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="20" role="img" aria-label="${esc(label)}: ${esc(value)}">
+<linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient>
+<rect rx="3" width="${w}" height="20" fill="#555"/><rect rx="3" x="${lw}" width="${vw}" height="20" fill="${color}"/>
+<rect rx="3" width="${w}" height="20" fill="url(#s)"/>
+<g fill="#fff" text-anchor="middle" font-family="Verdana,DejaVu Sans,Geneva,sans-serif" font-size="11">
+<text x="${lw / 2}" y="14">${esc(label)}</text><text x="${lw + vw / 2}" y="14">${esc(value)}</text></g></svg>`;
+}
+const svg = (s) => new Response(s, { headers: { "Content-Type": "image/svg+xml;charset=utf-8", "Cache-Control": "max-age=300", "Access-Control-Allow-Origin": "*" } });
+
 export default {
   async fetch(request) {
     if (request.method === "OPTIONS") return new Response(null, { headers: CORS });
@@ -24,10 +39,22 @@ export default {
           "POST /api/check": '{ "colors": ["#d7191c","#1a9641","#2166ac"] }',
           "POST /api/fix": '{ "colors": ["#d7191c","#1a9641"] }',
           "POST /api/simulate": '{ "color": "#d7191c", "type": "deutan" }',
-          "POST /api/contrast": '{ "foreground": "#767676", "background": "#ffffff", "large": false }'
+          "POST /api/contrast": '{ "foreground": "#767676", "background": "#ffffff", "large": false }',
+          "GET  /api/badge": '?colors=d7191c,1a9641,2166ac  → a live-verified SVG badge'
         }
       });
     }
+
+    // Live-verifying badge: <img src="https://api.opticquiz.com/api/badge?colors=..">
+    if (request.method === "GET" && path.endsWith("/badge")) {
+      const colors = (url.searchParams.get("colors") || "").split(",").map((s) => s.trim()).filter(Boolean);
+      if (colors.length < 2) return svg(badge("colorblind-safe", "add ?colors=", false));
+      let r;
+      try { r = cvd.checkPalette(colors); } catch { return svg(badge("colorblind-safe", "bad colors", false)); }
+      const n = ["protan", "deutan", "tritan"].reduce((a, t) => a + r.types[t].conflicts.length, 0);
+      return svg(badge("colorblind-safe", r.pass ? "✓ pass" : "✗ " + n + " conflict" + (n === 1 ? "" : "s"), r.pass));
+    }
+
     if (request.method !== "POST") return json({ error: "Use POST. See /api for usage." }, 405);
 
     let body;

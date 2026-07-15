@@ -1,0 +1,37 @@
+name: "OpticQuiz Colorblind Check"
+description: "Fail CI when a stylesheet's colors collapse for colorblind viewers (Machado 2009 + CIEDE2000)."
+author: "OpticQuiz"
+branding:
+  icon: "eye"
+  color: "blue"
+inputs:
+  path:
+    description: "Directory to scan for .css/.scss/.less files."
+    required: false
+    default: "."
+  files:
+    description: "Comma-separated explicit file list (overrides path)."
+    required: false
+    default: ""
+  fail-on:
+    description: "'conflict' (default) fails on hard conflicts; 'borderline' also fails on tight pairs."
+    required: false
+    default: "conflict"
+  severity:
+    description: "CVD severity to check against, 0-1 (1 = full dichromacy)."
+    required: false
+    default: "1"
+  model:
+    description: "Simulation model: 'machado' or 'brettel'."
+    required: false
+    default: "machado"
+outputs:
+  conflicts:
+    description: "Total colorblind conflicts found."
+  borderline:
+    description: "Total borderline (tight) pairs found."
+  files_checked:
+    description: "Number of files checked."
+runs:
+  using: "node20"
+  main: "index.js"

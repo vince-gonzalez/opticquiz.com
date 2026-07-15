@@ -18,12 +18,13 @@
     tritan: "0.7412 -0.4072 0.666 0 0 0.0751 0.5852 0.3397 0 0 0 0 1 0 0 0 0 0 1 0",
     balanced: "0.9777 -0.7251 0.7474 0 0 0.3248 0.2051 0.4701 0 0 0.4547 -0.6454 1.1907 0 0 0 0 0 1 0"
   };
+  // "Recommended" first — most people know "help," not their CVD type.
   var STATES = [
     { id: null, label: "Off" },
-    { id: "protan", label: "Protanopia correction" },
-    { id: "deutan", label: "Deuteranopia correction" },
-    { id: "tritan", label: "Tritanopia correction" },
-    { id: "balanced", label: "Balanced — all types" }
+    { id: "balanced", label: "Recommended — helps all types" },
+    { id: "deutan", label: "Deuteranopia (green-weak)" },
+    { id: "protan", label: "Protanopia (red-weak)" },
+    { id: "tritan", label: "Tritanopia (blue-yellow)" }
   ];
 
   function start() {
