@@ -1,0 +1,10 @@
+/* OpticQuiz test file.
+   Right-click anywhere in here  →  "OpticQuiz: Preview colors"
+   (the panel opens on the right). */
+
+:root {
+  --danger: #d7191c;   /* red  */
+  --ok:     #1a9641;   /* green — collapses with the red for deuteranopia */
+  --info:   #2166ac;   /* blue */
+  --warn:   #fdae61;   /* amber */
+}
