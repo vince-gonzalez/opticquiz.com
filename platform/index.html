@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz is a color-accessibility platform: one published method (DOI), everywhere you work. An engine on npm and PyPI, a REST API, a one-line widget, a VS Code extension, a GitHub Action, and an MCP server for AI assistants — plus free web tools.">
+<meta name="theme-color" content="#F8F6F2">
+<meta name="keywords" content="color accessibility platform, colorblind api, colorblind npm package, colorblind checker api, color vision deficiency tools, colorblind accessibility developer tools, wcag color api">
+<meta property="og:title" content="OpticQuiz — the color-accessibility platform">
+<meta property="og:description" content="One published method, everywhere you work: engine (npm/PyPI), REST API, one-line widget, VS Code extension, GitHub Action, MCP server, and free web tools.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/platform/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz — color-accessibility platform">
+<meta name="twitter:description" content="Engine, API, widget, VS Code, GitHub Action, MCP — one published color-accessibility method, everywhere you work.">
+<meta name="twitter:image" content="https://opticquiz.com/opticquiz_icon.png">
+<link rel="canonical" href="https://opticquiz.com/platform/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<title>Color-Accessibility Platform — API, npm, Widget, VS Code | OpticQuiz</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"OpticQuiz Color-Accessibility Platform","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"url":"https://opticquiz.com/platform/","description":"A color-accessibility platform: an engine (npm + PyPI), REST API, embeddable widget, VS Code extension, GitHub Action, and MCP server, from a published, open-access method.","isBasedOn":{"@type":"ScholarlyArticle","identifier":"https://doi.org/10.5281/zenodo.21310578"},"author":{"@type":"Person","name":"Vince Gonzalez","identifier":"https://orcid.org/0009-0005-3640-014X"},"license":"https://opensource.org/licenses/MIT"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://opticquiz.com/"},{"@type":"ListItem","position":2,"name":"Platform","item":"https://opticquiz.com/platform/"}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--green:#4A8C3F;--blue:#2166AC;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);-webkit-font-smoothing:antialiased;}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 100px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:720px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;letter-spacing:.03em;}.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.crumbs{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.06em;margin:26px 0 12px;}
+.crumbs a{color:var(--gray);text-decoration:none;}
+.eyebrow{font-family:var(--fm);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);}
+h1{font-family:var(--fd);font-size:clamp(36px,9vw,64px);line-height:.96;letter-spacing:.02em;margin:6px 0 14px;}
+.lede{font-size:18px;line-height:1.6;margin-bottom:8px;}
+.sub{font-size:14px;color:var(--gray);line-height:1.7;margin-bottom:26px;}
+.sub a{color:var(--red);}
+h2{font-family:var(--fd);font-size:clamp(22px,5vw,28px);line-height:1;letter-spacing:.02em;margin:6px 0 4px;}
+p{font-size:16px;color:var(--gray);line-height:1.7;margin-bottom:10px;}
+a{color:var(--red);}
+.tool{background:#fff;border:1.5px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:14px 0;}
+.tool .tag{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);border:1px solid var(--lgray);border-radius:20px;padding:2px 8px;float:right;}
+pre{background:#1A1A1A;color:#F4F1EA;border-radius:6px;padding:14px 16px;overflow-x:auto;font-family:var(--fm);font-size:13px;line-height:1.55;margin:10px 0 6px;}
+.mini{font-size:13px;color:var(--gray);}.mini a{color:var(--red);}
+.badge-live{display:inline-block;vertical-align:middle;margin:4px 0;}
+.gate{background:var(--black);color:#fff;border-radius:var(--rc);padding:20px;margin:20px 0 26px;}
+.gate a{color:#8ab4f8;}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:16px 18px;margin:24px 0;font-size:13px;color:var(--gray);line-height:1.8;}
+.disclaimer strong{color:var(--black);}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">PLATFORM</div>
+</header>
+<main class="wrap">
+  <nav class="crumbs"><a href="/">Home</a> › Platform</nav>
+  <span class="eyebrow">For developers &amp; designers</span>
+  <h1>THE COLOR-<br>ACCESSIBILITY<br>PLATFORM</h1>
+  <p class="lede">One published method for color-vision accessibility, everywhere you work — the same engine behind a checker, a fixer, a REST API, a one-line widget, a VS Code extension, a GitHub Action, and an MCP server.</p>
+  <p class="sub">Check whether colors stay distinguishable under color blindness, fix them if not, and correct pages for the people looking at them — all from a method that's <a href="/research/">published and open-access</a>, so it can be verified rather than trusted.</p>
+
+  <div class="gate">
+    <strong>The gate:</strong> the whole thing rests on one open-access paper — <a href="https://doi.org/10.5281/zenodo.21310578">DOI 10.5281/zenodo.21310578</a> — Machado (2009) color-vision simulation + CIEDE2000 perceptual difference. Everything below runs that exact method. MIT-licensed, on <a href="https://github.com/zengineco/opticquiz.com">GitHub</a>.
+  </div>
+
+  <h2>THE ENGINE</h2>
+  <div class="tool"><span class="tag">npm · PyPI</span>
+    <p>Check, fix, contrast, and simulate — zero dependencies, byte-identical across JavaScript and Python.</p>
+<pre>npm install opticquiz-cvd      # JavaScript / TypeScript
+pip install opticquiz-cvd      # Python (matplotlib, plotly, seaborn)</pre>
+<pre>const cvd = require("opticquiz-cvd");
+cvd.checkPalette(["#d7191c", "#1a9641"]).pass;   // false
+cvd.fixPalette(["#d7191c", "#1a9641"]).colors;   // a safe version
+cvd.checkContrast("#767676", "#ffffff").AA;      // true</pre>
+    <p class="mini"><a href="https://www.npmjs.com/package/opticquiz-cvd">npm</a> · <a href="https://pypi.org/project/opticquiz-cvd/">PyPI</a></p>
+  </div>
+
+  <h2>THE API</h2>
+  <div class="tool"><span class="tag">REST · CORS</span>
+    <p>Anything that can hit a URL — a service, a CI job, an AI agent — can call the engine.</p>
+<pre>curl -X POST https://api.opticquiz.com/api/check \
+  -H "Content-Type: application/json" \
+  -d '{"colors":["#d7191c","#1a9641"]}'</pre>
+    <p class="mini"><code>/api/check</code> · <code>/api/fix</code> · <code>/api/contrast</code> · <code>/api/simulate</code> · <a href="https://api.opticquiz.com/api">api.opticquiz.com/api</a></p>
+  </div>
+
+  <h2>THE WIDGET</h2>
+  <div class="tool"><span class="tag">one line</span>
+    <p>A floating eye that lets your visitors re-color the page for their own color vision.</p>
+<pre>&lt;script src="https://opticquiz.com/widget/eye.js" defer&gt;&lt;/script&gt;</pre>
+    <p class="mini"><a href="/widget/">Docs &amp; live demo</a> · <a href="https://www.npmjs.com/package/opticquiz-eye">opticquiz-eye on npm</a></p>
+  </div>
+
+  <h2>IN YOUR EDITOR</h2>
+  <div class="tool"><span class="tag">VS Code</span>
+    <p>Underlines color pairs that collapse for colorblind viewers as you write them, and fixes them with one click.</p>
+    <p class="mini"><a href="https://marketplace.visualstudio.com/items?itemName=opticquiz.opticquiz-colorblind-check">VS Code Marketplace</a> — or search "colorblind" in the Extensions panel.</p>
+  </div>
+
+  <h2>IN YOUR CI</h2>
+  <div class="tool"><span class="tag">GitHub Action</span>
+    <p>Fail a pull request when a stylesheet's colors collapse for colorblind viewers.</p>
+<pre>- uses: zengineco/opticquiz.com/packages/cvd-action@main
+  with:
+    path: ./src</pre>
+  </div>
+
+  <h2>FOR YOUR AI</h2>
+  <div class="tool"><span class="tag">MCP</span>
+    <p>Give Claude, Cursor, or any MCP client the tools to check and fix colors mid-conversation.</p>
+<pre>{ "mcpServers": { "opticquiz-cvd": {
+  "command": "npx", "args": ["-y", "opticquiz-cvd-mcp"] } } }</pre>
+    <p class="mini"><a href="https://www.npmjs.com/package/opticquiz-cvd-mcp">opticquiz-cvd-mcp on npm</a></p>
+  </div>
+
+  <h2>SHOW IT</h2>
+  <div class="tool"><span class="tag">live badge</span>
+    <p>A self-verifying badge that re-checks your palette every time it loads — a pass can't be faked.</p>
+    <p><img class="badge-live" src="https://api.opticquiz.com/api/badge?colors=0072B2,E69F00,009E73,CC79A7" alt="colorblind-safe: pass"></p>
+<pre>&lt;img src="https://api.opticquiz.com/api/badge?colors=YOUR,HEX,COLORS"&gt;</pre>
+  </div>
+
+  <h2>OR JUST USE THE WEB TOOLS</h2>
+  <div class="tool">
+    <p><a href="/checker/">Colorblind-safe palette checker</a> — paste colors, get the conflicts and a fix.<br>
+    <a href="/palettes/">Benchmark</a> — is viridis / jet / Tableau / D3 / Material colorblind-safe?<br>
+    <a href="/contrast-checker/">WCAG contrast checker</a> — the text-legibility axis.</p>
+  </div>
+
+  <div class="disclaimer" role="note">
+    <strong>Honest scope.</strong> These check and improve one axis — color distinguishability — and say so. They are screening and remediation <strong>aids, not a legal accessibility audit</strong>, and don't certify WCAG / ADA / EAA compliance, which cover far more than color. The method is <a href="/research/">published</a> so its limits are documented, not hidden.
+  </div>
+
+  <footer>OpticQuiz · one published method, everywhere you work · © opticquiz.com</footer>
+</main>
+</body>
+</html>
