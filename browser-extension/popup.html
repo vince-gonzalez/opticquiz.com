@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body{width:240px;margin:0;font:14px/1.3 system-ui,-apple-system,Segoe UI,sans-serif;background:#1A1A1A;color:#fff;}
+  .head{padding:12px 14px 6px;}
+  .head .t{font-weight:600;}
+  .head .s{font-size:11px;opacity:.55;margin-top:2px;}
+  .list{padding:4px 8px 8px;}
+  button.mode{display:flex;flex-direction:column;gap:1px;width:100%;text-align:left;background:transparent;color:#fff;border:none;border-radius:8px;padding:9px 10px;cursor:pointer;font:inherit;}
+  button.mode:hover{background:rgba(255,255,255,.08);}
+  button.mode[aria-checked="true"]{background:#0072B2;}
+  button.mode strong{font-weight:600;}
+  button.mode span{font-size:12px;opacity:.6;}
+  .foot{border-top:1px solid rgba(255,255,255,.12);padding:8px 14px 10px;font-size:11px;display:flex;gap:12px;}
+  .foot a{color:#8ab4f8;text-decoration:none;}
+</style>
+</head>
+<body>
+  <div class="head">
+    <div class="t">Colorblind Corrector</div>
+    <div class="s">Re-colors this page so you can tell colors apart.</div>
+  </div>
+  <div class="list" id="list" role="radiogroup" aria-label="Correction mode">
+    <button class="mode" data-mode="balanced" role="radio" aria-checked="false"><strong>Recommended</strong><span>helps all types</span></button>
+    <button class="mode" data-mode="deutan" role="radio" aria-checked="false"><strong>Deuteranopia</strong><span>green-weak, most common</span></button>
+    <button class="mode" data-mode="protan" role="radio" aria-checked="false"><strong>Protanopia</strong><span>red-weak</span></button>
+    <button class="mode" data-mode="tritan" role="radio" aria-checked="false"><strong>Tritanopia</strong><span>blue-yellow</span></button>
+    <button class="mode" data-mode="off" role="radio" aria-checked="false"><strong>Off</strong><span>normal colors</span></button>
+  </div>
+  <div class="foot">
+    <a href="https://opticquiz.com/live" target="_blank" rel="noopener">Camera mode</a>
+    <a href="https://opticquiz.com/checker" target="_blank" rel="noopener">Check a palette</a>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
