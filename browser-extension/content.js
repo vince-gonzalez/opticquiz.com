@@ -50,10 +50,10 @@
   // Re-apply once the body exists (needed when injected at document_start).
   document.addEventListener("DOMContentLoaded", function () { if (current) apply(current); });
 
-  // Live updates from the popup.
+  // Live updates: when the popup changes the saved mode, every page reacts.
   try {
-    chrome.runtime.onMessage.addListener(function (msg) {
-      if (msg && msg.type === "oq-mode") apply(msg.mode);
+    chrome.storage.onChanged.addListener(function (changes, area) {
+      if (area === "local" && changes[KEY]) apply(changes[KEY].newValue);
     });
   } catch (e) {}
 })();

@@ -16,15 +16,10 @@ buttons.forEach(function (b) {
   b.addEventListener("click", function () {
     var mode = b.getAttribute("data-mode");
     var val = mode === "off" ? null : mode;
+    // Writing the mode is all that's needed — each page's content script listens
+    // for the storage change and re-applies. No tabs permission, no messaging.
     chrome.storage.local.set(makeObj(KEY, val));
     mark(mode);
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      if (tabs[0] && tabs[0].id != null) {
-        chrome.tabs.sendMessage(tabs[0].id, { type: "oq-mode", mode: val }, function () {
-          void chrome.runtime.lastError; // ignore "no receiver" on chrome:// pages
-        });
-      }
-    });
   });
 });
 
