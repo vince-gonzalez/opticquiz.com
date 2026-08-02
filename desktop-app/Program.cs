@@ -6,6 +6,7 @@
 // Windows color-matrix convention. Method: https://doi.org/10.5281/zenodo.21310578  MIT.
 using System;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -77,13 +78,26 @@ namespace OpticQuizCorrector
 
             _tray = new NotifyIcon
             {
-                Icon = SystemIcons.Application,
+                Icon = LoadTrayIcon(),
                 Text = "OpticQuiz Colorblind Corrector — click to choose a mode",
                 Visible = true,
                 ContextMenuStrip = menu
             };
             // Left-click opens the same menu (so a single click reaches it).
             _tray.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) menu.Show(Cursor.Position); };
+        }
+
+        private static Icon LoadTrayIcon()
+        {
+            try
+            {
+                string p = Path.Combine(AppContext.BaseDirectory, "app.ico");
+                if (File.Exists(p)) return new Icon(p);
+                var extracted = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+                if (extracted != null) return extracted;
+            }
+            catch { /* fall through to default */ }
+            return SystemIcons.Application;
         }
 
         private void Apply(float[] matrix)
