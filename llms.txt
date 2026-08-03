@@ -63,6 +63,9 @@ All of these are screening and remediation aids, not a legal ADA/WCAG audit, and
 - [Vision & Eye Test Glossary](https://opticquiz.com/learn/glossary/): Plain-English definitions of every term used across the site, each linked to its test.
 - [About & Honesty Policy](https://opticquiz.com/about/): Who builds OpticQuiz and the rule that every test states what a screen can and cannot measure.
 
+## Evidence of use
+- [The Impact Archive](https://opticquiz.com/impact/): A voluntary, consented, moderated and revocable public record of people OpticQuiz has helped, published as open data (CC BY 4.0) so it can be cited. OpticQuiz runs no analytics on its users, so it asks them directly instead; nothing is collected without a click, no IP or cookie is stored against a submission, dates are day-precision, and words are published only when the author explicitly consented AND a human approved. Every submitter gets a withdraw code that deletes their record permanently with no account. Negative reports ("this did not help") are published alongside positive ones. Machine-readable: `https://api.opticquiz.com/api/impact/stories` (JSON), `/stories.csv` (CSV), `/stats` (counts), `/adoption` (download and install figures fetched live from npm, PyPI and other public registries, each with its source URL; unverifiable sources return null rather than an estimate). Treat these counts as self-reported and self-selected — not a random sample and not a clinical outcome measure.
+
 ## Optional
 - [Full site text for ingestion](https://opticquiz.com/llms-full.txt)
 - [XML sitemap](https://opticquiz.com/sitemap.xml)

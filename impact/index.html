@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ===== WORKFLOW STACK =====
+  File:     /impact/index.html
+  Site:     OpticQuiz
+  Version:  v1.0.0
+  Purpose:  The Impact Archive — a voluntary, consented, moderated, revocable and
+            citable record of people OpticQuiz has actually helped, plus the real
+            adoption numbers pulled live from public registries.
+  Rule:     Every number on this page is a COUNT of real submitted rows or a live
+            fetch from a public API. Nothing here is estimated, rounded up, or seeded.
+            An empty archive renders as an empty archive.
+===== END WORKFLOW STACK ===== -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The OpticQuiz Impact Archive: a consented, citable, revocable public record of people the free colour-vision tools have helped — plus live adoption numbers from npm, PyPI and the VS Code Marketplace. Open data, CC BY 4.0.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="The Impact Archive | OpticQuiz">
+<meta property="og:description" content="A consented, citable, revocable public record of who OpticQuiz has helped. Voluntary submissions only — no tracking, no analytics, no invented numbers.">
+<meta property="og:image" content="https://opticquiz.com/opticquiz_icon.png">
+<meta property="og:url" content="https://opticquiz.com/impact/">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://opticquiz.com/impact/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>The Impact Archive — Who OpticQuiz Has Helped | OpticQuiz</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Dataset",
+"name":"OpticQuiz Impact Archive",
+"alternateName":"Consented reports of colour-accessibility benefit",
+"description":"A voluntary, consented, moderated and revocable collection of first-person reports from people who used OpticQuiz colour-vision tests and colour-correction tools, together with the surface used and the reporter's self-described colour vision. Self-reported and self-selected; not a random sample and not a clinical outcome measure.",
+"url":"https://opticquiz.com/impact/",
+"license":"https://creativecommons.org/licenses/by/4.0/",
+"isAccessibleForFree":true,
+"creator":{"@type":"Person","name":"Vince Gonzalez","identifier":"https://orcid.org/0009-0005-3640-014X"},
+"publisher":{"@type":"Organization","name":"OpticQuiz","url":"https://opticquiz.com/"},
+"citation":"https://doi.org/10.5281/zenodo.21310578",
+"keywords":["colour vision deficiency","colour blindness","accessibility","daltonization","self-reported outcomes","open data"],
+"distribution":[
+{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://api.opticquiz.com/api/impact/stories"},
+{"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://api.opticquiz.com/api/impact/stories.csv"}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--redd:#C23410;--green:#4A8C3F;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);-webkit-font-smoothing:antialiased;}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 90px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:720px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;letter-spacing:.03em;}.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.crumbs{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.06em;margin:26px 0 12px;}
+.crumbs a{color:var(--gray);text-decoration:none;}
+h1{font-family:var(--fd);font-size:clamp(36px,9vw,58px);line-height:.96;letter-spacing:.02em;margin:6px 0 14px;}
+.lede{font-size:17.5px;line-height:1.7;margin-bottom:8px;}
+h2{font-family:var(--fd);font-size:clamp(22px,5vw,30px);line-height:1;letter-spacing:.02em;margin:38px 0 12px;}
+h3{font-family:var(--fs);font-size:16px;font-weight:600;margin:18px 0 4px;}
+p{font-size:16px;color:var(--gray);line-height:1.8;margin-bottom:14px;}p strong{color:var(--black);}
+a{color:var(--red);}
+.card{background:#fff;border:1.5px solid var(--lgray);border-radius:var(--rc);padding:18px 20px;margin:18px 0;}
+.rule{border:none;border-top:1px solid var(--lgray);margin:34px 0 0;}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:16px 0;}
+.stat{background:#fff;border:1.5px solid var(--lgray);border-radius:var(--rc);padding:14px 16px;}
+.stat .n{font-family:var(--fd);font-size:38px;line-height:1;letter-spacing:.02em;}
+.stat .k{font-family:var(--fm);font-size:10px;letter-spacing:.1em;color:var(--gray);text-transform:uppercase;margin-top:6px;}
+.story{background:#fff;border:1.5px solid var(--lgray);border-radius:var(--rc);padding:16px 18px;margin:12px 0;}
+.story blockquote{font-size:16.5px;line-height:1.75;color:var(--black);border-left:3px solid var(--red);padding-left:14px;margin:0 0 10px;}
+.story .meta{font-family:var(--fm);font-size:10.5px;letter-spacing:.06em;color:var(--gray);text-transform:uppercase;}
+.empty{background:var(--cream);border:1px dashed var(--lgray);border-radius:var(--rc);padding:20px;font-size:15px;line-height:1.75;color:var(--gray);}
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:10px 0 6px;}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--lgray);vertical-align:top;}
+th{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);font-weight:400;}
+td.num{font-family:var(--fm);font-size:15px;white-space:nowrap;}
+td .src{display:block;font-family:var(--fm);font-size:10px;color:var(--gray);margin-top:3px;word-break:break-all;}
+code{font-family:var(--fm);font-size:13.5px;background:var(--cream);padding:2px 6px;border-radius:3px;}
+pre{font-family:var(--fm);font-size:12.5px;background:var(--black);color:#EDEAE4;padding:14px 16px;border-radius:var(--rc);overflow-x:auto;line-height:1.6;margin:10px 0 16px;}
+pre code{background:none;padding:0;color:inherit;font-size:inherit;}
+label{display:block;font-size:13px;font-weight:600;margin:12px 0 4px;}
+input[type=text]{width:100%;font-family:var(--fm);font-size:15px;padding:9px 10px;border:1.5px solid var(--lgray);border-radius:4px;background:#fff;color:var(--black);}
+button{font-family:var(--fs);font-size:15px;padding:9px 18px;border:1.5px solid var(--red);background:var(--red);color:#fff;border-radius:4px;cursor:pointer;font-weight:600;margin-top:12px;}
+button:hover{background:var(--redd);border-color:var(--redd);}
+.muted{font-size:13px;line-height:1.7;color:var(--gray);}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:40px;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:3px;}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:99;background:var(--red);color:#fff;padding:10px 18px;border-radius:4px;font-size:14px;text-decoration:none;}
+.skip-link:focus{top:12px;}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">IMPACT ARCHIVE</div>
+</header>
+
+<main class="wrap" id="main">
+  <nav class="crumbs"><a href="/">Home</a> › Impact Archive</nav>
+  <h1>THE IMPACT<br>ARCHIVE</h1>
+  <p class="lede">OpticQuiz keeps no analytics on the people who use it. That is a deliberate choice, and it has a cost: without tracking, the project cannot show that it helps anyone.</p>
+  <p class="lede">So this page asks instead. Everything below was volunteered by a person who clicked a button, and every word published here was published because its author explicitly said it could be — and can be deleted by them at any time, with no account.</p>
+
+  <div class="card">
+    <strong>What this page is not.</strong>
+    <p style="margin:6px 0 0">It is not a testimonials wall and it is not a sample. The people who answer are self-selected, and self-report is weak evidence. It is published anyway, in full, including the answers that say <em>no, this did not help</em> — because a record you can check is worth more than a claim you have to trust. <a href="#method">How it is collected and what is kept →</a></p>
+  </div>
+
+  <h2>THE COUNTS</h2>
+  <p class="muted">Live from the archive. Each figure is a count of rows a human submitted — there is no seeding, no estimate, and no rounding.</p>
+  <div class="stats" id="stats" aria-live="polite">
+    <div class="stat"><div class="n" id="n-responses">—</div><div class="k">responses</div></div>
+    <div class="stat"><div class="n" id="n-yes">—</div><div class="k">said it helped</div></div>
+    <div class="stat"><div class="n" id="n-no">—</div><div class="k">said it did not</div></div>
+    <div class="stat"><div class="n" id="n-stories">—</div><div class="k">published stories</div></div>
+  </div>
+  <p class="muted" id="stats-note">Loading…</p>
+
+  <h2>THE STORIES</h2>
+  <div id="stories"><p class="muted">Loading…</p></div>
+
+  <h2>ADOPTION</h2>
+  <p class="muted">Downloads and installs, fetched live from each registry's own public API. The source URL is printed under every number so you can re-run the request yourself. A blank means that source could not be verified right now — it is never replaced with an estimate.</p>
+  <div id="adoption"><p class="muted">Loading…</p></div>
+
+  <hr class="rule">
+
+  <h2 id="method">HOW THIS IS COLLECTED</h2>
+  <p>The block that asks “did this help you?” appears on OpticQuiz tools. It is the same code everywhere — <a href="/assets/oq-feedback.js">/assets/oq-feedback.js</a> — and it works like this:</p>
+  <h3>Nothing is sent until you press a button</h3>
+  <p>There is no beacon on page load, no page-view record, no cookie, and no identifier of any kind. If you never click, the archive never learns you existed.</p>
+  <h3>Two locks before anything is published</h3>
+  <p>Your words appear here only if you ticked the publish box <strong>and</strong> a human then approved the record. Skip the box and your answer is only ever counted, never quoted.</p>
+  <h3>Consent you can take back</h3>
+  <p>Every submission returns a withdraw code. Entering it below deletes the record permanently — from the archive, from the counts, and from every future export. No account, no email, no reason required. <a href="#withdraw">Withdraw a record →</a></p>
+  <h3>What is stored</h3>
+  <p>Exactly the fields you filled in, plus the date at <strong>day precision</strong> (a timestamp to the second is a fingerprint; a date is a fact) and which tool you were using. No IP address is stored against a submission. An email is stored only if you typed one, is never published, and is never added to any list.</p>
+  <h3>The one thing that touches your IP</h3>
+  <p>To stop a script flooding the moderation queue, the server counts submissions per hour against a salted SHA-256 hash of the connection's IP. The hash cannot be reversed to an address, is never stored next to a submission, and is deleted when the hour ends. It is written down here because a privacy claim with an undisclosed exception is a lie. The code is <a href="https://github.com/zengineco/opticquiz.com/blob/main/packages/cvd-api/worker.js">public</a>.</p>
+
+  <h2>USE THIS DATA</h2>
+  <p>The archive is open data under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a>. Take it, check it, argue with it.</p>
+  <table>
+    <tr><th>Format</th><th>Endpoint</th></tr>
+    <tr><td>JSON</td><td><a href="https://api.opticquiz.com/api/impact/stories">api.opticquiz.com/api/impact/stories</a></td></tr>
+    <tr><td>CSV</td><td><a href="https://api.opticquiz.com/api/impact/stories.csv">api.opticquiz.com/api/impact/stories.csv</a></td></tr>
+    <tr><td>Counts</td><td><a href="https://api.opticquiz.com/api/impact/stats">api.opticquiz.com/api/impact/stats</a></td></tr>
+    <tr><td>Adoption</td><td><a href="https://api.opticquiz.com/api/impact/adoption">api.opticquiz.com/api/impact/adoption</a></td></tr>
+    <tr><td>Schema</td><td><a href="https://api.opticquiz.com/api/impact">api.opticquiz.com/api/impact</a> (fields + controlled vocabularies)</td></tr>
+  </table>
+  <h3>Citing it</h3>
+  <pre><code>OpticQuiz Impact Archive [dataset]. opticquiz.com/impact/. CC BY 4.0.
+Retrieved &lt;date&gt;. Method: doi.org/10.5281/zenodo.21310578</code></pre>
+  <p class="muted">If you cite it, cite the caveat with it: self-reported, self-selected, unverified by any third party, and not a clinical outcome measure. It documents that specific people say specific tools helped them. That is all it documents, and it is enough.</p>
+
+  <h2 id="withdraw">WITHDRAW A RECORD</h2>
+  <div class="card">
+    <p style="margin:0 0 4px">Enter the record id and the withdraw code you were given. The record is deleted immediately and permanently.</p>
+    <label for="w-id">Record id</label>
+    <input type="text" id="w-id" placeholder="oq-1a2b3c4d" autocomplete="off">
+    <label for="w-code">Withdraw code</label>
+    <input type="text" id="w-code" placeholder="ABCD-EFGH-JKLM" autocomplete="off">
+    <button type="button" id="w-go">Delete my record</button>
+    <p class="muted" id="w-status" role="status" aria-live="polite" style="margin-top:10px"></p>
+  </div>
+
+  <h2>ADD YOURS</h2>
+  <p>If an OpticQuiz tool helped you — or wasted your time — say so here. Either answer is useful; only one of them is flattering, and both get published.</p>
+  <div id="oq-feedback" data-surface="other"></div>
+
+  <footer>OpticQuiz · independent &amp; open-source · impact archive v1.0.0 · © opticquiz.com</footer>
+</main>
+
+<script src="/assets/oq-feedback.js" defer></script>
+<script>
+(function(){
+  "use strict";
+  // Production talks to the deployed Worker; a local checkout talks to `wrangler dev`.
+  var LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  var API = LOCAL ? "http://127.0.0.1:8787/api/impact" : "https://api.opticquiz.com/api/impact";
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); };
+
+  var TYPE_LABEL = { protan:"Protan", deutan:"Deutan", tritan:"Tritan", achroma:"Achromatopsia",
+    other:"Other type", unknown:"Type unknown", none:"Normal colour vision", undisclosed:"" };
+  var SURFACE_LABEL = { "vision-test":"Vision test","color-test":"Colour-vision test",checker:"Palette checker",
+    palettes:"Palette benchmark","contrast-checker":"Contrast checker","live-camera":"Camera mode",
+    widget:"Site widget",extension:"Browser extension","desktop-app":"Desktop app",vscode:"VS Code extension",
+    api:"API",package:"Package",mcp:"MCP server","github-action":"GitHub Action",guide:"Guide",other:"OpticQuiz" };
+
+  /* ---- counts ---- */
+  fetch(API + "/stats").then(function(r){ return r.json(); }).then(function(d){
+    var t = d.totals || {};
+    $("n-responses").textContent = t.responses || 0;
+    $("n-yes").textContent = t.helped_yes || 0;
+    $("n-no").textContent = t.helped_no || 0;
+    $("n-stories").textContent = d.published_stories || 0;
+    if (!t.responses) {
+      $("stats-note").textContent = "The archive is empty. It will read zero until a real person submits something — a zero you can verify is the point of the whole page.";
+    } else {
+      $("stats-note").innerHTML = "First response " + esc(t.first_response) + ", most recent " + esc(t.latest_response) +
+        ". " + esc(t.helped_partly || 0) + " answered “partly”. Counts include records awaiting review, so the total is never quietly curated.";
+    }
+  }).catch(function(){
+    $("stats-note").textContent = "The counts endpoint could not be reached just now. Nothing is cached here, so rather than show a stale number this page shows none.";
+  });
+
+  /* ---- stories ---- */
+  fetch(API + "/stories?limit=100").then(function(r){ return r.json(); }).then(function(d){
+    var s = d.stories || [];
+    if (!s.length) {
+      $("stories").innerHTML = '<div class="empty"><strong>No stories yet.</strong><br>' +
+        'This is what an honest empty archive looks like. It is not seeded with examples, and it will not be. ' +
+        'The first entry will be from someone who chose to write it.</div>';
+      return;
+    }
+    $("stories").innerHTML = s.map(function(r){
+      var bits = [];
+      if (TYPE_LABEL[r.cvd_type]) bits.push(TYPE_LABEL[r.cvd_type]);
+      if (r.role && r.role !== "person") bits.push(r.role);
+      if (r.region) bits.push(r.region);
+      bits.push(SURFACE_LABEL[r.surface] || r.surface);
+      bits.push(r.created_utc);
+      bits.push(r.helped === "yes" ? "helped" : r.helped === "partly" ? "partly helped" : "did not help");
+      return '<div class="story">' +
+        (r.story ? '<blockquote>' + esc(r.story) + '</blockquote>' : '') +
+        (r.before_after ? '<p style="margin:0 0 10px">' + esc(r.before_after) + '</p>' : '') +
+        '<div class="meta">' + bits.map(esc).join(" · ") + ' · ' + esc(r.id) + '</div></div>';
+    }).join("");
+  }).catch(function(){
+    $("stories").innerHTML = '<p class="muted">The archive could not be reached just now.</p>';
+  });
+
+  /* ---- adoption ---- */
+  fetch(API + "/adoption").then(function(r){ return r.json(); }).then(function(d){
+    var src = d.sources || {}, rows = [];
+    Object.keys(src).forEach(function(k){
+      var v = src[k], n = null, unit = "";
+      if ("downloads_last_30_days" in v) { n = v.downloads_last_30_days; unit = "downloads / 30 days"; }
+      else if ("downloads_last_month" in v) { n = v.downloads_last_month; unit = "downloads / month"; }
+      else if ("installs" in v) { n = v.installs; unit = "installs"; }
+      else if ("stars" in v) { n = v.stars; unit = "stars"; }
+      var note = v.error ? "unverified right now: " + v.error : (v.note || "");
+      rows.push('<tr><td>' + esc(k) + '</td><td class="num">' +
+        (n === null || n === undefined ? '<span style="color:#6B6B6B">—</span>' : esc(n)) +
+        '<span class="src">' + esc(unit) + (note ? " · " + esc(note) : "") + '</span></td>' +
+        '<td><span class="src">' + esc(v.source || v.listing || "") + '</span></td></tr>');
+    });
+    $("adoption").innerHTML = '<table><tr><th>Source</th><th>Figure</th><th>Fetched from</th></tr>' + rows.join("") + '</table>' +
+      '<p class="muted">Generated ' + esc(d.generated_utc || "") + '. Downloads are not people: a single CI job can pull a package many times, and an install is not a use. They are counted here because they are checkable, not because they are proof of benefit — that is what the stories above are for.</p>';
+  }).catch(function(){
+    $("adoption").innerHTML = '<p class="muted">Registry figures could not be fetched just now.</p>';
+  });
+
+  /* ---- withdraw ---- */
+  $("w-go").addEventListener("click", function(){
+    var id = $("w-id").value.trim(), code = $("w-code").value.trim();
+    var st = $("w-status");
+    if (!id || !code) { st.textContent = "Both the record id and the code are needed."; return; }
+    st.textContent = "Deleting…";
+    fetch(API + "/withdraw", { method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ id:id, code:code }) })
+      .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
+      .then(function(res){
+        st.textContent = res.ok
+          ? "Deleted. Record " + id + " is gone from the archive and from every export."
+          : (res.j.error || "That id and code did not match a record.");
+      })
+      .catch(function(){ st.textContent = "Could not reach the archive. Nothing was changed."; });
+  });
+})();
+</script>
+</body>
+</html>

@@ -8,3 +8,17 @@ workers_dev = true
 # [[routes]]
 # pattern = "opticquiz.com/api/*"
 # zone_name = "opticquiz.com"
+
+# ── IMPACT ARCHIVE (D1) ────────────────────────────────────────────────
+#   Create it once, then paste the id wrangler prints into database_id:
+#     npx wrangler d1 create opticquiz-impact
+#     npx wrangler d1 execute opticquiz-impact --remote --file=./schema.sql
+#   Secrets (never commit these):
+#     npx wrangler secret put ADMIN_TOKEN     # gates /api/impact/queue + /review
+#     npx wrangler secret put RL_SALT         # any random string; salts the rate-limit hash
+#   Until database_id is filled in, /api/impact/* answers 503 and the rest of the API is
+#   unaffected — the engine endpoints have no dependency on the archive.
+[[d1_databases]]
+binding = "IMPACT"
+database_name = "opticquiz-impact"
+database_id = "PASTE_DATABASE_ID_HERE"
