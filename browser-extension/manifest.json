@@ -1,15 +1,15 @@
 {
   "manifest_version": 3,
   "name": "OpticQuiz — Colorblind Corrector",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Correct colors on any web page for your type of color blindness, in real time. Published method, zero tracking.",
   "permissions": ["storage"],
   "action": {
     "default_popup": "popup.html",
     "default_title": "Colorblind Corrector",
-    "default_icon": { "16": "icon.png", "48": "icon.png", "128": "icon.png" }
+    "default_icon": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" }
   },
-  "icons": { "16": "icon.png", "48": "icon.png", "128": "icon.png" },
+  "icons": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
