@@ -21,4 +21,4 @@ workers_dev = true
 [[d1_databases]]
 binding = "IMPACT"
 database_name = "opticquiz-impact"
-database_id = "PASTE_DATABASE_ID_HERE"
+database_id = "7d94f70d-4564-4444-8b46-28af99aa020a"
