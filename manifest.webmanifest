@@ -1,7 +1,7 @@
 {
-  "name": "OpticQuiz — Eye & Vision Tests",
+  "name": "OpticQuiz — Vision Tests & Color Accessibility",
   "short_name": "OpticQuiz",
-  "description": "Fourteen free, honest, browser-based vision and perception tests. No account, no paywall; results stay on your device.",
+  "description": "Sixteen free, honest, browser-based vision and perception tests, plus color-accessibility tools that check, fix and correct color for color blindness. No account; results stay on your device.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -10,6 +10,6 @@
   "theme_color": "#F8F6F2",
   "icons": [
     { "src": "/opticquiz_icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/opticquiz_icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any" }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" }
   ]
 }
