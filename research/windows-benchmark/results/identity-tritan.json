@@ -1,0 +1,16 @@
+{
+  "transform": "identity (no correction)",
+  "cvd_type": "tritan",
+  "M1_gain_mean": 0.0,
+  "M1_gain_median": 0.0,
+  "M1_gain_p10": 0.0,
+  "M1_gain_p90": 0.0,
+  "M1_pairs_made_worse": 0,
+  "M2_rescue_rate": 0.0,
+  "n_pairs": 1000,
+  "M3_fidelity_cost_mean": 0.0,
+  "M4_clip_rate": 0.0,
+  "M5_neutral_shift_mean": 0.0,
+  "M6_okabe_ito_gain_mean": 0.0,
+  "M6_okabe_ito_worst": 0.0
+}

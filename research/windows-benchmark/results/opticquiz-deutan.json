@@ -1,0 +1,16 @@
+{
+  "transform": "opticquiz daltonization (deutan, shipped)",
+  "cvd_type": "deutan",
+  "M1_gain_mean": 10.122,
+  "M1_gain_median": 7.976,
+  "M1_gain_p10": -0.819,
+  "M1_gain_p90": 24.559,
+  "M1_pairs_made_worse": 112,
+  "M2_rescue_rate": 0.74,
+  "n_pairs": 1000,
+  "M3_fidelity_cost_mean": 9.881,
+  "M4_clip_rate": 0.3594,
+  "M5_neutral_shift_mean": 0.0,
+  "M6_okabe_ito_gain_mean": 0.12,
+  "M6_okabe_ito_worst": -20.835
+}

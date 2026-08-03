@@ -1,0 +1,16 @@
+{
+  "transform": "opticquiz daltonization (protan, shipped)",
+  "cvd_type": "protan",
+  "M1_gain_mean": 16.354,
+  "M1_gain_median": 15.038,
+  "M1_gain_p10": 4.425,
+  "M1_gain_p90": 29.974,
+  "M1_pairs_made_worse": 25,
+  "M2_rescue_rate": 0.941,
+  "n_pairs": 1000,
+  "M3_fidelity_cost_mean": 12.965,
+  "M4_clip_rate": 0.3512,
+  "M5_neutral_shift_mean": 0.0,
+  "M6_okabe_ito_gain_mean": 2.083,
+  "M6_okabe_ito_worst": -21.723
+}

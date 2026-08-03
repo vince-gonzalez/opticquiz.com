@@ -1,0 +1,16 @@
+{
+  "transform": "opticquiz daltonization (tritan, shipped)",
+  "cvd_type": "tritan",
+  "M1_gain_mean": 5.163,
+  "M1_gain_median": 5.46,
+  "M1_gain_p10": -1.679,
+  "M1_gain_p90": 11.123,
+  "M1_pairs_made_worse": 159,
+  "M2_rescue_rate": 0.701,
+  "n_pairs": 1000,
+  "M3_fidelity_cost_mean": 13.272,
+  "M4_clip_rate": 0.225,
+  "M5_neutral_shift_mean": 0.0,
+  "M6_okabe_ito_gain_mean": -6.574,
+  "M6_okabe_ito_worst": -30.539
+}

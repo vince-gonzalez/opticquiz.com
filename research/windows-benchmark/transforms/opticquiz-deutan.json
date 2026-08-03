@@ -1,0 +1,28 @@
+{
+  "name": "opticquiz daltonization (deutan, shipped)",
+  "space": "linear",
+  "matrix": [
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      0.1628,
+      0.725,
+      0.1122
+    ],
+    [
+      0.4547,
+      -0.6454,
+      1.1907
+    ]
+  ],
+  "offset": [
+    0,
+    0,
+    0
+  ],
+  "source": "browser-extension/content.js, OpticQuiz Colorblind Corrector (Chrome Web Store)",
+  "note": "Machado 2009 simulation + Fidaner redistribution, applied in linear RGB."
+}
