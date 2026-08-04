@@ -2,10 +2,15 @@
 var KEY = "oq-cx-mode";
 var buttons = document.querySelectorAll(".mode");
 
+var ask = document.getElementById("ask");
+
 function mark(mode) {
   buttons.forEach(function (b) {
     b.setAttribute("aria-checked", b.getAttribute("data-mode") === (mode || "off") ? "true" : "false");
   });
+  // Only ask once a correction is actually running. Asking "did this help?" of someone who
+  // has not turned it on yet is noise, and noise is what makes people stop reading asks.
+  if (ask) ask.hidden = !mode || mode === "off";
 }
 
 chrome.storage.local.get([KEY], function (r) {

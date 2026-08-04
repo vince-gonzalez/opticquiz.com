@@ -15,6 +15,11 @@
   button.mode span{font-size:12px;opacity:.6;}
   .foot{border-top:1px solid rgba(255,255,255,.12);padding:8px 14px 10px;font-size:11px;display:flex;gap:12px;}
   .foot a{color:#8ab4f8;text-decoration:none;}
+  .ask{border-top:1px solid rgba(255,255,255,.12);padding:9px 14px;font-size:12px;
+       display:flex;gap:8px;align-items:center;justify-content:space-between;}
+  .ask span{opacity:.7;}
+  .ask a{color:#8ab4f8;text-decoration:none;font-weight:600;}
+  .ask[hidden]{display:none;}
 </style>
 </head>
 <body>
@@ -28,6 +33,12 @@
     <button class="mode" data-mode="protan" role="radio" aria-checked="false"><strong>Protanopia</strong><span>red-weak</span></button>
     <button class="mode" data-mode="tritan" role="radio" aria-checked="false"><strong>Tritanopia</strong><span>blue-yellow</span></button>
     <button class="mode" data-mode="off" role="radio" aria-checked="false"><strong>Off</strong><span>normal colors</span></button>
+  </div>
+  <!-- Shown only once a mode has actually been chosen: asking someone whether a thing
+       helped before they have used it is noise. popup.js unhides it. -->
+  <div class="ask" id="ask" hidden>
+    <span>Did this help?</span>
+    <a href="https://opticquiz.com/impact/?from=extension" target="_blank" rel="noopener">Say so →</a>
   </div>
   <div class="foot">
     <a href="https://opticquiz.com/live" target="_blank" rel="noopener">Camera mode</a>
