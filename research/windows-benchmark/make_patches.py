@@ -1,22 +1,26 @@
 """
-Generates patches.png — the calibration target displayed during Stage 1.
+Generates patches.png — the calibration target displayed during transform recovery.
 
-A 9x9x9 sRGB lattice (729) plus a 17-step neutral ramp, laid out as flat blocks
-with a known index. Blocks are large and separated by a mid-grey gutter so that
-capture registration is trivial and edge blending cannot contaminate a sample:
-each patch is read from its centre region only.
+A 9x9x9 sRGB lattice (729) plus a 17-step neutral ramp, laid out as flat blocks with a
+known index, and four ArUco markers in the corners.
+
+The markers are what make photographic recovery practical: they give automatic, sub-pixel,
+perspective-correct registration, so a hand-held photo of the screen can be rectified back
+to the target's own coordinates without hand-cropping or assuming the camera was square on.
 
     python make_patches.py            -> patches.png + patches.json
 """
 import json
 import numpy as np
+import cv2
 from PIL import Image
 
 N = 9            # lattice steps per channel
 BLOCK = 34       # px per patch
 GUTTER = 6       # px between patches
-MARGIN = 40
-FIDUCIAL = 24    # corner registration squares
+MARGIN = 96      # room for the corner markers
+MARKER = 72      # ArUco marker size in px
+DICT = cv2.aruco.DICT_4X4_50
 
 
 def build():
@@ -29,35 +33,37 @@ def build():
     W = MARGIN * 2 + cols * BLOCK + (cols - 1) * GUTTER
     H = MARGIN * 2 + rows * BLOCK + (rows - 1) * GUTTER
 
-    img = Image.new("RGB", (W, H), (128, 128, 128))
-    px = img.load()
+    img = np.full((H, W, 3), 128, dtype=np.uint8)   # mid-grey field
     index = []
 
     for i, c in enumerate(patches):
         cx, cy = i % cols, i // cols
         x0 = MARGIN + cx * (BLOCK + GUTTER)
         y0 = MARGIN + cy * (BLOCK + GUTTER)
-        rgb = tuple(int(np.floor(v * 255 + 0.5)) for v in c)
-        for y in range(y0, y0 + BLOCK):
-            for x in range(x0, x0 + BLOCK):
-                px[x, y] = rgb
-        index.append({"i": i, "nominal": list(rgb),
+        rgb = [int(np.floor(v * 255 + 0.5)) for v in c]
+        img[y0:y0 + BLOCK, x0:x0 + BLOCK] = rgb
+        # Sample only the middle half of each block: edges blur under a camera lens and
+        # under any display scaling, and a contaminated edge silently biases the fit.
+        index.append({"i": i, "nominal": rgb,
                       "box": [x0, y0, BLOCK, BLOCK],
                       "sample": [x0 + BLOCK // 4, y0 + BLOCK // 4, BLOCK // 2, BLOCK // 2]})
 
-    # Fiducials: pure white and pure black corners. These also act as a clipping
-    # canary — if the filter crushes them, the capture will show it immediately.
-    for (fx, fy, col) in [(0, 0, (255, 255, 255)), (W - FIDUCIAL, 0, (0, 0, 0)),
-                          (0, H - FIDUCIAL, (0, 0, 0)), (W - FIDUCIAL, H - FIDUCIAL, (255, 255, 255))]:
-        for y in range(fy, fy + FIDUCIAL):
-            for x in range(fx, fx + FIDUCIAL):
-                px[x, y] = col
+    # Four ArUco markers, ids 0-3, clockwise from top-left.
+    d = cv2.aruco.getPredefinedDictionary(DICT)
+    pad = 12
+    corners = [(pad, pad), (W - MARKER - pad, pad),
+               (W - MARKER - pad, H - MARKER - pad), (pad, H - MARKER - pad)]
+    for mid, (mx, my) in enumerate(corners):
+        m = cv2.aruco.generateImageMarker(d, mid, MARKER)
+        img[my:my + MARKER, mx:mx + MARKER] = np.dstack([m] * 3)
 
-    img.save("patches.png")
+    Image.fromarray(img).save("patches.png")
     json.dump({"width": W, "height": H, "block": BLOCK, "n": len(patches),
+               "marker_size": MARKER, "marker_dict": "DICT_4X4_50",
+               "marker_corners_tl": [list(c) for c in corners],
                "patches": index}, open("patches.json", "w"))
-    print(f"patches.png  {W}x{H}  {len(patches)} patches")
-    print("Display it at 100% zoom, no scaling, on the display under test.")
+    print(f"patches.png  {W}x{H}  {len(patches)} patches + 4 ArUco markers")
+    print("Display at 100% zoom, no scaling, on the display under test.")
 
 
 if __name__ == "__main__":
