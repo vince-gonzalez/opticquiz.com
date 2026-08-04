@@ -33,6 +33,25 @@
     { id: null, label: "Off", sub: "normal colors" }
   ];
   var KEY = "oq-eye-mode";
+  var SKEY = "oq-eye-strength";     // 0-100; 100 = full dichromacy correction
+
+  // M(s) = I + s*(M - I). Full strength is tuned for complete dichromacy, which is the
+  // MINORITY case - most colour-vision-deficient people are anomalous trichromats. On 10
+  // real palettes the full-strength matrices score negative net at severity 0.7 while the
+  // scaled ones score positive, at half the distortion. A blend of two matrices is still a
+  // matrix, so this stays one feColorMatrix.
+  var IDENT = [1,0,0,0,0, 0,1,0,0,0, 0,0,1,0,0, 0,0,0,1,0];
+  function scaled(key, pct) {
+    var s = Math.max(0, Math.min(100, pct)) / 100;
+    if (s >= 0.999) return M[key];
+    var v = M[key].split(/\s+/).map(Number), o = [];
+    for (var i = 0; i < 20; i++) o.push(+(IDENT[i] + s * (v[i] - IDENT[i])).toFixed(5));
+    return o.join(" ");
+  }
+  function readStrength() {
+    try { var v = parseInt(localStorage.getItem(SKEY), 10); return isNaN(v) ? 100 : v; }
+    catch (e) { return 100; }
+  }
 
   function el(tag, css, attrs) {
     var e = document.createElement(tag);
@@ -61,7 +80,8 @@
       f.setAttribute("color-interpolation-filters", "linearRGB");
       var cm = document.createElementNS(ns, "feColorMatrix");
       cm.setAttribute("type", "matrix");
-      cm.setAttribute("values", M[k]);
+      cm.setAttribute("values", scaled(k, readStrength()));
+      cm.setAttribute("data-oq-mode", k);
       f.appendChild(cm); defs.appendChild(f);
     }
     svg.appendChild(defs); document.body.appendChild(svg);
@@ -97,9 +117,35 @@
 
     var foot = el("a", "display:block;font-size:11px;opacity:.55;text-decoration:none;color:#8ab4f8;padding:8px 10px 4px;", { href: "https://opticquiz.com/checker/", target: "_blank", rel: "noopener" });
     foot.textContent = "What is this? →";
+    // Strength control. Shown always: someone with mild deficiency needs it most, and
+    // they are the least likely to go looking for a setting.
+    var strRow = el("div", "padding:8px 12px 10px;border-top:1px solid rgba(255,255,255,.14);");
+    var strLab = el("div",
+      "display:flex;justify-content:space-between;font-size:11px;opacity:.75;margin-bottom:5px;");
+    var strTxt = el("span"); strTxt.textContent = "Strength";
+    var strNum = el("span"); strNum.textContent = readStrength() + "%";
+    strLab.appendChild(strTxt); strLab.appendChild(strNum);
+    var strIn = el("input", "width:100%;accent-color:#0072B2;",
+      { type: "range", min: "0", max: "100", step: "5",
+        value: String(readStrength()), "aria-label": "Correction strength" });
+    strIn.addEventListener("input", function () {
+      strNum.textContent = strIn.value + "%";
+      try { localStorage.setItem(SKEY, strIn.value); } catch (e) {}
+      refresh();
+    });
+    strRow.appendChild(strLab); strRow.appendChild(strIn);
+    menu.appendChild(strRow);
+
     menu.appendChild(foot);
 
+    function refresh() {
+      var list = document.querySelectorAll("feColorMatrix[data-oq-mode]");
+      for (var i = 0; i < list.length; i++) {
+        list[i].setAttribute("values", scaled(list[i].getAttribute("data-oq-mode"), readStrength()));
+      }
+    }
     function apply(mode) {
+      refresh();
       content.style.filter = mode ? "url(#oq-f-" + mode + ")" : "";
       btn.style.background = mode ? "#0072B2" : "#1A1A1A";
       try { mode ? localStorage.setItem(KEY, mode) : localStorage.removeItem(KEY); } catch (e) {}
