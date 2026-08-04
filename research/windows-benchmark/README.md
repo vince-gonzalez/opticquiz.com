@@ -67,43 +67,52 @@ python benchmark.py --transform identity                     --type deutan --lat
 python benchmark.py --transform transforms/opticquiz-deutan.json --type deutan --lattice 9 --max-pairs 1000
 ```
 
-## Measuring Windows (needs a Windows machine — not yet done)
+## Reproducing the negative result
+
+Each probe reads the live filter state from the registry itself and **refuses to conclude
+anything if both captures were taken in the same state**. Use Grayscale as the test filter —
+a CVD filter is subtle enough to hide in noise, grayscale is unmissable.
 
 ```
-python make_patches.py                    # generates patches.png
-```
-Display `patches.png` full-screen at 100% zoom on the display under test, then:
+python probe.py state                  # confirm what the filter is actually doing
+python probe.py capture A              # then CHANGE the filter (Win+Ctrl+C)
+python probe.py capture B
+python probe.py compare                # GDI / BitBlt path
 
-```
-python probe.py off        # colour filter OFF
-                           # turn the filter on in Settings > Accessibility > Colour filters
-python probe.py on         # do not move the window
-python probe.py compare
-```
+python dxgi_probe.py capture A         # then CHANGE the filter
+python dxgi_probe.py capture B
+python dxgi_probe.py compare           # DXGI Desktop Duplication path
 
-`probe.py compare` decides whether the whole software path is valid:
-
-- **Outcome A** — capture observes the filter. Run `recover.py`, then `benchmark.py` against
-  the recovered transform.
-- **Outcome B** — capture does not observe the filter. **Stop.** Software capture is invalid
-  here and must not be used. This outcome is itself a finding worth publishing: it would mean
-  no software tool can audit a filter shipped to every Windows machine.
-
-```
-python recover.py --off capture-off.png --on capture-on.png --name windows-deutan
-python benchmark.py --transform transforms/windows-deutan.json --type deutan --lattice 9 --max-pairs 1000
+python mag_probe.py                    # Magnification API — run with filter off, then on
 ```
 
-Record the exact Windows build, GPU, driver version and display model alongside any result.
+All three return null on the recorded environment. See [FINDINGS.md](FINDINGS.md).
+
+## Measuring Windows — remaining route
+
+No software vantage point exists, so the transform can only be recovered by measuring light
+leaving the display (PROTOCOL.md Stage 1-alt): photograph `patches.png` with fixed manual
+camera settings, filter off and on, and solve from the ratio so the camera's own transfer
+function cancels to first order.
+
+```
+python make_patches.py                 # generates the 746-patch calibration target
+```
+
+`recover.py` and `benchmark.py` are already built and verified for this — recovery recovers a
+known injected matrix to ±0.0003 (RMS residual 0.29/255). Only the capture stage changes.
 
 ## Files
 
 ```
 PROTOCOL.md        pre-registered method, metrics, and stated limits
+FINDINGS.md        the measured negative result and what it does/doesn't mean
 make_patches.py    generates the calibration target
-probe.py           Stage 0 — capture feasibility (run this first)
-recover.py         Stage 1 — least-squares transform recovery, reports residuals
-benchmark.py       Stage 2 — metrics M1-M6
+probe.py           Stage 0  — GDI capture feasibility + live state reader
+dxgi_probe.py      Stage 0b — DXGI Desktop Duplication feasibility
+mag_probe.py       Stage 1-alt — read the transform from the Magnification API
+recover.py         Stage 1  — least-squares transform recovery, reports residuals
+benchmark.py       Stage 2  — metrics M1-M6
 transforms/        transform definitions (ours are extracted from shipped source)
 results/           computed metrics
 ```
