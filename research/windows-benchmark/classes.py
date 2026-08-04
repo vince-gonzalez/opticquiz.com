@@ -107,25 +107,48 @@ def corr_fixpalette(rgb, t):
     return hexes_to_rgb(out["colors"] if isinstance(out, dict) else out)
 
 
+_batch = {}
+
+
+def batch(pids, t, sims, sev):
+    """Concatenate every palette into ONE array, with pair indices offset into it.
+
+    The objective was making one simulator call per palette per simulator - 16 per
+    evaluation, times 500 iterations times 10 restarts times 5 folds. Batching makes it
+    one call per simulator regardless of how many palettes, which is the difference
+    between this finishing and not."""
+    key = (tuple(pids), t, tuple(sims), sev)
+    if key not in _batch:
+        cols, A, B, CB, off = [], {s: [] for s in sims}, {s: [] for s in sims}, {s: [] for s in sims}, 0
+        for pid in pids:
+            rgb, a, b, _ = baseline(pid, t, sims[0], sev)
+            cols.append(rgb)
+            for s in sims:
+                _, aa, bb, cb = baseline(pid, t, s, sev)
+                A[s].append(aa + off); B[s].append(bb + off); CB[s].append(cb)
+            off += len(rgb)
+        allc = np.concatenate(cols)
+        idx = {s: (np.concatenate(A[s]), np.concatenate(B[s]), np.concatenate(CB[s]))
+               for s in sims}
+        _batch[key] = (allc, idx, [len(c) for c in cols])
+    return _batch[key]
+
+
 def net_on(fn, pids, t, sims, sev):
+    allc, idx, sizes = batch(pids, t, sims, sev)
+    cor = np.concatenate([fn(allc[o:o + n], t) for o, n in
+                          zip(np.cumsum([0] + sizes[:-1]), sizes)])
     resc = broke = coll = 0
-    fid = []
-    for pid in pids:
-        rgb = hexes_to_rgb(PAL[pid]["colors"])
-        cor = fn(rgb, t)
-        fid.append(float(de(rgb, cor).mean()))
-        for s in sims:
-            _, a, b, cb = baseline(pid, t, s, sev)
-            sm = sim(cor, t, s, sev)
-            ca = de(sm[a], sm[b]) < COLLAPSE
-            coll += int(cb.sum())
-            resc += int((cb & ~ca).sum())
-            broke += int((~cb & ca).sum())
+    for s in sims:
+        a, b, cb = idx[s]
+        sm = sim(cor, t, s, sev)
+        ca = de(sm[a], sm[b]) < COLLAPSE
+        coll += int(cb.sum()); resc += int((cb & ~ca).sum()); broke += int((~cb & ca).sum())
     return {"collapsed": coll, "rescued": resc, "broken": broke,
-            "net": resc - broke, "fidelity": float(np.mean(fid))}
+            "net": resc - broke, "fidelity": float(de(allc, cor).mean())}
 
 
-def fit_class(cname, t, train, sev, budget, seed, restarts=10):
+def fit_class(cname, t, train, sev, budget, seed, restarts=6):
     mk, ndof = CLASSES[cname]
 
     def obj(p):
@@ -148,7 +171,7 @@ def fit_class(cname, t, train, sev, budget, seed, restarts=10):
     best, bv = None, np.inf
     for s0 in starts:
         r = minimize(obj, s0, method="Nelder-Mead",
-                     options={"maxiter": 500, "xatol": 1e-3, "fatol": 1e-3})
+                     options={"maxiter": 350, "xatol": 1e-3, "fatol": 1e-3})
         if r.fun < bv:
             best, bv = r.x, r.fun
     return mk(best)
