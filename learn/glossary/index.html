@@ -43,8 +43,11 @@ h1{font-family:var(--fd);font-size:clamp(38px,9vw,58px);color:var(--black);line-
 dl{margin:0;}
 dt{font-family:var(--fs);font-weight:600;font-size:17px;color:var(--black);margin:20px 0 4px;}
 dd{margin:0;font-size:15px;color:var(--gray);line-height:1.8;}
-dd a{color:var(--red);text-decoration:none;}
-dd a:hover{text-decoration:underline;}
+/* WCAG 1.4.1 Use of Color: a link inside a text block cannot be distinguished by colour
+   alone. Underlined by default; hover thickens it rather than adding it. Failing this
+   criterion on a colour-blindness site is the one we least get to make. */
+dd a{color:var(--red);text-decoration:underline;text-underline-offset:2px;}
+dd a:hover{text-decoration-thickness:2px;}
 footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
 .backlink{display:block;text-align:center;margin-top:20px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
 </style>
