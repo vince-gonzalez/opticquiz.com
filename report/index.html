@@ -75,16 +75,15 @@ footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px s
 
   <div class="screen-only">
     <p class="meta"><a href="/">← OpticQuiz</a></p>
-    <h1>Screening record</h1>
-    <p class="sub">A printable summary of what these tests observed, for an optometrist or
-      ophthalmologist. It is generated entirely in your browser from results stored on this
+    <h1>Notes for your optometrist</h1>
+    <p class="sub">Something to print and take along if you are booking an eye appointment. It is generated entirely in your browser from results stored on this
       device — nothing is uploaded, and printing uses your browser's own Save&nbsp;as&nbsp;PDF.</p>
     <div class="intake">
-      <p style="font-size:14px;margin-bottom:10px;"><strong>Before you print</strong> — an
-      optometrist reads this part first. The numbers matter less than why you came.</p>
-      <label>Who was tested<input id="f-who" placeholder="e.g. my son, age 9"></label>
-      <label>Who ran the test<input id="f-by" placeholder="e.g. his mother, at home"></label>
-      <label>What prompted this<textarea id="f-why" rows="3"
+      <p style="font-size:14px;margin-bottom:10px;"><strong>Before you print</strong> — this part matters most. What you have noticed at home is more
+      useful to an optometrist than any number below.</p>
+      <label>Who is this about<input id="f-who" placeholder="e.g. my son, age 9"></label>
+      <label>Who is filling this in<input id="f-by" placeholder="e.g. his mother, at home"></label>
+      <label>What made you wonder<textarea id="f-why" rows="3"
         placeholder="e.g. he has been struggling to read the coloured lines on maps and mixes up the red and green counters in games"></textarea></label>
       <p style="font-size:13px;color:#6B6B6B;margin:2px 0 0;">Typed here, printed below, stored
       only in this browser. Never uploaded.</p>
@@ -148,8 +147,8 @@ footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px s
     }
     var prof=OQ.Results.profile();
     var h='';
-    h+='<h1 style="font-size:22px;margin-bottom:2px;">Colour-vision screening record</h1>';
-    h+='<p class="meta">Self-administered · uncalibrated consumer display · generated '+esc(new Date().toISOString().slice(0,10))+'</p>';
+    h+='<h1 style="font-size:22px;margin-bottom:2px;">Notes to take to an eye appointment</h1>';
+    h+='<p class="meta">Done at home on an ordinary screen · '+esc(new Date().toISOString().slice(0,10))+'</p>';
 
     // Printed FIRST, above the numbers. A functional complaint - "he cannot read the
     // coloured lines on maps" - is what an optometrist acts on. The counts are supporting
@@ -157,20 +156,20 @@ footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px s
     var ctx=loadCtx();
     if(ctx.who||ctx.by||ctx.why){
       h+='<div class="ctx">';
-      if(ctx.who) h+='<div class="q">Person tested</div><div class="a">'+esc(ctx.who)+'</div>';
-      if(ctx.by)  h+='<div class="q">Test administered by</div><div class="a">'+esc(ctx.by)+'</div>';
-      if(ctx.why) h+='<div class="q">Reason for screening, as reported</div>'+
+      if(ctx.who) h+='<div class="q">Who this is about</div><div class="a">'+esc(ctx.who)+'</div>';
+      if(ctx.by)  h+='<div class="q">Who wrote this</div><div class="a">'+esc(ctx.by)+'</div>';
+      if(ctx.why) h+='<div class="q">What made you wonder</div>'+
                      '<div class="a" style="margin-bottom:0;">'+esc(ctx.why)+'</div>';
       h+='</div>';
     }
 
-    h+='<div class="cannot"><strong>This is a screening record, not a diagnosis.</strong>'+
-       'These tests were self-administered on an uncalibrated screen under unknown lighting. '+
-       'The figures below are raw observations and the method used to obtain them, provided so that '+
+    h+='<div class="cannot"><strong>These are home notes, not a test result.</strong>'+
+       'These were done at home on an ordinary, uncalibrated screen in unknown lighting. '+
+       'The numbers below are simply what happened, with a note on how each was produced, so that '+
        'a qualified professional can judge them independently. They are not a clinical grade and '+
        'should not be used for any medical, employment, licensing or safety decision.</div>';
 
-    h+='<h2>Observations</h2>';
+    h+='<h2>What happened</h2>';
     all.forEach(function(rec){
       var t=TESTS[rec.test]; if(!t) return;
       h+='<div class="card"><strong>'+esc(t.name)+'</strong>'+
@@ -186,11 +185,11 @@ footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px s
       // someone's mouth in an exam room, and a number that precise reads as a measurement
       // no matter what the surrounding paragraph says. False precision is the failure mode
       // this whole page exists to avoid.
-      h+='<h2>Pattern indicated by this screen</h2>';
+      h+='<h2>What the answers have in common</h2>';
       h+='<div class="card"><table>'+
-         '<tr><th style="width:52%">Axis the errors fall along</th><td class="n">'+esc(prof.type)+'</td></tr>'+
+         '<tr><th style="width:52%">Colours most often confused</th><td class="n">'+esc(prof.type)+'</td></tr>'+
          '<tr><th>Observed as</th><td class="n">'+esc(prof.basis)+'</td></tr>'+
-         '<tr><th>Weight this screen carries</th><td class="n">'+esc(prof.confidence)+'</td></tr>'+
+         '<tr><th>How much weight to give this</th><td class="n">'+esc(prof.confidence)+'</td></tr>'+
          '</table><p style="font-size:13px;color:#6B6B6B;margin:0;">This restates the counts '+
          'above and nothing more. No severity figure is given because five plates on an '+
          'uncalibrated screen cannot support one.</p></div>';
@@ -201,7 +200,7 @@ footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px s
     // clustering. Leaving the contradiction in would let a clinician dismiss the whole
     // document, correctly.
     var hasD15=all.some(function(r){return r.test==="d15";});
-    h+='<h2>What a screen of this kind cannot determine</h2><ul>'+
+    h+='<h2>What this cannot tell you</h2><ul>'+
        (hasD15
         ? '<li><strong>The suggested axis is inferred from error clustering, not measured.</strong> '+
           'An arrangement test indicates a likely confusion axis; confirming protan versus deutan, '+
@@ -213,7 +212,7 @@ footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px s
        '<li>Display calibration, colour profile, ambient lighting and viewing distance all affect these results and none were controlled.</li>'+
        '</ul>';
 
-    h+='<h2>Method and source</h2>'+
+    h+='<h2>How this was made</h2>'+
        '<p>The plate-generation method and its calibration limits are published open-access: '+
        '<strong>doi.org/10.5281/zenodo.21310578</strong> (CC&nbsp;BY&nbsp;4.0). Source code: '+
        'github.com/zengineco/opticquiz.com. OpticQuiz is an independent, open-source project and '+
