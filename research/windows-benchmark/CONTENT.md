@@ -78,3 +78,58 @@ through the result — and that mapping step is where quality is lost and where 
 **So this measures the ceiling of the content-aware approach, not a shipped implementation.**
 The ceiling is high enough to be worth building toward: roughly half the remaining confusion at
 half the distortion, with one correction for all three deficiency types.
+
+---
+
+## Taking it to live content: it does not survive
+
+`live_content.py` builds the real pipeline — quantise the frame to 24 colours, `fix_palette`
+them, bake the movement into a 17³ displacement LUT, apply per pixel with trilinear
+interpolation (exactly what a GPU sampler does with a 3D texture).
+
+Two flaws in my own first measurement, both found before drawing conclusions:
+
+1. **No distinctness filter.** 91 of 276 pairs were below the collapse threshold *to a normal
+   viewer* — near-duplicate quantiser outputs counted as information loss. A third of the
+   total was noise. Now only pairs at ΔE ≥ 20 to normal vision are counted.
+2. **The banding canary measured the scene's own edges.** Absolute pixel steps were 0.969 for
+   every σ, because the scene is hard-edged swatches. Now it measures output gradient *minus*
+   input gradient.
+
+With those fixed, on one synthetic scene, 4 simulators:
+
+| | collapsed | rescued | broken | net | image ΔE |
+|---|---|---|---|---|---|
+| **protan** global matrix | 8 | 8 | 14 | **−6** | 5.01 |
+| content LUT σ=0.05 | 8 | 7 | 2 | **+5** | 2.66 |
+| **deutan** global matrix | 12 | 12 | 16 | **−4** | 5.17 |
+| content LUT σ=0.18 | 12 | 3 | 1 | **+2** | 2.59 |
+| **tritan** global matrix | 7 | 3 | **50** | **−47** | 4.11 |
+| content LUT σ=0.18 | 7 | 3 | 0 | **+3** | 2.59 |
+
+The metrics say the content LUT wins everywhere. **The rendered image says it is a no-op.**
+Viewed through a deuteranopia simulation, the LUT output is essentially indistinguishable
+from no correction at all — the status colours stay collapsed, the heatmap stays a flat
+smear — while the global matrix visibly separates them.
+
+It scores well because it barely acts. `fix_palette` moved **6 of 24** colours, by 2.66 ΔE
+mean, and returned `pass=False` — it declined to solve the palette. The σ smoothing then
+diluted even that. "Does less harm" achieved by "does less", which is the same failure the
+gated experiment produced.
+
+### What is actually true, then
+
+- **On design palettes** — 8 to 10 curated colours, i.e. charts, dashboards, UI themes —
+  content-aware correction genuinely wins: half the remaining confusion at half the
+  distortion. That result stands.
+- **On arbitrary content** with 24+ quantised colours it does not, because `fix_palette`'s
+  per-colour drift budget is tuned for small design palettes and it declines to move.
+- **And the global matrix is net-harmful on real content anyway** — −6, −4 and a catastrophic
+  −47 for tritan on this scene.
+
+So for live camera content, **neither approach is good**, and that is the honest state. Making
+content-aware work there needs a set-wise optimiser built for large palettes without
+`fix_palette`'s conservatism — a real build, not a wrapper around an existing function.
+
+Third time today that rendering the picture overturned what the numbers said. The metrics are
+necessary and they are not sufficient.
