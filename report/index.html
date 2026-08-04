@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ===== WORKFLOW STACK =====
+  File:     /report/index.html
+  Purpose:  A printable record of screening OBSERVATIONS to hand to a clinician.
+  Rule:     It reports what happened and how it was measured. It does NOT conclude.
+            A clinician has an anomaloscope; what they lack is what this person did
+            with a known stimulus. Raw counts plus a published method is useful to
+            them. A verdict from an uncalibrated browser is not, and claiming one
+            would also be the thing that turns a wellness screen into something it
+            is not allowed to be.
+  Privacy:  Reads localStorage only. There is no network code on this page. Printing
+            is the browser's own Save-as-PDF, so the record never leaves the device.
+===== END ===== -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Print a record of your OpticQuiz colour-vision screening results to take to an optometrist — raw observations, the published method, and a plain statement of what a screen cannot determine.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://opticquiz.com/report/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Screening Record — for your eye-care professional | OpticQuiz</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;
+      --fd:"Bebas Neue",Impact,fantasy;--fs:Georgia,"Times New Roman",serif;--fm:"Courier New",monospace;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);line-height:1.6;}
+.wrap{max-width:760px;margin:0 auto;padding:24px 22px 90px;}
+.screen-only{margin-bottom:26px;}
+h1{font-size:26px;letter-spacing:.01em;margin-bottom:4px;}
+.sub{font-size:14px;color:var(--gray);margin-bottom:18px;}
+h2{font-size:16px;margin:26px 0 8px;border-bottom:1.5px solid var(--black);padding-bottom:4px;
+   text-transform:uppercase;letter-spacing:.08em;font-family:var(--fm);}
+p{font-size:14.5px;margin-bottom:11px;}
+.meta{font-family:var(--fm);font-size:12px;color:var(--gray);}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0 14px;}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--lgray);vertical-align:top;}
+th{font-family:var(--fm);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gray);font-weight:400;}
+td.n{font-family:var(--fm);white-space:nowrap;}
+.card{background:#fff;border:1.5px solid var(--lgray);border-radius:6px;padding:14px 16px;margin:12px 0;}
+.cannot{background:#FDF1EE;border:1.5px solid var(--red);border-radius:6px;padding:14px 16px;margin:14px 0;}
+.cannot strong{display:block;margin-bottom:6px;}
+ul{margin:0 0 8px 18px;font-size:14px;}
+li{margin-bottom:5px;}
+button{font-family:var(--fs);font-size:15px;padding:11px 20px;border:1.5px solid var(--black);
+  background:var(--black);color:#fff;border-radius:5px;cursor:pointer;margin-right:8px;}
+button.ghost{background:#fff;color:var(--black);}
+a{color:var(--red);}
+.empty{background:var(--cream);border:1px dashed var(--lgray);border-radius:6px;padding:22px;font-size:14.5px;}
+footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px solid var(--lgray);
+  margin-top:28px;padding-top:10px;}
+@media print{
+  @page{margin:16mm;}
+  html,body{background:#fff;}
+  .screen-only{display:none !important;}
+  .wrap{max-width:none;padding:0;}
+  .card,.cannot{break-inside:avoid;}
+  h2{break-after:avoid;}
+  a{color:#000;text-decoration:none;}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <div class="screen-only">
+    <p class="meta"><a href="/">← OpticQuiz</a></p>
+    <h1>Screening record</h1>
+    <p class="sub">A printable summary of what these tests observed, for an optometrist or
+      ophthalmologist. It is generated entirely in your browser from results stored on this
+      device — nothing is uploaded, and printing uses your browser's own Save&nbsp;as&nbsp;PDF.</p>
+    <button onclick="window.print()">Print / Save as PDF</button>
+    <button class="ghost" id="wipe">Delete these results</button>
+  </div>
+
+  <div id="report"></div>
+
+</main>
+
+<script src="/assets/oq-results.js"></script>
+<script>
+(function(){
+  "use strict";
+  var esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
+
+  var TESTS={
+    d15:{name:"Farnsworth D-15 (arrangement)",
+      rows:function(d){
+        var r=[["Total error score",d.totalError],
+               ["Dominant confusion axis",d.dominantAxis||"none identified"]];
+        if(d.axisScores) r.push(["Axis hit counts",
+          "deutan "+d.axisScores.deutan+" · protan "+d.axisScores.protan+" · tritan "+d.axisScores.tritan]);
+        if(d.perEye) r.push(["Total error, per eye",
+          "right "+(d.perEye.right==null?"—":d.perEye.right)+" · left "+(d.perEye.left==null?"—":d.perEye.left)]);
+        return r;},
+      method:"15 colour caps arranged by hue against a fixed reference cap. Errors are scored as total transposition distance, and adjacent-cap transpositions are mapped onto the deutan, protan and tritan confusion axes. Reported figures are for the eye with the higher total error."},
+    color:{name:"Pseudoisochromatic plates (procedurally generated)",
+      rows:function(d){
+        var rows=[["Red-green plates read correctly",d.rgCorrect+" of "+d.rgTotal]];
+        if(d.tTotal) rows.push(["Blue-yellow (tritan) plates read correctly",d.tCorrect+" of "+d.tTotal]);
+        rows.push(["Lightness-only control plate",d.ctrlOK?"read correctly":"MISSED — run may be invalid"]);
+        return rows;},
+      method:"Plates are generated in the browser at load time; no stored or scanned plate images are used. The hidden figure differs from the background only in hue along a confusion axis, with dot size and lightness randomised so the figure cannot be read by brightness or shape. Scoring is a plain count. Reported figures are for the eye with more misses."},
+    sat:{name:"Saturation threshold (adaptive staircase)",
+      rows:function(d){return Object.keys(d).map(function(k){return [k,String(d[k])];});},
+      method:"An adaptive staircase measures the faintest colour distinguishable from grey along each of four hue axes."}
+  };
+
+  function render(){
+    var all=(window.OQ&&OQ.Results)?OQ.Results.all():[];
+    var el=document.getElementById("report");
+    if(!all.length){
+      el.innerHTML='<div class="empty"><strong>No results stored on this device yet.</strong><br><br>'+
+        'Take the <a href="/d15/">Farnsworth D-15</a> — it grades finer than a plate test and identifies '+
+        'a confusion axis — or the <a href="/color/">colour plate test</a>, then come back. Results are '+
+        'saved only in this browser.</div>';
+      return;
+    }
+    var prof=OQ.Results.profile();
+    var h='';
+    h+='<h1 style="font-size:22px;margin-bottom:2px;">Colour-vision screening record</h1>';
+    h+='<p class="meta">Self-administered · uncalibrated consumer display · generated '+esc(new Date().toISOString().slice(0,10))+'</p>';
+
+    h+='<div class="cannot"><strong>This is a screening record, not a diagnosis.</strong>'+
+       'These tests were self-administered on an uncalibrated screen under unknown lighting. '+
+       'The figures below are raw observations and the method used to obtain them, provided so that '+
+       'a qualified professional can judge them independently. They are not a clinical grade and '+
+       'should not be used for any medical, employment, licensing or safety decision.</div>';
+
+    h+='<h2>Observations</h2>';
+    all.forEach(function(rec){
+      var t=TESTS[rec.test]; if(!t) return;
+      h+='<div class="card"><strong>'+esc(t.name)+'</strong>'+
+         '<p class="meta" style="margin:2px 0 8px;">Taken '+esc(rec.date)+'</p><table>';
+      t.rows(rec.data||{}).forEach(function(r){
+        h+='<tr><th style="width:52%">'+esc(r[0])+'</th><td class="n">'+esc(r[1])+'</td></tr>';});
+      h+='</table><p style="font-size:13px;color:#6B6B6B;margin:0;"><em>Method.</em> '+esc(t.method)+'</p></div>';
+    });
+
+    if(prof){
+      h+='<h2>Pattern indicated by this screen</h2>';
+      h+='<div class="card"><table>'+
+         '<tr><th style="width:52%">Axis of confusion suggested</th><td class="n">'+esc(prof.type)+'</td></tr>'+
+         '<tr><th>Derived from</th><td class="n">'+esc(prof.basis)+'</td></tr>'+
+         '<tr><th>Weight this screen carries</th><td class="n">'+esc(prof.confidence)+'</td></tr>'+
+         '</table><p style="font-size:13px;color:#6B6B6B;margin:0;">This line restates the '+
+         'observations above. It is not an interpretation and not a diagnosis.</p></div>';
+    }
+
+    // The blanket "cannot separate protan from deutan" is TOO STRONG when a D-15 is
+    // present: an arrangement test does legitimately indicate an axis from error
+    // clustering. Leaving the contradiction in would let a clinician dismiss the whole
+    // document, correctly.
+    var hasD15=all.some(function(r){return r.test==="d15";});
+    h+='<h2>What a screen of this kind cannot determine</h2><ul>'+
+       (hasD15
+        ? '<li><strong>The suggested axis is inferred from error clustering, not measured.</strong> '+
+          'An arrangement test indicates a likely confusion axis; confirming protan versus deutan, '+
+          'and grading it, requires an anomaloscope. The plate test above cannot distinguish them at all.</li>'
+        : '<li><strong>It cannot separate protanopia from deuteranopia.</strong> That requires an anomaloscope.</li>')+
+       '<li><strong>It cannot grade severity clinically.</strong> Any band shown by these tests comes from a small number of items on an uncalibrated display.</li>'+
+       '<li><strong>It cannot detect acquired colour-vision change</strong> or distinguish it from inherited deficiency.</li>'+
+       '<li><strong>It cannot rule anything out.</strong> A normal result on a screening test is not a normal clinical examination.</li>'+
+       '<li>Display calibration, colour profile, ambient lighting and viewing distance all affect these results and none were controlled.</li>'+
+       '</ul>';
+
+    h+='<h2>Method and source</h2>'+
+       '<p>The plate-generation method and its calibration limits are published open-access: '+
+       '<strong>doi.org/10.5281/zenodo.21310578</strong> (CC&nbsp;BY&nbsp;4.0). Source code: '+
+       'github.com/zengineco/opticquiz.com. OpticQuiz is an independent, open-source project and '+
+       'is not a medical device, laboratory, or healthcare provider.</p>';
+
+    h+='<footer>Generated on the patient\'s own device by opticquiz.com. No results were '+
+       'transmitted. Educational and accessibility use only &mdash; not a medical diagnosis.</footer>';
+    el.innerHTML=h;
+  }
+
+  document.getElementById("wipe").addEventListener("click",function(){
+    if(confirm("Delete all test results stored in this browser? This cannot be undone.")){
+      OQ.Results.clear(); render();
+    }
+  });
+  render();
+})();
+</script>
+</body>
+</html>

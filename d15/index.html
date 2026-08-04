@@ -948,6 +948,21 @@ document.addEventListener("touchend", function(e) {
 // ── 8. RESULTS RENDER ─────────────────────────────────────
 
 function renderResults() {
+  // Persist on-device for the printable report and the corrector handoff.
+  // Worse eye by total error: a clinician wants the affected eye, and a correction
+  // tuned to the better eye would under-correct.
+  try {
+    if (window.OQ && OQ.Results) {
+      var R = STATE.results, worse =
+        (R.right && R.left) ? (R.right.totalError >= R.left.totalError ? R.right : R.left)
+                            : (R.right || R.left);
+      if (worse) OQ.Results.save("d15", {
+        totalError: worse.totalError, dominantAxis: worse.dominantAxis,
+        axisScores: worse.axisScores,
+        perEye: { right: R.right && R.right.totalError, left: R.left && R.left.totalError }
+      });
+    }
+  } catch (e) {}
   var r = STATE.results;
   if (r.right) document.getElementById("tab-right-val").textContent = r.right.severity === "none" ? "Normal" : r.right.severity.charAt(0).toUpperCase() + r.right.severity.slice(1);
   if (r.left)  document.getElementById("tab-left-val").textContent  = r.left.severity  === "none" ? "Normal" : r.left.severity.charAt(0).toUpperCase()  + r.left.severity.slice(1);
@@ -1108,5 +1123,6 @@ function shareResults() {
 }
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-results.js"></script>
 </body>
 </html>

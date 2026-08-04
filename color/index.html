@@ -807,6 +807,17 @@ function renderQuestion() {
 }
 
 function renderResults() {
+  try {
+    if (window.OQ && OQ.Results) {
+      var R = STATE.results, pick = function (r) { return r ? (r.rgTotal - r.rgCorrect) : -1; },
+          worse = (R.right && R.left) ? (pick(R.right) >= pick(R.left) ? R.right : R.left)
+                                      : (R.right || R.left);
+      if (worse) OQ.Results.save("color", {
+        ctrlOK: worse.ctrlOK, rgTotal: worse.rgTotal, rgCorrect: worse.rgCorrect,
+        tTotal: worse.tTotal, tCorrect: worse.tCorrect
+      });
+    }
+  } catch (e) {}
   // READS: STATE.results  WRITES: DOM
   var r = STATE.results;
   if (r.right) document.getElementById("tab-right-val").textContent = shortLabel(r.right.category);
@@ -996,5 +1007,6 @@ function shareResults() {
 <script src="/assets/oq-i18n-color.js"></script>
 <script src="/assets/oq-i18n.js"></script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-results.js"></script>
 </body>
 </html>
