@@ -146,6 +146,32 @@ def compare():
     mons = json.load(open("capture-A.json")).get("monitors") or [(0, 0, a.shape[1], a.shape[0])]
     overall = []
     rows = []
+
+    def is_colour_mapping(sub_a, sub_b, mask):
+        """Distinguish a colour FILTER from CONTENT that merely changed.
+
+        A colour filter is a function: one input colour maps to exactly one output colour,
+        everywhere on the display. Content change is not — a terminal scrolling or a video
+        playing sends the same input colour to many different outputs. Without this gate a
+        single busy monitor (Discord, a video, the terminal you are typing in) reads as
+        'the filter is visible', which is precisely what happened on the first multi-monitor
+        run. Returns (fraction_of_colours_with_multiple_outputs, n_checked)."""
+        pa, pb = sub_a[mask].reshape(-1, 3).astype(int), sub_b[mask].reshape(-1, 3).astype(int)
+        if len(pa) < 100:
+            return None, 0
+        keys = (pa[:, 0] << 16) | (pa[:, 1] << 8) | pa[:, 2]
+        order = np.argsort(keys)
+        keys, pbs = keys[order], pb[order]
+        uniq, start, cnt = np.unique(keys, return_index=True, return_counts=True)
+        multi = checked = 0
+        for u, s, c in zip(uniq, start, cnt):
+            if c < 8:
+                continue
+            checked += 1
+            seg = pbs[s:s + c]
+            if len(np.unique((seg[:, 0] << 16) | (seg[:, 1] << 8) | seg[:, 2])) > 1:
+                multi += 1
+        return (multi / checked if checked else None), checked
     for i, (l, t, r, bt) in enumerate(mons):
         bt = min(bt, a.shape[0])
         r = min(r, a.shape[1])
@@ -154,28 +180,46 @@ def compare():
         if sub_a.size == 0:
             continue
         d = np.abs(sub_a - sub_b)
-        frac = float(np.mean(d.max(axis=2) > 2))
-        overall.append(frac)
+        mask = d.max(axis=2) > 2
+        frac = float(np.mean(mask))
+        inconsistent, checked = is_colour_mapping(sub_a, sub_b, mask)
+
+        # A change only counts as the filter if it behaves like one.
+        verdict = "no change"
+        if frac >= 0.01:
+            if inconsistent is None:
+                verdict = "changed, too little data to classify"
+            elif inconsistent > 0.10:
+                verdict = "CONTENT CHANGE (not a colour filter) - excluded"
+            else:
+                verdict = "consistent colour mapping - filter observed"
+                overall.append(frac)
+
         rows.append({"monitor": i, "rect": [l, t, r, bt],
                      "pixels_changed_fraction": round(frac, 4),
                      "mean_abs_delta_255": round(float(d.mean()), 3),
-                     "max_abs_delta_255": round(float(d.max()), 1)})
+                     "colours_with_multiple_outputs":
+                         None if inconsistent is None else round(inconsistent, 3),
+                     "verdict": verdict})
 
     print(json.dumps({"note": f"bottom {TASKBAR_ROWS} rows of each monitor excluded (taskbar clock)",
                       "per_monitor": rows}, indent=2))
     changed = max(overall) if overall else 0.0
 
-    if any(f >= 0.01 for f in overall) and not all(f >= 0.01 for f in overall):
-        print("\nNOTE: the filter appears on SOME displays but not others. That is itself")
-        print("a result — record which monitor is which before drawing conclusions.")
+    excluded = [r for r in rows if "CONTENT CHANGE" in r["verdict"]]
+    if excluded:
+        print(f"\n{len(excluded)} monitor(s) excluded for content change - something on that")
+        print("screen (a video, a chat app, the terminal you are typing in) altered pixels")
+        print("between captures. A colour filter is a function: one input colour maps to one")
+        print("output colour. These did not. Use an idle screen for a clean per-monitor result.")
 
     if changed < 0.01:
-        print("\nOUTCOME B — the capture does NOT observe the filter.")
+        print("\nOUTCOME B - the capture does NOT observe the filter.")
         print("The filter state genuinely differed between these two captures and the pixels")
         print("did not move. Software capture is INVALID for this measurement: do not run")
         print("recover.py on these images. This is a publishable finding in its own right.")
     else:
-        print(f"\nOUTCOME A — the capture observes the filter ({changed:.1%} of pixels changed).")
+        print(f"\nOUTCOME A - the capture observes the filter ({changed:.1%} of pixels changed).")
         print("Software capture is valid. Proceed to recover.py.")
 
 

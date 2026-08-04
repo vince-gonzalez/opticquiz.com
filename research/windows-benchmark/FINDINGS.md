@@ -36,9 +36,19 @@ changed anything. Two controls guard against it:
    share a state. An earlier run of this experiment was invalid for exactly this reason — the
    filter was on for both captures — and the tooling was rebuilt so it cannot happen silently.
 
-2. **Grayscale (`FilterType = 0`) was used as the probe**, not a colour-vision filter. A CVD
-   filter is a subtle shift that could hide in noise; grayscale is unmissable. The operator
-   confirmed visually that the display went grey.
+2. **Grayscale (`FilterType = 0`) was used as the primary probe**, not a colour-vision
+   filter. A CVD filter is a subtle shift that could hide in noise; grayscale is unmissable.
+   The operator confirmed visually that the display went grey. The result was then
+   **confirmed with Deuteranopia (`FilterType = 3`)**, the filter the benchmark actually
+   cares about, on two idle displays — also null.
+
+3. **Content change is distinguished from a colour transform.** A colour filter is a
+   function: one input colour maps to exactly one output colour. On a multi-monitor run, one
+   display showed 27.3% of pixels changed — but 97.4% of its input colours mapped to *more
+   than one* output colour, which no transform can do. It was a video, a chat client and the
+   operator's own terminal updating between captures. `compare` now applies this test and
+   excludes such displays automatically; before it did, a single busy screen was enough to
+   flip the verdict to a false positive.
 
 For `MagGetFullscreenColorEffect`, the control reading was verified first: with the filter
 **off**, the API returns exact identity, as it must. With grayscale **on**, it still returns
@@ -47,9 +57,13 @@ exact identity.
 Verified state transitions for the capture tests:
 
 ```
-GDI   capture A: Active=1 FilterType=0    capture B: Active=0 FilterType=0
-DXGI  capture A: Active=0 FilterType=0    capture B: Active=1 FilterType=0
+GDI       capture A: Active=1 FilterType=0    capture B: Active=0 FilterType=0   (grayscale)
+DXGI      capture A: Active=0 FilterType=0    capture B: Active=1 FilterType=0   (grayscale)
+GDI x3mon capture A: Active=1 FilterType=3    capture B: Active=0 FilterType=3   (deuteranopia)
 ```
+
+The three-monitor deuteranopia run: monitors 0 and 2 idle, both **0.0000** changed. Monitor 1
+excluded — it held a video, a chat client and a live terminal.
 
 The bottom 80 rows of each display were excluded from statistics: in the first (invalid) run,
 **every** apparently-changed pixel was the taskbar clock advancing by one minute.
@@ -93,7 +107,8 @@ pipeline (DWM output stage or GPU output CSC/LUT) rather than in the composed de
   nothing. A private or undocumented interface may well exist.
 - It does not generalise beyond the environment above. A different GPU vendor, driver, or
   Windows build could behave differently, and the test is cheap to repeat.
-- Only the primary display was tested. The multi-monitor case is not yet answered.
+- Two of three displays were measured clean (primary and one secondary); the third could not
+  be measured because it was in active use. No per-display difference was observed.
 
 ---
 
