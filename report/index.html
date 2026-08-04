@@ -47,6 +47,14 @@ button{font-family:var(--fs);font-size:15px;padding:11px 20px;border:1.5px solid
   background:var(--black);color:#fff;border-radius:5px;cursor:pointer;margin-right:8px;}
 button.ghost{background:#fff;color:var(--black);}
 a{color:var(--red);}
+.intake{background:#fff;border:1.5px solid var(--lgray);border-radius:6px;padding:14px 16px;margin:14px 0 18px;}
+.intake label{display:block;font-size:12px;font-family:var(--fm);letter-spacing:.05em;
+  text-transform:uppercase;color:var(--gray);margin-bottom:10px;}
+.intake input,.intake textarea{display:block;width:100%;font-family:var(--fs);font-size:14.5px;
+  padding:8px 9px;border:1.5px solid var(--lgray);border-radius:4px;margin-top:4px;color:var(--black);}
+.ctx{background:var(--cream);border-left:4px solid var(--black);padding:12px 14px;margin:12px 0 4px;}
+.ctx .q{font-family:var(--fm);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--gray);}
+.ctx .a{font-size:15px;margin-bottom:8px;}
 .empty{background:var(--cream);border:1px dashed var(--lgray);border-radius:6px;padding:22px;font-size:14.5px;}
 footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px solid var(--lgray);
   margin-top:28px;padding-top:10px;}
@@ -54,6 +62,7 @@ footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px s
   @page{margin:16mm;}
   html,body{background:#fff;}
   .screen-only{display:none !important;}
+  .ctx{break-inside:avoid;}
   .wrap{max-width:none;padding:0;}
   .card,.cannot{break-inside:avoid;}
   h2{break-after:avoid;}
@@ -70,6 +79,16 @@ footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px s
     <p class="sub">A printable summary of what these tests observed, for an optometrist or
       ophthalmologist. It is generated entirely in your browser from results stored on this
       device — nothing is uploaded, and printing uses your browser's own Save&nbsp;as&nbsp;PDF.</p>
+    <div class="intake">
+      <p style="font-size:14px;margin-bottom:10px;"><strong>Before you print</strong> — an
+      optometrist reads this part first. The numbers matter less than why you came.</p>
+      <label>Who was tested<input id="f-who" placeholder="e.g. my son, age 9"></label>
+      <label>Who ran the test<input id="f-by" placeholder="e.g. his mother, at home"></label>
+      <label>What prompted this<textarea id="f-why" rows="3"
+        placeholder="e.g. he has been struggling to read the coloured lines on maps and mixes up the red and green counters in games"></textarea></label>
+      <p style="font-size:13px;color:#6B6B6B;margin:2px 0 0;">Typed here, printed below, stored
+      only in this browser. Never uploaded.</p>
+    </div>
     <button onclick="window.print()">Print / Save as PDF</button>
     <button class="ghost" id="wipe">Delete these results</button>
   </div>
@@ -108,6 +127,15 @@ footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px s
       method:"An adaptive staircase measures the faintest colour distinguishable from grey along each of four hue axes."}
   };
 
+  var CKEY="oq-report-ctx-v1";
+  function loadCtx(){try{return JSON.parse(localStorage.getItem(CKEY))||{};}catch(e){return {};}}
+  function saveCtx(){
+    var c={who:val("f-who"),by:val("f-by"),why:val("f-why")};
+    try{localStorage.setItem(CKEY,JSON.stringify(c));}catch(e){}
+    render();
+  }
+  function val(id){var el=document.getElementById(id);return el?el.value.trim():"";}
+
   function render(){
     var all=(window.OQ&&OQ.Results)?OQ.Results.all():[];
     var el=document.getElementById("report");
@@ -122,6 +150,19 @@ footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px s
     var h='';
     h+='<h1 style="font-size:22px;margin-bottom:2px;">Colour-vision screening record</h1>';
     h+='<p class="meta">Self-administered · uncalibrated consumer display · generated '+esc(new Date().toISOString().slice(0,10))+'</p>';
+
+    // Printed FIRST, above the numbers. A functional complaint - "he cannot read the
+    // coloured lines on maps" - is what an optometrist acts on. The counts are supporting
+    // evidence for it, not the other way round.
+    var ctx=loadCtx();
+    if(ctx.who||ctx.by||ctx.why){
+      h+='<div class="ctx">';
+      if(ctx.who) h+='<div class="q">Person tested</div><div class="a">'+esc(ctx.who)+'</div>';
+      if(ctx.by)  h+='<div class="q">Test administered by</div><div class="a">'+esc(ctx.by)+'</div>';
+      if(ctx.why) h+='<div class="q">Reason for screening, as reported</div>'+
+                     '<div class="a" style="margin-bottom:0;">'+esc(ctx.why)+'</div>';
+      h+='</div>';
+    }
 
     h+='<div class="cannot"><strong>This is a screening record, not a diagnosis.</strong>'+
        'These tests were self-administered on an uncalibrated screen under unknown lighting. '+
@@ -140,13 +181,19 @@ footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px s
     });
 
     if(prof){
+      // NO DECIMAL SEVERITY HERE, deliberately. The internal profile carries 0.433... for
+      // scaling the corrector; printing that would put "OpticQuiz said deut .43" into
+      // someone's mouth in an exam room, and a number that precise reads as a measurement
+      // no matter what the surrounding paragraph says. False precision is the failure mode
+      // this whole page exists to avoid.
       h+='<h2>Pattern indicated by this screen</h2>';
       h+='<div class="card"><table>'+
-         '<tr><th style="width:52%">Axis of confusion suggested</th><td class="n">'+esc(prof.type)+'</td></tr>'+
-         '<tr><th>Derived from</th><td class="n">'+esc(prof.basis)+'</td></tr>'+
+         '<tr><th style="width:52%">Axis the errors fall along</th><td class="n">'+esc(prof.type)+'</td></tr>'+
+         '<tr><th>Observed as</th><td class="n">'+esc(prof.basis)+'</td></tr>'+
          '<tr><th>Weight this screen carries</th><td class="n">'+esc(prof.confidence)+'</td></tr>'+
-         '</table><p style="font-size:13px;color:#6B6B6B;margin:0;">This line restates the '+
-         'observations above. It is not an interpretation and not a diagnosis.</p></div>';
+         '</table><p style="font-size:13px;color:#6B6B6B;margin:0;">This restates the counts '+
+         'above and nothing more. No severity figure is given because five plates on an '+
+         'uncalibrated screen cannot support one.</p></div>';
     }
 
     // The blanket "cannot separate protan from deutan" is TOO STRONG when a D-15 is
@@ -177,9 +224,18 @@ footer{font-family:var(--fm);font-size:10.5px;color:var(--gray);border-top:1px s
     el.innerHTML=h;
   }
 
+  ["f-who","f-by","f-why"].forEach(function(id){
+    var el=document.getElementById(id); if(!el) return;
+    var c=loadCtx(); el.value=c[id.slice(2)==="who"?"who":id.slice(2)==="by"?"by":"why"]||"";
+    el.addEventListener("input",saveCtx);
+  });
+
   document.getElementById("wipe").addEventListener("click",function(){
     if(confirm("Delete all test results stored in this browser? This cannot be undone.")){
-      OQ.Results.clear(); render();
+      OQ.Results.clear();
+      try{localStorage.removeItem(CKEY);}catch(e){}
+      ["f-who","f-by","f-why"].forEach(function(id){var el=document.getElementById(id); if(el) el.value="";});
+      render();
     }
   });
   render();
