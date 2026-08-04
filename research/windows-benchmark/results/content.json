@@ -1,0 +1,122 @@
+[
+  {
+    "deficiency": "protan",
+    "corrector": "identity (control)",
+    "collapsed_before": 202,
+    "collapsed_after": 202,
+    "rescued": 0,
+    "rescue_rate": 0.0,
+    "fidelity_mean": 0.0,
+    "worst_move_mean": 0.0
+  },
+  {
+    "deficiency": "protan",
+    "corrector": "global matrix (shipped)",
+    "collapsed_before": 202,
+    "collapsed_after": 150,
+    "rescued": 161,
+    "rescue_rate": 0.797,
+    "fidelity_mean": 12.94,
+    "worst_move_mean": 27.58
+  },
+  {
+    "deficiency": "protan",
+    "corrector": "daltonize (Fidaner)",
+    "collapsed_before": 202,
+    "collapsed_after": 133,
+    "rescued": 174,
+    "rescue_rate": 0.861,
+    "fidelity_mean": 14.61,
+    "worst_move_mean": 29.37
+  },
+  {
+    "deficiency": "protan",
+    "corrector": "fix_palette (content-aware)",
+    "collapsed_before": 202,
+    "collapsed_after": 84,
+    "rescued": 150,
+    "rescue_rate": 0.743,
+    "fidelity_mean": 6.81,
+    "worst_move_mean": 16.57
+  },
+  {
+    "deficiency": "deutan",
+    "corrector": "identity (control)",
+    "collapsed_before": 223,
+    "collapsed_after": 223,
+    "rescued": 0,
+    "rescue_rate": 0.0,
+    "fidelity_mean": 0.0,
+    "worst_move_mean": 0.0
+  },
+  {
+    "deficiency": "deutan",
+    "corrector": "global matrix (shipped)",
+    "collapsed_before": 223,
+    "collapsed_after": 160,
+    "rescued": 171,
+    "rescue_rate": 0.767,
+    "fidelity_mean": 13.07,
+    "worst_move_mean": 27.69
+  },
+  {
+    "deficiency": "deutan",
+    "corrector": "daltonize (Fidaner)",
+    "collapsed_before": 223,
+    "collapsed_after": 166,
+    "rescued": 145,
+    "rescue_rate": 0.65,
+    "fidelity_mean": 10.85,
+    "worst_move_mean": 29.5
+  },
+  {
+    "deficiency": "deutan",
+    "corrector": "fix_palette (content-aware)",
+    "collapsed_before": 223,
+    "collapsed_after": 94,
+    "rescued": 169,
+    "rescue_rate": 0.758,
+    "fidelity_mean": 6.81,
+    "worst_move_mean": 16.57
+  },
+  {
+    "deficiency": "tritan",
+    "corrector": "identity (control)",
+    "collapsed_before": 117,
+    "collapsed_after": 117,
+    "rescued": 0,
+    "rescue_rate": 0.0,
+    "fidelity_mean": 0.0,
+    "worst_move_mean": 0.0
+  },
+  {
+    "deficiency": "tritan",
+    "corrector": "global matrix (shipped)",
+    "collapsed_before": 117,
+    "collapsed_after": 142,
+    "rescued": 79,
+    "rescue_rate": 0.675,
+    "fidelity_mean": 10.01,
+    "worst_move_mean": 17.31
+  },
+  {
+    "deficiency": "tritan",
+    "corrector": "daltonize (Fidaner)",
+    "collapsed_before": 117,
+    "collapsed_after": 129,
+    "rescued": 18,
+    "rescue_rate": 0.154,
+    "fidelity_mean": 4.91,
+    "worst_move_mean": 11.48
+  },
+  {
+    "deficiency": "tritan",
+    "corrector": "fix_palette (content-aware)",
+    "collapsed_before": 117,
+    "collapsed_after": 60,
+    "rescued": 102,
+    "rescue_rate": 0.872,
+    "fidelity_mean": 6.81,
+    "worst_move_mean": 16.57
+  }
+]
