@@ -1,6 +1,6 @@
 {
   "name": "opticquiz-eye",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "One-line colorblind accessibility widget: a floating eye that lets visitors re-color your page (daltonization) for their type of color-vision deficiency. Zero dependencies, zero tracking, SSR-safe.",
   "main": "index.js",
   "types": "index.d.ts",

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "OpticQuiz — Colorblind Corrector",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Correct colors on any web page for your type of color blindness, in real time. Published method, zero tracking.",
   "permissions": ["storage"],
   "action": {

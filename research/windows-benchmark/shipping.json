@@ -1,0 +1,21 @@
+{
+  "_comment": "What is DECLARED to ship, per deficiency and per surface. verify_shipped.py checks the source files against this, so the decision is explicit and reviewable rather than inferred from which transform files happen to exist on disk.",
+  "linear_surfaces": {
+    "protan": {
+      "transform": "opticquiz-protan",
+      "reason": "v2 REJECTED on visual review. It passed all five held-out metric checks, but costs 14% more distortion on realistic content and still loses to daltonize on rescue, gain and safe palettes. Protanopia is an open problem."
+    },
+    "deutan": {
+      "transform": "opticquiz-v2-deutan",
+      "reason": "v2 SHIPPED. Rescue 0.718-0.777 -> 0.851-0.896 on held-out simulators, leading the field ahead of daltonize, at equal lattice fidelity. Costs 34% more distortion on realistic content, judged worth it for that margin."
+    },
+    "tritan": {
+      "transform": "opticquiz-v2-tritan",
+      "reason": "v2 SHIPPED. Best result in the benchmark: wins the metrics, halves damage to already-safe palettes (-9.5 -> -4.2), and is the only matrix LESS distorting on realistic content than the one it replaces. Known caveat: washes the low end of a red-green ramp toward white for a tritan viewer."
+    }
+  },
+  "desktop_app": {
+    "transform": "opticquiz-{type}",
+    "reason": "DELIBERATELY ON v1. MagSetFullscreenColorEffect applies the matrix to gamma-encoded sRGB, while every browser surface applies it in linear light. Measured consequence: deutan rescue 0.731 (linear) vs 0.696 (sRGB) under Brettel 1997; tritan 0.810 vs 0.877. The v2 matrices were derived in linear space, so shipping them here would be an unmeasured change. The desktop app needs its own sRGB-space derivation."
+  }
+}
