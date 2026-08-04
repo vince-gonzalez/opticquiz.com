@@ -11,12 +11,15 @@ any measurement was taken, deliberately, so the analysis cannot be steered after
 | Analysis pipeline implemented | done |
 | Recovery maths verified against a known injected transform | done — recovered to ±0.0003, RMS residual 0.29/255 |
 | Baseline: OpticQuiz shipped daltonisation scored | done — `results/opticquiz-*.json` |
-| Stage 0: does screen capture observe the Windows filter? | **not yet run** — needs a Windows display |
-| Stage 1: Windows transform recovered | blocked on Stage 0 |
+| Stage 0: does screen capture observe the Windows filter? | **done — NO.** Three independent software paths, all blind. See [FINDINGS.md](FINDINGS.md) |
+| Stage 1: Windows transform recovered | **blocked in software.** Requires a camera or colorimeter (Stage 1-alt) |
 | Stage 2: comparison | blocked on Stage 1 |
 
-The Windows half is not measured yet and no claim is made about it anywhere in this
-repository. What exists is the instrument, verified, plus our own transform scored by it.
+The Windows half is not measured and no claim is made about its *behaviour* anywhere in this
+repository. What exists is the instrument (verified), our own transform scored by it, and a
+measured negative result: **the Windows colour filters are not observable through GDI capture,
+DXGI Desktop Duplication, or the public Magnification API.** That result is documented in
+[FINDINGS.md](FINDINGS.md) and is publishable on its own.
 
 ## Baseline result — OpticQuiz daltonisation, 9×9×9 sRGB lattice, 1000 collapsing pairs
 

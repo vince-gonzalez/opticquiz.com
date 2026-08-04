@@ -1,4 +1,8 @@
 capture-*.png
+capture-*.json
+dxgi-*.npy
+dxgi-*.json
 _synth-*.png
+_preview.png
 patches.png
 __pycache__/
