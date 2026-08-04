@@ -111,3 +111,72 @@ the same answer is evidence both read it correctly.
 - Uncalibrated nominal sRGB throughout.
 - Windows, macOS, iOS and Android system filters are absent because they cannot be measured
   from software — see [FINDINGS.md](FINDINGS.md).
+
+---
+
+# v2 — matrices derived against the benchmark, honestly
+
+`optimise.py` searches for better matrices. The obvious failure mode is training on the test
+set, so:
+
+- **Simulator split.** Fitted against Machado 2009 + Brettel 1997 only. Viénot 1999, Vischeck
+  and Coblis are never seen during the fit and are the score that counts.
+- **Stimulus split.** Fitted on a 343-colour lattice; scored on a 729-colour lattice with a
+  different random seed.
+- **Structural grey preservation.** Rows are constrained to sum to 1, so the achromatic axis
+  is preserved by construction rather than by hope. 6 free parameters, not 9.
+- **Caps, not trades.** Fidelity cost, safe-palette damage and gamut clipping are each capped
+  at the *current* matrix's own value — "do not make it worse" — and are penalties in the
+  objective, never tradeable against raw gain.
+- **A win requires every metric to hold**, on the held-out models. Not one.
+
+### Two failures worth recording
+
+**The first objective maximised mean gain, and that was wrong.** A matrix can raise the mean
+enormously by blowing apart pairs that were already distinguishable while letting marginal
+ones fall below threshold. It scored as a large improvement while rescue rate dropped 0.94 →
+0.78 and gamut clipping went 35% → 57%. Fixed by maximising `min(ΔE, 15)` — which pays for
+lifting a pair *to* the threshold and stops paying beyond it.
+
+**The first verdict checked only gain**, and so blessed that matrix. Fixed: all five metrics
+must hold. The script now rejects its own output routinely, which is the point.
+
+### Result — v2 vs v1 vs daltonize, all six simulators
+
+| | | v1 (shipped) | **v2 (derived)** | daltonize |
+|---|---|---|---|---|
+| **protan** | rescue | 0.917 – 0.952 | 0.932 – 0.961 | **0.953 – 0.979** |
+| | fidelity cost | 12.97 | **13.01** | 14.30 |
+| | safe palettes | +1.80 – +2.91 | +1.69 – +2.93 | **+3.30 – +4.32** |
+| **deutan** | rescue | 0.718 – 0.777 | **0.851 – 0.896** | 0.733 – 0.819 |
+| | mean gain | +10.09 – +11.12 | +11.78 – **+13.72** | +11.97 – +13.71 |
+| | safe palettes | −1.04 – +0.99 | **−0.31 – +1.17** | −2.75 – −1.22 |
+| **tritan** | rescue | 0.705 – 0.843 | **0.834 – 0.916** | 0.128 – 0.422 |
+| | mean gain | +5.07 – +16.69 | **+11.18 – +18.69** | +0.44 – +1.60 |
+| | safe palettes | −9.53 – −6.43 | **−4.20 – −2.93** | −0.46 – +0.95 |
+
+**deutan: v2 now leads the field.** Rescue rises 12–14 points over v1 and clears daltonize by
+6–8, at the same fidelity cost, while *improving* safe-palette behaviour where daltonize
+actively damages it.
+
+**tritan: v2 extends an already-dominant lead** and halves the worst problem in the whole
+benchmark — damage to already-accessible palettes drops from −9.5 to −4.2.
+
+**protan: v2 improves on v1 but still loses to daltonize** on rescue, gain and safe palettes,
+winning only fidelity cost. The honest read is that the Fidaner construction is simply better
+for protanopia and the matrix family searched here does not close the gap. Recorded as a loss.
+
+### Disclosure
+
+Two constraint configurations were tried for deuteranopia (safe-palette floor at −0.5 and at
+the current matrix's own +0.18). The first passed all five held-out checks; the second found a
+different local optimum that traded gain for palette safety and was rejected. The shipped v2
+deutan matrix is the first. The verdict in both cases was computed on held-out simulators and
+held-out stimuli, so the selection is between generalising candidates, not between fits.
+
+### Not yet done
+
+These matrices are **not** in the shipped extension. They are derived, verified against models
+they were not fitted to, and recorded here. Shipping them is a separate decision, and should
+be preceded by looking at real pages through them — every number above is modelled
+discriminability, and no human has yet seen anything.

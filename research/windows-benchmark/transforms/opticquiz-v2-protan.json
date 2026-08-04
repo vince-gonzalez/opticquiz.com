@@ -1,0 +1,28 @@
+{
+  "name": "opticquiz v2 (protan)",
+  "space": "linear",
+  "matrix": [
+    [
+      0.997080355716178,
+      0.00023248377695218918,
+      0.002687160506869776
+    ],
+    [
+      0.5180352053432595,
+      0.4937273239645111,
+      -0.011762529307770608
+    ],
+    [
+      0.621383484749883,
+      -0.5533950621061788,
+      0.9320115773562958
+    ]
+  ],
+  "offset": [
+    0,
+    0,
+    0
+  ],
+  "derivation": "optimise.py \u2014 rows constrained to sum to 1 so the achromatic axis is preserved exactly; fitted against ['dl-machado2009', 'dl-brettel1997'] and verified on ['dl-vienot1999', 'dl-vischeck', 'dl-coblisv2']",
+  "fidelity_budget_dE": 13.106
+}

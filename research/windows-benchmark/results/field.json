@@ -22,7 +22,20 @@
     "M6_okabe_worst": -21.72,
     "deficiency": "protan",
     "simulator": "opticquiz-machado2009",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 17.82,
+    "M2_rescue_rate": 0.959,
+    "M1_made_worse": 21,
+    "M3_fidelity_cost": 13.01,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": 1.97,
+    "M6_okabe_worst": -22.07,
+    "deficiency": "protan",
+    "simulator": "opticquiz-machado2009",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -61,7 +74,20 @@
     "M6_okabe_worst": -21.16,
     "deficiency": "protan",
     "simulator": "dl-brettel1997",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 18.48,
+    "M2_rescue_rate": 0.953,
+    "M1_made_worse": 27,
+    "M3_fidelity_cost": 13.01,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": 1.98,
+    "M6_okabe_worst": -21.06,
+    "deficiency": "protan",
+    "simulator": "dl-brettel1997",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -100,7 +126,20 @@
     "M6_okabe_worst": -23.02,
     "deficiency": "protan",
     "simulator": "dl-vienot1999",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 18.78,
+    "M2_rescue_rate": 0.956,
+    "M1_made_worse": 23,
+    "M3_fidelity_cost": 13.01,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": 1.69,
+    "M6_okabe_worst": -23.42,
+    "deficiency": "protan",
+    "simulator": "dl-vienot1999",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -139,7 +178,20 @@
     "M6_okabe_worst": -22.43,
     "deficiency": "protan",
     "simulator": "dl-machado2009",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 17.84,
+    "M2_rescue_rate": 0.958,
+    "M1_made_worse": 19,
+    "M3_fidelity_cost": 13.01,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": 1.93,
+    "M6_okabe_worst": -22.59,
+    "deficiency": "protan",
+    "simulator": "dl-machado2009",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -178,7 +230,20 @@
     "M6_okabe_worst": -18.58,
     "deficiency": "protan",
     "simulator": "dl-vischeck",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 16.95,
+    "M2_rescue_rate": 0.961,
+    "M1_made_worse": 20,
+    "M3_fidelity_cost": 13.01,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": 2.74,
+    "M6_okabe_worst": -19.18,
+    "deficiency": "protan",
+    "simulator": "dl-vischeck",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -217,7 +282,20 @@
     "M6_okabe_worst": -20.47,
     "deficiency": "protan",
     "simulator": "dl-coblisv2",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 16.37,
+    "M2_rescue_rate": 0.932,
+    "M1_made_worse": 24,
+    "M3_fidelity_cost": 13.01,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": 2.93,
+    "M6_okabe_worst": -21.74,
+    "deficiency": "protan",
+    "simulator": "dl-coblisv2",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -256,7 +334,20 @@
     "M6_okabe_worst": -20.83,
     "deficiency": "deutan",
     "simulator": "opticquiz-machado2009",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 12.03,
+    "M2_rescue_rate": 0.877,
+    "M1_made_worse": 69,
+    "M3_fidelity_cost": 9.9,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": 0.93,
+    "M6_okabe_worst": -24.24,
+    "deficiency": "deutan",
+    "simulator": "opticquiz-machado2009",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -295,7 +386,20 @@
     "M6_okabe_worst": -20.53,
     "deficiency": "deutan",
     "simulator": "dl-brettel1997",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 12.2,
+    "M2_rescue_rate": 0.882,
+    "M1_made_worse": 66,
+    "M3_fidelity_cost": 9.9,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": 1.06,
+    "M6_okabe_worst": -23.83,
+    "deficiency": "deutan",
+    "simulator": "dl-brettel1997",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -334,7 +438,20 @@
     "M6_okabe_worst": -22.92,
     "deficiency": "deutan",
     "simulator": "dl-vienot1999",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 12.98,
+    "M2_rescue_rate": 0.896,
+    "M1_made_worse": 55,
+    "M3_fidelity_cost": 9.9,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": 0.71,
+    "M6_okabe_worst": -27.19,
+    "deficiency": "deutan",
+    "simulator": "dl-vienot1999",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -373,7 +490,20 @@
     "M6_okabe_worst": -20.55,
     "deficiency": "deutan",
     "simulator": "dl-machado2009",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 12.08,
+    "M2_rescue_rate": 0.882,
+    "M1_made_worse": 65,
+    "M3_fidelity_cost": 9.9,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": 1.04,
+    "M6_okabe_worst": -23.56,
+    "deficiency": "deutan",
+    "simulator": "dl-machado2009",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -412,7 +542,20 @@
     "M6_okabe_worst": -18.58,
     "deficiency": "deutan",
     "simulator": "dl-vischeck",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 11.78,
+    "M2_rescue_rate": 0.851,
+    "M1_made_worse": 68,
+    "M3_fidelity_cost": 9.9,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": 1.17,
+    "M6_okabe_worst": -22.15,
+    "deficiency": "deutan",
+    "simulator": "dl-vischeck",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -451,7 +594,20 @@
     "M6_okabe_worst": -23.43,
     "deficiency": "deutan",
     "simulator": "dl-coblisv2",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 13.72,
+    "M2_rescue_rate": 0.883,
+    "M1_made_worse": 65,
+    "M3_fidelity_cost": 9.9,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": -0.31,
+    "M6_okabe_worst": -26.43,
+    "deficiency": "deutan",
+    "simulator": "dl-coblisv2",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -490,7 +646,20 @@
     "M6_okabe_worst": -30.54,
     "deficiency": "tritan",
     "simulator": "opticquiz-machado2009",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 11.34,
+    "M2_rescue_rate": 0.834,
+    "M1_made_worse": 85,
+    "M3_fidelity_cost": 13.27,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": -2.97,
+    "M6_okabe_worst": -25.09,
+    "deficiency": "tritan",
+    "simulator": "opticquiz-machado2009",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -529,7 +698,20 @@
     "M6_okabe_worst": -39.6,
     "deficiency": "tritan",
     "simulator": "dl-brettel1997",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 17.05,
+    "M2_rescue_rate": 0.892,
+    "M1_made_worse": 47,
+    "M3_fidelity_cost": 13.27,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": -3.7,
+    "M6_okabe_worst": -28.05,
+    "deficiency": "tritan",
+    "simulator": "dl-brettel1997",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -568,7 +750,20 @@
     "M6_okabe_worst": -36.38,
     "deficiency": "tritan",
     "simulator": "dl-vienot1999",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 17.3,
+    "M2_rescue_rate": 0.908,
+    "M1_made_worse": 47,
+    "M3_fidelity_cost": 13.27,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": -2.93,
+    "M6_okabe_worst": -25.11,
+    "deficiency": "tritan",
+    "simulator": "dl-vienot1999",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -607,7 +802,20 @@
     "M6_okabe_worst": -30.31,
     "deficiency": "tritan",
     "simulator": "dl-machado2009",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 11.18,
+    "M2_rescue_rate": 0.834,
+    "M1_made_worse": 84,
+    "M3_fidelity_cost": 13.27,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": -3.42,
+    "M6_okabe_worst": -25.82,
+    "deficiency": "tritan",
+    "simulator": "dl-machado2009",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -646,7 +854,20 @@
     "M6_okabe_worst": -38.91,
     "deficiency": "tritan",
     "simulator": "dl-vischeck",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 16.41,
+    "M2_rescue_rate": 0.883,
+    "M1_made_worse": 51,
+    "M3_fidelity_cost": 13.27,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": -3.64,
+    "M6_okabe_worst": -27.45,
+    "deficiency": "tritan",
+    "simulator": "dl-vischeck",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {
@@ -685,7 +906,20 @@
     "M6_okabe_worst": -42.53,
     "deficiency": "tritan",
     "simulator": "dl-coblisv2",
-    "corrector": "opticquiz",
+    "corrector": "opticquiz v1 (shipped)",
+    "n_pairs": 1200
+  },
+  {
+    "M1_gain_mean": 18.69,
+    "M2_rescue_rate": 0.916,
+    "M1_made_worse": 48,
+    "M3_fidelity_cost": 13.27,
+    "M5_neutral_shift": 0.08,
+    "M6_okabe_mean": -4.2,
+    "M6_okabe_worst": -32.34,
+    "deficiency": "tritan",
+    "simulator": "dl-coblisv2",
+    "corrector": "opticquiz v2 (derived)",
     "n_pairs": 1200
   },
   {

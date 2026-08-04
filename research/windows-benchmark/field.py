@@ -155,6 +155,15 @@ def corr_identity(rgb, deficiency):
     return rgb.copy()
 
 
+def _matrix_corrector(prefix):
+    def f(rgb, deficiency):
+        M, space = load_matrix(f"{prefix}-{deficiency}")
+        if space == "linear":
+            return quant(linear_to_srgb(np.clip(srgb_to_linear(rgb) @ M.T, 0, 1)))
+        return quant(rgb @ M.T)
+    return f
+
+
 def corr_opticquiz(rgb, deficiency):
     M, space = load_matrix(f"opticquiz-{deficiency}")
     if space == "linear":
@@ -172,7 +181,8 @@ def corr_daltonize(rgb, deficiency):
 
 CORRECTORS = {
     "identity (control)": corr_identity,
-    "opticquiz": corr_opticquiz,
+    "opticquiz v1 (shipped)": corr_opticquiz,
+    "opticquiz v2 (derived)": _matrix_corrector("opticquiz-v2"),
     "daltonize (Fidaner)": corr_daltonize,
 }
 
