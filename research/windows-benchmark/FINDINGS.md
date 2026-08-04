@@ -2,6 +2,11 @@
 
 **Status: measured, reproducible, negative result.** Recorded 4 August 2026.
 
+> **Scope note.** That colour filters do not appear in screenshots was already known
+> informally (see Prior art). What is measured here is the extent — three independent
+> software paths, including the public colour-effect API — and what follows from it: the
+> transform cannot be recovered, so the feature cannot be independently evaluated.
+
 Windows 11 ships colour filters for protanopia, deuteranopia and tritanopia
 (Settings → Accessibility → Colour filters). They are plausibly the most widely deployed
 colour-vision assistive transform in existence — present on every Windows installation.
@@ -85,18 +90,43 @@ any documented capture API observes the frame. This is consistent with Night Lig
 likewise invisible to screenshots, and points to the transform living in the display output
 pipeline (DWM output stage or GPU output CSC/LUT) rather than in the composed desktop image.
 
-### Consequences that are not obvious
+### Prior art — what was already known
+
+**The screenshot behaviour is not new, and this document originally implied it was.** That
+was an overreach, caught in review and corrected here. Third-party accessibility guides
+already state that Windows colour filters apply system-wide *except* to screenshots and
+screen sharing — for example [rgblind.com's colour-blind gaming guide](https://rgblind.com/blog/color-blind-gaming-guide),
+which notes the filters leave screenshots and screen shares unaffected. Users have evidently
+noticed and written it down.
+
+What does not appear in any source located: the **specific transform coefficients** for the
+deuteranopia, protanopia and tritanopia filters. Microsoft documents the feature and the
+[`MagSetFullscreenColorEffect`](https://learn.microsoft.com/en-us/windows/win32/api/magnification/nf-magnification-magsetfullscreencoloreffect)
+API, including example identity and grayscale matrices, but not the coefficients its own
+accessibility filters use. Absence from a search is not proof of absence, and this is stated
+as "not located" rather than "does not exist".
+
+### What this work adds
+
+- A **measured, quantified, reproducible** result — byte-identical frames across three
+  independent paths — where previously there was an informal observation in user guides.
+- The **`MagGetFullscreenColorEffect` null**: the public full-screen colour-effect API returns
+  exact identity while a colour filter is active. No source located reports this, and it is
+  the result that closes off the obvious programmatic workaround.
+- **Tooling that cannot fool itself**: filter state read from the registry at capture time,
+  same-state pairs refused, and a function test that separates a genuine colour transform
+  from content that merely changed on screen.
+
+### Consequences
 
 - **No software tool can audit these filters.** Not a testing harness, not an accessibility
-  checker, not a third-party benchmark. Their behaviour is unverifiable from user space.
-- **A screenshot from a colour-filter user does not show what that user saw.** If a
-  colour-blind person files a bug report with a screenshot, or shares their screen for
-  support, the recipient sees the *uncorrected* image. The assistive transform silently does
-  not travel with the evidence.
-- **Screen recordings and remote-desktop sessions are similarly unaffected**, which means the
-  filter cannot be demonstrated to anyone remotely.
-- **The feature cannot be independently evaluated for efficacy** by anyone outside Microsoft.
-  Whether it helps, and how much, is currently unfalsifiable from the outside.
+  checker, not a third-party benchmark. Verified for the three paths tested.
+- **A screenshot from a colour-filter user does not show what that user saw.** Filing a bug
+  report with a screenshot, or sharing a screen for support, transmits the *uncorrected*
+  image. (Already known — see prior art above.)
+- **The feature's efficacy cannot be independently evaluated** from outside, because the
+  transform cannot be recovered by software. This is the consequence that motivated the
+  benchmark and now blocks it.
 
 ### What this does NOT claim
 
