@@ -222,3 +222,52 @@ post-hoc change to be reported as such, not folded silently into the protocol.
 
 That last one is the point of rendering the images: the metrics said protan v2 was a clean
 five-for-five pass, and it is still the wrong thing to ship.
+
+---
+
+## Gating the correction — a negative result, and what it points at
+
+**Idea.** A matrix is linear and global: it must move every colour by the same rule. That is
+why every correction here pays fidelity cost on blues and neutrals that were never confusable,
+and why all of them damage Okabe–Ito — a palette designed so its colours *don't* collapse and
+which therefore never needed touching. So gate it:
+
+```
+out = c + w(c)·(M·c − c),    w = clip((ΔE(c, S(c)) − t0) / (t1 − t0), 0, 1)
+```
+
+Correct fully where a colour is at risk, leave it *identical* where it isn't.
+
+**It does not work.** Held out, with the thresholds fitted:
+
+| | rescue | fidelity | Okabe–Ito | colours left alone |
+|---|---|---|---|---|
+| protan | 0.941 → 0.940 | 12.97 → 12.95 | +2.51 → +2.51 | **0.0%** |
+| deutan | 0.884 → 0.882 | 9.90 → 9.87 | +0.53 → +0.53 | **0.0%** |
+| tritan | 0.886 → **0.797** | 13.27 → **11.41** | −3.59 → **−2.26** | 13.3% |
+
+For protan and deutan the optimiser drove the threshold **negative** — it chose not to gate at
+all, because correcting everything scored better than correcting selectively. For tritan the
+gate engaged and produced an honest trade: 14% less distortion and half the palette damage, at
+the cost of 9 points of rescue rate. No free win anywhere.
+
+*(A fourth over-permissive verdict was caught here: with `w = 1` everywhere the gated and
+ungated matrices are the same matrix, and the comparison reported a win over itself on
+floating-point noise. `gated.py` now requires the gate to actually engage.)*
+
+**Why it fails, which is the useful part.** The risk signal is wrong. `ΔE(c, S(c))` measures
+how far a colour *shifts* under simulation — not whether it *collides* with another colour. A
+colour can shift enormously and stay perfectly distinguishable; two colours can each shift
+barely and still land on top of each other. Confusability is a property of **pairs**, and a
+per-pixel function of a single colour cannot see pairs.
+
+**Where that leads.** Collision is contextual: it depends on what else is on the screen. Which
+means the correct minimal-footprint corrector is not a smarter per-pixel gate — it is
+**content-aware**: extract the palette actually present in the content, find the pairs that
+actually collapse *in that content*, and move only those, only as far as needed.
+
+That algorithm already exists in this project. `fix_palette` — shipping in the checker — is
+exactly a set-wise minimal-movement corrector with a per-colour drift budget. It has never
+been applied to live content. Marrying the two (quantise the frame → `fix_palette` the
+dominant colours → apply the result as a LUT) is the untested idea this benchmark most
+clearly points at.
