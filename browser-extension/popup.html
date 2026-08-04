@@ -20,6 +20,12 @@
   .ask span{opacity:.7;}
   .ask a{color:#8ab4f8;text-decoration:none;font-weight:600;}
   .ask[hidden]{display:none;}
+  .str{border-top:1px solid rgba(255,255,255,.12);padding:10px 14px 12px;}
+  .str[hidden]{display:none;}
+  .strhead{display:flex;justify-content:space-between;font-size:12px;opacity:.75;margin-bottom:6px;}
+  .str input[type=range]{width:100%;accent-color:#8ab4f8;}
+  .strnote{font-size:11px;opacity:.55;line-height:1.45;margin-top:6px;}
+  .strnote.measured{opacity:.85;color:#8ab4f8;}
 </style>
 </head>
 <body>
@@ -36,6 +42,14 @@
   </div>
   <!-- Shown only once a mode has actually been chosen: asking someone whether a thing
        helped before they have used it is noise. popup.js unhides it. -->
+  <div class="str" id="str" hidden>
+    <div class="strhead"><span>Strength</span><span id="strval">100%</span></div>
+    <input type="range" id="strength" min="0" max="100" step="5" value="100"
+           aria-label="Correction strength">
+    <div class="strnote" id="strnote">Full strength suits complete colour blindness. If your
+      deficiency is mild, less is usually better — and distorts far less.</div>
+  </div>
+
   <div class="ask" id="ask" hidden>
     <span>Did this help?</span>
     <a href="https://opticquiz.com/impact/?from=extension" target="_blank" rel="noopener">Say so →</a>

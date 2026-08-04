@@ -143,5 +143,28 @@ def check_registry():
 
 
 
+def check_severity_formula():
+    """The severity derivation exists TWICE - in assets/oq-results.js for the site and in
+    browser-extension/content.js for the corrector, because a content script cannot import
+    from the page. Two copies of one rule is how they silently diverge, so the constants
+    are pinned here."""
+    import re as _re
+    pat = _re.compile(r"\(\s*(?:r|t\.d15\.data)\.totalError\s*-\s*(\d+)\s*\)\s*/\s*(\d+)")
+    out = {}
+    for label, path in (("site", "../../assets/oq-results.js"),
+                        ("extension", "../../browser-extension/content.js")):
+        m = pat.search(open(path, encoding="utf-8").read())
+        out[label] = m.groups() if m else None
+        print(f"  {label:10s} d15 severity constants: {out[label]}")
+    ok = out["site"] is not None and out["site"] == out["extension"]
+    print("\n" + ("severity derivation matches across site and extension" if ok else
+                  "DRIFT - the site and the extension derive severity DIFFERENTLY"))
+    return 0 if ok else 1
+
+
 if __name__ == "__main__":
-    sys.exit(check_registry() if "--registry" in sys.argv else main())
+    if "--registry" in sys.argv:
+        sys.exit(check_registry())
+    if "--severity" in sys.argv:
+        sys.exit(check_severity_formula())
+    sys.exit(main())
