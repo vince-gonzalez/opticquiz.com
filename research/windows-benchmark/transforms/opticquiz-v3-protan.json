@@ -1,0 +1,34 @@
+{
+  "name": "opticquiz v3 (protan)",
+  "space": "linear",
+  "matrix": [
+    [
+      0.9175407036779648,
+      -0.07585635321244871,
+      0.1583156495344839
+    ],
+    [
+      0.06884858110696018,
+      1.0693615396619913,
+      -0.13821012076895145
+    ],
+    [
+      -0.39655474516374345,
+      0.5999690142626642,
+      0.7965857309010792
+    ]
+  ],
+  "offset": [
+    0,
+    0,
+    0
+  ],
+  "derivation": "optimise_net.py \u2014 maximises M7 (rescued - broken) on 6 real palettes under 2 simulators; verified on 4 unseen palettes under 3 unseen simulators",
+  "held_out": {
+    "collapsed": 32,
+    "rescued": 31,
+    "broken": 6,
+    "net": 25,
+    "fidelity": 10.334925434215993
+  }
+}

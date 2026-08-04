@@ -2,16 +2,16 @@
   "_comment": "What is DECLARED to ship, per deficiency and per surface. verify_shipped.py checks the source files against this, so the decision is explicit and reviewable rather than inferred from which transform files happen to exist on disk.",
   "linear_surfaces": {
     "protan": {
-      "transform": "opticquiz-protan",
-      "reason": "v2 REJECTED on visual review. It passed all five held-out metric checks, but costs 14% more distortion on realistic content and still loses to daltonize on rescue, gain and safe palettes. Protanopia is an open problem."
+      "transform": "opticquiz-v3-protan",
+      "reason": "v3 SHIPPED. Net +47 on 10 real palettes vs v2 +30 and daltonize +31, at LOWER distortion (10.51 vs 13.80 / 14.61). Held out on 4 unseen palettes under 3 unseen simulators: +25 vs v2's +20. Closes the protanopia gap that v1 and v2 both lost to daltonize."
     },
     "deutan": {
-      "transform": "opticquiz-v2-deutan",
-      "reason": "v2 SHIPPED. Rescue 0.718-0.777 -> 0.851-0.896 on held-out simulators, leading the field ahead of daltonize, at equal lattice fidelity. Costs 34% more distortion on realistic content, judged worth it for that margin."
+      "transform": "opticquiz-v3-deutan",
+      "reason": "v3 SHIPPED. Net +65 vs v2 +31 and daltonize +39, at lower distortion (9.51). Breaks 11 pairs where v2 breaks 53. Held out: +22 vs v2's +5."
     },
     "tritan": {
       "transform": "opticquiz-v2-tritan",
-      "reason": "v2 SHIPPED. Best result in the benchmark: wins the metrics, halves damage to already-safe palettes (-9.5 -> -4.2), and is the only matrix LESS distorting on realistic content than the one it replaces. Known caveat: washes the low end of a red-green ramp toward white for a tritan viewer."
+      "reason": "STAYS ON v2. v3 tritan OVERFIT - fit net +15, held-out +1 against v2's +7 - and was refused. v2 is net +17 on real palettes (with the dE>=20 distinctness filter), a genuine improvement on v1's -1."
     }
   },
   "desktop_app": {

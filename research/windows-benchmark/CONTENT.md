@@ -133,3 +133,45 @@ content-aware work there needs a set-wise optimiser built for large palettes wit
 
 Third time today that rendering the picture overturned what the numbers said. The metrics are
 necessary and they are not sufficient.
+
+
+---
+
+## Correction: the "net harmful" alarm was mine, not the matrix's
+
+The net table above was computed **without a distinctness filter** — it counted pairs that
+were below the collapse threshold *to a normal viewer too*, i.e. near-duplicate colours that
+were never distinguishable by anyone. Recomputed over the same 10 palettes and 4 simulators,
+counting only pairs at ΔE ≥ 20 to normal vision:
+
+| | v1 | v2 | **v3** |
+|---|---|---|---|
+| protan | +24 | +30 | **+47** |
+| deutan | +32 | +31 | **+65** |
+| tritan | −1 | **+17** | overfit, rejected |
+
+**Retracted:** the claim that tritan correction is "net harmful on real content". With the
+filter, tritan v2 is **+17** — positive, and a genuine improvement on v1's −1. The alarming
+version was an artifact of counting non-distinct pairs.
+
+**Also corrected:** deutan v1 and v2 are effectively tied on net (+32 vs +31), so shipping v2
+was neutral on this measure rather than the improvement it was called at the time.
+
+### v3, and the end of the protanopia problem
+
+`optimise_net.py` optimises M7 directly — the quantity that is reported — with two
+independent holdouts: 6 fitting palettes / 4 unseen, and 2 fitting simulators / 3 unseen.
+
+| | rescued | broken | net | distortion |
+|---|---|---|---|---|
+| protan daltonize | 71 | 40 | +31 | 14.61 |
+| **protan v3** | 66 | **19** | **+47** | **10.51** |
+| deutan daltonize | 80 | 41 | +39 | 10.85 |
+| **deutan v3** | 76 | **11** | **+65** | **9.51** |
+
+v3 beats daltonize on net *and* distortion simultaneously, on both deficiencies. It rescues
+slightly fewer pairs and breaks roughly a quarter as many. **The protanopia gap — open since
+the first field benchmark — is closed.**
+
+Tritan v3 was rejected: fit net +15, held-out +1 against v2's +7. Textbook overfit to the six
+fitting palettes, caught by the palette holdout. Tritan stays on v2.
