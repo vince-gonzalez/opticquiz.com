@@ -180,3 +180,45 @@ These matrices are **not** in the shipped extension. They are derived, verified 
 they were not fitted to, and recorded here. Shipping them is a separate decision, and should
 be preceded by looking at real pages through them — every number above is modelled
 discriminability, and no human has yet seen anything.
+
+---
+
+## Looking at it changed two conclusions
+
+`visual.py` renders content through each matrix beside what the deficient viewer sees. Two
+things fell out that no metric in the protocol caught.
+
+### M3 disagrees with realistic content
+
+Mean fidelity cost over a uniform 9×9×9 sRGB lattice, versus the same measure over a scene
+of status colours, categorical series, the Okabe–Ito palette, a heatmap ramp and skin tones:
+
+| | lattice M3 (v1 → v2) | realistic scene (v1 → v2) |
+|---|---|---|
+| protan | 12.97 → 13.01 (+0.3%) | 5.01 → **5.69 (+14%)** |
+| deutan | 9.89 → 9.90 (+0.1%) | 3.86 → **5.17 (+34%)** |
+| tritan | 13.28 → 13.27 (−0.1%) | 4.30 → **4.11 (−4%)** |
+
+The lattice says v1 and v2 cost the same. On realistic content, deutan v2 distorts **34%
+more**. A uniform lattice weights saturated cube-corner colours that barely occur in real
+interfaces and under-weights the mid-saturation and near-neutral colours that dominate them.
+
+**M3 as specified is the wrong measure of perceived distortion.** It is not wrong as
+written — it measures what it says — but it should not be read as "how much this changes
+what you look at". A content-weighted fidelity metric is needed, and adding one is a
+post-hoc change to be reported as such, not folded silently into the protocol.
+
+### Verdicts, revised by looking
+
+- **deutan v2 — ship.** Rescue 0.851–0.896 against v1's 0.718–0.777, leading the field. The
+  34% higher distortion on realistic content is a real cost, and worth it for that margin.
+- **tritan v2 — ship, best result here.** Wins the metrics *and* is the only matrix that is
+  **less** distorting on realistic content than the one it replaces (4.11 vs 4.30), while
+  halving damage to already-safe palettes. One caveat visible only by looking: it washes the
+  low end of the red-green ramp toward white for a tritan viewer, losing separation there.
+- **protan v2 — do not ship.** Marginal metric gain, 14% *more* distortion on realistic
+  content, and it still loses to daltonize. It is not worth the change. Keep v1 and treat
+  protanopia as an open problem.
+
+That last one is the point of rendering the images: the metrics said protan v2 was a clean
+five-for-five pass, and it is still the wrong thing to ship.
