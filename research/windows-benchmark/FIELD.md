@@ -271,3 +271,43 @@ exactly a set-wise minimal-movement corrector with a per-colour drift budget. It
 been applied to live content. Marrying the two (quantise the frame → `fix_palette` the
 dominant colours → apply the result as a LUT) is the untested idea this benchmark most
 clearly points at.
+
+---
+
+## The ceiling is not structural. It was my objective.
+
+A dichromat simulation `S` is close to a rank-2 projection, so for any matrix `M` the
+composition `S∘M` is still rank 2 — a global linear map cannot manufacture the dimension the
+viewer has lost. That made a structural limit plausible: every pair you separate paid for by
+a pair you crush, forever, no matter how hard you search.
+
+**Tested, and false.** 360 random grey-preserving matrices scored on the 10 real palettes:
+
+| | shipped v1 | shipped v2 | best random | ceiling as % of fixable |
+|---|---|---|---|---|
+| protan | +15 | +22 | **+36** | 71% |
+| deutan | +24 | +25 | **+44** | 65% |
+| tritan | +0 | +10 | **+21**, breaking **0** | 54% |
+
+Random sampling beat every matrix we ship. The tritan winner rescues 21 and breaks none, at
+*lower* distortion than the shipped one. There is a large positive-net region and our search
+never went there.
+
+**Why:** `optimise.py` maximised `min(ΔE, 15)` over already-collapsed pairs. That rewards
+rescuing and never penalises breaking. M7 did not exist until after those matrices shipped, so
+nothing was ever optimised for the quantity that turned out to matter. The limit was the
+objective, not the algebra.
+
+### A diagnostic worth keeping
+
+Singular values of `S∘M` — the spread that survives the dichromat:
+
+```
+identity            1.000  0.833  0.106
+shipped deutan v2   1.000  0.765  0.091     compresses the axis they CAN still see
+random aggressive   1.000  0.174  0.005     destroys it
+```
+
+The third value is the lost dimension and no `M` restores it. **The second is the one to
+protect**, and the shipped matrix makes it worse than doing nothing. Aggressive matrices
+collapse it outright, which is exactly why high-strength corrections break so many pairs.
