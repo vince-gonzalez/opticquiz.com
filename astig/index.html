@@ -18,7 +18,7 @@
     - Scored: no blur / single axis / oblique / complex
     - Share results via Web Share API → clipboard → prompt fallback
     - WCAG 2.1 AA throughout — same accessibility standard as other pages
-  Palette: white/#F8F6F2/#E8431A/#4A8C3F/#1A1A1A (logo-derived)
+  Palette: white/#F8F6F2/#C23410/#3F7836/#1A1A1A (logo-derived)
   Fonts: Bebas Neue (display) + Source Serif 4 (body) + Courier New (mono)
   No external images. No base64. No backend.
 ===== END WORKFLOW STACK ===== -->
@@ -65,13 +65,13 @@ gtag('config', 'G-T6CF42RKT4');
     --lgray  #D4D0C8
     --gray   #6B6B6B   (5.74:1 on white — AA)
     --black  #1A1A1A   (16.2:1 on white — AAA)
-    --red    #E8431A
+    --red    #C23410
     --redd   #C23410
-    --green  #4A8C3F
+    --green  #3F7836
     --greend #38692F
     --redbg  #FDF1EE
     --gbg    #EEF5ED
-    --amber  #D4820A
+    --amber  #9A5E07
 ===== END DESIGN SYSTEM ===== */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -83,13 +83,13 @@ gtag('config', 'G-T6CF42RKT4');
   --lgray: #D4D0C8;
   --gray: #6B6B6B;
   --black: #1A1A1A;
-  --red: #E8431A;
-  --redd: #C23410;
-  --green: #4A8C3F;
+  --red: #C23410;
+  --redd: #9E2A0D;
+  --green: #3F7836;
   --greend: #38692F;
   --redbg: #FDF1EE;
   --gbg: #EEF5ED;
-  --amber: #D4820A;
+  --amber: #9A5E07;
   --fd: "Bebas Neue", Impact, fantasy;
   --fs: "Source Serif 4", Georgia, serif;
   --fm: "Courier New", monospace;
@@ -344,11 +344,11 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
 .seo p strong{color:#1A1A1A;}
 .seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
 .seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
-.seo a{color:#E8431A;}
+.seo a{color:#C23410;}
 .seo .learn-links{background:#fff;border:1px solid #D4D0C8;border-radius:8px;padding:14px 16px;margin:18px 0;}
 .seo .learn-links a{display:block;padding:5px 0;text-decoration:none;color:#1A1A1A;border-bottom:1px solid #D4D0C8;font-size:14px;}
 .seo .learn-links a:last-child{border-bottom:none;}
-.seo .learn-links a:hover{color:#E8431A;}
+.seo .learn-links a:hover{color:#C23410;}
 </style>
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="OpticQuiz — Astigmatism Fan Test">
@@ -659,7 +659,7 @@ function updateFanHighlights() {
       line.setAttribute("y1", y1.toFixed(1));
       line.setAttribute("x2", x2.toFixed(1));
       line.setAttribute("y2", y2.toFixed(1));
-      line.setAttribute("stroke", "#E8431A");
+      line.setAttribute("stroke", "#C23410");
       line.setAttribute("stroke-width", "3");
       line.setAttribute("class", "spoke-sel");
       line.setAttribute("opacity", "0.8");
@@ -817,8 +817,8 @@ function buildFanSVG(size) {
   }
 
   // Center dot
-  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="5" fill="#E8431A"/>';
-  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="9" fill="none" stroke="#E8431A" stroke-width="0.7" opacity="0.3"/>';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="5" fill="#C23410"/>';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="9" fill="none" stroke="#C23410" stroke-width="0.7" opacity="0.3"/>';
 
   svg += '</svg>';
   return svg;
@@ -840,10 +840,10 @@ function buildResultFanSVG(size, selectedSpokes) {
     var x1 = cx + rSpoke * Math.cos(rad), y1 = cy + rSpoke * Math.sin(rad);
     var x2 = cx - rSpoke * Math.cos(rad), y2 = cy - rSpoke * Math.sin(rad);
     var isSelected = selectedSpokes.indexOf(i) !== -1;
-    svg += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="' + (isSelected ? "#E8431A" : "#DDDDDD") + '" stroke-width="' + (isSelected ? "3" : "1") + '" opacity="' + (isSelected ? "0.85" : "1") + '"/>';
+    svg += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="' + (isSelected ? "#C23410" : "#DDDDDD") + '" stroke-width="' + (isSelected ? "3" : "1") + '" opacity="' + (isSelected ? "0.85" : "1") + '"/>';
   }
 
-  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="4" fill="#E8431A"/>';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="4" fill="#C23410"/>';
   svg += '</svg>';
   return svg;
 }
@@ -901,7 +901,7 @@ function renderFanPhase() {
       '</div>' +
       '<div class="fan-legend" aria-hidden="true">' +
         '<div class="legend-item"><div class="legend-swatch" style="background:#1A1A1A"></div>Normal spoke</div>' +
-        '<div class="legend-item"><div class="legend-swatch" style="background:#E8431A"></div>Selected (darker/blurry)</div>' +
+        '<div class="legend-item"><div class="legend-swatch" style="background:#C23410"></div>Selected (darker/blurry)</div>' +
       '</div>' +
       '<div class="spoke-count" id="spoke-count" role="status" aria-live="polite">No spokes selected — tap any that look darker or blurrier</div>' +
     '</div>' +

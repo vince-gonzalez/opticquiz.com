@@ -5,3 +5,9 @@
 .env*
 !.env.example
 node_modules/
+packages/cvd-py/opticquiz_cvd.egg-info/
+packages/cvd-py/dist/
+*.vsix
+*.zip
+desktop-app/bin/
+desktop-app/obj/

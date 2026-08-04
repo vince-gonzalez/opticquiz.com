@@ -38,9 +38,9 @@
     '.oqfb .oqfb-note{font-size:12.5px;line-height:1.6;}',
     '.oqfb-row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0;}',
     '.oqfb button{font-family:inherit;font-size:15px;padding:9px 16px;border:1.5px solid #D4D0C8;background:#F8F6F2;color:#1A1A1A;border-radius:4px;cursor:pointer;}',
-    '.oqfb button:hover{border-color:#E8431A;}',
+    '.oqfb button:hover{border-color:#C23410;}',
     '.oqfb button[aria-pressed="true"]{background:#1A1A1A;color:#fff;border-color:#1A1A1A;}',
-    '.oqfb .oqfb-send{background:#E8431A;color:#fff;border-color:#E8431A;font-weight:600;}',
+    '.oqfb .oqfb-send{background:#C23410;color:#fff;border-color:#C23410;font-weight:600;}',
     '.oqfb .oqfb-send:hover{background:#C23410;border-color:#C23410;}',
     '.oqfb .oqfb-send[disabled]{opacity:.55;cursor:default;}',
     '.oqfb label{display:block;font-size:13px;color:#1A1A1A;margin:12px 0 4px;font-weight:600;}',
@@ -51,9 +51,9 @@
     '.oqfb .oqfb-consent{display:flex;gap:9px;align-items:flex-start;margin:14px 0 0;font-size:13px;line-height:1.6;color:#1A1A1A;font-weight:400;}',
     '.oqfb .oqfb-consent input{margin-top:3px;width:16px;height:16px;flex:0 0 auto;}',
     '.oqfb code{font-family:"Courier New",monospace;font-size:15px;background:#F0EDE6;padding:2px 6px;border-radius:3px;letter-spacing:.06em;}',
-    '.oqfb a{color:#E8431A;}',
+    '.oqfb a{color:#C23410;}',
     '.oqfb .oqfb-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}',
-    '.oqfb *:focus-visible{outline:3px solid #E8431A;outline-offset:2px;}'
+    '.oqfb *:focus-visible{outline:3px solid #C23410;outline-offset:2px;}'
   ].join("");
 
   function el(tag, attrs, html) {

@@ -44,7 +44,7 @@
 </script>
 <style>
 *, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
-:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#E8431A;--redd:#C23410;--green:#4A8C3F;--gbg:#EEF5ED;--redbg:#FDF1EE;--amber:#D4820A;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#C23410;--redd:#9E2A0D;--green:#3F7836;--gbg:#EEF5ED;--redbg:#FDF1EE;--amber:#9A5E07;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
 html{background:var(--bg);}
 body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
 *:focus-visible{outline:3px solid var(--red);outline-offset:2px;border-radius:var(--r);}
@@ -132,16 +132,16 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
   <p class="lede">Paste your palette. See it the way people with each type of color blindness do — and get the exact color pairs that become hard to tell apart. Scored with a <a href="/research/">published, open-access method</a>, entirely in your browser.</p>
 
   <section id="tool" class="tool" aria-label="Palette checker">
-    <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload, drop, or paste an image to extract its colors">
-      <input type="file" id="imgfile" accept="image/*" class="sr-only">
+    <div class="dropzone" id="dropzone" role="group" aria-label="Upload, drop, or paste an image to extract its colors">
+      <input type="file" id="imgfile" accept="image/*" class="sr-only" aria-label="Choose an image file to extract colors from">
       <img id="preview" class="preview" alt="Uploaded image preview" hidden>
       <div id="dz-text">📷 <strong>Drop a screenshot or mockup</strong> — or <u>click to upload</u>, or paste — and we'll pull out its main colors</div>
     </div>
-    <input type="file" id="camfile" accept="image/*" capture="environment" class="sr-only">
+    <input type="file" id="camfile" accept="image/*" capture="environment" class="sr-only" aria-label="Take a photo to extract colors from">
     <button class="btn btn-ghost" id="takephoto" type="button" style="margin-top:12px;width:100%;">Take a photo</button>
     <div class="tool-label" style="margin-top:16px;">…or add &amp; edit colors by hand</div>
     <div class="addrow">
-      <input type="color" id="picker" value="#4a8c3f" aria-label="Pick a color">
+      <input type="color" id="picker" value="#3F7836" aria-label="Pick a color">
       <input type="text" id="hexin" placeholder="#RRGGBB — or paste several" aria-label="Enter hex colors" autocomplete="off">
       <button class="btn btn-primary" id="add" type="button">Add</button>
     </div>

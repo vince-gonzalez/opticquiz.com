@@ -18,7 +18,7 @@
     - Share results via Web Share API → clipboard → prompt fallback
     - WCAG 2.1 AA: skip link, aria-live, role attrs, focus rings,
       min 44px targets, color never sole conveyor, reduced-motion
-  Palette: white/#F8F6F2/#E8431A/#4A8C3F/#1A1A1A (logo-derived)
+  Palette: white/#F8F6F2/#C23410/#3F7836/#1A1A1A (logo-derived)
   Fonts: Bebas Neue (display) + Source Serif 4 (body) + Courier New (mono)
   No external images. No base64. No backend.
 ===== END WORKFLOW STACK ===== -->
@@ -65,13 +65,13 @@ gtag('config', 'G-T6CF42RKT4');
     --lgray  #D4D0C8   borders
     --gray   #6B6B6B   secondary text (AA on white)
     --black  #1A1A1A   primary text (AAA on white)
-    --red    #E8431A   orange-red accent
+    --red    #C23410   orange-red accent
     --redd   #C23410   red hover
-    --green  #4A8C3F   forest green
+    --green  #3F7836   forest green
     --greend #38692F   green hover
     --redbg  #FDF1EE   red tint bg
     --gbg    #EEF5ED   green tint bg
-    --amber  #D4820A   caution
+    --amber  #9A5E07   caution
 ===== END DESIGN SYSTEM ===== */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -83,13 +83,13 @@ gtag('config', 'G-T6CF42RKT4');
   --lgray: #D4D0C8;
   --gray: #6B6B6B;
   --black: #1A1A1A;
-  --red: #E8431A;
-  --redd: #C23410;
-  --green: #4A8C3F;
+  --red: #C23410;
+  --redd: #9E2A0D;
+  --green: #3F7836;
   --greend: #38692F;
   --redbg: #FDF1EE;
   --gbg: #EEF5ED;
-  --amber: #D4820A;
+  --amber: #9A5E07;
   --fd: "Bebas Neue", Impact, fantasy;
   --fs: "Source Serif 4", Georgia, serif;
   --fm: "Courier New", monospace;
@@ -348,11 +348,11 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
 .seo p strong{color:#1A1A1A;}
 .seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
 .seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
-.seo a{color:#E8431A;}
+.seo a{color:#C23410;}
 .seo .learn-links{background:#fff;border:1px solid #D4D0C8;border-radius:8px;padding:14px 16px;margin:18px 0;}
 .seo .learn-links a{display:block;padding:5px 0;text-decoration:none;color:#1A1A1A;border-bottom:1px solid #D4D0C8;font-size:14px;}
 .seo .learn-links a:last-child{border-bottom:none;}
-.seo .learn-links a:hover{color:#E8431A;}
+.seo .learn-links a:hover{color:#C23410;}
 </style>
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="OpticQuiz — Amsler Grid Test">
@@ -718,8 +718,8 @@ function renderGrid(size) {
 
   // Center dot — large enough to fixate on, red for visibility
   var cx = s / 2, cy = s / 2;
-  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="5" fill="#E8431A"/>';
-  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="8" fill="none" stroke="#E8431A" stroke-width="0.8" opacity="0.3"/>';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="5" fill="#C23410"/>';
+  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="8" fill="none" stroke="#C23410" stroke-width="0.8" opacity="0.3"/>';
 
   svg += '</svg>';
   return svg;

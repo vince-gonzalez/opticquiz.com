@@ -21,7 +21,7 @@
     - Share results via Web Share API → clipboard → prompt fallback
     - WCAG 2.1 AA: skip link, aria-live, aria-grabbed, keyboard
       reorder via Space+ArrowKeys, focus rings, reduced-motion
-  Palette: white/#F8F6F2/#E8431A/#4A8C3F/#1A1A1A (logo-derived)
+  Palette: white/#F8F6F2/#C23410/#3F7836/#1A1A1A (logo-derived)
   Fonts: Bebas Neue (display) + Source Serif 4 (body) + Courier New (mono)
   No external images. No base64. No backend.
   NOTE ON COLORS: D-15 cap colors are clinical approximations for sRGB
@@ -71,13 +71,13 @@ gtag('config', 'G-T6CF42RKT4');
   --lgray  #D4D0C8
   --gray   #6B6B6B   AA on white
   --black  #1A1A1A   AAA on white
-  --red    #E8431A
+  --red    #C23410
   --redd   #C23410
-  --green  #4A8C3F
+  --green  #3F7836
   --greend #38692F
   --redbg  #FDF1EE
   --gbg    #EEF5ED
-  --amber  #D4820A
+  --amber  #9A5E07
 ===== END DESIGN SYSTEM ===== */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -89,13 +89,13 @@ gtag('config', 'G-T6CF42RKT4');
   --lgray: #D4D0C8;
   --gray: #6B6B6B;
   --black: #1A1A1A;
-  --red: #E8431A;
-  --redd: #C23410;
-  --green: #4A8C3F;
+  --red: #C23410;
+  --redd: #9E2A0D;
+  --green: #3F7836;
   --greend: #38692F;
   --redbg: #FDF1EE;
   --gbg: #EEF5ED;
-  --amber: #D4820A;
+  --amber: #9A5E07;
   --fd: "Bebas Neue", Impact, fantasy;
   --fs: "Source Serif 4", Georgia, serif;
   --fm: "Courier New", monospace;
@@ -305,11 +305,11 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
 .seo p strong{color:#1A1A1A;}
 .seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
 .seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
-.seo a{color:#E8431A;}
+.seo a{color:#C23410;}
 .seo .learn-links{background:#fff;border:1px solid #D4D0C8;border-radius:8px;padding:14px 16px;margin:18px 0;}
 .seo .learn-links a{display:block;padding:5px 0;text-decoration:none;color:#1A1A1A;border-bottom:1px solid #D4D0C8;font-size:14px;}
 .seo .learn-links a:last-child{border-bottom:none;}
-.seo .learn-links a:hover{color:#E8431A;}
+.seo .learn-links a:hover{color:#C23410;}
 </style>
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="OpticQuiz — Farnsworth D-15 Hue Sort">
@@ -461,7 +461,7 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
   </div>
 </div>
 
-<p style="max-width:640px;margin:20px auto 0;padding:0 20px;font-size:13px;color:#6B6B6B;line-height:1.7;text-align:center;">The Farnsworth D-15 is referenced in OpticQuiz&#39;s published, open-access color-vision method — <a href="/research/" style="color:#E8431A;">read the paper &amp; open source &#8594;</a></p>
+<p style="max-width:640px;margin:20px auto 0;padding:0 20px;font-size:13px;color:#6B6B6B;line-height:1.7;text-align:center;">The Farnsworth D-15 is referenced in OpticQuiz&#39;s published, open-access color-vision method — <a href="/research/" style="color:#C23410;">read the paper &amp; open source &#8594;</a></p>
 </main>
 
 <section class="seo" aria-label="About this test">
@@ -522,7 +522,7 @@ var CAPS = [
 var CONFUSION_AXES = {
   deutan: {
     name: "Deutan axis",
-    color: "#E8431A",
+    color: "#C23410",
     // Deutan confusion: confuse caps along the red-green confusion line (caps 3↔13, 4↔12, etc.)
     pairs: [[3,13],[4,12],[5,11],[6,10],[7,9]]
   },
@@ -1003,7 +1003,7 @@ function renderResultDetail(eye) {
     html += '<h3>Axis breakdown</h3><div class="axis-bars" role="list">';
     var axes = [
       { key: "deutan", name: "Deutan (red-green, green)", color: "#D4520A" },
-      { key: "protan", name: "Protan (red-green, red)",   color: "#E8431A" },
+      { key: "protan", name: "Protan (red-green, red)",   color: "#C23410" },
       { key: "tritan", name: "Tritan (blue-yellow)",       color: "#3A7FE8" }
     ];
     for (var i = 0; i < axes.length; i++) {
@@ -1069,7 +1069,7 @@ function buildConfusionDiagram(order, size) {
     var x1 = cx + r * Math.cos(fromAngle), y1 = cy + r * Math.sin(fromAngle);
     var x2 = cx + r * Math.cos(toAngle), y2 = cy + r * Math.sin(toAngle);
     var isError = Math.abs(fromId - toId) > 2 && !(fromId === 15 && toId === 1) && !(fromId === 1 && toId === 15);
-    svg += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="' + (isError ? "#E8431A" : "#D4D0C8") + '" stroke-width="' + (isError ? "1.8" : "1") + '" opacity="' + (isError ? "0.8" : "0.5") + '"/>';
+    svg += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="' + (isError ? "#C23410" : "#D4D0C8") + '" stroke-width="' + (isError ? "1.8" : "1") + '" opacity="' + (isError ? "0.8" : "0.5") + '"/>';
   }
 
   // Draw cap dots at correct positions

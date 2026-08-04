@@ -242,7 +242,7 @@ code{font-family:var(--vscode-editor-font-family,monospace);font-size:11px;opaci
 .fix{border:1px solid #3fb95055;background:rgba(63,185,80,.06);border-radius:6px;padding:12px;}
 .gen{border:1px solid rgba(88,166,255,.35);background:rgba(88,166,255,.06);border-radius:6px;padding:12px;}
 .warn{border:1px solid rgba(212,130,10,.45);background:rgba(212,130,10,.07);border-radius:6px;padding:12px;}
-.warnt{color:#d4820a;font-size:12px;font-weight:normal;}
+.warnt{color:#9A5E07;font-size:12px;font-weight:normal;}
 button{margin-top:12px;background:var(--vscode-button-background);color:var(--vscode-button-foreground);border:none;padding:8px 14px;border-radius:4px;cursor:pointer;font-size:13px;}
 button:hover{background:var(--vscode-button-hoverBackground);}
 table{border-collapse:collapse;font-size:12px;}

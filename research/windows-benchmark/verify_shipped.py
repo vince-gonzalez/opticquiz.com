@@ -92,5 +92,56 @@ def main():
     return 1 if fail else 0
 
 
+
+
+# --- registry drift -----------------------------------------------------------
+# Added after finding opticquiz-eye@1.1.0 on npm carrying the v2 deutan matrix while
+# the repo at the SAME version number carried v3. verify_shipped compared the repo to
+# shipping.json and never asked what the world could actually install. A benchmark that
+# documents v3 while the registry serves v2 is a false benchmark.
+#
+#     python verify_shipped.py --registry
+#
+def check_registry():
+    import subprocess, tempfile, tarfile, os, re, glob
+    pkg = "opticquiz-eye"
+    local = json.load(open("../../packages/cvd-eye/package.json"))["version"]
+    try:
+        pub = subprocess.run(["npm", "view", pkg, "version"], capture_output=True,
+                             text=True, shell=True).stdout.strip()
+    except Exception as e:
+        print("could not reach the registry:", e); return 1
+    print(f"\n{pkg}: repo {local}  ·  registry {pub}")
+    if local != pub:
+        print(f"  repo is AHEAD of the registry - publish {local} before citing it anywhere")
+        return 0
+    with tempfile.TemporaryDirectory() as td:
+        subprocess.run(["npm", "pack", f"{pkg}@{pub}"], cwd=td, capture_output=True, shell=True)
+        tgz = glob.glob(os.path.join(td, "*.tgz"))
+        if not tgz:
+            print("  could not download the published tarball"); return 1
+        with tarfile.open(tgz[0]) as t:
+            t.extractall(td)
+        src = open(os.path.join(td, "package", "index.js"), encoding="utf-8").read()
+    bad = 0
+    for t in TYPES:
+        want = parse("../../packages/cvd-eye/index.js", "fe", t)
+        m = re.search(rf'{t}:\s*"([^"]+)"', src)
+        if not m:
+            print(f"  ?? {t}: not found in the published package"); bad += 1; continue
+        v = [float(x) for x in m.group(1).split()]
+        pubM = np.array([v[0:3], v[5:8], v[10:13]])
+        same = np.allclose(pubM, want, atol=5e-5)
+        print(f"  {'OK  ' if same else 'DRIFT'} {t:8s} published matrix "
+              f"{'matches' if same else 'DOES NOT MATCH'} the repo at the same version")
+        if not same:
+            bad += 1
+    print("\n" + ("registry matches the repo" if not bad else
+                  "REGISTRY DRIFT - the installable package is not what this repo documents"))
+    return 1 if bad else 0
+
+
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(check_registry() if "--registry" in sys.argv else main())

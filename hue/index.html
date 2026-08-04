@@ -47,7 +47,7 @@
     - WCAG 2.1 AA throughout — same a11y standard as all OpticQuiz pages
     - var-only JS, single STATE object, READS/WRITES annotated
 
-  Palette: white/#F8F6F2/#E8431A/#4A8C3F/#1A1A1A (logo-derived)
+  Palette: white/#F8F6F2/#C23410/#3F7836/#1A1A1A (logo-derived)
   Fonts: Bebas Neue (display) + Source Serif 4 (body) + Courier New (mono)
 ===== END WORKFLOW STACK ===== -->
 
@@ -92,13 +92,13 @@ gtag('config', 'G-T6CF42RKT4');
   --lgray  #D4D0C8
   --gray   #6B6B6B   AA on white
   --black  #1A1A1A   AAA on white
-  --red    #E8431A
+  --red    #C23410
   --redd   #C23410
-  --green  #4A8C3F
+  --green  #3F7836
   --greend #38692F
   --redbg  #FDF1EE
   --gbg    #EEF5ED
-  --amber  #D4820A
+  --amber  #9A5E07
 ===== END DESIGN SYSTEM ===== */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -110,13 +110,13 @@ gtag('config', 'G-T6CF42RKT4');
   --lgray: #D4D0C8;
   --gray: #6B6B6B;
   --black: #1A1A1A;
-  --red: #E8431A;
-  --redd: #C23410;
-  --green: #4A8C3F;
+  --red: #C23410;
+  --redd: #9E2A0D;
+  --green: #3F7836;
   --greend: #38692F;
   --redbg: #FDF1EE;
   --gbg: #EEF5ED;
-  --amber: #D4820A;
+  --amber: #9A5E07;
   --fd: "Bebas Neue", Impact, fantasy;
   --fs: "Source Serif 4", Georgia, serif;
   --fm: "Courier New", monospace;
@@ -357,11 +357,11 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
 .seo p strong{color:#1A1A1A;}
 .seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
 .seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
-.seo a{color:#E8431A;}
+.seo a{color:#C23410;}
 .seo .learn-links{background:#fff;border:1px solid #D4D0C8;border-radius:8px;padding:14px 16px;margin:18px 0;}
 .seo .learn-links a{display:block;padding:5px 0;text-decoration:none;color:#1A1A1A;border-bottom:1px solid #D4D0C8;font-size:14px;}
 .seo .learn-links a:last-child{border-bottom:none;}
-.seo .learn-links a:hover{color:#E8431A;}
+.seo .learn-links a:hover{color:#C23410;}
 </style>
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="OpticQuiz — Blue/Purple & Hue Neighbor Test">
@@ -640,7 +640,7 @@ var NEIGHBORHOODS = [
     direction: -1,       // neighbor = 110 - gap → toward yellow (60°)
     L: 52, S: 68,
     clinical: "Deutan axis — primary",
-    barColor: "#4A8C3F",
+    barColor: "#3F7836",
     swatchA: 110, swatchB: 65,
     blurb: "Green (110°) vs yellow-green (65°). The most common CVD type — deuteranomaly causes these to merge at smaller separations."
   },
@@ -1209,7 +1209,7 @@ function renderResultDetail(eye) {
     var nbhd = NEIGHBORHOODS[i];
     var t    = r.thresholds[nbhd.key];
     var bw   = Math.round((t / STAIRCASE.maxGap) * 100);
-    var fillColor = t < MILD_JND ? "#4A8C3F" : t < ELEVATED_JND ? "#D4820A" : "#E8431A";
+    var fillColor = t < MILD_JND ? "#3F7836" : t < ELEVATED_JND ? "#9A5E07" : "#C23410";
     var levelNote = t < MILD_JND ? "Normal" : t < ELEVATED_JND ? "Mildly elevated" : "Elevated";
     var sBjnd  = (nbhd.swatchBS !== undefined) ? nbhd.swatchBS : nbhd.S;
     var colorA = hsl(nbhd.swatchA, nbhd.S,  nbhd.L);
@@ -1253,7 +1253,7 @@ function renderResultDetail(eye) {
       '<div style="display:flex;gap:4px;flex-wrap:wrap;">';
     for (var ti = 0; ti < sc.history.length; ti++) {
       var dot      = sc.history[ti];
-      var dotColor = dot.correct ? "#4A8C3F" : "#E8431A";
+      var dotColor = dot.correct ? "#3F7836" : "#C23410";
       html += '<div style="width:8px;height:8px;border-radius:50%;background:' + dotColor + ';" aria-label="Trial ' + (ti+1) + ': ' + (dot.correct ? 'correct' : 'wrong') + ' at ' + dot.gap + '°"></div>';
     }
     html += '</div></div>';

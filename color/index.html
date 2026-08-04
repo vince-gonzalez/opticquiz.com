@@ -67,11 +67,11 @@
 .seo p strong{color:#1A1A1A;}
 .seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
 .seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
-.seo a{color:#E8431A;}
+.seo a{color:#C23410;}
 .seo .learn-links{background:#fff;border:1px solid #D4D0C8;border-radius:8px;padding:14px 16px;margin:18px 0;}
 .seo .learn-links a{display:block;padding:5px 0;text-decoration:none;color:#1A1A1A;border-bottom:1px solid #D4D0C8;font-size:14px;}
 .seo .learn-links a:last-child{border-bottom:none;}
-.seo .learn-links a:hover{color:#E8431A;}
+.seo .learn-links a:hover{color:#C23410;}
 </style>
 
 <!-- GA4 -->
@@ -99,13 +99,13 @@ gtag('config', 'G-T6CF42RKT4');
   --lgray: #D4D0C8;
   --gray: #6B6B6B;
   --black: #1A1A1A;
-  --red: #E8431A;
-  --redd: #C23410;
-  --green: #4A8C3F;
+  --red: #C23410;
+  --redd: #9E2A0D;
+  --green: #3F7836;
   --greend: #38692F;
   --redbg: #FDF1EE;
   --gbg: #EEF5ED;
-  --amber: #D4820A;
+  --amber: #9A5E07;
   --fd: "Bebas Neue", Impact, fantasy;
   --fs: "Source Serif 4", Georgia, serif;
   --fm: "Courier New", monospace;
@@ -287,7 +287,7 @@ footer { font-family: var(--fm); font-size: 10px; color: var(--gray); letter-spa
     <div class="divider"></div>
 
     <h3 id="setup-heading" data-i18n="setup.heading">Before you begin</h3>
-    <div class="check-list" id="check-list" role="list" aria-labelledby="setup-heading">
+    <div class="check-list" id="check-list" aria-labelledby="setup-heading">
       <div class="check-item" id="ci-0" role="checkbox" aria-checked="false" tabindex="0"
            onclick="toggleCheck(0)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(0)">
         <div class="check-box" id="cb-0" aria-hidden="true"></div>
@@ -863,7 +863,7 @@ function renderResultDetail(eye) {
   html += '<div class="result-section" role="list" aria-label="Plates read correctly per axis">';
   html += axisBar("Red-green plates", r.rgCorrect, r.rgTotal, "#C23410");
   html += axisBar("Blue-yellow plates", r.tCorrect, r.tTotal, "#1A5CB8");
-  html += axisBar("Control plate", r.ctrlOK ? 1 : 0, 1, r.ctrlOK ? "#4A8C3F" : "#E8431A");
+  html += axisBar("Control plate", r.ctrlOK ? 1 : 0, 1, r.ctrlOK ? "#3F7836" : "#C23410");
   html += '</div>';
 
   // Severity read — an honest band derived only from the miss count, with its own error bars stated.
@@ -922,7 +922,7 @@ function severityRead(r) {
   var rgMiss = r.rgTotal - r.rgCorrect;
   var tMiss = r.tTotal - r.tCorrect;
   var band, color, desc;
-  if (rgMiss <= 0)       { band = "None";       color = "#4A8C3F"; desc = "no red-green deficiency to grade"; }
+  if (rgMiss <= 0)       { band = "None";       color = "#3F7836"; desc = "no red-green deficiency to grade"; }
   else if (rgMiss === 1) { band = "Borderline"; color = "#6B6B6B"; desc = "one missed plate is within normal variation, not a deficiency on its own"; }
   else if (rgMiss === 2) { band = "Mild";       color = "#C98A00"; desc = "a mild red-green confusion pattern"; }
   else if (rgMiss === 3) { band = "Moderate";   color = "#D2691E"; desc = "a moderate red-green confusion pattern"; }
