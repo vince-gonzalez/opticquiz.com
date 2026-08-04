@@ -1,4 +1,268 @@
 {
+  "protan@1.0": {
+    "matrix-grey": {
+      "net_mean": 3.0,
+      "net_sd": 5.403702434442518,
+      "rescued": 35,
+      "broken": 20,
+      "fidelity": 9.66431585319186
+    },
+    "matrix-free": {
+      "net_mean": 0.0,
+      "net_sd": 1.8973665961010275,
+      "rescued": 34,
+      "broken": 34,
+      "fidelity": 10.632322849803822
+    },
+    "affine": {
+      "net_mean": 4.8,
+      "net_sd": 6.241794613730894,
+      "rescued": 43,
+      "broken": 19,
+      "fidelity": 11.07976966639988
+    },
+    "daltonize (ref)": {
+      "net_mean": 5.6,
+      "net_sd": 8.777243302996675,
+      "rescued": 60,
+      "broken": 32,
+      "fidelity": 14.585660535640395
+    },
+    "fix_palette (ref)": {
+      "net_mean": 10.0,
+      "net_sd": 5.176871642217914,
+      "rescued": 55,
+      "broken": 5,
+      "fidelity": 6.791145627556207
+    },
+    "identity": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 0.0
+    }
+  },
+  "protan@0.7": {
+    "matrix-grey": {
+      "net_mean": 0.4,
+      "net_sd": 1.8547236990991407,
+      "rescued": 6,
+      "broken": 4,
+      "fidelity": 8.810133623973202
+    },
+    "matrix-free": {
+      "net_mean": -0.4,
+      "net_sd": 0.8000000000000002,
+      "rescued": 0,
+      "broken": 2,
+      "fidelity": 11.337831335232451
+    },
+    "affine": {
+      "net_mean": -2.2,
+      "net_sd": 1.9390719429665317,
+      "rescued": 2,
+      "broken": 13,
+      "fidelity": 13.572345599431952
+    },
+    "daltonize (ref)": {
+      "net_mean": -4.0,
+      "net_sd": 2.898275349237888,
+      "rescued": 6,
+      "broken": 26,
+      "fidelity": 14.585660535640395
+    },
+    "fix_palette (ref)": {
+      "net_mean": 0.0,
+      "net_sd": 2.0,
+      "rescued": 6,
+      "broken": 6,
+      "fidelity": 6.791145627556207
+    },
+    "identity": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 0.0
+    }
+  },
+  "protan@0.4": {
+    "matrix-grey": {
+      "net_mean": -0.8,
+      "net_sd": 1.1661903789690602,
+      "rescued": 0,
+      "broken": 4,
+      "fidelity": 9.210842594868087
+    },
+    "matrix-free": {
+      "net_mean": -0.2,
+      "net_sd": 0.4000000000000001,
+      "rescued": 0,
+      "broken": 1,
+      "fidelity": 11.624073072533303
+    },
+    "affine": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 11.79756934632925
+    },
+    "daltonize (ref)": {
+      "net_mean": -2.8,
+      "net_sd": 2.7129319932501073,
+      "rescued": 0,
+      "broken": 14,
+      "fidelity": 14.585660535640395
+    },
+    "fix_palette (ref)": {
+      "net_mean": -1.2,
+      "net_sd": 1.4696938456699067,
+      "rescued": 0,
+      "broken": 6,
+      "fidelity": 6.791145627556207
+    },
+    "identity": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 0.0
+    }
+  },
+  "deutan@1.0": {
+    "matrix-grey": {
+      "net_mean": 4.2,
+      "net_sd": 5.035871324805668,
+      "rescued": 51,
+      "broken": 30,
+      "fidelity": 10.112832292443759
+    },
+    "matrix-free": {
+      "net_mean": 0.6,
+      "net_sd": 6.053098380168622,
+      "rescued": 39,
+      "broken": 36,
+      "fidelity": 12.747223828449297
+    },
+    "affine": {
+      "net_mean": 2.4,
+      "net_sd": 5.748043145279966,
+      "rescued": 45,
+      "broken": 33,
+      "fidelity": 12.157105188982857
+    },
+    "daltonize (ref)": {
+      "net_mean": 4.8,
+      "net_sd": 6.273754856543248,
+      "rescued": 56,
+      "broken": 32,
+      "fidelity": 10.905307953553313
+    },
+    "fix_palette (ref)": {
+      "net_mean": 8.2,
+      "net_sd": 4.445222154178574,
+      "rescued": 52,
+      "broken": 11,
+      "fidelity": 6.791145627556207
+    },
+    "identity": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 0.0
+    }
+  },
+  "deutan@0.7": {
+    "matrix-grey": {
+      "net_mean": -1.2,
+      "net_sd": 1.9390719429665317,
+      "rescued": 0,
+      "broken": 6,
+      "fidelity": 9.320620164828597
+    },
+    "matrix-free": {
+      "net_mean": -3.2,
+      "net_sd": 5.5641710972974225,
+      "rescued": 3,
+      "broken": 19,
+      "fidelity": 9.713407544147918
+    },
+    "affine": {
+      "net_mean": -1.0,
+      "net_sd": 0.8944271909999159,
+      "rescued": 2,
+      "broken": 7,
+      "fidelity": 10.146035900365414
+    },
+    "daltonize (ref)": {
+      "net_mean": -0.8,
+      "net_sd": 0.9797958971132713,
+      "rescued": 3,
+      "broken": 7,
+      "fidelity": 10.905307953553313
+    },
+    "fix_palette (ref)": {
+      "net_mean": -0.4,
+      "net_sd": 1.4966629547095764,
+      "rescued": 3,
+      "broken": 5,
+      "fidelity": 6.791145627556207
+    },
+    "identity": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 0.0
+    }
+  },
+  "deutan@0.4": {
+    "matrix-grey": {
+      "net_mean": -0.8,
+      "net_sd": 1.6000000000000003,
+      "rescued": 0,
+      "broken": 4,
+      "fidelity": 6.470385906343279
+    },
+    "matrix-free": {
+      "net_mean": -1.8,
+      "net_sd": 1.4696938456699067,
+      "rescued": 0,
+      "broken": 9,
+      "fidelity": 11.673685404486246
+    },
+    "affine": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 10.769086896416104
+    },
+    "daltonize (ref)": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 10.905307953553313
+    },
+    "fix_palette (ref)": {
+      "net_mean": -1.2,
+      "net_sd": 1.4696938456699067,
+      "rescued": 0,
+      "broken": 6,
+      "fidelity": 6.791145627556207
+    },
+    "identity": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 0.0
+    }
+  },
   "tritan@1.0": {
     "matrix-grey": {
       "net_mean": 2.0,
@@ -32,6 +296,94 @@
       "net_mean": 6.6,
       "net_sd": 5.642694391866353,
       "rescued": 39,
+      "broken": 6,
+      "fidelity": 6.791145627556207
+    },
+    "identity": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 0.0
+    }
+  },
+  "tritan@0.7": {
+    "matrix-grey": {
+      "net_mean": -0.2,
+      "net_sd": 2.4,
+      "rescued": 5,
+      "broken": 6,
+      "fidelity": 7.493799501148155
+    },
+    "matrix-free": {
+      "net_mean": 0.0,
+      "net_sd": 2.280350850198276,
+      "rescued": 4,
+      "broken": 4,
+      "fidelity": 10.801682501994083
+    },
+    "affine": {
+      "net_mean": -0.2,
+      "net_sd": 2.9257477676655586,
+      "rescued": 6,
+      "broken": 7,
+      "fidelity": 11.034815901518877
+    },
+    "daltonize (ref)": {
+      "net_mean": 1.4,
+      "net_sd": 1.3564659966250538,
+      "rescued": 7,
+      "broken": 0,
+      "fidelity": 4.912521176374631
+    },
+    "fix_palette (ref)": {
+      "net_mean": 0.4,
+      "net_sd": 1.7435595774162693,
+      "rescued": 8,
+      "broken": 6,
+      "fidelity": 6.791145627556207
+    },
+    "identity": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 0.0
+    }
+  },
+  "tritan@0.4": {
+    "matrix-grey": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 7.6406409859532545
+    },
+    "matrix-free": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 10.654276872715858
+    },
+    "affine": {
+      "net_mean": -0.6,
+      "net_sd": 1.2,
+      "rescued": 0,
+      "broken": 3,
+      "fidelity": 11.141348462656318
+    },
+    "daltonize (ref)": {
+      "net_mean": 0.0,
+      "net_sd": 0.0,
+      "rescued": 0,
+      "broken": 0,
+      "fidelity": 4.912521176374631
+    },
+    "fix_palette (ref)": {
+      "net_mean": -1.2,
+      "net_sd": 1.4696938456699067,
+      "rescued": 0,
       "broken": 6,
       "fidelity": 6.791145627556207
     },
