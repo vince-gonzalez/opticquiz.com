@@ -488,9 +488,17 @@ var PALETTES = {
     bg: { hMin: 15,  hMax: 44,  sMin: 46, sMax: 68, lMin: 50, lMax: 68 }
   },
   // blue-yellow (tritan) vanishing plate: blue digit hidden in pink/rose field
+  // Solved, not chosen. The previous palette (fg 205-240 blue on bg 328-352 rose) separated
+  // figure from ground ACROSS the tritan confusion line rather than along it: mean dE2000 was
+  // 35.1 to normal vision and 52.4 under tritan simulation. A tritan saw the digit MORE
+  // clearly than someone with typical colour vision, so the plate scored backwards. Measured
+  // 52.0 degrees off axis by tools/confusion_axis.py.
+  //
+  // This pair is cyan on green: 33.5 to normal vision, 9.0 under tritan - below the collapse
+  // threshold - and 37.0 under deutan, so it still does not accidentally screen red-green.
   tritan: {
-    fg: { hMin: 205, hMax: 240, sMin: 45, sMax: 66, lMin: 56, lMax: 74 },
-    bg: { hMin: 328, hMax: 352, sMin: 40, sMax: 62, lMin: 56, lMax: 74 }
+    fg: { hMin: 175, hMax: 200, sMin: 50, sMax: 72, lMin: 52, lMax: 68 },
+    bg: { hMin: 115, hMax: 135, sMin: 50, sMax: 72, lMin: 52, lMax: 68 }
   },
   // control: pure lightness contrast — readable by ALL vision types incl. total CVD
   control: {
@@ -815,7 +823,8 @@ function renderResults() {
       if (worse) OQ.Results.save("color", {
         ctrlOK: worse.ctrlOK, rgTotal: worse.rgTotal, rgCorrect: worse.rgCorrect,
         tTotal: worse.tTotal, tCorrect: worse.tCorrect
-      });
+      }, 2);   // instrument 2 - tritan palette solved onto the confusion axis; see
+               // MIN_INSTRUMENT in oq-results.js and tools/confusion_axis.py
     }
   } catch (e) {}
   // READS: STATE.results  WRITES: DOM

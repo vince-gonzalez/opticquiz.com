@@ -41,7 +41,12 @@
      d15: 2 - until 2026-08-05 the swatches rendered their cap id on the face, and CAPS[] is
      stored in correct hue order, so the sequence could be reconstructed without perceiving
      colour. Every result recorded before that is from an easier test. */
-  var MIN_INSTRUMENT = { d15: 2 };
+  var MIN_INSTRUMENT = { d15: 2, color: 2 };
+  // color: 2 - until 2026-08-05 the two tritan plates separated figure from ground ACROSS the
+  // tritan confusion line instead of along it (52 degrees off, measured by
+  // tools/confusion_axis.py). Mean dE2000 was 35.1 to normal vision and 52.4 under tritan
+  // simulation, so a tritan read the digit MORE easily than a normal observer and the
+  // blue-yellow axis of every stored result is meaningless.
 
   function read() {
     var empty = { version: 1, tests: {} };
