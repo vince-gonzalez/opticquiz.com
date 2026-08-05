@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ===== WORKFLOW STACK =====
+  File:    /setup/index.html
+  Purpose: Get colour correction working for YOU, on whichever surface you use.
+  Not:     /platform/ is the developer hub - the toolkit, for people building things.
+           This page is organised around a person getting set up, and is honest about
+           which surfaces are one click and which are not.
+===== END ===== -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Set up OpticQuiz colour correction: browser extension, one-line widget for your own site, whole-screen Windows app, and the npm and PyPI packages. Free, open source, nothing uploaded.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="Set up colour correction — OpticQuiz">
+<meta property="og:description" content="Find your type, then get correction running in your browser, on your whole screen, on your own website, or in your own code.">
+<meta property="og:image" content="https://opticquiz.com/og-card.png">
+<meta property="og:url" content="https://opticquiz.com/setup/">
+<link rel="canonical" href="https://opticquiz.com/setup/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<title>Set Up Colour Correction — Browser, Windows, Your Site | OpticQuiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;
+      --red:#C23410;--redd:#9E2A0D;--green:#3F7836;--blue:#0072B2;
+      --fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);-webkit-font-smoothing:antialiased;}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 90px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:720px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;letter-spacing:.03em;}.logo-name span{color:var(--red);}
+.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.crumbs{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.06em;margin:26px 0 12px;}
+.crumbs a{color:var(--gray);}
+h1{font-family:var(--fd);font-size:clamp(34px,8vw,54px);line-height:.98;letter-spacing:.02em;margin:6px 0 12px;}
+.lede{font-size:17px;line-height:1.7;margin-bottom:8px;}
+h2{font-family:var(--fd);font-size:clamp(22px,5vw,30px);line-height:1;letter-spacing:.02em;margin:34px 0 6px;}
+h3{font-size:16px;font-weight:600;margin:18px 0 4px;}
+p{font-size:16px;color:var(--gray);line-height:1.8;margin-bottom:12px;}
+p strong{color:var(--black);}
+a{color:var(--red);}
+.card{background:#fff;border:1.5px solid var(--lgray);border-radius:var(--rc);padding:18px 20px;margin:14px 0;}
+.card .tag{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);}
+.easy{border-left:4px solid var(--green);}
+.work{border-left:4px solid #C98A00;}
+pre{font-family:var(--fm);font-size:12.5px;background:var(--black);color:#EDEAE4;padding:12px 14px;border-radius:var(--rc);overflow-x:auto;line-height:1.6;margin:10px 0;}
+pre code{background:none;padding:0;color:inherit;}
+code{font-family:var(--fm);font-size:13.5px;background:var(--cream);padding:2px 6px;border-radius:3px;}
+.profile{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--blue);border-radius:var(--rc);padding:16px 18px;margin:16px 0;}
+.profile .k{font-family:var(--fm);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--gray);}
+.profile .v{font-size:17px;font-weight:600;margin-bottom:8px;}
+ol{margin:0 0 12px 20px;}ol li{font-size:16px;color:var(--gray);line-height:1.8;margin-bottom:6px;}
+ol li strong{color:var(--black);}
+.note{font-size:14px;color:var(--gray);line-height:1.7;}
+footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:36px;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:2px;}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">SET UP</div>
+</header>
+
+<main class="wrap">
+  <nav class="crumbs"><a href="/">Home</a> › Set up</nav>
+  <h1>SET IT UP</h1>
+  <p class="lede">Colour correction, on whichever surface you actually use. All of it is free
+    and open source, none of it needs an account, and nothing you do here is uploaded anywhere.</p>
+
+  <h2>FIRST — HOW STRONG?</h2>
+  <p>Correction tuned for <em>complete</em> colour blindness is too strong for most people, and
+    at that setting it distorts far more than it helps. Most colour-vision deficiency is
+    partial. So the strength matters as much as the type, and the honest way to set it is to
+    measure rather than guess.</p>
+
+  <div id="prof"></div>
+
+  <h2>IN YOUR BROWSER</h2>
+  <div class="card easy">
+    <div class="tag">One click · Chrome &amp; Edge</div>
+    <h3>Colorblind Corrector extension</h3>
+    <p>Re-colours any page you visit. Pick a mode, set the strength, done. Makes no network
+      requests and stores only your setting.</p>
+    <p><a href="https://chromewebstore.google.com/search/opticquiz" target="_blank" rel="noopener">Find it on the Chrome Web Store →</a></p>
+    <p class="note">If you have taken a test on this site, the extension reads that result and
+      sets your strength for you the next time you visit — no typing, no account.</p>
+  </div>
+
+  <div class="card easy">
+    <div class="tag">No install · any browser, any phone</div>
+    <h3>Camera mode</h3>
+    <p>Point your phone at the world and see it corrected live. Runs entirely on the device;
+      nothing is recorded.</p>
+    <p><a href="/live">Open camera mode →</a></p>
+  </div>
+
+  <h2>ON YOUR WHOLE SCREEN — WINDOWS</h2>
+  <div class="card work">
+    <div class="tag">Needs building · no installer yet</div>
+    <h3>OpticQuiz Corrector (desktop)</h3>
+    <p>Corrects <strong>everything</strong> on your display — games, PDFs, video, other apps —
+      not just web pages. It sits in the system tray.</p>
+    <p><strong>There is no download yet.</strong> It has to be built from source, which needs
+      the free .NET 8 SDK. That is a real barrier and it is being worked on; until then:</p>
+<pre><code>git clone https://github.com/zengineco/opticquiz.com
+cd opticquiz.com/desktop-app
+dotnet build -c Release
+</code></pre>
+    <p class="note">Then run <code>OpticQuizCorrector.exe</code> from the build output and pick a
+      mode from the tray icon. Windows 8 or later. Its matrices are derived separately from the
+      browser ones, because Windows applies them in a different colour space — the same numbers
+      would produce a different, worse correction there.</p>
+  </div>
+
+  <h2>ON A SITE YOU OWN</h2>
+  <div class="card easy">
+    <div class="tag">One line</div>
+    <h3>The eye widget</h3>
+    <p>Gives every visitor to your site a colourblind mode with a strength control. No build
+      step, no dependency, no tracking.</p>
+<pre><code>&lt;script src="https://opticquiz.com/widget/eye.js" defer&gt;&lt;/script&gt;</code></pre>
+    <p>Or from npm, if you bundle:</p>
+<pre><code>npm install opticquiz-eye</code></pre>
+    <p><a href="/widget/">Widget documentation →</a></p>
+  </div>
+
+  <h2>IN YOUR OWN CODE</h2>
+  <div class="card">
+    <div class="tag">Same engine, four ways</div>
+    <p>Check whether a palette survives colour blindness, fix one that doesn't, or simulate
+      any of the three types. Byte-identical results across JavaScript and Python.</p>
+<pre><code>npm install opticquiz-cvd          # JavaScript / TypeScript
+pip install opticquiz-cvd          # Python (matplotlib-friendly)
+</code></pre>
+    <p>Or call it over HTTP with no install at all:</p>
+<pre><code>curl -X POST https://api.opticquiz.com/api/check \
+  -H "Content-Type: application/json" \
+  -d '{"colors":["#d7191c","#1a9641","#2166ac"]}'</code></pre>
+    <p><a href="/platform/">Everything for developers — API, VS Code, GitHub Action, MCP →</a></p>
+  </div>
+
+  <h2>WHAT NONE OF THIS IS</h2>
+  <p>These are aids, not a cure. They make colours easier to <em>tell apart</em>; they do not
+    give you colour vision you do not have, and they are not a medical device or a treatment.
+    Every correction here trades some colour accuracy for some separability, which is why the
+    strength control exists and why lower is often better.</p>
+  <p>If you want to know what you actually have, <a href="/report/">print the notes page</a> and
+    take it to an optometrist. It is written for them, and it says plainly what a home screen
+    cannot determine.</p>
+
+  <footer>OpticQuiz · independent &amp; open-source · © opticquiz.com</footer>
+</main>
+
+<script src="/assets/oq-results.js"></script>
+<script>
+(function(){
+  var esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
+  var el=document.getElementById("prof");
+  var p=(window.OQ&&OQ.Results)?OQ.Results.profile():null;
+  if(p){
+    // The strength is shown as a percentage because that is the control people will touch.
+    // The underlying severity decimal is NOT shown - a number that precise reads as a
+    // clinical measurement, and it is not one.
+    el.innerHTML='<div class="profile">'+
+      '<div class="k">From your own test on this site</div>'+
+      '<div class="v">'+esc(p.type)+' · suggested strength '+Math.round(p.severity*100)+'%</div>'+
+      '<p class="note" style="margin:0;">Based on '+esc(p.basis)+'. This is a screening estimate '+
+      'on an uncalibrated screen, not a diagnosis — treat it as a starting point and adjust '+
+      'until it looks right to you. You are the instrument.</p></div>';
+  } else {
+    el.innerHTML='<div class="profile">'+
+      '<div class="k">Not measured yet</div>'+
+      '<div class="v">Take a test first</div>'+
+      '<p class="note" style="margin:0;">The <a href="/d15/">Farnsworth D-15</a> grades finest '+
+      'and identifies which colours you confuse; the <a href="/color/">plate test</a> is faster. '+
+      'Either one sets your strength automatically. Results stay in this browser.</p></div>';
+  }
+})();
+</script>
+</body>
+</html>
