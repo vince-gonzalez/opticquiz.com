@@ -3,6 +3,11 @@
 **Recorded 5 August 2026.** This is the most serious methodological problem in this benchmark
 and it is about our own process, not about Windows.
 
+> **Read [SEVERITY-CLIFF.md](SEVERITY-CLIFF.md) alongside this.** Everything below compares
+> matrices at severity 1.0. At the severities most colour-vision-deficient people actually have,
+> no approach measured here - ours, daltonize, or content-aware - rescues a single pair. Which
+> makes the v2-versus-v3 question below a dispute about the minority case.
+
 `CONTENT.md:69` already noted that "two measures disagree. That is recorded, not resolved."
 Resolving it is what produced this document. The disagreement is larger than that line implies,
 and it goes the other way.
