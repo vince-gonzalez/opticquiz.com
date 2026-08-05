@@ -79,6 +79,17 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
     at that setting it distorts far more than it helps. Most colour-vision deficiency is
     partial. So the strength matters as much as the type, and the honest way to set it is to
     measure rather than guess.</p>
+  <p><strong>And if you screen mild, correction may do nothing for you.</strong> We benchmarked
+    our own filters, the published daltonisation methods, and content-aware correction against
+    observers simulated at mild, moderate and complete deficiency. At mild severity
+    <em>none of them</em> separated a single colour pair that was previously confusable — while
+    still shifting every other colour by the same amount they always do. Benefit scales with
+    how impaired you are. The distortion does not.</p>
+  <p>That is a measurement under a model of colour vision, not a study of people, so it cannot
+    tell you what <em>you</em> will experience — if a filter helps you read a particular chart,
+    nothing here contradicts that. But it is the reason this page tells you to start low
+    instead of selling you the strongest setting.
+    <a href="https://github.com/zengineco/opticquiz.com/blob/main/research/windows-benchmark/SEVERITY-CLIFF.md">The numbers are public →</a></p>
 
   <div id="prof"></div>
 
@@ -175,7 +186,17 @@ pip install opticquiz-cvd          # Python (matplotlib-friendly)
       '<div class="v">'+esc(p.type)+' · suggested strength '+Math.round(p.severity*100)+'%</div>'+
       '<p class="note" style="margin:0;">Based on '+esc(p.basis)+'. This is a screening estimate '+
       'on an uncalibrated screen, not a diagnosis — treat it as a starting point and adjust '+
-      'until it looks right to you. You are the instrument.</p></div>';
+      'until it looks right to you. You are the instrument.</p>'+
+      // Below roughly a third of the scale our own benchmark finds no measurable benefit from
+      // any correction method. Saying so where the number is shown, rather than only in prose
+      // further up, is the whole point - this is the moment someone decides to install.
+      (p.severity < 0.35
+        ? '<p class="note" style="margin:8px 0 0;"><strong>At this strength, correction may not '+
+          'help you.</strong> Our benchmark finds no measurable benefit at mild severity, from '+
+          'any method including ours. Try it by all means — it costs nothing and you may '+
+          'disagree with the measurement — but leaving it off is a reasonable answer.</p>'
+        : '')+
+      '</div>';
   } else {
     el.innerHTML='<div class="profile">'+
       '<div class="k">Not measured yet</div>'+
