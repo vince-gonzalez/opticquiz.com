@@ -34,14 +34,32 @@
     return new Date().toISOString().slice(0, 10);   // day precision, deliberate
   }
 
+  /* Minimum instrument version whose stored results are still trustworthy. Bump an entry
+     here whenever a test changes in a way that shifts its scores; anything older is dropped
+     on read rather than left to feed the severity slider and the corrector.
+
+     d15: 2 - until 2026-08-05 the swatches rendered their cap id on the face, and CAPS[] is
+     stored in correct hue order, so the sequence could be reconstructed without perceiving
+     colour. Every result recorded before that is from an easier test. */
+  var MIN_INSTRUMENT = { d15: 2 };
+
   function read() {
+    var empty = { version: 1, tests: {} };
     try {
       var raw = localStorage.getItem(KEY);
-      if (!raw) return { version: 1, tests: {} };
+      if (!raw) return empty;
       var d = JSON.parse(raw);
-      return d && d.tests ? d : { version: 1, tests: {} };
+      if (!d || !d.tests) return empty;
+      var dropped = false;
+      for (var k in MIN_INSTRUMENT) {
+        if (!Object.prototype.hasOwnProperty.call(d.tests, k)) continue;
+        var rec = d.tests[k];
+        if (!rec || !(rec.instrument >= MIN_INSTRUMENT[k])) { delete d.tests[k]; dropped = true; }
+      }
+      if (dropped) write(d);
+      return d;
     } catch (e) {
-      return { version: 1, tests: {} };
+      return empty;
     }
   }
 
@@ -100,9 +118,11 @@
   var PRIORITY = ["d15", "sat", "color"];
 
   OQ.Results = {
-    save: function (test, data) {
+    save: function (test, data, instrument) {
       var d = read();
-      d.tests[test] = { test: test, date: today(), data: data || {} };
+      d.tests[test] = { test: test, date: today(),
+                        instrument: instrument || MIN_INSTRUMENT[test] || 1,
+                        data: data || {} };
       d.updated = today();
       return write(d);
     },
