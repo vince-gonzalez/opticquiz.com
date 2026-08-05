@@ -203,6 +203,60 @@ console.log(`\n  chrome / edge : ${chrome}  (${size(chrome)})`);
 console.log(`  firefox       : ${firefox}  (${size(firefox)})`);
 console.log(`\n  version ${VERSION}\n`);
 
+/* Source package for AMO review.
+ *
+ *     node build.mjs --source
+ *
+ * AMO asks whether any tool "generates code or file(s) to include in the extension". This
+ * build does: the Firefox manifest.json is derived from the Chrome one at build time rather
+ * than kept as a second file. Nothing is minified or bundled and every .js and .html file
+ * ships byte-identical to source - but the honest answer to their question is still yes, and
+ * an undisclosed build step found later is far worse than an extra upload.
+ *
+ * Contains exactly what a reviewer needs to reproduce dist/: the source files, the build
+ * script, and instructions. Not the wider website repository.
+ */
+if (process.argv.includes("--source")) {
+  const SRC = ["manifest.json", "content.js", "popup.html", "popup.js",
+               "icon16.png", "icon48.png", "icon128.png", "build.mjs", "README.md"];
+  const instructions = [
+    "OpticQuiz - Colorblind Corrector: reproducing the reviewed package",
+    "",
+    "Requirements: Node.js 18 or later. No dependencies, no network access needed.",
+    "",
+    "  node build.mjs",
+    "",
+    "That writes dist/opticquiz-extension-firefox-<version>.zip, which is the package under",
+    "review, and dist/opticquiz-extension-chrome-<version>.zip for the Chromium stores.",
+    "",
+    "What the build actually does:",
+    "  1. Copies the source files listed in SHIP, unmodified.",
+    "  2. Derives the Firefox manifest from manifest.json by adding exactly one key,",
+    "     browser_specific_settings (gecko id, strict_min_version, data_collection_permissions,",
+    "     and gecko_android). Nothing else differs between the two packages.",
+    "  3. Writes the ZIP in-process with node:zlib.",
+    "",
+    "No minifier, no bundler, no transpiler, no template engine. content.js, popup.js and",
+    "popup.html in the reviewed package are byte-identical to the copies in this archive; you",
+    "can confirm that with any checksum tool.",
+    "",
+    "Public repository: https://github.com/zengineco/opticquiz.com/tree/main/browser-extension",
+    "Licence: MIT",
+    "",
+  ].join("\n");
+
+  const entries = SRC.filter((f) => existsSync(join(ROOT, f)))
+    .map((f) => ({ name: f, data: readFileSync(join(ROOT, f)) }));
+  entries.unshift({ name: "BUILD-INSTRUCTIONS.txt", data: Buffer.from(instructions, "utf8") });
+
+  const out = join(DIST, `opticquiz-extension-source-${VERSION}.zip`);
+  rmSync(out, { force: true });
+  writeFileSync(out, makeZip(entries));
+  const b = readFileSync(out);
+  if (b.readUInt32LE(0) !== 0x04034b50) throw new Error("source zip is not a ZIP");
+  console.log(`  source        : ${out}  (${(b.length / 1024).toFixed(0)} KB, ${entries.length} files)`);
+}
+
 /* Run Mozilla's own validator - the same addons-linter that AMO runs server-side.
  *
  *     node build.mjs --lint
