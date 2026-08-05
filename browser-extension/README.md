@@ -27,3 +27,27 @@ Correction is an **aid, not a cure**, and strongly improves color separation but
 resolve every case. It applies one filter to the page, so on sites that rely on
 `position:fixed` / `sticky` elements the layout can shift while a mode is on — toggle **Off**
 to restore. Method: https://doi.org/10.5281/zenodo.21310578 · MIT.
+
+## Building the store packages
+
+```
+node build.mjs           # both zips
+node build.mjs --lint    # both zips, then Mozilla's addons-linter on the Firefox one
+```
+
+Run `--lint` before every submission. It is the same validator AMO runs server-side, and it
+knows things the bytes cannot tell you - which manifest keys are mandatory this month, and
+which ones are silently inert below a given Firefox version.
+
+### Why the ZIP is written in-process
+
+`tar -a -c -f out.zip` looks like it works and does not. Git Bash puts GNU tar ahead of
+Windows' bsdtar on PATH; bsdtar's `-a` understands zip, GNU tar's `-a` is `--auto-compress`
+and only knows gz/bz2/xz/zst. Handed a `.zip` filename it writes a **plain tar** and exits 0.
+
+That shipped a tar named `.zip` to Firefox, which rejected it as "invalid or corrupt add-on
+file". The build had verified its own output with `tar -tf`, which reads a tar perfectly
+well - so the check confirmed "7 files at the root" for a file that had never been a zip.
+
+The writer is now ~80 lines of `zlib` in `build.mjs`, and the build asserts the container
+format on the bytes it just wrote before it will report success.
