@@ -95,7 +95,7 @@ gtag('config', 'G-T6CF42RKT4');
   --greend #38692F
   --redbg  #FDF1EE
   --gbg    #EEF5ED
-  --amber  #9A5E07
+  --amber  #824F06
 ===== END DESIGN SYSTEM ===== */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -107,13 +107,13 @@ gtag('config', 'G-T6CF42RKT4');
   --lgray: #D4D0C8;
   --gray: #6B6B6B;
   --black: #1A1A1A;
-  --red: #C23410;
+  --red: #C23410;--red-text:#9E2A0D;
   --redd: #9E2A0D;
   --green: #3F7836;
   --greend: #38692F;
   --redbg: #FDF1EE;
   --gbg: #EEF5ED;
-  --amber: #9A5E07;
+  --amber: #824F06;
   --fd: "Bebas Neue", Impact, fantasy;
   --fs: "Source Serif 4", Georgia, serif;
   --fm: "Courier New", monospace;
@@ -136,7 +136,7 @@ body { font-family: var(--fs); background: var(--bg); color: var(--black); min-h
 .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .logo-wrap img { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--lgray); }
 .logo-name { font-family: var(--fd); font-size: 22px; color: var(--black); letter-spacing: 0.03em; }
-.logo-name span { color: var(--red); }
+.logo-name span { color: var(--red-text); }
 .ver-badge { font-family: var(--fm); font-size: 13px; color: var(--gray); border: 1px solid var(--lgray); padding: 3px 8px; border-radius: 20px; letter-spacing: 0.1em; }
 
 /* ── SCREENS ─────────────────────────────────────── */
@@ -145,7 +145,7 @@ body { font-family: var(--fs); background: var(--bg); color: var(--black); min-h
 @keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
 /* ── TYPE ────────────────────────────────────────── */
-.eyebrow { font-family: var(--fm); font-size: 13px; letter-spacing: 0.14em; color: var(--red); text-transform: uppercase; display: block; margin-bottom: 10px; }
+.eyebrow { font-family: var(--fm); font-size: 13px; letter-spacing: 0.14em; color: var(--red-text); text-transform: uppercase; display: block; margin-bottom: 10px; }
 h1 { font-family: var(--fd); font-size: clamp(48px, 12vw, 72px); color: var(--black); line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 16px; }
 h2 { font-family: var(--fd); font-size: clamp(32px, 8vw, 48px); color: var(--black); line-height: 0.94; letter-spacing: 0.02em; margin-bottom: 16px; }
 h3 { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
@@ -168,7 +168,7 @@ p { font-size: 15px; color: var(--gray); line-height: 1.7; }
 .instr-list { margin: 20px 0; }
 .instr-item { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--lgray); }
 .instr-item:last-child { border-bottom: none; }
-.instr-num { font-family: var(--fd); font-size: 28px; color: var(--red); min-width: 28px; line-height: 1; margin-top: 2px; }
+.instr-num { font-family: var(--fd); font-size: 28px; color: var(--red-text); min-width: 28px; line-height: 1; margin-top: 2px; }
 .instr-text { font-size: 14px; color: var(--black); line-height: 1.6; }
 .instr-sub { font-size: 13px; color: var(--gray); margin-top: 2px; }
 
@@ -181,7 +181,7 @@ p { font-size: 15px; color: var(--gray); line-height: 1.7; }
 
 /* ── EYE BANNER ──────────────────────────────────── */
 .eye-banner { background: var(--redbg); border: 1.5px solid var(--red); border-radius: var(--rc); padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-.eb-icon { font-family: var(--fd); font-size: 22px; color: var(--red); flex-shrink: 0; }
+.eb-icon { font-family: var(--fd); font-size: 22px; color: var(--red-text); flex-shrink: 0; }
 .eb-main { font-size: 14px; font-weight: 600; color: var(--black); }
 .eb-sub { font-size: 13px; color: var(--gray); margin-top: 1px; }
 
@@ -263,19 +263,19 @@ p { font-size: 15px; color: var(--gray); line-height: 1.7; }
 .switch-content { padding-top: 40px; text-align: center; }
 .big-eye-label { font-family: var(--fd); font-size: clamp(64px, 18vw, 100px); line-height: 0.9; letter-spacing: 0.02em; margin-bottom: 12px; }
 .big-eye-label.eye-left { color: var(--green); }
-.big-eye-label.eye-right { color: var(--red); }
+.big-eye-label.eye-right { color: var(--red-text); }
 
 /* ── RESULTS ─────────────────────────────────────── */
 .eye-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
 .eye-tab { padding: 12px; border-radius: var(--r); border: 1.5px solid var(--lgray); background: var(--white); cursor: pointer; text-align: center; transition: all 0.12s; -webkit-tap-highlight-color: transparent; }
-.eye-tab.active { border-color: var(--red); background: var(--redbg); }
+.eye-tab.active { border-color: var(--red-text); background: var(--redbg); }
 .eye-tab-lbl { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px; }
 .eye-tab-val { font-family: var(--fd); font-size: 20px; color: var(--black); letter-spacing: 0.02em; }
 
 .verdict-block { background: var(--white); border: 1.5px solid var(--lgray); border-top: 4px solid var(--red); border-radius: var(--rc); padding: 20px; margin-bottom: 20px; }
 .verdict-block.ok { border-top-color: var(--green); }
 .verdict-block.warn { border-top-color: var(--amber); }
-.v-eyebrow { font-family: var(--fm); font-size: 13px; color: var(--red); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
+.v-eyebrow { font-family: var(--fm); font-size: 13px; color: var(--red-text); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
 .verdict-block.ok .v-eyebrow { color: var(--green); }
 .verdict-block.warn .v-eyebrow { color: var(--amber); }
 .v-main { font-family: var(--fd); font-size: clamp(22px, 5.5vw, 32px); color: var(--black); line-height: 1; margin-bottom: 6px; }
@@ -311,7 +311,7 @@ p { font-size: 15px; color: var(--gray); line-height: 1.7; }
 .interp-text strong { color: var(--black); }
 
 .disclaimer { background: var(--cream); border: 1.5px solid var(--lgray); border-left: 4px solid var(--red); border-radius: var(--rc); padding: 18px 18px 18px 20px; margin-top: 24px; }
-.disclaimer-title { font-family: var(--fm); font-size: 13px; letter-spacing: 0.1em; color: var(--red); text-transform: uppercase; margin-bottom: 8px; }
+.disclaimer-title { font-family: var(--fm); font-size: 13px; letter-spacing: 0.1em; color: var(--red-text); text-transform: uppercase; margin-bottom: 8px; }
 .disclaimer-body { font-size: 13px; color: var(--gray); line-height: 1.8; }
 .disclaimer-body strong { color: var(--black); font-weight: 600; }
 
@@ -331,11 +331,11 @@ footer { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spa
 .seo p strong{color:#1A1A1A;}
 .seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
 .seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
-.seo a{color:#C23410;}
+.seo a{color:#9E2A0D;}
 .seo .learn-links{background:#fff;border:1px solid #D4D0C8;border-radius:8px;padding:14px 16px;margin:18px 0;}
 .seo .learn-links a{display:block;padding:5px 0;text-decoration:none;color:#1A1A1A;border-bottom:1px solid #D4D0C8;font-size:14px;}
 .seo .learn-links a:last-child{border-bottom:none;}
-.seo .learn-links a:hover{color:#C23410;}
+.seo .learn-links a:hover{color:#9E2A0D;}
 </style>
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="OpticQuiz — Saturation Threshold Test">
@@ -531,7 +531,7 @@ var AXES = [
   { key: "red",    hue: 0,   label: "Red",    subLabel: "Protan axis",        cssHue: 0,   barColor: "#C23410" },
   { key: "green",  hue: 120, label: "Green",  subLabel: "Deutan axis",        cssHue: 120, barColor: "#3F7836" },
   { key: "blue",   hue: 240, label: "Blue",   subLabel: "Tritan axis",        cssHue: 240, barColor: "#3A7FE8" },
-  { key: "yellow", hue: 60,  label: "Yellow", subLabel: "Tritan/deutan axis", cssHue: 60,  barColor: "#9A5E07" }
+  { key: "yellow", hue: 60,  label: "Yellow", subLabel: "Tritan/deutan axis", cssHue: 60,  barColor: "#824F06" }
 ];
 
 // Staircase config
@@ -980,7 +980,7 @@ function renderResultDetail(eye) {
     var barWidth = Math.round((threshold / STAIRCASE.maxSat) * 100);
     var normalLineLeft = Math.round((NORMAL_THRESHOLD_PCT / STAIRCASE.maxSat) * 100);
     var levelNote = threshold <= THRESHOLD_NORMAL ? "Normal range" : threshold <= THRESHOLD_MILD ? "Mildly elevated" : "Significantly elevated";
-    var barColor = threshold <= THRESHOLD_NORMAL ? "#3F7836" : threshold <= THRESHOLD_MILD ? "#9A5E07" : "#C23410";
+    var barColor = threshold <= THRESHOLD_NORMAL ? "#3F7836" : threshold <= THRESHOLD_MILD ? "#824F06" : "#C23410";
 
     html += '<div class="tc-row" role="listitem">' +
       '<div class="tc-meta">' +

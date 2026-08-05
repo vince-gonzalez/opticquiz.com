@@ -67,11 +67,11 @@
 .seo p strong{color:#1A1A1A;}
 .seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
 .seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
-.seo a{color:#C23410;}
+.seo a{color:#9E2A0D;}
 .seo .learn-links{background:#fff;border:1px solid #D4D0C8;border-radius:8px;padding:14px 16px;margin:18px 0;}
 .seo .learn-links a{display:block;padding:5px 0;text-decoration:none;color:#1A1A1A;border-bottom:1px solid #D4D0C8;font-size:14px;}
 .seo .learn-links a:last-child{border-bottom:none;}
-.seo .learn-links a:hover{color:#C23410;}
+.seo .learn-links a:hover{color:#9E2A0D;}
 </style>
 
 <!-- GA4 -->
@@ -99,13 +99,13 @@ gtag('config', 'G-T6CF42RKT4');
   --lgray: #D4D0C8;
   --gray: #6B6B6B;
   --black: #1A1A1A;
-  --red: #C23410;
+  --red: #C23410;--red-text:#9E2A0D;
   --redd: #9E2A0D;
   --green: #3F7836;
   --greend: #38692F;
   --redbg: #FDF1EE;
   --gbg: #EEF5ED;
-  --amber: #9A5E07;
+  --amber: #824F06;
   --fd: "Bebas Neue", Impact, fantasy;
   --fs: "Source Serif 4", Georgia, serif;
   --fm: "Courier New", monospace;
@@ -134,7 +134,7 @@ body {
 .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .logo-wrap img { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--lgray); }
 .logo-name { font-family: var(--fd); font-size: 22px; color: var(--black); letter-spacing: 0.03em; }
-.logo-name span { color: var(--red); }
+.logo-name span { color: var(--red-text); }
 .ver-badge { font-family: var(--fm); font-size: 13px; color: var(--gray); border: 1px solid var(--lgray); padding: 3px 8px; border-radius: 20px; letter-spacing: 0.1em; }
 
 /* SCREENS */
@@ -143,7 +143,7 @@ body {
 @keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
 /* TYPE */
-.eyebrow { font-family: var(--fm); font-size: 13px; letter-spacing: 0.14em; color: var(--red); text-transform: uppercase; display: block; margin-bottom: 10px; }
+.eyebrow { font-family: var(--fm); font-size: 13px; letter-spacing: 0.14em; color: var(--red-text); text-transform: uppercase; display: block; margin-bottom: 10px; }
 h1 { font-family: var(--fd); font-size: clamp(48px, 12vw, 72px); color: var(--black); line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 16px; }
 h2 { font-family: var(--fd); font-size: clamp(32px, 8vw, 48px); color: var(--black); line-height: 0.94; letter-spacing: 0.02em; margin-bottom: 16px; }
 h3 { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
@@ -172,8 +172,8 @@ p { font-size: 15px; color: var(--gray); line-height: 1.7; }
 /* EYE SELECTOR */
 .eye-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
 .eye-btn { padding: 20px 16px; border: 2px solid var(--lgray); border-radius: var(--rc); background: var(--white); cursor: pointer; text-align: center; transition: border-color 0.12s, background 0.12s; -webkit-tap-highlight-color: transparent; min-height: 64px; }
-.eye-btn:hover { border-color: var(--red); background: var(--redbg); }
-.eye-btn.selected { border-color: var(--red); background: var(--redbg); }
+.eye-btn:hover { border-color: var(--red-text); background: var(--redbg); }
+.eye-btn.selected { border-color: var(--red-text); background: var(--redbg); }
 .eye-btn-label { font-family: var(--fd); font-size: 24px; color: var(--black); letter-spacing: 0.02em; display: block; margin-bottom: 2px; }
 .eye-btn-sub { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spacing: 0.06em; text-transform: uppercase; }
 
@@ -196,13 +196,13 @@ p { font-size: 15px; color: var(--gray); line-height: 1.7; }
 .options.g2 { grid-template-columns: 1fr 1fr; }
 .options.g3 { grid-template-columns: 1fr 1fr 1fr; }
 .opt-btn { padding: 18px 10px; font-family: var(--fs); font-size: 20px; font-weight: 600; color: var(--black); background: var(--white); border: 1.5px solid var(--lgray); border-radius: var(--r); cursor: pointer; text-align: center; transition: border-color 0.12s, background 0.1s, transform 0.08s; min-height: 64px; -webkit-tap-highlight-color: transparent; }
-.opt-btn:hover { border-color: var(--red); background: var(--redbg); }
+.opt-btn:hover { border-color: var(--red-text); background: var(--redbg); }
 .opt-btn:active { transform: scale(0.95); }
 .opt-nothing { font-size: 13px; font-weight: 400; color: var(--gray); letter-spacing: 0.03em; font-family: var(--fm); }
 
 /* RESULTS */
 .verdict-block { background: var(--white); border: 1.5px solid var(--lgray); border-top: 4px solid var(--red); border-radius: var(--rc); padding: 20px; margin-bottom: 20px; }
-.v-eyebrow { font-family: var(--fm); font-size: 13px; color: var(--red); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
+.v-eyebrow { font-family: var(--fm); font-size: 13px; color: var(--red-text); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
 .v-main { font-family: var(--fd); font-size: clamp(24px, 6vw, 34px); color: var(--black); line-height: 1; margin-bottom: 3px; }
 .v-sub { font-size: 14px; color: var(--gray); line-height: 1.5; }
 
@@ -232,13 +232,13 @@ p { font-size: 15px; color: var(--gray); line-height: 1.7; }
 /* eye tabs */
 .eye-result-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
 .eye-result-tab { padding: 10px 14px; border-radius: var(--r); border: 1.5px solid var(--lgray); background: var(--white); cursor: pointer; text-align: center; transition: all 0.12s; -webkit-tap-highlight-color: transparent; }
-.eye-result-tab.active { border-color: var(--red); background: var(--redbg); }
+.eye-result-tab.active { border-color: var(--red-text); background: var(--redbg); }
 .eye-result-tab-label { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px; }
 .eye-result-tab-val { font-family: var(--fd); font-size: 18px; color: var(--black); letter-spacing: 0.02em; }
 
 /* disclaimer */
 .disclaimer { background: var(--cream); border: 1.5px solid var(--lgray); border-left: 4px solid var(--red); border-radius: var(--rc); padding: 18px 18px 18px 20px; margin-top: 24px; }
-.disclaimer-title { font-family: var(--fm); font-size: 13px; letter-spacing: 0.1em; color: var(--red); text-transform: uppercase; margin-bottom: 8px; }
+.disclaimer-title { font-family: var(--fm); font-size: 13px; letter-spacing: 0.1em; color: var(--red-text); text-transform: uppercase; margin-bottom: 8px; }
 .disclaimer-body { font-size: 13px; color: var(--gray); line-height: 1.8; }
 .disclaimer-body strong { color: var(--black); font-weight: 600; }
 
@@ -938,7 +938,7 @@ function severityRead(r) {
   }
   html += 'On ' + r.rgTotal + ' plates a severity read is <strong>coarse</strong>: a single plate can shift the band, and an uncalibrated screen in poor light can too. Only a clinician&rsquo;s anomaloscope or Farnsworth D-15 grades severity properly &mdash; this is an honest estimate, not a clinical grade.</div>';
   if (rgMiss >= 1 || tMiss >= 1) {
-    html += '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--lgray);font-size:13px;color:var(--gray);">Want a finer read? The <a href="/sat/" style="color:var(--red);">Saturation Threshold test</a> catches milder deficiencies these plates can miss, and the <a href="/anomal/" style="color:var(--red);">red-green match</a> narrows the type-lean. Neither is a diagnosis either &mdash; but together they triangulate.</div>';
+    html += '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--lgray);font-size:13px;color:var(--gray);">Want a finer read? The <a href="/sat/" style="color:var(--red-text);">Saturation Threshold test</a> catches milder deficiencies these plates can miss, and the <a href="/anomal/" style="color:var(--red-text);">red-green match</a> narrows the type-lean. Neither is a diagnosis either &mdash; but together they triangulate.</div>';
   }
   html += '</div>';
   return html;
