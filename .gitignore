@@ -11,3 +11,4 @@ packages/cvd-py/dist/
 *.zip
 desktop-app/bin/
 desktop-app/obj/
+desktop-app/dist/
