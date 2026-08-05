@@ -231,25 +231,25 @@ body{font-family:var(--vscode-font-family);color:var(--vscode-foreground);paddin
 h2{font-size:15px;margin:0 0 14px;}
 .ok{color:#3fb950;} .bad{color:#f85149;}
 .section{margin:0 0 18px;}
-.lbl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;opacity:.7;margin-bottom:8px;}
-.simlbl{font-size:11px;opacity:.6;margin:8px 0 4px;}
+.lbl{font-size:13px;text-transform:uppercase;letter-spacing:.06em;opacity:.7;margin-bottom:8px;}
+.simlbl{font-size:13px;opacity:.6;margin:8px 0 4px;}
 .row{display:flex;flex-wrap:wrap;gap:8px;}
 .cell{display:flex;flex-direction:column;align-items:center;gap:3px;}
 .sw{width:38px;height:38px;border-radius:5px;border:1px solid rgba(128,128,128,.4);}
 .sw.sm{width:20px;height:20px;display:inline-block;vertical-align:middle;border-radius:4px;margin-right:2px;}
-code{font-family:var(--vscode-editor-font-family,monospace);font-size:11px;opacity:.85;}
-.cf{margin:5px 0;font-size:12px;}
+code{font-family:var(--vscode-editor-font-family,monospace);font-size:13px;opacity:.85;}
+.cf{margin:5px 0;font-size:13px;}
 .fix{border:1px solid #3fb95055;background:rgba(63,185,80,.06);border-radius:6px;padding:12px;}
 .gen{border:1px solid rgba(88,166,255,.35);background:rgba(88,166,255,.06);border-radius:6px;padding:12px;}
 .warn{border:1px solid rgba(212,130,10,.45);background:rgba(212,130,10,.07);border-radius:6px;padding:12px;}
-.warnt{color:#9A5E07;font-size:12px;font-weight:normal;}
+.warnt{color:#9A5E07;font-size:13px;font-weight:normal;}
 button{margin-top:12px;background:var(--vscode-button-background);color:var(--vscode-button-foreground);border:none;padding:8px 14px;border-radius:4px;cursor:pointer;font-size:13px;}
 button:hover{background:var(--vscode-button-hoverBackground);}
-table{border-collapse:collapse;font-size:12px;}
+table{border-collapse:collapse;font-size:13px;}
 th,td{text-align:left;padding:4px 12px 4px 0;}
-th{font-weight:normal;opacity:.6;font-size:11px;}
-.muted{opacity:.6;font-size:11px;}
-.foot{margin-top:16px;opacity:.5;font-size:11px;}
+th{font-weight:normal;opacity:.6;font-size:13px;}
+.muted{opacity:.6;font-size:13px;}
+.foot{margin-top:16px;opacity:.5;font-size:13px;}
 a{color:var(--vscode-textLink-foreground);}
 </style></head><body>${inner}
 <script nonce="${n}">const vscode=acquireVsCodeApi();const b=document.getElementById('apply');if(b)b.addEventListener('click',()=>vscode.postMessage({type:'apply'}));const g=document.getElementById('applygen');if(g)g.addEventListener('click',()=>vscode.postMessage({type:'applygen'}));</script>

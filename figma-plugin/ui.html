@@ -1,33 +1,33 @@
 <!-- OpticQuiz Colorblind-Safe Checker — Figma plugin UI.
      The engine below is a copy of /assets/oq-cvd.js (keep in sync). Runs on-device. -->
 <style>
-  body{font-family:Inter,-apple-system,system-ui,sans-serif;margin:0;padding:14px;background:var(--figma-color-bg,#fff);color:var(--figma-color-text,#1a1a1a);font-size:12px;}
+  body{font-family:Inter,-apple-system,system-ui,sans-serif;margin:0;padding:14px;background:var(--figma-color-bg,#fff);color:var(--figma-color-text,#1a1a1a);font-size:13px;}
   h1{font-size:13px;margin:0 0 2px;font-weight:700;}
-  .sub{color:var(--figma-color-text-secondary,#7f7f7f);margin:0 0 12px;font-size:11px;line-height:1.5;}
+  .sub{color:var(--figma-color-text-secondary,#7f7f7f);margin:0 0 12px;font-size:13px;line-height:1.5;}
   .verdict{border-radius:6px;padding:10px 12px;margin:10px 0;font-weight:600;font-size:13px;}
   .verdict.pass{background:#e7f5e9;color:#227a34;}
   .verdict.fail{background:#fdeee9;color:#c23410;}
   .type{border:1px solid var(--figma-color-border,#e5e5e5);border-radius:6px;padding:10px 12px;margin:8px 0;}
-  .type h2{font-size:12px;margin:0 0 6px;display:flex;justify-content:space-between;align-items:center;}
-  .tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;}
+  .type h2{font-size:13px;margin:0 0 6px;display:flex;justify-content:space-between;align-items:center;}
+  .tag{font-size:13px;font-weight:600;padding:2px 7px;border-radius:10px;}
   .tag.ok{background:#e7f5e9;color:#227a34;}.tag.bad{background:#fdeee9;color:#c23410;}
   .sim{display:flex;flex-wrap:wrap;gap:3px;margin:4px 0 6px;}
   .sim .s{width:22px;height:22px;border-radius:4px;border:1px solid rgba(0,0,0,.12);}
-  .cf{display:flex;align-items:center;gap:6px;padding:5px 0;border-top:1px solid var(--figma-color-border,#eee);font-size:11px;color:var(--figma-color-text-secondary,#7f7f7f);flex-wrap:wrap;}
+  .cf{display:flex;align-items:center;gap:6px;padding:5px 0;border-top:1px solid var(--figma-color-border,#eee);font-size:13px;color:var(--figma-color-text-secondary,#7f7f7f);flex-wrap:wrap;}
   .cf .s{width:18px;height:18px;border-radius:4px;border:1px solid rgba(0,0,0,.12);}
-  .cf .sev{margin-left:auto;font-size:9px;font-weight:700;text-transform:uppercase;padding:1px 6px;border-radius:10px;}
+  .cf .sev{margin-left:auto;font-size:13px;font-weight:700;text-transform:uppercase;padding:1px 6px;border-radius:10px;}
   .sev.risk{background:#fbf0dd;color:#b8770a;}.sev.severe{background:#fdeee9;color:#c23410;}
   .cf{cursor:pointer;transition:background .1s;border-radius:5px;margin:0 -6px;padding-left:6px;padding-right:6px;}
   .cf:hover{background:var(--figma-color-bg-hover,#f2f2f2);}
-  .cf .hint{color:#C23410;font-weight:600;font-size:10px;}
+  .cf .hint{color:#C23410;font-weight:600;font-size:13px;}
   .sim .s{cursor:pointer;}
-  #status{font-size:11px;color:#227a34;min-height:15px;margin-top:8px;font-weight:600;}
+  #status{font-size:13px;color:#227a34;min-height:15px;margin-top:8px;font-weight:600;}
   .row{display:flex;gap:8px;align-items:center;margin-top:10px;}
-  button{font-family:inherit;font-size:11px;font-weight:600;border:1px solid var(--figma-color-border,#ddd);background:var(--figma-color-bg-secondary,#f5f5f5);color:inherit;border-radius:6px;padding:7px 12px;cursor:pointer;}
+  button{font-family:inherit;font-size:13px;font-weight:600;border:1px solid var(--figma-color-border,#ddd);background:var(--figma-color-bg-secondary,#f5f5f5);color:inherit;border-radius:6px;padding:7px 12px;cursor:pointer;}
   button.primary{background:#C23410;color:#fff;border-color:#C23410;}
-  .foot{margin-top:12px;font-size:10px;color:var(--figma-color-text-secondary,#999);line-height:1.6;}
+  .foot{margin-top:12px;font-size:13px;color:var(--figma-color-text-secondary,#999);line-height:1.6;}
   .foot a{color:#C23410;text-decoration:none;}
-  .empty{color:var(--figma-color-text-secondary,#7f7f7f);font-size:11px;padding:8px 0;}
+  .empty{color:var(--figma-color-text-secondary,#7f7f7f);font-size:13px;padding:8px 0;}
 </style>
 
 <h1>Colorblind-Safe Checker</h1>

@@ -65,14 +65,14 @@ body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:10
 .logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
 .logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
 .logo-name span{color:var(--red);}
-.ver-badge{font-family:var(--fm);font-size:10px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.ver-badge{font-family:var(--fm);font-size:13px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
 .screen{display:none;}
 .screen.active{display:block;animation:fadein .2s ease;}
 @keyframes fadein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
-.eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.14em;color:var(--red);text-transform:uppercase;display:block;margin-bottom:10px;}
+.eyebrow{font-family:var(--fm);font-size:13px;letter-spacing:.14em;color:var(--red);text-transform:uppercase;display:block;margin-bottom:10px;}
 h1{font-family:var(--fd);font-size:clamp(48px,12vw,72px);color:var(--black);line-height:.92;letter-spacing:.02em;margin-bottom:16px;}
 h2{font-family:var(--fd);font-size:clamp(32px,8vw,48px);color:var(--black);line-height:.94;letter-spacing:.02em;margin-bottom:16px;}
-h3{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+h3{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
 p{font-size:15px;color:var(--gray);line-height:1.7;}
 .btn{display:block;width:100%;padding:16px 20px;font-family:var(--fs);font-size:16px;font-weight:600;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;text-align:center;transition:border-color .12s,background .12s,transform .08s;min-height:52px;-webkit-tap-highlight-color:transparent;}
 .btn:hover{border-color:var(--black);background:var(--cream);}
@@ -93,11 +93,11 @@ p{font-size:15px;color:var(--gray);line-height:1.7;}
 .eye-btn{padding:18px 16px;border:2px solid var(--lgray);border-radius:var(--rc);background:#fff;cursor:pointer;text-align:center;transition:border-color .12s,background .12s;min-height:64px;}
 .eye-btn.selected{border-color:var(--red);background:var(--redbg);}
 .eye-btn-label{font-family:var(--fd);font-size:24px;color:var(--black);display:block;}
-.eye-btn-sub{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;}
+.eye-btn-sub{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;}
 .field{margin:16px 0;}
 .field label{font-size:13px;color:var(--black);font-weight:600;display:block;margin-bottom:6px;}
 .field input{width:100%;padding:12px 14px;font-family:var(--fm);font-size:16px;border:1.5px solid var(--lgray);border-radius:var(--r);background:#fff;color:var(--black);}
-.field .sub{font-size:12px;color:var(--gray);margin-top:6px;line-height:1.5;}
+.field .sub{font-size:13px;color:var(--gray);margin-top:6px;line-height:1.5;}
 /* stage */
 .stage-wrap{position:relative;background:#fff;border:2px solid var(--lgray);border-radius:var(--rc);overflow:hidden;margin:12px 0;height:min(52vh,340px);}
 .fix-cross{position:absolute;top:50%;transform:translate(-50%,-50%);font-family:var(--fm);font-size:26px;color:var(--black);font-weight:700;user-select:none;}
@@ -105,20 +105,20 @@ p{font-size:15px;color:var(--gray);line-height:1.7;}
 .stage-hint{font-size:13px;color:var(--gray);line-height:1.6;text-align:center;margin:6px 0 12px;}
 .big-stat{background:#fff;border:1.5px solid var(--lgray);border-top:4px solid var(--red);border-radius:var(--rc);padding:22px;margin-bottom:16px;text-align:center;}
 .big-stat-val{font-family:var(--fd);font-size:clamp(38px,11vw,60px);color:var(--black);line-height:1;}
-.big-stat-lbl{font-family:var(--fm);font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+.big-stat-lbl{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
 .mini-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
 .mini{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:14px;text-align:center;}
 .mini-val{font-family:var(--fd);font-size:26px;color:var(--black);}
-.mini-lbl{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;}
+.mini-lbl{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;}
 .interp-card{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:16px 0;}
 .interp-text{font-size:14px;color:var(--gray);line-height:1.8;}
 .disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:18px 18px 18px 20px;margin-top:24px;}
-.disclaimer-title{font-family:var(--fm);font-size:11px;letter-spacing:.1em;color:var(--red);text-transform:uppercase;margin-bottom:8px;}
-.disclaimer-body{font-size:12px;color:var(--gray);line-height:1.8;}
+.disclaimer-title{font-family:var(--fm);font-size:13px;letter-spacing:.1em;color:var(--red);text-transform:uppercase;margin-bottom:8px;}
+.disclaimer-body{font-size:13px;color:var(--gray);line-height:1.8;}
 .disclaimer-body strong{color:var(--black);font-weight:600;}
 .share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
-footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
-.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:12px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
 @media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
 </style>
 <meta name="twitter:card" content="summary_large_image">

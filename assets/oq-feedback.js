@@ -35,7 +35,7 @@
     '.oqfb{font-family:"Source Serif 4",Georgia,serif;background:#fff;border:1.5px solid #D4D0C8;border-radius:8px;padding:16px 18px;margin:26px 0;color:#1A1A1A;}',
     '.oqfb h3{font-family:"Bebas Neue",Impact,fantasy;font-size:20px;letter-spacing:.02em;margin:0 0 4px;font-weight:400;}',
     '.oqfb p{font-size:14px;line-height:1.7;color:#6B6B6B;margin:0 0 10px;}',
-    '.oqfb .oqfb-note{font-size:12.5px;line-height:1.6;}',
+    '.oqfb .oqfb-note{font-size:13px;line-height:1.6;}',
     '.oqfb-row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0;}',
     '.oqfb button{font-family:inherit;font-size:15px;padding:9px 16px;border:1.5px solid #D4D0C8;background:#F8F6F2;color:#1A1A1A;border-radius:4px;cursor:pointer;}',
     '.oqfb button:hover{border-color:#C23410;}',

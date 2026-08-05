@@ -98,7 +98,7 @@
       { role: "menu", "aria-label": "Colorblind viewing modes" });
     menu.hidden = true;
 
-    var title = el("div", "font-size:11px;letter-spacing:.06em;text-transform:uppercase;opacity:.55;padding:6px 10px 8px;");
+    var title = el("div", "font-size:13px;letter-spacing:.06em;text-transform:uppercase;opacity:.55;padding:6px 10px 8px;");
     title.textContent = "Colorblind view";
     menu.appendChild(title);
 
@@ -108,20 +108,20 @@
     var items = [];
     MODES.forEach(function (m) {
       var it = el("button", itemCss(false), { type: "button", role: "menuitemradio", "aria-checked": "false", "data-mode": m.id || "off" });
-      it.innerHTML = "<strong>" + m.label + "</strong><span style='font-size:12px;opacity:.6;'>" + m.sub + "</span>";
+      it.innerHTML = "<strong>" + m.label + "</strong><span style='font-size:13px;opacity:.6;'>" + m.sub + "</span>";
       it.addEventListener("mouseenter", function () { if (it.getAttribute("aria-checked") !== "true") it.style.background = "rgba(255,255,255,.08)"; });
       it.addEventListener("mouseleave", function () { if (it.getAttribute("aria-checked") !== "true") it.style.background = "transparent"; });
       it.addEventListener("click", function () { apply(m.id); close(); btn.focus(); });
       menu.appendChild(it); items.push({ mode: m.id || "off", el: it });
     });
 
-    var foot = el("a", "display:block;font-size:11px;opacity:.55;text-decoration:none;color:#8ab4f8;padding:8px 10px 4px;", { href: "https://opticquiz.com/checker/", target: "_blank", rel: "noopener" });
+    var foot = el("a", "display:block;font-size:13px;opacity:.55;text-decoration:none;color:#8ab4f8;padding:8px 10px 4px;", { href: "https://opticquiz.com/checker/", target: "_blank", rel: "noopener" });
     foot.textContent = "What is this? →";
     // Strength control. Shown always: someone with mild deficiency needs it most, and
     // they are the least likely to go looking for a setting.
     var strRow = el("div", "padding:8px 12px 10px;border-top:1px solid rgba(255,255,255,.14);");
     var strLab = el("div",
-      "display:flex;justify-content:space-between;font-size:11px;opacity:.75;margin-bottom:5px;");
+      "display:flex;justify-content:space-between;font-size:13px;opacity:.75;margin-bottom:5px;");
     var strTxt = el("span"); strTxt.textContent = "Strength";
     var strNum = el("span"); strNum.textContent = readStrength() + "%";
     strLab.appendChild(strTxt); strLab.appendChild(strNum);
