@@ -102,21 +102,22 @@ footer{font-family:var(--fm);font-size:10px;color:var(--gray);letter-spacing:.06
   </div>
 
   <h2>ON YOUR WHOLE SCREEN — WINDOWS</h2>
-  <div class="card work">
-    <div class="tag">Needs building · no installer yet</div>
-    <h3>OpticQuiz Corrector (desktop)</h3>
-    <p>Corrects <strong>everything</strong> on your display — games, PDFs, video, other apps —
-      not just web pages. It sits in the system tray.</p>
-    <p><strong>There is no download yet.</strong> It has to be built from source, which needs
-      the free .NET 8 SDK. That is a real barrier and it is being worked on; until then:</p>
-<pre><code>git clone https://github.com/zengineco/opticquiz.com
-cd opticquiz.com/desktop-app
-dotnet build -c Release
-</code></pre>
-    <p class="note">Then run <code>OpticQuizCorrector.exe</code> from the build output and pick a
-      mode from the tray icon. Windows 8 or later. Its matrices are derived separately from the
-      browser ones, because Windows applies them in a different colour space — the same numbers
-      would produce a different, worse correction there.</p>
+  <div class="card easy">
+    <div class="tag">One download · no install, no prerequisites</div>
+    <h3>OpticQuiz Corrector (Windows)</h3>
+    <p>Corrects <strong>everything</strong> on your display — games, PDFs, video, other
+      applications — not only web pages. It sits in the system tray and you pick a mode from
+      there.</p>
+    <p><a href="https://github.com/zengineco/opticquiz.com/releases/download/v1.1.0-desktop/OpticQuizCorrector.exe">
+      <strong>Download OpticQuizCorrector.exe</strong></a> — 65&nbsp;MB, Windows 8 or later.</p>
+    <p class="note">It is a single file. Nothing to install, no .NET runtime needed, no
+      administrator rights. Windows may warn that the publisher is unrecognised, because the
+      build is not code-signed — a certificate costs money this project does not spend. You can
+      <a href="https://github.com/zengineco/opticquiz.com/tree/main/desktop-app">read every line
+      of its source</a> and build it yourself if you would rather not trust a binary.</p>
+    <p class="note">Its matrices are derived separately from the browser ones. Windows applies
+      colour transforms in a different colour space, and the same numbers there produce a
+      measurably worse correction — so it gets its own.</p>
   </div>
 
   <h2>ON A SITE YOU OWN</h2>
