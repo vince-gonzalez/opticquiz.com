@@ -69,6 +69,12 @@ rather than folded silently into the pre-registered set.
   that rejected it. Two measures disagree. That is recorded, not resolved — and it is a reason
   to be less confident about protan in either direction, not a reason to flip.
 
+> **Resolved 5 August 2026 — see [METRIC-DISAGREEMENT.md](METRIC-DISAGREEMENT.md).** The
+> disagreement is larger than this line suggests and runs the other way: on the *pre-registered*
+> metrics M1-M6, the shipped v3 matrices are the worst of the three candidates for both protan
+> and deutan. v3 was shipped on M7, which is post-hoc. Not a filter artifact - both populations
+> apply the same DISTINCT and COLLAPSE thresholds.
+
 ## The honest limit of this result
 
 `fix_palette` is a **design-time** tool. It rewrites a palette. Applying it to live content

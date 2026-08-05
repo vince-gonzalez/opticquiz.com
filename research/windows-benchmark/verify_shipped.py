@@ -20,10 +20,15 @@ The same numbers in the two spaces are two different corrections — measured at
 Run this before any release. A silent divergence between surfaces is the failure mode that
 makes a published benchmark false.
 """
-import json, re, sys
+import json, os, re, sys
 import numpy as np
 
-SHIPPING = json.load(open("shipping.json"))
+# Anchor every path to this file, not to the caller's working directory. A release gate that
+# only works when you happen to be standing in its own folder is a gate that quietly stops
+# being run, which is the one failure mode a gate cannot have.
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
+SHIPPING = json.load(open(os.path.join(HERE, "shipping.json")))
 
 SURFACES = {
     "browser-extension": ("../../browser-extension/content.js", "fe", "linear"),
@@ -37,7 +42,7 @@ TYPES = ("protan", "deutan", "tritan")
 
 
 def parse(path, kind, t):
-    s = open(path, encoding="utf-8").read()
+    s = open(os.path.join(HERE, path), encoding="utf-8").read()
     if kind == "fe":
         m = re.search(rf'{t}:\s*"([^"]+)"', s)
         if not m:
@@ -63,13 +68,13 @@ def main():
     fail = 0
     for t in TYPES:
         want = SHIPPING["linear_surfaces"][t]["transform"]
-        ref = np.array(json.load(open(f"transforms/{want}.json"))["matrix"])
+        ref = np.array(json.load(open(os.path.join(HERE, "transforms", want + ".json")))["matrix"])
         ref_label = want
         # The desktop app is now per-type: it applies in gamma-encoded sRGB, so deutan and
         # tritan use matrices derived for THAT space while protan stays on the original.
         _dt = SHIPPING["desktop_app"]["transform"]
         want_desktop = _dt[t] if isinstance(_dt, dict) else _dt.replace("{type}", t)
-        ref_desktop = np.array(json.load(open(f"transforms/{want_desktop}.json"))["matrix"])
+        ref_desktop = np.array(json.load(open(os.path.join(HERE, "transforms", want_desktop + ".json")))["matrix"])
 
         print(f"\n{t.upper()}   reference: {ref_label}")
         for name, (path, kind, space) in SURFACES.items():
@@ -108,7 +113,7 @@ def main():
 def check_registry():
     import subprocess, tempfile, tarfile, os, re, glob
     pkg = "opticquiz-eye"
-    local = json.load(open("../../packages/cvd-eye/package.json"))["version"]
+    local = json.load(open(os.path.join(REPO, "packages", "cvd-eye", "package.json")))["version"]
     try:
         pub = subprocess.run(["npm", "view", pkg, "version"], capture_output=True,
                              text=True, shell=True).stdout.strip()
@@ -156,7 +161,7 @@ def check_severity_formula():
     out = {}
     for label, path in (("site", "../../assets/oq-results.js"),
                         ("extension", "../../browser-extension/content.js")):
-        m = pat.search(open(path, encoding="utf-8").read())
+        m = pat.search(open(os.path.join(HERE, path), encoding="utf-8").read())
         out[label] = m.groups() if m else None
         print(f"  {label:10s} d15 severity constants: {out[label]}")
     ok = out["site"] is not None and out["site"] == out["extension"]

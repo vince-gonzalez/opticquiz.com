@@ -56,6 +56,12 @@ which matters more for all-day use than any single-metric win.
    designed specifically to survive colour-vision deficiency — the worst-affected pair loses
    20–30 ΔE2000 units of separation, and under tritan the mean effect is net negative (−6.57).
 
+**Fourth finding, recorded 5 August 2026:** the matrices in the table above are v1. The
+matrices actually shipping are **v3** for protan and deutan, and on these pre-registered metrics
+v3 scores *worse than both v1 and v2* - deutan rescue 58.6% against v2's 87.4%. v3 was shipped
+on a post-hoc metric. See **[METRIC-DISAGREEMENT.md](METRIC-DISAGREEMENT.md)**; it is the most
+serious methodological problem in this benchmark and it is about our process, not Windows.
+
 Finding 3 has a direct product consequence: on a site whose palette is already colourblind-safe,
 switching the corrector on can make it *harder* to read. That is worth telling users plainly, and
 it is an argument for content-aware correction over a fixed global matrix.
