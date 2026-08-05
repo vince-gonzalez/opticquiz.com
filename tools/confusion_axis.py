@@ -132,5 +132,113 @@ def main():
     return 0
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Part 2: tests that NAME a deficiency in their own copy.
+#
+# /hue/ and /sat/ run staircases rather than showing plates, then tell the user which
+# deficiency their result implicates. The psychophysics can be perfectly sound while that
+# sentence is wrong, and the sentence is what the user actually reads and repeats. So the
+# claim gets checked against simulation the same way a plate does.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _hx(h, s, l):
+    r, g, b = colorsys.hls_to_rgb((h % 360) / 360.0, l / 100.0, s / 100.0)
+    return "#%02X%02X%02X" % (round(r * 255), round(g * 255), round(b * 255))
+
+
+def _engine():
+    sys.path.insert(0, str(ROOT / "packages" / "cvd-py"))
+    import opticquiz_cvd as q
+    return q
+
+
+def check_hue(q):
+    """Each /hue/ pair should collapse hardest for the deficiency its own label names."""
+    src = (ROOT / "hue" / "index.html").read_text(encoding="utf-8")
+    m = re.search(r"var NEIGHBORHOODS\s*=\s*\[(.*?)\n\];", src, re.S)
+    if not m:
+        return [], 0
+    rows, bad = [], 0
+    for blk in re.findall(r"\{(.*?)\n  \}", m.group(1), re.S):
+        def g(k):
+            mm = re.search(k + r':\s*"?([^,"\n]+)', blk)
+            return mm.group(1).strip() if mm else None
+        a, b = g("swatchA"), g("swatchB")
+        if a is None or b is None or a == b:
+            continue                       # equal-hue pairs vary by chroma, not hue angle
+        L = float(g("L") or 55)
+        S = float(g("S") or 62)
+        A, B = _hx(float(a), S, L), _hx(float(b), S, L)
+        de = dict((t, q.delta_e(q.simulate(A, t), q.simulate(B, t))) for t in COPUNCTAL)
+        actual = min(de, key=de.get)
+        claim = (g("clinical") or "").lower()
+        ok = actual in claim
+        if not ok:
+            bad += 1
+        rows.append((g("key"), g("clinical") or "", q.delta_e(A, B), de, actual, ok))
+    return rows, bad
+
+
+def check_sat(q):
+    """Each /sat/ axis should need MORE saturation under the deficiency it names."""
+    src = (ROOT / "sat" / "index.html").read_text(encoding="utf-8")
+    m = re.search(r"var AXES\s*=\s*\[(.*?)\n\];", src, re.S)
+    if not m:
+        return [], 0
+    GREY = "#999999"
+    rows, bad = [], 0
+    for blk in re.findall(r"\{([^}]*)\}", m.group(1)):
+        hm = re.search(r"\bhue:\s*(\d+)", blk)
+        sm = re.search(r'subLabel:\s*"([^"]*)"', blk)
+        if not hm or not sm:
+            continue
+        hue, claim = int(hm.group(1)), sm.group(1)
+        thr = {}
+        for t in [None] + list(COPUNCTAL):
+            thr[t or "normal"] = 99
+            for s in range(1, 81):
+                c = _hx(hue, s, 60)
+                a = c if t is None else q.simulate(c, t)
+                gg = GREY if t is None else q.simulate(GREY, t)
+                if q.delta_e(a, gg) >= 5:
+                    thr[t or "normal"] = s
+                    break
+        named = [t for t in COPUNCTAL if t in claim.lower()]
+        worst = max(COPUNCTAL, key=lambda t: thr[t])
+        ok = all(thr[t] > thr["normal"] for t in named) and bool(named)
+        if not ok:
+            bad += 1
+        rows.append((hue, claim, thr, worst, ok, named))
+    return rows, bad
+
+
+def main2():
+    q = _engine()
+    bad = 0
+
+    rows, b = check_hue(q)
+    bad += b
+    print("\n/hue/ - does each pair collapse for the deficiency its label names?")
+    print("(lower dE = harder for that deficiency to tell apart)\n")
+    print("%-16s %-26s %7s %7s %7s %7s  %s"
+          % ("pair", "label says", "normal", "protan", "deutan", "tritan", "actually"))
+    for key, claim, dn, de, actual, ok in rows:
+        print("%-16s %-26s %7.1f %7.1f %7.1f %7.1f  %-7s %s"
+              % (key, claim[:26], dn, de["protan"], de["deutan"], de["tritan"], actual,
+                 "" if ok else "<-- MISLABELLED"))
+
+    rows, b = check_sat(q)
+    bad += b
+    print("\n/sat/ - does the named deficiency actually need more saturation to see the hue?")
+    print("(threshold = lowest saturation still >= 5 dE2000 from mid-grey)\n")
+    print("%-6s %-22s %7s %7s %7s %7s  %s"
+          % ("hue", "label says", "normal", "protan", "deutan", "tritan", ""))
+    for hue, claim, thr, worst, ok, named in rows:
+        print("%-6d %-22s %7d %7d %7d %7d  %s"
+              % (hue, claim[:22], thr["normal"], thr["protan"], thr["deutan"], thr["tritan"],
+                 "" if ok else "<-- claim not supported (worst is %s)" % worst))
+    return bad
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main() + main2())

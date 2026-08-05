@@ -606,10 +606,10 @@ var NEIGHBORHOODS = [
     anchorHue: 240,
     direction: 1,        // neighbor = 240 + gap → toward purple (300°)
     L: 55, S: 65,
-    clinical: "Tritan axis — primary",
+    clinical: "Protan axis — primary",
     barColor: "#5B5BCC",
     swatchA: 240, swatchB: 300,
-    blurb: "Blue (240°) vs purple (300°). Tritan-type deficiencies cause these to merge first. The most common self-reported color confusion."
+    blurb: "Blue (240°) vs purple (300°). Purple is blue plus red, so a protan-type deficiency loses the red component and purple slides toward blue. Measured ΔE2000 under simulation: protan 8.5, deutan 20.2, tritan 53.7 — this is a red-green confusion, not a blue-yellow one, despite involving blue."
   },
   {
     key: "blue_bluegreen",
@@ -628,10 +628,10 @@ var NEIGHBORHOODS = [
     anchorHue: 5,
     direction: 1,        // neighbor = 5 + gap → toward orange (30°)
     L: 50, S: 80,
-    clinical: "Protan axis",
+    clinical: "Deutan axis",
     barColor: "#CC3322",
     swatchA: 5, swatchB: 30,
-    blurb: "Red (5°) vs orange (30°). Protan-type deficiencies reduce red cone sensitivity — reds and oranges merge along this axis."
+    blurb: "Red (5°) vs orange (30°). Both red-green types merge these, deutan the more strongly. Measured ΔE2000 under simulation: deutan 9.7, tritan 13.0, protan 19.6."
   },
   {
     key: "green_yellow",
@@ -639,10 +639,10 @@ var NEIGHBORHOODS = [
     anchorHue: 110,
     direction: -1,       // neighbor = 110 - gap → toward yellow (60°)
     L: 52, S: 68,
-    clinical: "Deutan axis — primary",
+    clinical: "Protan axis — strongest",
     barColor: "#3F7836",
     swatchA: 110, swatchB: 65,
-    blurb: "Green (110°) vs yellow-green (65°). The most common CVD type — deuteranomaly causes these to merge at smaller separations."
+    blurb: "Green (110°) vs yellow-green (65°). The hardest pair on this test for red-green vision: measured ΔE2000 under simulation is 2.3 for protan and 6.4 for deutan, against 17.2 for normal vision. Both types merge it; protan almost completely."
   },
   {
     key: "pink_gray",
@@ -668,10 +668,10 @@ var NEIGHBORHOODS = [
     anchorHue: 290,
     direction: 1,        // neighbor = 290 + gap → toward pink (340°)
     L: 55, S: 60,
-    clinical: "Protan + deutan overlap",
+    clinical: "Tritan axis — secondary",
     barColor: "#9944BB",
     swatchA: 290, swatchB: 340,
-    blurb: "Purple (290°) vs pink (340°). Both protan and deutan types lose the red component of purple differently — this pair catches both axes."
+    blurb: "Purple (290°) vs pink (340°). Measured ΔE2000 under simulation: tritan 13.9, protan 19.6, deutan 34.0 — it narrows most for tritan, mildly for protan, and not at all for deutan."
   },
   {
     key: "brown_olive",
