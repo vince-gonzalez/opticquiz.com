@@ -15,7 +15,11 @@
     }
   },
   "desktop_app": {
-    "transform": "opticquiz-{type}",
-    "reason": "DELIBERATELY ON v1. MagSetFullscreenColorEffect applies the matrix to gamma-encoded sRGB, while every browser surface applies it in linear light. Measured consequence: deutan rescue 0.731 (linear) vs 0.696 (sRGB) under Brettel 1997; tritan 0.810 vs 0.877. The v2 matrices were derived in linear space, so shipping them here would be an unmeasured change. The desktop app needs its own sRGB-space derivation."
+    "transform": {
+      "protan": "opticquiz-protan",
+      "deutan": "opticquiz-desktop-deutan",
+      "tritan": "opticquiz-desktop-tritan"
+    },
+    "reason": "MagSetFullscreenColorEffect applies its matrix to GAMMA-ENCODED sRGB, not the linear light every browser surface uses, so the browser matrices are not transferable. deutan and tritan are now derived FOR sRGB space (held out: +18 and +4, against +3 and -4 for the browser matrices run here). protan stays on the original - its sRGB candidate tied on net (+16 vs +17) and a tie is not a win."
   }
 }

@@ -28,6 +28,17 @@ namespace OpticQuizCorrector
 
     // 5x5 color matrices in the Windows/GDI convention (newColor = color * matrix),
     // i.e. the transpose of the browser feColorMatrix values.
+    //
+    // IMPORTANT: these are NOT the browser matrices. MagSetFullscreenColorEffect applies
+    // its matrix to GAMMA-ENCODED sRGB, while every browser surface applies in linear
+    // light. A matrix is not transferable between the two - the sRGB transfer curve sits
+    // between them and no 3x3 undoes a nonlinearity. Running the browser matrices here
+    // measured NET HARMFUL for tritanopia (-4 on real palettes) and near-useless for
+    // deuteranopia (+3). Deuteranopia and Tritanopia below are derived specifically for
+    // sRGB space by research/windows-benchmark/optimise_srgb.py: +18 and +4 held out.
+    //
+    // Protanopia stays on the original: its sRGB-derived candidate tied on net (+16 vs
+    // +17) and was refused rather than shipped on a tie.
     internal static class Matrices
     {
         public static readonly float[] Off = {
@@ -35,11 +46,11 @@ namespace OpticQuizCorrector
         public static readonly float[] Recommended = {
             0.9777f,0.3248f,0.4547f,0,0,  -0.7251f,0.2051f,-0.6454f,0,0,  0.7474f,0.4701f,1.1907f,0,0,  0,0,0,1,0,  0,0,0,0,1 };
         public static readonly float[] Deuteranopia = {
-            1,0.1628f,0.4547f,0,0,  0,0.725f,-0.6454f,0,0,  0,0.1122f,1.1907f,0,0,  0,0,0,1,0,  0,0,0,0,1 };
+            1.02157f, -0.29392f, -0.56670f,0,0,  -0.28097f, 1.67034f, 0.55809f,0,0,  0.25940f, -0.37642f, 1.00861f,0,0,  0,0,0,1,0,  0,0,0,0,1 };
         public static readonly float[] Protanopia = {
             1,0.4789f,0.5973f,0,0,  0,0.4769f,-0.6887f,0,0,  0,0.0442f,1.0914f,0,0,  0,0,0,1,0,  0,0,0,0,1 };
         public static readonly float[] Tritanopia = {
-            0.7412f,0.0751f,0,0,0,  -0.4072f,0.5852f,0,0,0,  0.666f,0.3397f,1,0,0,  0,0,0,1,0,  0,0,0,0,1 };
+            0.85166f, -0.04784f, -0.07191f,0,0,  0.48172f, 1.00612f, 0.21637f,0,0,  -0.33338f, 0.04172f, 0.85554f,0,0,  0,0,0,1,0,  0,0,0,0,1 };
     }
 
     internal static class Program

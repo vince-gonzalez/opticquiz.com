@@ -96,10 +96,13 @@ both incumbents on data it never saw. It rejects its own output routinely — tr
 5. Render `visual.py` and look at it (R4).
 6. Push, then confirm the live asset actually serves the new values.
 
-**The desktop app is deliberately excluded.** `MagSetFullscreenColorEffect` applies its matrix
-to gamma-encoded sRGB while every browser surface uses linear light — measured at deutan rescue
-0.731 linear vs 0.696 sRGB. Same numbers, different correction. It needs its own sRGB-space
-derivation and until then it stays on v1.
+**The desktop app has its own matrices now.** `MagSetFullscreenColorEffect` applies to
+gamma-encoded sRGB while every browser surface uses linear light, and a matrix is not
+transferable between them — the sRGB transfer curve sits in between and no 3×3 undoes a
+nonlinearity. Running the browser matrices there measured **net harmful** for tritanopia
+(−4 on real palettes) and near-useless for deuteranopia (+3). `optimise_srgb.py` derives them
+for the space they are actually applied in: deutan +18, tritan +4 held out. Protan stays on
+the original — its sRGB candidate *tied* on net (+16 vs +17) and a tie is not a win.
 
 ---
 
@@ -108,6 +111,9 @@ derivation and until then it stays on v1.
 | | shipped | net (10 real palettes) | status |
 |---|---|---|---|
 | protan | **v3** | +47 (daltonize +31) | beats the field on net *and* distortion |
+| *desktop protan* | v1 (sRGB) | +17 | sRGB candidate tied, refused |
+| *desktop deutan* | **sRGB-derived** | +18 (was +3) | space-correct |
+| *desktop tritan* | **sRGB-derived** | +4 (was −4) | was net harmful |
 | deutan | **v3** | +65 (daltonize +39) | beats the field on net *and* distortion |
 | tritan | **v2** | +17 (daltonize ~0) | positive but v3 overfit — **open** |
 

@@ -1,0 +1,34 @@
+{
+  "name": "opticquiz desktop (deutan)",
+  "space": "srgb",
+  "matrix": [
+    [
+      1.0215724503804302,
+      -0.28097268042887424,
+      0.25940023004844404
+    ],
+    [
+      -0.29392374457839743,
+      1.6703412070038732,
+      -0.3764174624254757
+    ],
+    [
+      -0.5666961091961296,
+      0.5580898363189823,
+      1.0086062728771472
+    ]
+  ],
+  "offset": [
+    0,
+    0,
+    0
+  ],
+  "derivation": "optimise_srgb.py \u2014 fitted and scored with the matrix applied to GAMMA-ENCODED sRGB, which is what MagSetFullscreenColorEffect actually does",
+  "held_out": {
+    "collapsed": 26,
+    "rescued": 26,
+    "broken": 8,
+    "net": 18,
+    "fidelity": 10.084339153227209
+  }
+}

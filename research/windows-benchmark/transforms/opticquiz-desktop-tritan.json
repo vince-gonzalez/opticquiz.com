@@ -1,0 +1,34 @@
+{
+  "name": "opticquiz desktop (tritan)",
+  "space": "srgb",
+  "matrix": [
+    [
+      0.8516602075343448,
+      0.48172117651812724,
+      -0.33338138405247203
+    ],
+    [
+      -0.047841197750120135,
+      1.0061165399752885,
+      0.041724657774831586
+    ],
+    [
+      -0.07191111292705668,
+      0.21636667016783648,
+      0.8555444427592201
+    ]
+  ],
+  "offset": [
+    0,
+    0,
+    0
+  ],
+  "derivation": "optimise_srgb.py \u2014 fitted and scored with the matrix applied to GAMMA-ENCODED sRGB, which is what MagSetFullscreenColorEffect actually does",
+  "held_out": {
+    "collapsed": 13,
+    "rescued": 4,
+    "broken": 0,
+    "net": 4,
+    "fidelity": 4.467782512852207
+  }
+}

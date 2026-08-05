@@ -65,7 +65,10 @@ def main():
         want = SHIPPING["linear_surfaces"][t]["transform"]
         ref = np.array(json.load(open(f"transforms/{want}.json"))["matrix"])
         ref_label = want
-        want_desktop = SHIPPING["desktop_app"]["transform"].replace("{type}", t)
+        # The desktop app is now per-type: it applies in gamma-encoded sRGB, so deutan and
+        # tritan use matrices derived for THAT space while protan stays on the original.
+        _dt = SHIPPING["desktop_app"]["transform"]
+        want_desktop = _dt[t] if isinstance(_dt, dict) else _dt.replace("{type}", t)
         ref_desktop = np.array(json.load(open(f"transforms/{want_desktop}.json"))["matrix"])
 
         print(f"\n{t.upper()}   reference: {ref_label}")
