@@ -1,0 +1,71 @@
+# Build and deploy opticquiz.com to GitHub Pages.
+#
+# This replaces the legacy "deploy from a branch" builder, which GitHub generates and we
+# therefore cannot configure. On 2026-08-06 it wedged: a run sat Queued for seven hours holding
+# the github-pages concurrency slot, every run behind it either queued forever or timed out
+# after thirty minutes waiting for a deployment that could never start, and the Pages API
+# reported status "errored". There was no file to fix because there was no file.
+#
+# Owning the workflow also means the checks written today actually run. Until now typefloor.py
+# and confusion_axis.py only ran when someone remembered to type the command, which is not a
+# gate - it is a suggestion. They now block the deploy.
+
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # so a stuck deploy can be retried without an empty commit
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never cancel a deploy in flight - that is what produced the wedged state. Queue instead.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Minimum readable type size. Catches plain declarations, clamp() minimums, canvas
+      # font strings and the `font:` shorthand - four places it hides from a grep.
+      - name: Type floor
+        run: python tools/typefloor.py
+
+      # Every colour stimulus must lie on the confusion axis it claims to test, and every test
+      # that names a deficiency must name the one it actually collapses for. This check found
+      # the /color/ tritan plates scoring backwards and four mislabelled pairs in /hue/.
+      - name: Stimulus axis claims
+        run: python tools/confusion_axis.py
+
+  build:
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20      # legacy had no configurable timeout; this one is ours
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
