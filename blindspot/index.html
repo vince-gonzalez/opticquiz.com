@@ -44,6 +44,11 @@
 .seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
 .seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
 .seo a{color:#9E2A0D;}
+.card-box{background:#fff;border:2px dashed var(--red);border-radius:6px;height:110px;margin:14px auto;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:8px;}
+.slider-row{display:flex;align-items:center;gap:12px;margin:14px 0;}
+.slider-row input[type=range]{flex:1;height:34px;accent-color:var(--red-text);}
+.slider-cap{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;}
+.cal-note{font-family:var(--fm);font-size:13px;color:var(--gray);text-align:center;letter-spacing:.04em;margin-bottom:10px;}
 </style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
@@ -160,6 +165,17 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
       </div>
     </div>
     <div class="field">
+      <label for="cal-slider">Screen calibration — hold any bank card flat against the screen</label>
+      <div class="card-box" id="card-box" style="width:320px">MATCH THIS BOX<br>TO YOUR CARD'S WIDTH</div>
+      <div class="slider-row">
+        <span class="slider-cap">Smaller</span>
+        <input type="range" id="cal-slider" min="150" max="520" step="1" value="320" aria-label="Adjust box width to match your card" oninput="onCal(this.value)">
+        <span class="slider-cap">Larger</span>
+      </div>
+      <div class="cal-note" id="cal-note">Not calibrated — assuming a 96 dpi desktop screen</div>
+      <div class="sub">Every card on Earth is 85.6 mm wide. Without this the result is only correct on an unscaled desktop monitor — on a phone it overstates by more than half.</div>
+    </div>
+    <div class="field">
       <label for="dist-input">How far are you from the screen? (cm)</label>
       <input type="number" id="dist-input" value="50" min="20" max="120" inputmode="numeric">
       <div class="sub">A comfortable arm's length is about 50 cm. This sets the angle math — a rough guess is fine.</div>
@@ -225,6 +241,33 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
 //   left eye  -> cross on right, dot sweeps leftward  (temporal = left)
 var SWEEP_MS = 9000;           // one pass duration
 var CSS_PX_PER_CM = 37.8;      // ~96 CSS px/inch; disclosed approximation
+
+/* SCREEN SCALE MUST BE MEASURED, NOT ASSUMED.
+ *
+ * This page reports an ANGLE, which requires knowing how big a pixel physically is. It used a
+ * hardcoded 37.8 CSS px/cm, i.e. the assumption that one CSS pixel is 1/96 inch. That holds on
+ * an unscaled desktop monitor and almost nowhere else:
+ *
+ *     Windows @150% scaling   ~25.2 px/cm   result reported ~33% WORSE than reality
+ *     iPhone 15               ~60.4 px/cm   result reported ~60% BETTER than reality
+ *     Pixel 8                 ~64.8 px/cm   result reported ~71% BETTER than reality
+ *
+ * /acuity/ already solves this with a credit-card ruler and the shared OQ.Calib module. This
+ * page now uses the same one. Uncalibrated it falls back to 37.8 and says so, rather than
+ * printing an angle as if it were measured.
+ */
+var CAL = { pxPerCm: CSS_PX_PER_CM, calibrated: false };
+
+function onCal(v){
+  var px = parseInt(v, 10);
+  var box = document.getElementById("card-box");
+  if (box) box.style.width = px + "px";
+  var pxPerMm = (window.OQ && OQ.Calib) ? OQ.Calib.pxPerMm(px) : px / 85.6;
+  CAL.pxPerCm = pxPerMm * 10;
+  CAL.calibrated = true;
+  var n = document.getElementById("cal-note");
+  if (n) n.textContent = "Box " + px + " px = 85.6 mm → " + CAL.pxPerCm.toFixed(1) + " px/cm";
+}
 
 // ── STATE ──
 var STATE = { eye:"right", distCm:50, pass:0, edges:[], sweepStart:0, rafId:null,
@@ -325,7 +368,7 @@ function finish(){
 // ── RESULTS ──
 function pxToDeg(px){
   // angle subtended by px at viewing distance; disclosed approximation
-  var cm = px / CSS_PX_PER_CM;
+  var cm = px / CAL.pxPerCm;
   return Math.atan2(cm, STATE.distCm) * 180/Math.PI;
 }
 
@@ -381,5 +424,6 @@ function announce(msg){
 }
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-calib.js"></script>
 </body>
 </html>

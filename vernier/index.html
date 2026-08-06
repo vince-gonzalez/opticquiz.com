@@ -104,6 +104,11 @@ p{font-size:15px;color:var(--gray);line-height:1.7;}
 footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
 .backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
 @media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
+.card-box{background:#fff;border:2px dashed var(--red);border-radius:6px;height:110px;margin:14px auto;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:8px;}
+.slider-row{display:flex;align-items:center;gap:12px;margin:14px 0;}
+.slider-row input[type=range]{flex:1;height:34px;accent-color:var(--red-text);}
+.slider-cap{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;}
+.cal-note{font-family:var(--fm);font-size:13px;color:var(--gray);text-align:center;letter-spacing:.04em;margin-bottom:10px;}
 </style>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is vernier acuity?", "acceptedAnswer": {"@type": "Answer", "text": "The ability to detect a small misalignment between line segments. It's called a hyperacuity because people resolve offsets far finer than the spacing of the cones sampling the image."}}, {"@type": "Question", "name": "How is it different from 20/20 acuity?", "acceptedAnswer": {"@type": "Answer", "text": "Letter acuity measures the smallest detail you can resolve; vernier measures the smallest offset you can detect — typically many times finer."}}, {"@type": "Question", "name": "Are the arc-second numbers exact?", "acceptedAnswer": {"@type": "Answer", "text": "The pixel threshold is measured directly, but the arc-second conversion depends on the distance you entered and an assumed pixel size, so treat it as an estimate."}}, {"@type": "Question", "name": "How can I detect an offset smaller than one pixel?", "acceptedAnswer": {"@type": "Answer", "text": "Anti-aliasing renders lines at sub-pixel positions, and your visual system averages across many receptors, letting you resolve alignment below the physical pixel spacing."}}]}
@@ -152,6 +157,17 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
       <div class="instr-item"><div class="instr-n">1</div><div><div class="instr-t">Left or right?</div><div class="instr-s">Say which way the bottom line is shifted. Guess if you truly can't tell.</div></div></div>
       <div class="instr-item"><div class="instr-n">2</div><div><div class="instr-t">It gets harder as you nail it</div><div class="instr-s">Two right in a row shrinks the offset; one miss widens it. This homes in on your threshold.</div></div></div>
       <div class="instr-item"><div class="instr-n">3</div><div><div class="instr-t">~24 trials</div><div class="instr-s">The offset where you're right about 71% of the time is your acuity.</div></div></div>
+    </div>
+    <div class="field">
+      <label for="cal-slider">Screen calibration — hold any bank card flat against the screen</label>
+      <div class="card-box" id="card-box" style="width:320px">MATCH THIS BOX<br>TO YOUR CARD'S WIDTH</div>
+      <div class="slider-row">
+        <span class="slider-cap">Smaller</span>
+        <input type="range" id="cal-slider" min="150" max="520" step="1" value="320" aria-label="Adjust box width to match your card" oninput="onCal(this.value)">
+        <span class="slider-cap">Larger</span>
+      </div>
+      <div class="cal-note" id="cal-note">Not calibrated — assuming a 96 dpi desktop screen</div>
+      <div class="sub">Every card on Earth is 85.6 mm wide. Without this the result is only correct on an unscaled desktop monitor — on a phone it overstates by more than half.</div>
     </div>
     <div class="field">
       <label for="dist-input">Viewing distance from screen (cm)</label>
@@ -220,6 +236,33 @@ var START_OFFSET = 8.0;   // px, easy
 var MIN_OFFSET = 0.25;    // px floor (sub-pixel via anti-aliasing)
 var STEP_FACTOR = 0.8;    // geometric staircase step
 var CSS_PX_PER_CM = 37.8; // ~96 CSS px/inch; disclosed approximation
+
+/* SCREEN SCALE MUST BE MEASURED, NOT ASSUMED.
+ *
+ * This page reports an ANGLE, which requires knowing how big a pixel physically is. It used a
+ * hardcoded 37.8 CSS px/cm, i.e. the assumption that one CSS pixel is 1/96 inch. That holds on
+ * an unscaled desktop monitor and almost nowhere else:
+ *
+ *     Windows @150% scaling   ~25.2 px/cm   result reported ~33% WORSE than reality
+ *     iPhone 15               ~60.4 px/cm   result reported ~60% BETTER than reality
+ *     Pixel 8                 ~64.8 px/cm   result reported ~71% BETTER than reality
+ *
+ * /acuity/ already solves this with a credit-card ruler and the shared OQ.Calib module. This
+ * page now uses the same one. Uncalibrated it falls back to 37.8 and says so, rather than
+ * printing an angle as if it were measured.
+ */
+var CAL = { pxPerCm: CSS_PX_PER_CM, calibrated: false };
+
+function onCal(v){
+  var px = parseInt(v, 10);
+  var box = document.getElementById("card-box");
+  if (box) box.style.width = px + "px";
+  var pxPerMm = (window.OQ && OQ.Calib) ? OQ.Calib.pxPerMm(px) : px / 85.6;
+  CAL.pxPerCm = pxPerMm * 10;
+  CAL.calibrated = true;
+  var n = document.getElementById("cal-note");
+  if (n) n.textContent = "Box " + px + " px = 85.6 mm → " + CAL.pxPerCm.toFixed(1) + " px/cm";
+}
 
 // ── STATE ──
 var STATE = { distCm:50, trial:0, offset:START_OFFSET, dir:1, lastCorrect:false,
@@ -308,7 +351,7 @@ function finish(){
 
 // ── RESULTS ──
 function pxToArcsec(px){
-  var cm=px/CSS_PX_PER_CM;
+  var cm=px/CAL.pxPerCm;
   var deg=Math.atan2(cm, STATE.distCm)*180/Math.PI;
   return deg*3600;
 }
@@ -366,5 +409,6 @@ function announce(msg){
 }
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-calib.js"></script>
 </body>
 </html>
