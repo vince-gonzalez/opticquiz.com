@@ -231,8 +231,24 @@ function beginTrial(){
   var delay = MIN_WAIT + Math.random()*(MAX_WAIT-MIN_WAIT);
   STATE.waitTimer = setTimeout(function(){
     STATE.phase="hot";
-    STATE.hotStart = performance.now();
+    /* Start the clock AFTER the pixel changes, not before.
+     *
+     * This previously took performance.now() and then called setArena(), so the timer began
+     * before the DOM was even mutated - and a DOM change is not visible until the next frame
+     * is composited. That charged the person for up to a full frame they could not yet see:
+     * about 8 ms on average at 60 Hz, up to 16.7, on a measurement where 20 ms moves you
+     * between bands.
+     *
+     * Two nested rAFs: the first fires before the frame containing the change, the second
+     * after it has been submitted. hotStart stays 0 until then, and a tap arriving while it
+     * is still 0 is an anticipation - the person moved before the stimulus existed - which is
+     * now caught rather than recorded as a superhumanly fast trial.
+     */
+    STATE.hotStart = 0;
     setArena("hot","TAP!","");
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(t){ if(STATE.phase==="hot") STATE.hotStart = t; });
+    });
     announce("Tap now");
   }, delay);
 }
@@ -251,6 +267,12 @@ function onTap(){
     }
     if(STATE.phase==="false"){ beginTrial(); return; }
     if(STATE.phase==="hot"){
+      if(!STATE.hotStart){          // tapped before the frame carrying the stimulus landed
+        STATE.phase="idle";
+        setArena("idle","TOO EARLY","You moved before the signal appeared — tap to retry this trial");
+        announce("Too early");
+        return;
+      }
       var rt = Math.round(performance.now() - STATE.hotStart);
       STATE.times.push(rt);
       STATE.trial++;
@@ -294,7 +316,7 @@ function renderResults(){
   var maxT=Math.max.apply(null,times);
 
   var band = avg<220?"lightning-fast":avg<280?"quick":avg<350?"about average":avg<450?"a little relaxed":"unhurried";
-  var context = "Typical simple visual reaction time on a screen is about 250–350 ms. Under ~200 ms usually means you anticipated the flash; a lab button with no display lag runs 20–50 ms faster than any browser can measure.";
+  var context = "Typical simple visual reaction time on a screen is about 250–350 ms. The clock here starts on the frame that actually paints the signal rather than when the code requests it, which removes roughly 8 ms of frame delay that used to be charged to you — but your display’s own response time and the browser’s input handling still sit inside the number, and neither can be measured from a web page. A lab button rig runs 20–50 ms faster than any browser can. The average shown drops your slowest trial of five.";
 
   var h='<div class="big-stat"><div class="big-stat-val">'+avg+'</div><div class="big-stat-lbl">Average ms — '+band+'</div></div>';
   h+='<div class="mini-row"><div class="mini"><div class="mini-val">'+best+'</div><div class="mini-lbl">Best ms</div></div>'+
