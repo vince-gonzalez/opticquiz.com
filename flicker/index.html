@@ -212,40 +212,6 @@ var ROUNDS = 3;
 // ── STATE ──
 var STATE = { refreshHz:60, capHz:30, round:0, locks:[], hz:6, ladder:[], step:0, on:false, lastFlip:0, rafId:null };
 
-// ── REFRESH PROBE ──
-function probeRefresh(cb){
-  // Measures display refresh via rAF deltas, then derives the flicker cap (half refresh).
-  try{
-    var samples=[], last=null, count=0;
-    function step(t){
-      if(last!==null){ samples.push(t-last); }
-      last=t; count++;
-      if(count<40){ requestAnimationFrame(step); }
-      else{
-        samples.sort(function(a,b){return a-b;});
-        var med=samples[Math.floor(samples.length/2)] || 16.7;
-        var hz=Math.round(1000/med);
-        // clamp to plausible panel rates
-        if(hz<50)hz=60; if(hz>250)hz=240;
-        STATE.refreshHz=hz;
-        STATE.capHz=Math.floor(hz/2);
-        cb();
-      }
-    }
-    requestAnimationFrame(step);
-  }catch(err){ console.error("probeRefresh:",err); STATE.refreshHz=60; STATE.capHz=30; cb(); }
-}
-
-// ── ENGINE ──
-function startTest(){
-  // WRITES: STATE (reset)
-  STATE.round=0; STATE.locks=[];
-  showScreen("screen-test");
-  renderDots();
-  beginRound();
-  startFlickerLoop();
-}
-
 /* ACHIEVABLE FREQUENCIES.
  *
  * The flicker is driven by requestAnimationFrame, so a state change can only happen on a
@@ -273,6 +239,61 @@ function buildLadder(){
   return out.reverse();                       // ascending
 }
 
+// ── REFRESH PROBE ──
+function probeRefresh(cb){
+  // Measures display refresh via rAF deltas, then derives the flicker cap (half refresh).
+  //
+  // requestAnimationFrame does not fire in a hidden or backgrounded tab, so without a deadline
+  // this callback can simply never run: no ladder, no ceiling text, a test screen that does
+  // nothing. Anyone who opens this in a background tab and comes back to it hits that. Fall
+  // back to 60 Hz after a second and a half and carry on.
+  var done=false;
+  function finish(){
+    if(done) return;
+    done=true;
+    if(!STATE.ladder || !STATE.ladder.length){ STATE.ladder=buildLadder(); STATE.hz=STATE.ladder[0]; }
+    cb();
+  }
+  setTimeout(function(){
+    if(done) return;
+    STATE.refreshHz=60; STATE.capHz=30;
+    STATE.ladder=buildLadder(); STATE.hz=STATE.ladder[0];
+    finish();
+  }, 1500);
+  try{
+    var samples=[], last=null, count=0;
+    function step(t){
+      if(last!==null){ samples.push(t-last); }
+      last=t; count++;
+      if(count<40){ requestAnimationFrame(step); }
+      else{
+        samples.sort(function(a,b){return a-b;});
+        var med=samples[Math.floor(samples.length/2)] || 16.7;
+        var hz=Math.round(1000/med);
+        // clamp to plausible panel rates
+        if(hz<50)hz=60; if(hz>250)hz=240;
+        STATE.refreshHz=hz;
+        STATE.capHz=Math.floor(hz/2);
+        STATE.ladder=buildLadder();
+        STATE.hz=STATE.ladder[0];
+        finish();
+      }
+    }
+    requestAnimationFrame(step);
+  }catch(err){ console.error("probeRefresh:",err); STATE.refreshHz=60; STATE.capHz=30;
+    STATE.ladder=buildLadder(); STATE.hz=STATE.ladder[0]; finish(); }
+}
+
+// ── ENGINE ──
+function startTest(){
+  // WRITES: STATE (reset)
+  STATE.round=0; STATE.locks=[];
+  showScreen("screen-test");
+  renderDots();
+  beginRound();
+  startFlickerLoop();
+}
+
 function beginRound(){
   // READS: STATE.round  WRITES: STATE.hz, slider
   STATE.ladder = buildLadder();
@@ -288,13 +309,15 @@ function beginRound(){
 
 function onSlider(v){
   // WRITES: STATE.hz  - v is an INDEX into the achievable ladder, not a frequency
+  if(!STATE.ladder || !STATE.ladder.length) STATE.ladder = buildLadder();
   STATE.step = Math.max(0, Math.min(STATE.ladder.length-1, parseInt(v,10)||0));
   STATE.hz = STATE.ladder[STATE.step];
   updateHzLabel();
 }
 
 function updateHzLabel(){
-  document.getElementById("flick-hz").textContent = STATE.hz.toFixed(1)+" Hz";
+  var hz = (typeof STATE.hz === "number" && isFinite(STATE.hz)) ? STATE.hz : 0;
+  document.getElementById("flick-hz").textContent = hz.toFixed(1)+" Hz";
 }
 
 function startFlickerLoop(){
