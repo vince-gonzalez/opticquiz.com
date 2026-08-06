@@ -210,7 +210,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
 var ROUNDS = 3;
 
 // ── STATE ──
-var STATE = { refreshHz:60, capHz:30, round:0, locks:[], hz:6, on:false, lastFlip:0, rafId:null };
+var STATE = { refreshHz:60, capHz:30, round:0, locks:[], hz:6, ladder:[], step:0, on:false, lastFlip:0, rafId:null };
 
 // ── REFRESH PROBE ──
 function probeRefresh(cb){
@@ -246,11 +246,40 @@ function startTest(){
   startFlickerLoop();
 }
 
+/* ACHIEVABLE FREQUENCIES.
+ *
+ * The flicker is driven by requestAnimationFrame, so a state change can only happen on a
+ * frame boundary. A half-cycle therefore lasts a WHOLE NUMBER of frames, and the only
+ * frequencies a display can actually produce are refresh / (2n).
+ *
+ * The old loop compared elapsed time against 500/hz inside that frame callback, which
+ * silently rounded every request down to the next achievable value. On a 60 Hz display every
+ * setting from 16 to 28 Hz rendered as 15.0 Hz - an error of up to 13 Hz - while the page
+ * recorded whatever number the slider said. That range is exactly the band this test called
+ * "typical", so the most common result was the least trustworthy one.
+ *
+ * The slider now indexes this list, the loop counts frames, and the number shown and locked
+ * is the frequency actually on screen. On 60 Hz that means 30, 15, 10, 7.5, 6, 5 and nothing
+ * in between - which is coarse, and is the truth about what the hardware can do.
+ */
+function buildLadder(){
+  var out=[], n=1;
+  while(true){
+    var f = STATE.refreshHz/(2*n);
+    if(f < 3) break;
+    out.push(Math.round(f*10)/10);
+    n++;
+  }
+  return out.reverse();                       // ascending
+}
+
 function beginRound(){
   // READS: STATE.round  WRITES: STATE.hz, slider
-  STATE.hz = 6;
+  STATE.ladder = buildLadder();
+  STATE.step = 0;
+  STATE.hz = STATE.ladder[0];
   var s=document.getElementById("hz-slider");
-  s.max = STATE.capHz; s.value = 6;
+  s.min = 0; s.max = STATE.ladder.length-1; s.step = 1; s.value = 0;
   document.getElementById("round-hint").textContent =
     "Round "+(STATE.round+1)+" of "+ROUNDS+" — raise the speed until the dot stops flickering.";
   updateHzLabel();
@@ -258,8 +287,9 @@ function beginRound(){
 }
 
 function onSlider(v){
-  // WRITES: STATE.hz
-  STATE.hz = parseFloat(v);
+  // WRITES: STATE.hz  - v is an INDEX into the achievable ladder, not a frequency
+  STATE.step = Math.max(0, Math.min(STATE.ladder.length-1, parseInt(v,10)||0));
+  STATE.hz = STATE.ladder[STATE.step];
   updateHzLabel();
 }
 
@@ -272,12 +302,15 @@ function startFlickerLoop(){
   STATE.lastFlip = performance.now();
   STATE.on = false;
   var box=document.getElementById("flick-box");
-  function loop(t){
-    var halfPeriod = 500/STATE.hz; // ms for half a cycle
-    if(t - STATE.lastFlip >= halfPeriod){
+  var frames = 0;
+  function loop(){
+    // Whole frames per half-cycle. STATE.hz always comes off the ladder, so this divides
+    // exactly and the frequency on screen is the frequency reported.
+    var perHalf = Math.max(1, Math.round(STATE.refreshHz/(2*STATE.hz)));
+    if(++frames >= perHalf){
+      frames = 0;
       STATE.on = !STATE.on;
       box.style.background = STATE.on ? "#FFFFFF" : "#000000";
-      STATE.lastFlip = t;
     }
     STATE.rafId = requestAnimationFrame(loop);
   }

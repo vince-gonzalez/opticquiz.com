@@ -304,24 +304,42 @@ function renderResults(){
   var range=maxM-minM;
   var delta=mean-NORMAL_CENTER;
 
-  var lean, leanTxt;
-  if(delta>9){ lean="protan"; leanTxt="a protan (red-weak) lean — you needed noticeably more red than a balanced match"; }
-  else if(delta<-9){ lean="deutan"; leanTxt="a deutan (green-weak) lean — you needed noticeably more green than a balanced match"; }
-  else { lean="balanced"; leanTxt="a balanced match, near where typical red-green vision settles"; }
+  /* WHICH NUMBER IS THE RESULT.
+   *
+   * This page used to headline the match POSITION - "leans protan", "leans deutan" - because
+   * on a real Rayleigh anomaloscope an anomalous trichromat genuinely does shift their match
+   * toward more red or more green. That is established and it is not in dispute.
+   *
+   * It does not reproduce here. Simulating this exact stimulus with our own engine, the match
+   * centre stays at 50 for protan AND deutan at every severity from 0.3 to 1.0. The instrument
+   * uses broadband sRGB primaries, not the monochromatic lights the clinical effect depends on,
+   * and the shift does not survive the substitution.
+   *
+   * What does survive is the WIDTH of the accepted match. Simulated dE2000 <= 2 across mix
+   * settings: normal 49-51, protan 0.5 -> 48-52, protan 0.7 -> 46-54, dichromat -> 0-100. A
+   * dichromat accepts the entire range, which is exactly the classic anomaloscope finding.
+   *
+   * Three rounds with randomised starts sample that width crudely, through the spread of where
+   * the person lands. So the spread is the headline now and the lean is reported as a
+   * curiosity, which is the opposite of how this page read before.
+   */
+  var band, headline, bandTxt;
+  if(range<=10){ band="tight"; headline="Consistent match";
+    bandTxt="Your three matches landed within "+range+" points of each other. A narrow matching range is what typical red-green vision produces on this stimulus."; }
+  else if(range<=28){ band="mid"; headline="Somewhat variable match";
+    bandTxt="Your three matches spanned "+range+" points. That is wider than a typical match but well short of the whole scale, and on an uncalibrated screen it can just as easily mean the judgement was hard."; }
+  else { band="wide"; headline="Wide matching range";
+    bandTxt="Your three matches spanned "+range+" points of the scale. On a real anomaloscope, accepting a broad span of red-green mixtures as the same yellow is the classic sign of a red-green deficiency. On a screen it can also mean the match was simply hard to judge, so treat it as a reason to get a proper test rather than as a finding."; }
 
-  var wide = range>28;
-  var rangeTxt = wide ? "Your three matches wandered a lot (range "+range+" points), which on a real anomaloscope hints at a broad matching range — but on an uncalibrated screen it just as easily means the match was hard to judge. Retake in steady lighting before reading anything into it."
-                      : "Your three matches were fairly consistent (range "+range+" points), which is what a stable color match looks like.";
+  var leanTxt = Math.abs(delta)<9 ? "sat near the middle of the scale"
+              : (delta>0 ? "sat toward the red end" : "sat toward the green end");
 
-  var headline = lean==="balanced" ? "Balanced red-green match" : (lean==="protan"?"Leans protan (red-weak)":"Leans deutan (green-weak)");
-
-  var markPct = Math.max(0,Math.min(100,mean));
   var h='<div class="big-stat"><div class="big-stat-val">'+headline+'</div><div class="big-stat-lbl">screen anomaloscope — approximate</div></div>';
-  h+='<div class="scale"><div class="scale-mark" style="left:'+markPct+'%"></div></div>';
-  h+='<div class="scale-lbls"><span>More green (deutan)</span><span>Balanced</span><span>More red (protan)</span></div>';
-  h+='<div class="mini-row"><div class="mini"><div class="mini-val">'+Math.round(mean)+'</div><div class="mini-lbl">Match point (50 = balanced)</div></div>'+
-     '<div class="mini"><div class="mini-val">'+range+'</div><div class="mini-lbl">Match range (spread)</div></div></div>';
-  h+='<div class="interp-card"><div class="interp-text">Averaged over three rounds, your red-green match showed <strong>'+leanTxt+'</strong>. '+rangeTxt+' Remember this is a broadband-screen approximation of a single-wavelength instrument — a clean or leaning result here is a curiosity, not a diagnosis.</div></div>';
+  h+='<div class="mini-row"><div class="mini"><div class="mini-val">'+range+'</div><div class="mini-lbl">Match range (spread) — the informative one</div></div>'+
+     '<div class="mini"><div class="mini-val">'+Math.round(mean)+'</div><div class="mini-lbl">Average match point (50 = balanced)</div></div></div>';
+  h+='<div class="interp-card"><div class="interp-text">'+bandTxt+'</div></div>';
+  h+='<div class="interp-card"><div class="interp-text">Your average match point '+leanTxt+
+     '. <strong>We do not read anything into that.</strong> A clinical anomaloscope mixes two single wavelengths, and there an anomalous match really does shift toward red or green. This one mixes your screen’s red and green primaries, which are broad bands of light — and simulating this exact stimulus with our own colour-vision engine puts the match centre at 50 for protan and deutan alike, at every severity. The shift does not survive the substitution, so the number is shown for interest and not scored.</div></div>';
   document.getElementById("result-detail").innerHTML=h;
 }
 
@@ -331,8 +349,8 @@ function shareResults(){
   try{
     var mixes=STATE.matches.map(function(m){return m.mix;});
     var mean=Math.round(mixes.reduce(function(s,x){return s+x;},0)/mixes.length);
-    var lean=mean>59?"leans red-weak":mean<41?"leans green-weak":"balanced";
-    var text="My OpticQuiz anomaloscope red-green match — "+lean+" ("+mean+"/100). Try it: opticquiz.com/anomal/";
+    var mn=Math.min.apply(null,mixes), mx=Math.max.apply(null,mixes);
+    var text="My OpticQuiz screen-anomaloscope match range — "+(mx-mn)+" points across three rounds. Try it: opticquiz.com/anomal/";
     if(navigator.share){ navigator.share({title:"OpticQuiz Anomaloscope",text:text,url:"https://opticquiz.com/anomal/"}); }
     else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){announce("Copied");}); }
     else { prompt("Copy your result:",text); }
