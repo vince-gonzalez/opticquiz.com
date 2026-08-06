@@ -537,8 +537,12 @@ var SPOKE_NAMES = ["Horizontal (0°)", "15°", "30°", "Diagonal (45°)", "60°"
 
 // Clinical axis groupings for interpretation
 // DECISION: group adjacent spokes into clinical axis bands (standard axes are 0/90/45/135)
+/* Grouped by DEGREES. The lookup below must convert the tapped spoke index through
+ * SPOKE_ANGLES first - comparing an index against these values matches only the number 0.
+ * 15 belongs with horizontal; it was in no group at all, so tapping it counted toward nothing.
+ */
 var AXIS_GROUPS = {
-  horizontal: [0, 165],        // ~0° / 180° axis (with-the-rule astigmatism common)
+  horizontal: [0, 15, 165],    // ~0° / 180° axis (with-the-rule astigmatism common)
   vertical:   [90, 75, 105],   // ~90° axis (against-the-rule)
   oblique45:  [45, 30, 60],    // ~45° oblique
   oblique135: [135, 120, 150]  // ~135° oblique
@@ -718,11 +722,17 @@ function analyzeResult(spokes, q2, eye) {
   }
 
   // Map selected spokes to axis groups
+  /* spokes holds INDICES 0-11 from toggleSpoke(i); AXIS_GROUPS holds DEGREES. Matching an
+   * index directly against degrees could only ever hit the literal 0, so every selection that
+   * did not include the horizontal line scored zero in every group, maxG came out null, and
+   * the label fell through to "Possible oblique axis" no matter what the person tapped. The
+   * reported axis was fabricated for eleven of the twelve lines.
+   */
   var groupCounts = { horizontal: 0, vertical: 0, oblique45: 0, oblique135: 0 };
   for (var si = 0; si < spokes.length; si++) {
-    var idx = spokes[si];
+    var deg = SPOKE_ANGLES[spokes[si]];
     for (var g in AXIS_GROUPS) {
-      if (AXIS_GROUPS[g].indexOf(idx) !== -1) groupCounts[g]++;
+      if (AXIS_GROUPS[g].indexOf(deg) !== -1) groupCounts[g]++;
     }
   }
 
@@ -742,7 +752,11 @@ function analyzeResult(spokes, q2, eye) {
   var isSingleAxis = maxCount >= 1 && spokes.length <= 3;
   var isComplex = spokes.length > 4;
 
-  var label = isComplex ? "Complex or irregular blur" : "Possible " + (maxG === "horizontal" ? "horizontal" : maxG === "vertical" ? "vertical" : "oblique") + " axis";
+  // maxG null means nothing classified - say so rather than defaulting to "oblique", which
+  // is how a broken lookup produced a confident wrong answer instead of an obvious blank.
+  var label = isComplex ? "Complex or irregular blur"
+            : maxG === null ? "Blur reported, axis unclear"
+            : "Possible " + (maxG === "horizontal" ? "horizontal" : maxG === "vertical" ? "vertical" : "oblique") + " axis";
   var axisLabel = maxG ? axisLabels[maxG] : "Multiple axes";
 
   var noteText = "";
