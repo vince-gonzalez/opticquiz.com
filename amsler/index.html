@@ -337,6 +337,11 @@ footer { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spa
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+.card-box{background:#fff;border:2px dashed var(--red);border-radius:6px;height:110px;margin:14px auto;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:8px;}
+.slider-row{display:flex;align-items:center;gap:12px;margin:14px 0;}
+.slider-row input[type=range]{flex:1;height:34px;accent-color:var(--red-text);}
+.slider-cap{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;}
+.cal-note{font-family:var(--fm);font-size:13px;color:var(--gray);text-align:center;letter-spacing:.04em;margin-bottom:10px;}
 </style>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What does the Amsler grid test for?", "acceptedAnswer": {"@type": "Answer", "text": "Distortions or gaps in your central vision — wavy, blurry, dim, or missing lines — that can accompany macular problems such as age-related macular degeneration."}}, {"@type": "Question", "name": "How do I use the Amsler grid correctly?", "acceptedAnswer": {"@type": "Answer", "text": "Wear reading glasses, hold the grid at comfortable reading distance, cover one eye, and fixate the center dot while noticing whether the surrounding lines look straight and complete."}}, {"@type": "Question", "name": "What do wavy or missing lines mean?", "acceptedAnswer": {"@type": "Answer", "text": "They can indicate a macular change (metamorphopsia). It isn't a diagnosis, but new distortion should be checked by an eye-care professional promptly."}}, {"@type": "Question", "name": "Can the Amsler grid replace a retina exam?", "acceptedAnswer": {"@type": "Answer", "text": "No. It's a monitoring screen you can use at home between exams, not a substitute for a dilated retinal examination."}}]}
@@ -400,6 +405,22 @@ footer { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spa
     <h3>How to take the test</h3>
     <div class="instr-list" role="list">
       <div class="instr-item" role="listitem">
+        <div class="instr-num" aria-hidden="true">0</div>
+        <div style="flex:1">
+          <div class="instr-text">Calibrate the screen and your distance</div>
+          <div class="instr-sub">The grid has to subtend 20&deg; of your visual field. That needs your screen's real scale and how far away you sit — without both, the grid can cover anywhere from 7&deg; to 22&deg;.</div>
+          <div class="card-box" id="card-box" style="width:320px">MATCH THIS BOX<br>TO YOUR CARD'S WIDTH</div>
+          <div class="slider-row">
+            <span class="slider-cap">Smaller</span>
+            <input type="range" id="cal-slider" min="150" max="520" step="1" value="320" aria-label="Adjust box width to match your card" oninput="onCal(this.value)">
+            <span class="slider-cap">Larger</span>
+          </div>
+          <div class="cal-note" id="cal-note">Not calibrated — assuming a 96 dpi desktop screen</div>
+          <label for="dist-input" style="font-size:14px">Viewing distance (cm)</label>
+          <input type="number" id="dist-input" value="35" min="20" max="100" inputmode="numeric" oninput="onDist(this.value)" style="width:100%;padding:10px;margin-top:4px">
+        </div>
+      </div>
+      <div class="instr-item" role="listitem">
         <div class="instr-num" aria-hidden="true">1</div>
         <div>
           <div class="instr-text">If you wear reading glasses or progressive lenses, keep them on</div>
@@ -453,7 +474,8 @@ footer { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spa
       </div>
     </div>
 
-    <div class="grid-area">
+    <div class="cal-note" id="field-note"></div>
+<div class="grid-area">
       <div class="grid-container" id="grid-container" role="img" aria-label="Amsler grid — stare at the center red dot">
         <!-- SVG injected by renderGrid() -->
       </div>
@@ -593,7 +615,7 @@ var STATE = {
   taps: { right: [], left: [] },
   results: { right: null, left: null },
   activeTab: "right",
-  gridSize: 300
+  gridSize: 300, distCm: 35, fieldDeg: 0
 };
 
 // ── 3. ENGINE ─────────────────────────────────────────────
@@ -699,12 +721,69 @@ function retakeTest() {
   showScreen("screen-intro");
 }
 
+
+/* Screen scale and distance, measured. The grid is an ANGLE and cannot be drawn without both.
+ * Uncalibrated it falls back to a 96 dpi desktop assumption and says so. */
+var CAL = { pxPerCm: 37.8, calibrated: false };
+
+function onCal(v){
+  var px = parseInt(v, 10);
+  var box = document.getElementById("card-box");
+  if (box) box.style.width = px + "px";
+  var pxPerMm = (window.OQ && OQ.Calib) ? OQ.Calib.pxPerMm(px) : px / 85.6;
+  CAL.pxPerCm = pxPerMm * 10;
+  CAL.calibrated = true;
+  var nEl = document.getElementById("cal-note");
+  if (nEl) nEl.textContent = "Box " + px + " px = 85.6 mm → " + CAL.pxPerCm.toFixed(1) + " px/cm";
+}
+
+function onDist(v){
+  var d = parseFloat(v);
+  STATE.distCm = (isFinite(d) && d >= 20 && d <= 100) ? d : 35;
+}
+
 // ── 4. RENDER ─────────────────────────────────────────────
+
+/* The Amsler grid is defined by ANGLE, not pixels.
+ *
+ * A clinical grid is 10 cm square with twenty 5 mm cells, viewed at 30 cm: 20 degrees across,
+ * one degree per cell. That geometry is the whole instrument - it maps the central field where
+ * macular disease shows, and a cell is one degree so a distortion can be located.
+ *
+ * This drew a fixed 300 CSS pixels with ten cells, so the field it covered depended entirely
+ * on the device:
+ *
+ *     desktop 96dpi @30cm   15.1 deg     iPhone 15 @30cm    9.5 deg
+ *     Windows @150% @30cm   22.4 deg     Pixel 8   @40cm    6.6 deg
+ *
+ * A 2.3x spread, on the test people use to self-monitor age-related macular degeneration. At
+ * 6.6 degrees it covers barely a third of the field it is supposed to, which is the direction
+ * that misses a scotoma.
+ *
+ * Now sized from the measured screen scale and the stated distance, twenty cells, capped by
+ * the viewport - and when the viewport cannot hold 20 degrees the page reports the field it
+ * actually covered instead of implying the full one.
+ */
+var AMSLER_DEG = 20;      // clinical field width
+var AMSLER_CELLS = 20;    // one degree per cell
+
+function amslerTargetPx(){
+  var pxPerCm = (window.CAL && CAL.pxPerCm) ? CAL.pxPerCm : 37.8;
+  var dist = STATE.distCm || 35;
+  var cm = 2 * dist * Math.tan((AMSLER_DEG / 2) * Math.PI / 180);
+  return cm * pxPerCm;
+}
+
+function amslerFieldDeg(px){
+  var pxPerCm = (window.CAL && CAL.pxPerCm) ? CAL.pxPerCm : 37.8;
+  var dist = STATE.distCm || 35;
+  return 2 * Math.atan(((px / pxPerCm) / 2) / dist) * 180 / Math.PI;
+}
 
 function renderGrid(size) {
   // READS: size  WRITES: nothing — returns SVG string
   var s = size || 300;
-  var cells = 10;
+  var cells = AMSLER_CELLS;
   var cell = s / cells;
   var pad = 0;
   var svg = '<svg width="' + s + '" height="' + s + '" viewBox="0 0 ' + s + ' ' + s + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Amsler grid">';
@@ -736,8 +815,17 @@ function renderQ() {
   document.getElementById("prog-bar").setAttribute("aria-valuenow", pct);
   document.getElementById("prog-label").textContent = eyeLabel.toUpperCase() + " EYE — Q " + (STATE.currentQ + 1) + " / " + QUESTIONS.length;
 
-  var sz = Math.min(window.innerWidth - 56, 300);
+  // Ask for the clinical 20 degrees; take what the viewport allows and report the difference.
+  var want = amslerTargetPx();
+  var sz = Math.max(200, Math.min(window.innerWidth - 56, want));
   STATE.gridSize = sz;
+  STATE.fieldDeg = amslerFieldDeg(sz);
+  var fn = document.getElementById("field-note");
+  if (fn) {
+    fn.textContent = STATE.fieldDeg >= AMSLER_DEG - 0.5
+      ? "Covering the full clinical field: " + STATE.fieldDeg.toFixed(0) + "° across at " + (STATE.distCm||35) + " cm."
+      : "This screen can only show " + STATE.fieldDeg.toFixed(0) + "° of field at " + (STATE.distCm||35) + " cm, against the clinical 20°. Sit closer or use a larger screen to cover the rest.";
+  }
 
   var container = document.getElementById("grid-container");
   container.style.width = sz + "px";
@@ -946,5 +1034,6 @@ function shareResults() {
 }
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-calib.js"></script>
 </body>
 </html>
