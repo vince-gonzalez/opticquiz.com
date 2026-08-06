@@ -36,6 +36,8 @@ ROOT = Path(__file__).resolve().parent.parent
 # Copunctal points: where all confusion lines for a deficiency converge, in CIE 1931 xy.
 COPUNCTAL = {"protan": (0.747, 0.253), "deutan": (1.080, -0.080), "tritan": (0.171, 0.000)}
 
+SKIP_DIRS = {"node_modules", ".git", "dist", "__pycache__"}
+
 # Angle above which a plate is separating figure from ground in a direction the deficiency
 # can still see. Not a standard - a line we draw and report against.
 WARN_DEG = 25.0
@@ -89,30 +91,51 @@ def palettes_from(path):
     m = re.search(r"var PALETTES\s*=\s*\{(.*?)\n\};", src, re.S)
     if not m:
         return {}
+    # Find each palette by its NAME and then pull the fg/bg blocks that follow, rather than
+    # matching a whole-entry shape. /color/ writes one property per line and /color/kids/
+    # writes each palette on a single line; a pattern that assumed the first silently parsed
+    # ZERO palettes out of the second and this tool reported it as clean.
+    body = m.group(1)
     out = {}
-    for name, body in re.findall(r"(\w+):\s*\{\s*(fg:.*?)\n\s*\}", m.group(1), re.S):
+    # Filter to top-level palette names FIRST, then slice between consecutive ones. Deciding
+    # the boundary inside the loop let a chunk run to the end of the object, so every palette
+    # read the LAST fg/bg in the file and all of them reported identical angles.
+    names = [x for x in re.finditer(r"(\w+)\s*:\s*\{", body) if x.group(1) not in ("fg", "bg")]
+    for i, nm in enumerate(names):
+        name = nm.group(1)
+        end = names[i + 1].start() if i + 1 < len(names) else len(body)
+        chunk = body[nm.end():end]
         band = {}
-        for side, fields in re.findall(r"(fg|bg):\s*\{([^}]*)\}", body):
-            band[side] = {k: float(v) for k, v in re.findall(r"(\w+):\s*(-?[\d.]+)", fields)}
+        for side, fields in re.findall(r"(fg|bg)\s*:\s*\{([^}]*)\}", chunk):
+            band[side] = {k: float(v) for k, v in re.findall(r"(\w+)\s*:\s*(-?[\d.]+)", fields)}
         if "fg" in band and "bg" in band:
             out[name] = band
     return out
 
 
-def main():
-    page = ROOT / "color" / "index.html"
-    pals = palettes_from(page)
-    if not pals:
-        print("could not parse PALETTES out of", page); return 1
+def pages_with_palettes():
+    """EVERY page defining a PALETTES object, discovered rather than listed.
 
-    print("Stimulus alignment with the confusion axis it claims to test")
-    print("(0 = perfectly on axis, 90 = the deficiency sees it clearly)\n")
-    print("%-10s %-8s %9s   %s" % ("palette", "axis", "deviation", "verdict"))
+    This used to check only /color/. /color/kids/ keeps its own copy of the same constants,
+    so when the broken tritan palette was corrected on one page the other kept it and this
+    gate still reported all clear. A gate with a hardcoded file list has a blind spot exactly
+    the shape of whatever someone duplicated.
+    """
+    out = []
+    for path in sorted(ROOT.rglob("index.html")):
+        if SKIP_DIRS & set(path.parts):
+            continue
+        if "var PALETTES" in path.read_text(encoding="utf-8", errors="replace"):
+            out.append(path)
+    return out
+
+
+def report_palettes(pals):
     bad = 0
     for name, band in pals.items():
         fg, bg = centroid(band["fg"]), centroid(band["bg"])
         if name == "control":
-            print("%-10s %-8s %9s   %s" % (name, "-", "n/a",
+            print("  %-10s %-8s %9s   %s" % (name, "-", "n/a",
                   "lightness contrast by design, no hue axis to test"))
             continue
         kinds = ["protan", "deutan"] if name == "rg" else ["tritan"]
@@ -121,9 +144,33 @@ def main():
             ok = d <= WARN_DEG
             if not ok:
                 bad += 1
-            print("%-10s %-8s %8.1f°   %s" % (name, k, d,
+            print("  %-10s %-8s %8.1f°   %s" % (name, k, d,
                   "on axis" if ok else "OFF AXIS - this plate does not screen for " + k))
-    print()
+    return bad
+
+
+def main():
+    pages = pages_with_palettes()
+    if not pages:
+        print("no page defines PALETTES"); return 1
+
+    print("Stimulus alignment with the confusion axis it claims to test")
+    print("(0 = perfectly on axis, 90 = the deficiency sees it clearly)\n")
+    bad = 0
+    for page in pages:
+        print(str(page.relative_to(ROOT)).replace("\\", "/"))
+        pals = palettes_from(page)
+        # A page that declares PALETTES and yields none means the PARSER failed, not that the
+        # page is clean. Reporting that as a pass is how the kids page kept a broken tritan
+        # palette through a run of this very tool.
+        if not pals:
+            print("  PARSE FAILED - page declares PALETTES but none could be read")
+            bad += 1
+            print()
+            continue
+        print("  %-10s %-8s %9s   %s" % ("palette", "axis", "deviation", "verdict"))
+        bad += report_palettes(pals)
+        print()
     if bad:
         print("%d palette/axis pair(s) off axis. A plate separated across the confusion line" % bad)
         print("is readable by the people it is supposed to screen.")

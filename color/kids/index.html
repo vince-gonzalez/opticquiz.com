@@ -211,7 +211,11 @@ var SHAPE_SVG = {
 // Confusion-line palettes (same method as /color/): hue separates figure/bg, lightness randomized.
 var PALETTES = {
   rg:{ fg:{hMin:96,hMax:145,sMin:40,sMax:60,lMin:50,lMax:68}, bg:{hMin:15,hMax:44,sMin:46,sMax:68,lMin:50,lMax:68} },
-  tritan:{ fg:{hMin:205,hMax:240,sMin:45,sMax:66,lMin:56,lMax:74}, bg:{hMin:328,hMax:352,sMin:40,sMax:62,lMin:56,lMax:74} },
+  // Same correction as /color/. The previous pair separated figure from ground 52 degrees
+  // ACROSS the tritan confusion line: 35.1 dE to normal vision, 52.4 under tritan simulation,
+  // so a tritan child saw the shape MORE clearly than a child with typical colour vision.
+  // Cyan on green instead: 33.5 normal, 9.0 tritan, 37.0 deutan.
+  tritan:{ fg:{hMin:175,hMax:200,sMin:50,sMax:72,lMin:52,lMax:68}, bg:{hMin:115,hMax:135,sMin:50,sMax:72,lMin:52,lMax:68} },
   control:{ fg:{hMin:20,hMax:38,sMin:10,sMax:24,lMin:36,lMax:48}, bg:{hMin:28,hMax:46,sMin:4,sMax:12,lMin:78,lMax:88} }
 };
 
