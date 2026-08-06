@@ -248,7 +248,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
 
 <section class="seo" aria-label="About the visual acuity test">
   <h2>About this visual acuity test</h2>
-  <p>This is a real <strong>tumbling-E eye chart</strong> that runs in your browser — and unlike most online eye tests, the letters are rendered <strong>true-to-size</strong>. A 20/20 optotype is defined by physics: its critical detail subtends 5 arc-minutes of visual angle. To honor that on your screen, you first calibrate with any bank card (a globally standard 85.6 mm wide), which tells us your display's true pixels-per-millimeter. Combined with your viewing distance, every E is drawn at a genuinely correct visual angle.</p>
+  <p>This is a real <strong>tumbling-E eye chart</strong> that runs in your browser — and unlike most online eye tests, the letters are rendered <strong>true-to-size</strong>. A 20/20 optotype is defined by physics: the whole letter subtends 5 arc-minutes of visual angle, and its critical detail — the thickness of each prong and the gap between them — subtends one. That one arc-minute is what your eye is actually resolving. To honor that on your screen, you first calibrate with any bank card (a globally standard 85.6 mm wide), which tells us your display's true pixels-per-millimeter. Combined with your viewing distance, every E is drawn at a genuinely correct visual angle.</p>
   <p>You identify which way each E's prongs point, one eye at a time, down a level ladder from 20/200 toward 20/16. Wear your usual glasses or contacts — the result reflects your <strong>corrected</strong> vision. Two honest limits apply: very small optotypes hit your screen's pixel floor at close range (we compute and show that limit rather than fake it), and this estimates functional sharpness — it is <strong>not a refraction and cannot produce a prescription</strong>.</p>
   <div class="learn-links">
     <a href="/learn/visual-acuity-and-20-20/">Read: What 20/20 Vision Actually Means →</a>
@@ -274,7 +274,23 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
 var CARD_MM = OQ.Calib.CARD_MM;     // ISO/IEC 7810 ID-1 card width (shared calibration layer)
 var ES_PER_LEVEL = 4;               // optotypes shown per level
 var PASS_NEEDED = 3;                // 3 of 4 correct passes a level
-var MIN_RENDER_PX = 8;              // below this the E can't render honestly
+/* HONEST RENDER FLOOR.
+ *
+ * Acuity is limited by the CRITICAL DETAIL, not the letter. A tumbling E is a 5x5 grid, so
+ * its prong and gap are one fifth of the overall size. Judging the floor on overall size in
+ * CSS pixels got this wrong in both directions: at the old 8 px floor a dpr-1 display drew a
+ * 1.6 device-pixel stroke, which antialiases into mush and cannot be honestly discriminated,
+ * while a dpr-2 display was held back from sizes it renders perfectly well.
+ *
+ * The floor is therefore expressed where it actually bites: the stroke must be at least two
+ * DEVICE pixels, so that a prong and the gap beside it are distinguishable rather than a grey
+ * smear. Overall size >= 5 * 2 / dpr.
+ */
+var MIN_STROKE_DEVICE_PX = 2;
+function minRenderPx(){
+  var dpr = window.devicePixelRatio || 1;
+  return (5 * MIN_STROKE_DEVICE_PX) / dpr;
+}
 // Level ladder: logMAR + Snellen label, large -> small
 var LEVELS = [
   { logmar:1.0, label:"20/200" },
@@ -314,9 +330,9 @@ function optotypePx(logmar){
 }
 
 function measurableFloor(){
-  // smallest level whose E renders >= MIN_RENDER_PX; returns level or null
+  // smallest level whose E clears the stroke-based render floor; returns level or null
   for(var i=LEVELS.length-1;i>=0;i--){
-    if(optotypePx(LEVELS[i].logmar) >= MIN_RENDER_PX) return LEVELS[i];
+    if(optotypePx(LEVELS[i].logmar) >= minRenderPx()) return LEVELS[i];
   }
   return null;
 }
@@ -356,7 +372,7 @@ function nextOptotype(){
   // READS: STATE.levelIdx/subTrial  WRITES: canvas, STATE.curDir
   var lvl=LEVELS[STATE.levelIdx];
   var px=optotypePx(lvl.logmar);
-  if(px<MIN_RENDER_PX){ finishEye(true); return; } // hit honest render floor
+  if(px<minRenderPx()){ finishEye(true); return; } // hit honest render floor
   STATE.curDir=DIRS[Math.floor(Math.random()*4)];
   drawE(px, STATE.curDir);
   document.getElementById("prog-label").textContent="LEVEL "+lvl.label+" · E "+(STATE.subTrial+1)+"/"+ES_PER_LEVEL;
