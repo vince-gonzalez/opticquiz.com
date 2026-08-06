@@ -213,9 +213,22 @@ var MAX_TRIALS = 24;
 var LETTERS = ["C","D","H","K","N","O","R","S","V","Z"];
 var CHOICES_PER_TRIAL = 6;
 var START_C = 0.55;      // Weber contrast (letter vs bg), easy
-var MIN_C = 0.006;       // floor
+var MIN_C = 0.006;       // requested floor; the real floor is quantisation, see finestContrast()
 var STEP = 0.8;          // geometric staircase factor
-var BG = 128;            // mid-gray background luminance (0-255)
+/* Background is a LIGHT field, not mid-grey, for two reasons.
+ *
+ * Pelli-Robson is black letters on white, so light is the standard arrangement. More
+ * importantly, 8-bit quantisation sets the finest contrast a screen can produce, and it gets
+ * finer as the field gets brighter. Measured against relative luminance:
+ *
+ *     BG 128  ->  finest Weber contrast 1.68%   ->  caps the score at logCS 1.77
+ *     BG 220  ->  finest Weber contrast 1.02%   ->  caps the score at logCS 1.99
+ *
+ * Typical contrast sensitivity is around logCS 1.8-2.0. At 128 this test could not measure a
+ * person with normal vision at all - it floored out below the normal range while the staircase
+ * happily kept requesting contrasts the display rendered as the identical pixel value.
+ */
+var BG = 220;            // light background, code value 0-255
 
 // ── STATE ──
 // Adaptive staircase lives in the shared OQ engine (assets/oq-psy.js).
@@ -224,7 +237,12 @@ var STATE = { trial:0, contrast:START_C, target:"", choices:[], stair:null, done
 // ── ENGINE ──
 function startTest(){
   STATE.trial=0; STATE.contrast=START_C; STATE.done=false;
-  STATE.stair = OQ.Staircase({ value:START_C, min:MIN_C, max:START_C, factor:STEP });
+  // Never let the staircase descend below what the panel can render. Otherwise successive
+  // steps produce an identical pixel value, the observer keeps answering correctly because
+  // nothing changed, and the threshold reads far better than it is.
+  var floorC = Math.max(MIN_C, finestContrast());
+  STATE.floorC = floorC;
+  STATE.stair = OQ.Staircase({ value:START_C, min:floorC, max:START_C, factor:STEP });
   showScreen("screen-test");
   nextTrial();
 }
@@ -248,8 +266,38 @@ function nextTrial(){
   document.getElementById("prog-c").textContent=(STATE.contrast*100).toFixed(1)+"%";
 }
 
+/* sRGB code values are NOT luminance.
+ *
+ * This previously set the letter to BG*(1-contrast) in code values and called it Weber
+ * contrast. sRGB is gamma-encoded, so that overstated sensitivity by roughly a factor of two:
+ * a requested 10% rendered as 20.6% actual, 2% rendered as 5.0%. In score terms the reported
+ * logCS ran 0.23 to 0.40 too high - between one and a half and nearly three Pelli-Robson
+ * steps, on a page that prints a logCS number.
+ *
+ * Weber contrast is defined on LUMINANCE, so the target luminance is computed first and the
+ * code value is derived by inverting the transfer function.
+ */
+function srgbToLin(v){
+  v = v/255;
+  return v <= 0.04045 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4);
+}
+function linToSrgb(L){
+  L = Math.max(0, Math.min(1, L));
+  var v = L <= 0.0031308 ? L*12.92 : 1.055*Math.pow(L, 1/2.4) - 0.055;
+  return Math.round(v*255);
+}
+function letterCodeFor(contrast){
+  var Lbg = srgbToLin(BG);
+  return Math.max(0, Math.min(255, linToSrgb(Lbg*(1-contrast))));
+}
+/** Smallest Weber contrast this display can actually produce at BG - one code value. */
+function finestContrast(){
+  var Lbg = srgbToLin(BG);
+  return (Lbg - srgbToLin(BG-1)) / Lbg;
+}
+
 function drawLetter(letter, contrast){
-  // READS: letter,contrast  WRITES: canvas — letter darker than mid-gray bg by Weber contrast
+  // READS: letter,contrast  WRITES: canvas - letter darker than the field by Weber LUMINANCE contrast
   try{
     var cv=document.getElementById("cs-canvas");
     var dpr=window.devicePixelRatio||1;
@@ -261,8 +309,7 @@ function drawLetter(letter, contrast){
     // background = mid gray
     ctx.fillStyle="rgb("+BG+","+BG+","+BG+")";
     ctx.fillRect(0,0,cssW,cssH);
-    // letter luminance = BG*(1-contrast) (darker). Weber-ish on a mid field.
-    var lum=Math.max(0, Math.round(BG*(1-contrast)));
+    var lum=letterCodeFor(contrast);
     ctx.fillStyle="rgb("+lum+","+lum+","+lum+")";
     ctx.textAlign="center"; ctx.textBaseline="middle";
     ctx.font="600 120px 'Source Serif 4', Georgia, serif";
@@ -299,12 +346,24 @@ function renderResults(){
   var thrPct=(thr*100).toFixed(1);
   var logTxt=logCS.toFixed(2);
 
+  // If the threshold landed on the panel's quantisation floor, the number is a CEILING on
+  // what this screen can measure, not a measurement of the person. Say so instead of printing
+  // it as a result.
+  var atFloor = STATE.floorC && thr <= STATE.floorC*1.02;
+
   var band = logCS>2.0 ? "very sharp — you held on to extremely faint letters"
            : logCS>1.6 ? "strong contrast sensitivity"
            : logCS>1.2 ? "solid, everyday range"
            : "coarser today — worth a retry with brightness up and sitting back";
 
-  var interp="You could still read the letter down to about <strong>"+thrPct+"% contrast</strong> against the gray field — a relative contrast sensitivity of roughly <strong>"+sensitivity.toFixed(0)+"×</strong> (log "+logTxt+"). Lower percentage = fainter letter caught = better. This is the axis that fades in fog, glare, and dim light, and it can soften before letter-chart sharpness does. Because your display isn't calibrated, treat the number as a personal baseline on this screen, not a clinical Pelli-Robson value — your result is in the "+band.split("—")[0].trim()+" range.";
+  var interp = atFloor
+    ? "You read the letter all the way down to <strong>"+thrPct+"% contrast</strong>, which is the "+
+      "faintest step this display can actually produce. An 8-bit screen can only change the "+
+      "letter by one code value at a time, and below that every step renders as the identical "+
+      "pixel. So this is a floor on the measurement, not a reading of your vision — your true "+
+      "contrast sensitivity is somewhere better than log "+logTxt+" and this screen cannot say "+
+      "how much better."
+    : "You could still read the letter down to about <strong>"+thrPct+"% contrast</strong> against the gray field — a relative contrast sensitivity of roughly <strong>"+sensitivity.toFixed(0)+"×</strong> (log "+logTxt+"). Lower percentage = fainter letter caught = better. This is the axis that fades in fog, glare, and dim light, and it can soften before letter-chart sharpness does. Because your display isn't calibrated, treat the number as a personal baseline on this screen, not a clinical Pelli-Robson value — your result is in the "+band.split("—")[0].trim()+" range.";
 
   var h='<div class="big-stat"><div class="big-stat-val">log '+logTxt+'</div><div class="big-stat-lbl">contrast sensitivity (this screen)</div></div>';
   h+='<div class="mini-row"><div class="mini"><div class="mini-val">'+thrPct+'%</div><div class="mini-lbl">Faintest letter read</div></div>'+
