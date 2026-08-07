@@ -245,10 +245,26 @@ function beginTrial(){
      * now caught rather than recorded as a superhumanly fast trial.
      */
     STATE.hotStart = 0;
+    STATE.framed = false;
+    var requestedAt = performance.now();
     setArena("hot","TAP!","");
     requestAnimationFrame(function(){
-      requestAnimationFrame(function(t){ if(STATE.phase==="hot") STATE.hotStart = t; });
+      requestAnimationFrame(function(t){
+        if(STATE.phase==="hot" && !STATE.hotStart){ STATE.hotStart = t; STATE.framed = true; }
+      });
     });
+    /* rAF is not guaranteed to run. A backgrounded tab, a throttled context, or an embedded
+     * view that never composites will simply never call it - and without this fallback
+     * hotStart stays 0 forever, every tap is judged an anticipation, and the test cannot be
+     * completed at all. Trading 8 ms of frame accuracy for a working test is not a trade;
+     * it was a regression I introduced fixing the frame delay.
+     *
+     * 100 ms is chosen because simple visual reaction time has a physiological floor around
+     * 150 ms, so this can never fire inside a genuine response.
+     */
+    setTimeout(function(){
+      if(STATE.phase==="hot" && !STATE.hotStart) STATE.hotStart = requestedAt;
+    }, 100);
     announce("Tap now");
   }, delay);
 }
