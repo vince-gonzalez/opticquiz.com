@@ -1,0 +1,532 @@
+{
+ "uncertainty_deg": 3.6,
+ "rows": [
+  {
+   "site": "ZEISS",
+   "plate": "1",
+   "type": "demonstration",
+   "answer": "12",
+   "dev": {
+    "protan": 20.8,
+    "deutan": 38.5
+   },
+   "pca": {
+    "protan": 20.8,
+    "deutan": 38.5
+   },
+   "sep": 0.3057,
+   "colours": 2,
+   "dots": 585
+  },
+  {
+   "site": "ZEISS",
+   "plate": "2",
+   "type": "transformation",
+   "answer": "8",
+   "dev": {
+    "protan": 25.6,
+    "deutan": 36.1
+   },
+   "pca": {
+    "protan": 8.6,
+    "deutan": 19.1
+   },
+   "sep": 0.0909,
+   "colours": 5,
+   "dots": 708
+  },
+  {
+   "site": "ZEISS",
+   "plate": "3",
+   "type": "transformation",
+   "answer": "29",
+   "dev": {
+    "protan": 37.0,
+    "deutan": 28.4
+   },
+   "pca": {
+    "protan": 14.0,
+    "deutan": 5.5
+   },
+   "sep": 0.0945,
+   "colours": 10,
+   "dots": 638
+  },
+  {
+   "site": "ZEISS",
+   "plate": "4",
+   "type": "transformation",
+   "answer": "5",
+   "dev": {
+    "protan": 0.9,
+    "deutan": 11.3
+   },
+   "pca": {
+    "protan": 9.6,
+    "deutan": 20.0
+   },
+   "sep": 0.0447,
+   "colours": 7,
+   "dots": 746
+  },
+  {
+   "site": "ZEISS",
+   "plate": "5",
+   "type": "transformation",
+   "answer": "3",
+   "dev": {
+    "protan": 18.6,
+    "deutan": 27.4
+   },
+   "pca": {
+    "protan": 15.6,
+    "deutan": 24.4
+   },
+   "sep": 0.1978,
+   "colours": 10,
+   "dots": 655
+  },
+  {
+   "site": "ZEISS",
+   "plate": "6",
+   "type": "transformation",
+   "answer": "15",
+   "dev": {
+    "protan": 11.1,
+    "deutan": 21.1
+   },
+   "pca": {
+    "protan": 9.6,
+    "deutan": 19.6
+   },
+   "sep": 0.1348,
+   "colours": 6,
+   "dots": 750
+  },
+  {
+   "site": "ZEISS",
+   "plate": "7",
+   "type": "transformation",
+   "answer": "74",
+   "dev": {
+    "protan": 18.6,
+    "deutan": 28.1
+   },
+   "pca": {
+    "protan": 13.8,
+    "deutan": 23.2
+   },
+   "sep": 0.1363,
+   "colours": 10,
+   "dots": 708
+  },
+  {
+   "site": "ZEISS",
+   "plate": "8",
+   "type": "vanishing",
+   "answer": "6",
+   "dev": {
+    "protan": 70.2,
+    "deutan": 79.6
+   },
+   "pca": {
+    "protan": 27.7,
+    "deutan": 37.2
+   },
+   "sep": 0.0651,
+   "colours": 8,
+   "dots": 700
+  },
+  {
+   "site": "ZEISS",
+   "plate": "9",
+   "type": "vanishing",
+   "answer": "45",
+   "dev": {
+    "protan": 76.0,
+    "deutan": 66.6
+   },
+   "pca": {
+    "protan": 24.4,
+    "deutan": 33.8
+   },
+   "sep": 0.0502,
+   "colours": 8,
+   "dots": 562
+  },
+  {
+   "site": "ZEISS",
+   "plate": "10",
+   "type": "vanishing",
+   "answer": "5",
+   "dev": {
+    "protan": 22.9,
+    "deutan": 11.5
+   },
+   "pca": {
+    "protan": 4.7,
+    "deutan": 6.7
+   },
+   "sep": 0.159,
+   "colours": 8,
+   "dots": 746
+  },
+  {
+   "site": "ZEISS",
+   "plate": "15",
+   "type": "hidden digit",
+   "answer": "nothing",
+   "dev": {
+    "protan": 56.9,
+    "deutan": 66.3
+   },
+   "pca": {
+    "protan": 6.9,
+    "deutan": 16.3
+   },
+   "sep": 0.0638,
+   "colours": 9,
+   "dots": 602
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "1",
+   "type": "demonstration",
+   "answer": "12",
+   "dev": {
+    "protan": 12.9,
+    "deutan": 1.3
+   },
+   "pca": {
+    "protan": 11.3,
+    "deutan": 0.2
+   },
+   "palette": "rg0",
+   "sep": 0.0975,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "2",
+   "type": "transformation",
+   "answer": "8",
+   "dev": {
+    "protan": 14.3,
+    "deutan": 3.1
+   },
+   "pca": {
+    "protan": 13.5,
+    "deutan": 2.3
+   },
+   "palette": "rg1",
+   "sep": 0.0926,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "3",
+   "type": "transformation",
+   "answer": "29",
+   "dev": {
+    "protan": 12.8,
+    "deutan": 3.8
+   },
+   "pca": {
+    "protan": 4.2,
+    "deutan": 12.4
+   },
+   "palette": "rg2",
+   "sep": 0.0893,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "4",
+   "type": "transformation",
+   "answer": "5",
+   "dev": {
+    "protan": 10.9,
+    "deutan": 0.9
+   },
+   "pca": {
+    "protan": 15.8,
+    "deutan": 3.9
+   },
+   "palette": "rg3",
+   "sep": 0.106,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "5",
+   "type": "transformation",
+   "answer": "3",
+   "dev": {
+    "protan": 12.9,
+    "deutan": 1.3
+   },
+   "pca": {
+    "protan": 11.3,
+    "deutan": 0.2
+   },
+   "palette": "rg0",
+   "sep": 0.0975,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "6",
+   "type": "transformation",
+   "answer": "74",
+   "dev": {
+    "protan": 14.3,
+    "deutan": 3.1
+   },
+   "pca": {
+    "protan": 13.5,
+    "deutan": 2.3
+   },
+   "palette": "rg1",
+   "sep": 0.0926,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "7",
+   "type": "transformation",
+   "answer": "6",
+   "dev": {
+    "protan": 12.8,
+    "deutan": 3.8
+   },
+   "pca": {
+    "protan": 4.2,
+    "deutan": 12.4
+   },
+   "palette": "rg2",
+   "sep": 0.0893,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "8",
+   "type": "transformation",
+   "answer": "45",
+   "dev": {
+    "protan": 10.9,
+    "deutan": 0.9
+   },
+   "pca": {
+    "protan": 15.8,
+    "deutan": 3.9
+   },
+   "palette": "rg3",
+   "sep": 0.106,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "9",
+   "type": "transformation",
+   "answer": "2",
+   "dev": {
+    "protan": 12.9,
+    "deutan": 1.3
+   },
+   "pca": {
+    "protan": 11.3,
+    "deutan": 0.2
+   },
+   "palette": "rg0",
+   "sep": 0.0975,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "10",
+   "type": "transformation",
+   "answer": "97",
+   "dev": {
+    "protan": 14.3,
+    "deutan": 3.1
+   },
+   "pca": {
+    "protan": 13.5,
+    "deutan": 2.3
+   },
+   "palette": "rg1",
+   "sep": 0.0926,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "101",
+   "type": "transformation",
+   "answer": "56",
+   "dev": {
+    "tritan": 10.5
+   },
+   "pca": {
+    "tritan": 10.5
+   },
+   "palette": "tri0",
+   "sep": 0.3141,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "102",
+   "type": "transformation",
+   "answer": "3",
+   "dev": {
+    "tritan": 16.6
+   },
+   "pca": {
+    "tritan": 16.5
+   },
+   "palette": "tri1",
+   "sep": 0.279,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "103",
+   "type": "transformation",
+   "answer": "18",
+   "dev": {
+    "tritan": 2.7
+   },
+   "pca": {
+    "tritan": 2.7
+   },
+   "palette": "tri2",
+   "sep": 0.304,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "104",
+   "type": "transformation",
+   "answer": "7",
+   "dev": {
+    "tritan": 15.2
+   },
+   "pca": {
+    "tritan": 15.1
+   },
+   "palette": "tri3",
+   "sep": 0.3265,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "105",
+   "type": "transformation",
+   "answer": "42",
+   "dev": {
+    "tritan": 10.5
+   },
+   "pca": {
+    "tritan": 10.5
+   },
+   "palette": "tri0",
+   "sep": 0.3141,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "106",
+   "type": "transformation",
+   "answer": "9",
+   "dev": {
+    "tritan": 16.6
+   },
+   "pca": {
+    "tritan": 16.5
+   },
+   "palette": "tri1",
+   "sep": 0.279,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "107",
+   "type": "transformation",
+   "answer": "63",
+   "dev": {
+    "tritan": 2.7
+   },
+   "pca": {
+    "tritan": 2.7
+   },
+   "palette": "tri2",
+   "sep": 0.304,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "108",
+   "type": "transformation",
+   "answer": "4",
+   "dev": {
+    "tritan": 15.2
+   },
+   "pca": {
+    "tritan": 15.1
+   },
+   "palette": "tri3",
+   "sep": 0.3265,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "109",
+   "type": "transformation",
+   "answer": "81",
+   "dev": {
+    "tritan": 10.5
+   },
+   "pca": {
+    "tritan": 10.5
+   },
+   "palette": "tri0",
+   "sep": 0.3141,
+   "colours": 24,
+   "dots": null
+  },
+  {
+   "site": "colorblind.io",
+   "plate": "110",
+   "type": "transformation",
+   "answer": "35",
+   "dev": {
+    "tritan": 16.6
+   },
+   "pca": {
+    "tritan": 16.5
+   },
+   "palette": "tri1",
+   "sep": 0.279,
+   "colours": 24,
+   "dots": null
+  }
+ ]
+}
