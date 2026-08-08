@@ -619,9 +619,17 @@ function scoreOrder(order) {
 
   // Total error: sum of absolute differences between submitted position and correct position
   // Correct order is caps 1–15 in sequence
+  /* Cap 1 is the FIXED REFERENCE and is not in the tray, so tray index 0 holds cap 2 and the
+   * correct 0-indexed position of cap c is c - 2, not c - 1.
+   *
+   * With the old offset a flawless arrangement scored 14 rather than 0 - every cap contributed
+   * one unit of phantom error - and 14 lands inside the "moderate" band (12-24). Someone who
+   * sorted every cap correctly was told they had a moderate colour vision deficiency, and the
+   * bottom of the scale was unreachable.
+   */
   var totalError = 0;
   for (var i = 0; i < order.length; i++) {
-    var correctPos = order[i] - 1;  // cap id - 1 = correct 0-indexed position
+    var correctPos = order[i] - 2;  // tray index 0 = cap 2 (cap 1 is the fixed reference)
     totalError += Math.abs(i - correctPos);
   }
 
@@ -644,10 +652,28 @@ function scoreOrder(order) {
   var maxAxisScore = Math.max(axisScores.deutan, axisScores.protan, axisScores.tritan);
   var totalAxisHits = axisScores.deutan + axisScores.protan + axisScores.tritan;
 
+  /* protan and deutan share FOUR of their five confusion pairs ([3,13] [4,12] [5,11] [6,10]),
+   * so they tie constantly - and the old tie-break was object key order, which always handed
+   * the result to deutan. Across random arrangements that produced deutan 32% and protan 13%,
+   * a bias with no basis in the data.
+   *
+   * Ties between the two red-green axes are now reported as red-green rather than resolved by
+   * accident. That is also the honest answer: a fifteen-cap panel on an uncalibrated screen
+   * cannot reliably separate protanopia from deuteranopia, which the rest of the site already
+   * says.
+   */
   var dominantAxis = null;
   if (maxAxisScore >= 2) {
+    var top = [];
     for (var axis in axisScores) {
-      if (axisScores[axis] === maxAxisScore) { dominantAxis = axis; break; }
+      if (axisScores[axis] === maxAxisScore) top.push(axis);
+    }
+    if (top.length === 1) {
+      dominantAxis = top[0];
+    } else if (top.length === 2 && top.indexOf("tritan") === -1) {
+      dominantAxis = "redgreen";                 // protan/deutan tie - not separable here
+    } else {
+      dominantAxis = null;                       // three-way, or red-green vs tritan: unclear
     }
   }
 
@@ -682,7 +708,8 @@ function scoreOrder(order) {
 
 function buildLabel(severity, axis) {
   if (severity === "none") return "No significant confusion";
-  var axisNames = { deutan: "Deutan pattern", protan: "Protan pattern", tritan: "Tritan pattern" };
+  var axisNames = { deutan: "Deutan pattern", protan: "Protan pattern", tritan: "Tritan pattern",
+                    redgreen: "Red-green pattern" };
   if (axis) return (severity.charAt(0).toUpperCase() + severity.slice(1)) + " — " + axisNames[axis];
   return (severity.charAt(0).toUpperCase() + severity.slice(1)) + " hue confusion";
 }
@@ -695,7 +722,8 @@ function buildResultNote(severity, axis, axisScores, totalError) {
   var axisDesc = {
     deutan: "a green-axis confusion pattern (deuteranomaly or deuteranopia). Caps along the red-green confusion axis were transposed, consistent with reduced green cone sensitivity.",
     protan: "a red-axis confusion pattern (protanomaly or protanopia). Transpositions align with the protan confusion axis, suggesting reduced red cone sensitivity.",
-    tritan: "a blue-yellow confusion pattern (tritanomaly or tritanopia). Transpositions cluster along the blue confusion axis, which is rare and worth specialist follow-up."
+    tritan: "a blue-yellow confusion pattern (tritanomaly or tritanopia). Transpositions cluster along the blue confusion axis, which is rare and worth specialist follow-up.",
+    redgreen: "a red-green confusion pattern. Transpositions fall on the shared protan/deutan axis and this test cannot say which of the two it is - the two confusion lines overlap on four of five cap pairs, and fifteen caps on an uncalibrated screen is not enough to separate them. An anomaloscope can."
   };
 
   var base = "Error score: " + totalError + ". ";
@@ -963,7 +991,7 @@ function renderResults() {
         totalError: worse.totalError, dominantAxis: worse.dominantAxis,
         axisScores: worse.axisScores,
         perEye: { right: R.right && R.right.totalError, left: R.left && R.left.totalError }
-      }, 2);   // instrument 2 - unnumbered swatches; see MIN_INSTRUMENT in oq-results.js
+      }, 3);   // instrument 3 - unnumbered swatches AND corrected totalError offset
     }
   } catch (e) {}
   var r = STATE.results;
@@ -1037,6 +1065,8 @@ function renderResultDetail(eye) {
     ? "The deutan confusion pattern suggests difficulty distinguishing colors along the green confusion axis. This is the most common form of inherited color vision deficiency. The Ishihara color vision test (opticquiz.com/color/) will add supporting data. For a definitive result, consult an optometrist for a physical D-15 or FM-100 Hue test."
     : r.dominantAxis === "protan"
     ? "The protan confusion pattern suggests difficulty along the red confusion axis. Protanopia and protanomaly also reduce the perceived brightness of red — relevant for traffic signals and warning indicators. Cross-check with the Ishihara test at opticquiz.com/color/."
+    : r.dominantAxis === "redgreen"
+    ? "Your transpositions fall on the red-green confusion axis, but this test cannot tell you whether that is protan or deutan. The two confusion lines share four of their five cap pairs, so a fifteen-cap panel simply does not carry enough information to separate them - and any site that names one from this data is guessing. The Ishihara plates at opticquiz.com/color/ add supporting evidence, and an anomaloscope is what actually distinguishes the two."
     : r.dominantAxis === "tritan"
     ? "A tritan confusion pattern is rare. It suggests difficulty along the blue-yellow confusion axis, which is not X-linked and affects men and women equally. Acquired tritanomaly can sometimes be associated with age-related changes, medication effects, or ocular disease. Specialist follow-up is worth considering."
     : "Hue confusion is present but does not cluster strongly along a single axis. This pattern can occur with mild anomalous trichromacy, irregular screen gamut, or distracted sorting. Consider retaking the test and cross-checking with the Ishihara test at opticquiz.com/color/.";

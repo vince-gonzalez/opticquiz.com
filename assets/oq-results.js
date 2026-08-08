@@ -41,7 +41,10 @@
      d15: 2 - until 2026-08-05 the swatches rendered their cap id on the face, and CAPS[] is
      stored in correct hue order, so the sequence could be reconstructed without perceiving
      colour. Every result recorded before that is from an easier test. */
-  var MIN_INSTRUMENT = { d15: 2, color: 2 };
+  var MIN_INSTRUMENT = { d15: 3, color: 2 };
+  // d15: 3 - until 2026-08-06 totalError used cap-1 as the correct index when the tray starts
+  // at cap 2, so a FLAWLESS arrangement scored 14 and landed in the "moderate" band. Every
+  // stored score is inflated by up to 14 and its severity band is wrong.
   // color: 2 - until 2026-08-05 the two tritan plates separated figure from ground ACROSS the
   // tritan confusion line instead of along it (52 degrees off, measured by
   // tools/confusion_axis.py). Mean dE2000 was 35.1 to normal vision and 52.4 under tritan
