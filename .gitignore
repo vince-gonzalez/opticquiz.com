@@ -13,3 +13,4 @@ desktop-app/bin/
 desktop-app/obj/
 desktop-app/dist/
 browser-extension/dist/
+__pycache__/
