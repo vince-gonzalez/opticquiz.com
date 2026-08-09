@@ -149,7 +149,12 @@ def main():
             print("  %-6s  (svg not found)" % p["no"])
             continue
         dots = drop_backdrop(extract(cands[0]))
-        F, G = assign_groups(dots, [h for h, _ in p["figure"]], [h for h, _ in p["ground"]])
+        # Prefer the spatially derived assignment. The original figure/ground fields were
+        # labelled by dot count, which mislabels any plate carrying a plate-wide colour outside
+        # the two largest classes - six of the eleven ZEISS plates were affected.
+        fk = "figure_spatial" if "figure_spatial" in p else "figure"
+        gk = "ground_spatial" if "ground_spatial" in p else "ground"
+        F, G = assign_groups(dots, [h for h, _ in p[fk]], [h for h, _ in p[gk]])
         if not F or not G:
             print("  %-6s  (could not assign groups: %d figure, %d ground)" % (p["no"], len(F), len(G)))
             continue

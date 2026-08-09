@@ -1,108 +1,1222 @@
 {
-  "_about": "Figure/ground dot colours as DELIVERED by public web colour-vision tests, read from each site's own markup or bundle on 2026-08-08. Weights are dot counts. Nothing here is inferred: the SVG classes or the JS palette keys declare which population is figure and which is ground. Collected for a colorimetric audit against the dichromatic confusion lines; see tools/audit_delivered_plates.py.",
-  "_method_note": "Plate type is taken from each site's own answer key, which is a functional classifier: a digit plus a confusion digit is a transformation plate; a digit with no confusion digit is a vanishing plate; correctAnswer 'nothing' with a confusion digit is a hidden-digit plate. Confusion-axis alignment is the right criterion only for transformation and vanishing plates.",
-
-  "zeiss": {
-    "site": "visionscreening.zeiss.com",
-    "source": "assets/img/color-plates/ishihara_N.svg — fills declared in <style>, figure/ground by class; answer key in chunk-PWIUXT4S.js",
-    "delivery": "svg",
-    "plates": [
-      {"no": 1,  "answer": "12",      "confusion": null, "type": "demonstration",
-       "ground": [["#5c8687", 484]], "figure": [["#f15f12", 101]]},
-      {"no": 2,  "answer": "8",       "confusion": "3",  "type": "transformation",
-       "ground": [["#444329", 240], ["#aaa35f", 193]],
-       "figure": [["#928237", 174], ["#eb4825", 68], ["#f88c4f", 33]]},
-      {"no": 3,  "answer": "29",      "confusion": "70", "type": "transformation",
-       "ground": [["#ae9c35", 187], ["#7c722c", 172], ["#928237", 131]],
-       "figure": [["#e17974", 41], ["#d05658", 29], ["#bc4520", 21], ["#fca054", 17], ["#7fa96d", 14], ["#f67e34", 13], ["#006e40", 13]]},
-      {"no": 4,  "answer": "5",       "confusion": "2",  "type": "transformation",
-       "ground": [["#f88c4f", 288], ["#eb4825", 254]],
-       "figure": [["#f15f12", 105], ["#928237", 30], ["#aaa35f", 26], ["#b64c4e", 23], ["#444329", 20]]},
-      {"no": 5,  "answer": "3",       "confusion": "5",  "type": "transformation",
-       "ground": [["#ed4815", 202], ["#f47539", 168], ["#fb8a06", 168]],
-       "figure": [["#1c6237", 35], ["#5c8a69", 30], ["#65592d", 14], ["#a99231", 12], ["#7c722c", 10], ["#f58056", 9], ["#ad3123", 7]]},
-      {"no": 6,  "answer": "15",      "confusion": "17", "type": "transformation",
-       "ground": [["#eb4825", 247], ["#f88c4f", 199], ["#f15f12", 162]],
-       "figure": [["#444329", 62], ["#928237", 60], ["#c80026", 20]]},
-      {"no": 7,  "answer": "74",      "confusion": "21", "type": "transformation",
-       "ground": [["#bd4e27", 197], ["#dd8330", 186], ["#fb9335", 137]],
-       "figure": [["#1c6237", 46], ["#5c8a69", 36], ["#65592d", 28], ["#f58056", 26], ["#a99231", 21], ["#ad3123", 17], ["#7c722c", 14]]},
-      {"no": 8,  "answer": "6",       "confusion": null, "type": "vanishing",
-       "ground": [["#a99231", 176], ["#65592d", 174], ["#7c722c", 138]],
-       "figure": [["#448a69", 71], ["#0e7751", 60], ["#bd4e27", 32], ["#f67e34", 28], ["#fb9335", 21]]},
-      {"no": 9,  "answer": "45",      "confusion": null, "type": "vanishing",
-       "ground": [["#a99231", 146], ["#65592d", 128], ["#7c722c", 95]],
-       "figure": [["#448a69", 59], ["#bd4e27", 39], ["#fb9335", 33], ["#0e7751", 33], ["#f67e34", 29]]},
-      {"no": 10, "answer": "5",       "confusion": null, "type": "vanishing",
-       "ground": [["#d87c63", 226], ["#ad3123", 208], ["#c95c45", 109]],
-       "figure": [["#ffd300", 72], ["#ffa100", 55], ["#006027", 30], ["#4f9d53", 26], ["#208545", 20]]},
-      {"no": 15, "answer": "nothing", "confusion": "45", "type": "hidden digit",
-       "ground": [["#c16529", 160], ["#f67e34", 148], ["#8f8927", 106]],
-       "figure": [["#e50019", 40], ["#00973d", 34], ["#f28174", 33], ["#5b665b", 30], ["#6baa7b", 26], ["#661a00", 25]]}
+ "_about": "Figure/ground dot colours as DELIVERED by public web colour-vision tests, read from each site's own markup or bundle on 2026-08-08. Weights are dot counts. Nothing here is inferred: the SVG classes or the JS palette keys declare which population is figure and which is ground. Collected for a colorimetric audit against the dichromatic confusion lines; see tools/audit_delivered_plates.py.",
+ "_method_note": "Plate type is taken from each site's own answer key, which is a functional classifier: a digit plus a confusion digit is a transformation plate; a digit with no confusion digit is a vanishing plate; correctAnswer 'nothing' with a confusion digit is a hidden-digit plate. Confusion-axis alignment is the right criterion only for transformation and vanishing plates.",
+ "zeiss": {
+  "site": "visionscreening.zeiss.com",
+  "source": "assets/img/color-plates/ishihara_N.svg \u2014 fills declared in <style>, figure/ground by class; answer key in chunk-PWIUXT4S.js",
+  "delivery": "svg",
+  "plates": [
+   {
+    "no": 1,
+    "answer": "12",
+    "confusion": null,
+    "type": "demonstration",
+    "ground": [
+     [
+      "#5c8687",
+      484
+     ]
+    ],
+    "figure": [
+     [
+      "#f15f12",
+      101
+     ]
+    ],
+    "figure_spatial": [
+     [
+      "#f15f12",
+      101
+     ]
+    ],
+    "ground_spatial": [
+     [
+      "#5c8687",
+      484
+     ]
     ]
-  },
-
-  "colorblind_io": {
-    "site": "colorblind.io",
-    "source": "_next/static/chunks/1d2qlrcs2mr6v.js — arrays `c` (red-green) and `l` (tritan), each palette an object with `background` and `foreground` keys of 12 hex values",
-    "delivery": "procedural_canvas",
-    "caveat": "These are the DESIGNED palettes. Rendered dots differ: every dot gets independent per-channel jitter of +/-10 in 8-bit sRGB, and red-green SCREENING plates are additionally remapped to a random target luminance in [0.30, 0.52] by a method that clamps at 1 and adds a flat linear offset, which distorts chromaticity and is not gamut-safe. Tritan plates receive no luminance matching (the call passes 5 args so the options object defaults empty). So for red-green plates this measures design intent, not the delivered stimulus.",
-    "palettes": {
-      "rg0": {"axis": "red-green", "note": "warm figure on olive ground",
-        "background": ["#787848","#909048","#909060","#A8A848","#A8A860","#B4A854","#C0C060","#C0C078","#D8C060","#D8D860","#D8D8A8","#90A860"],
-        "foreground": ["#D86048","#D87848","#D87860","#D89060","#E48454","#F09060","#F09078","#F0A848","#F0A878","#F0C078","#D86060","#F0A890"]},
-      "rg1": {"axis": "red-green", "note": "POLARITY INVERTED vs rg0: warm is ground, green is figure",
-        "background": ["#D87848","#D87860","#D89060","#E48460","#F09060","#F0A848","#F0A860","#F0A878","#F09078","#F0C078","#D8A878","#F0C0A8"],
-        "foreground": ["#789030","#789048","#909048","#90A860","#A8A848","#A8C078","#C0C060","#C0D878","#909078","#A8A878","#B4B460","#D8D860"]},
-      "rg2": {"axis": "red-green", "note": "desaturated taupe ground, pink/magenta figure",
-        "background": ["#605448","#787860","#786C60","#909078","#A89078","#A89C78","#9C9C84","#B4A890","#CCC0A8","#909060","#A8A878","#847860"],
-        "foreground": ["#E4606C","#D87860","#F09078","#F0909C","#D8849C","#A84860","#D86060","#E48460","#F0A878","#907878","#B45484","#E4846C"]},
-      "rg3": {"axis": "red-green", "note": "foreground includes #FCE448, a saturated yellow sitting in the same yellow region as the olive ground",
-        "background": ["#789048","#90A860","#9CB46C","#A8C078","#C0C060","#C0D878","#CCD884","#D8D860","#D8D878","#B4C078","#E4E4B4","#A8B478"],
-        "foreground": ["#D86060","#D86C60","#D87848","#E47854","#F09078","#FC9C78","#FCB448","#FCB484","#FCE448","#F09084","#FC9C84","#E49C84"]},
-      "tri0": {"axis": "tritan",
-        "background": ["#8A7A32","#968838","#7E702A","#928234","#867630","#8E7E38","#A08C3C","#B49840","#7A6C28","#9C8A30","#A89440","#887430"],
-        "foreground": ["#6E6EC0","#6464B6","#7676C8","#5C5CAE","#7C7CCC","#7272BE","#5858A8","#6868B8","#8080D0","#5050A0","#7474C4","#6060B0"]},
-      "tri1": {"axis": "tritan",
-        "background": ["#887838","#947E40","#7C7030","#908034","#867438","#8A7C3C","#A08844","#7A6C2C","#968640","#8C7A34","#9C8C48","#B09848"],
-        "foreground": ["#6080B8","#5678B0","#6888C0","#4E70A8","#5C7CB4","#6484BC","#4868A0","#5070AC","#7090C8","#4060A0","#5878B8","#6C8CC4"]},
-      "tri2": {"axis": "tritan", "note": "agent flagged this one: ground is green-olive and figure is purple, which is a red-green direction rather than a tritan one",
-        "background": ["#6E8A30","#648028","#769238","#5C7824","#6A8632","#7E9A40","#567020","#728E34","#88A448","#507018","#7C963C","#8CA84C"],
-        "foreground": ["#8868B4","#7E60AC","#9070BC","#7658A4","#8C6CB8","#9474C0","#6C50A0","#7458A8","#9878C4","#6448A0","#8464B0","#9C7CC8"]},
-      "tri3": {"axis": "tritan",
-        "background": ["#9A8020","#928828","#A48830","#8C7A1C","#968224","#9E8C2C","#B09838","#867418","#A89030","#7C6C14","#B49C3C","#908028"],
-        "foreground": ["#5C7CC0","#5274B8","#6484C8","#4A6CB0","#5878BC","#6888C4","#4060A8","#4868B0","#7090D0","#3858A0","#5474B4","#6C8CCC"]}
-    },
-    "plate_map_rg": [
-      {"no": 1,  "digit": "12", "palette": "rg0", "purpose": "demonstration"},
-      {"no": 2,  "digit": "8",  "palette": "rg1", "purpose": "screening"},
-      {"no": 3,  "digit": "29", "palette": "rg2", "purpose": "screening"},
-      {"no": 4,  "digit": "5",  "palette": "rg3", "purpose": "screening"},
-      {"no": 5,  "digit": "3",  "palette": "rg0", "purpose": "screening"},
-      {"no": 6,  "digit": "74", "palette": "rg1", "purpose": "screening"},
-      {"no": 7,  "digit": "6",  "palette": "rg2", "purpose": "screening"},
-      {"no": 8,  "digit": "45", "palette": "rg3", "purpose": "screening"},
-      {"no": 9,  "digit": "2",  "palette": "rg0", "purpose": "screening"},
-      {"no": 10, "digit": "97", "palette": "rg1", "purpose": "screening"}
+   },
+   {
+    "no": 2,
+    "answer": "8",
+    "confusion": "3",
+    "type": "transformation",
+    "ground": [
+     [
+      "#444329",
+      240
+     ],
+     [
+      "#aaa35f",
+      193
+     ]
     ],
-    "plate_map_tritan": [
-      {"no": 101, "digit": "56", "palette": "tri0"}, {"no": 102, "digit": "3",  "palette": "tri1"},
-      {"no": 103, "digit": "18", "palette": "tri2"}, {"no": 104, "digit": "7",  "palette": "tri3"},
-      {"no": 105, "digit": "42", "palette": "tri0"}, {"no": 106, "digit": "9",  "palette": "tri1"},
-      {"no": 107, "digit": "63", "palette": "tri2"}, {"no": 108, "digit": "4",  "palette": "tri3"},
-      {"no": 109, "digit": "81", "palette": "tri0"}, {"no": 110, "digit": "35", "palette": "tri1"}
+    "figure": [
+     [
+      "#928237",
+      174
+     ],
+     [
+      "#eb4825",
+      68
+     ],
+     [
+      "#f88c4f",
+      33
+     ]
     ],
-    "self_reported": {
-      "note": "colorblind.io grades its own red-green plates in-browser and emits the result as data-* attributes, simulating protanopia/deuteranopia over the plate's own dots and taking mean-difference over pooled-sd as signal-to-noise. Tritan plates carry no such attributes. Useful as an independent cross-check on any measurement of ours.",
-      "plate1_live": {"status": "strong", "normal_signal": 1.276, "protan_signal": 0.559, "deutan_signal": 0.080, "cvd_retention": 0.438},
-      "thresholds": "strong if normalSNR>=1.15 and retention<=0.5; review if normalSNR>=0.85 and retention<=0.7; else weak"
-    }
+    "figure_spatial": [
+     [
+      "#eb4825",
+      68
+     ],
+     [
+      "#f88c4f",
+      33
+     ]
+    ],
+    "ground_spatial": [
+     [
+      "#444329",
+      240
+     ],
+     [
+      "#aaa35f",
+      193
+     ],
+     [
+      "#928237",
+      174
+     ]
+    ]
+   },
+   {
+    "no": 3,
+    "answer": "29",
+    "confusion": "70",
+    "type": "transformation",
+    "ground": [
+     [
+      "#ae9c35",
+      187
+     ],
+     [
+      "#7c722c",
+      172
+     ],
+     [
+      "#928237",
+      131
+     ]
+    ],
+    "figure": [
+     [
+      "#e17974",
+      41
+     ],
+     [
+      "#d05658",
+      29
+     ],
+     [
+      "#bc4520",
+      21
+     ],
+     [
+      "#fca054",
+      17
+     ],
+     [
+      "#7fa96d",
+      14
+     ],
+     [
+      "#f67e34",
+      13
+     ],
+     [
+      "#006e40",
+      13
+     ]
+    ],
+    "figure_spatial": [
+     [
+      "#e17974",
+      41
+     ],
+     [
+      "#d05658",
+      29
+     ],
+     [
+      "#bc4520",
+      21
+     ],
+     [
+      "#fca054",
+      17
+     ],
+     [
+      "#7fa96d",
+      14
+     ],
+     [
+      "#006e40",
+      13
+     ],
+     [
+      "#f67e34",
+      13
+     ]
+    ],
+    "ground_spatial": [
+     [
+      "#ae9c35",
+      187
+     ],
+     [
+      "#7c722c",
+      172
+     ],
+     [
+      "#928237",
+      131
+     ]
+    ]
+   },
+   {
+    "no": 4,
+    "answer": "5",
+    "confusion": "2",
+    "type": "transformation",
+    "ground": [
+     [
+      "#f88c4f",
+      288
+     ],
+     [
+      "#eb4825",
+      254
+     ]
+    ],
+    "figure": [
+     [
+      "#f15f12",
+      105
+     ],
+     [
+      "#928237",
+      30
+     ],
+     [
+      "#aaa35f",
+      26
+     ],
+     [
+      "#b64c4e",
+      23
+     ],
+     [
+      "#444329",
+      20
+     ]
+    ],
+    "figure_spatial": [
+     [
+      "#928237",
+      30
+     ],
+     [
+      "#aaa35f",
+      26
+     ],
+     [
+      "#b64c4e",
+      23
+     ],
+     [
+      "#444329",
+      20
+     ]
+    ],
+    "ground_spatial": [
+     [
+      "#f88c4f",
+      288
+     ],
+     [
+      "#eb4825",
+      254
+     ],
+     [
+      "#f15f12",
+      105
+     ]
+    ]
+   },
+   {
+    "no": 5,
+    "answer": "3",
+    "confusion": "5",
+    "type": "transformation",
+    "ground": [
+     [
+      "#ed4815",
+      202
+     ],
+     [
+      "#f47539",
+      168
+     ],
+     [
+      "#fb8a06",
+      168
+     ]
+    ],
+    "figure": [
+     [
+      "#1c6237",
+      35
+     ],
+     [
+      "#5c8a69",
+      30
+     ],
+     [
+      "#65592d",
+      14
+     ],
+     [
+      "#a99231",
+      12
+     ],
+     [
+      "#7c722c",
+      10
+     ],
+     [
+      "#f58056",
+      9
+     ],
+     [
+      "#ad3123",
+      7
+     ]
+    ],
+    "figure_spatial": [
+     [
+      "#1c6237",
+      35
+     ],
+     [
+      "#5c8a69",
+      30
+     ],
+     [
+      "#65592d",
+      14
+     ],
+     [
+      "#a99231",
+      12
+     ],
+     [
+      "#7c722c",
+      10
+     ],
+     [
+      "#f58056",
+      9
+     ],
+     [
+      "#ad3123",
+      7
+     ]
+    ],
+    "ground_spatial": [
+     [
+      "#ed4815",
+      202
+     ],
+     [
+      "#f47539",
+      168
+     ],
+     [
+      "#fb8a06",
+      168
+     ]
+    ]
+   },
+   {
+    "no": 6,
+    "answer": "15",
+    "confusion": "17",
+    "type": "transformation",
+    "ground": [
+     [
+      "#eb4825",
+      247
+     ],
+     [
+      "#f88c4f",
+      199
+     ],
+     [
+      "#f15f12",
+      162
+     ]
+    ],
+    "figure": [
+     [
+      "#444329",
+      62
+     ],
+     [
+      "#928237",
+      60
+     ],
+     [
+      "#c80026",
+      20
+     ]
+    ],
+    "figure_spatial": [
+     [
+      "#444329",
+      62
+     ],
+     [
+      "#928237",
+      60
+     ],
+     [
+      "#c80026",
+      20
+     ]
+    ],
+    "ground_spatial": [
+     [
+      "#eb4825",
+      247
+     ],
+     [
+      "#f88c4f",
+      199
+     ],
+     [
+      "#f15f12",
+      162
+     ]
+    ]
+   },
+   {
+    "no": 7,
+    "answer": "74",
+    "confusion": "21",
+    "type": "transformation",
+    "ground": [
+     [
+      "#bd4e27",
+      197
+     ],
+     [
+      "#dd8330",
+      186
+     ],
+     [
+      "#fb9335",
+      137
+     ]
+    ],
+    "figure": [
+     [
+      "#1c6237",
+      46
+     ],
+     [
+      "#5c8a69",
+      36
+     ],
+     [
+      "#65592d",
+      28
+     ],
+     [
+      "#f58056",
+      26
+     ],
+     [
+      "#a99231",
+      21
+     ],
+     [
+      "#ad3123",
+      17
+     ],
+     [
+      "#7c722c",
+      14
+     ]
+    ],
+    "figure_spatial": [
+     [
+      "#1c6237",
+      46
+     ],
+     [
+      "#5c8a69",
+      36
+     ],
+     [
+      "#65592d",
+      28
+     ],
+     [
+      "#f58056",
+      26
+     ],
+     [
+      "#a99231",
+      21
+     ],
+     [
+      "#ad3123",
+      17
+     ],
+     [
+      "#7c722c",
+      14
+     ]
+    ],
+    "ground_spatial": [
+     [
+      "#bd4e27",
+      197
+     ],
+     [
+      "#dd8330",
+      186
+     ],
+     [
+      "#fb9335",
+      137
+     ]
+    ]
+   },
+   {
+    "no": 8,
+    "answer": "6",
+    "confusion": null,
+    "type": "vanishing",
+    "ground": [
+     [
+      "#a99231",
+      176
+     ],
+     [
+      "#65592d",
+      174
+     ],
+     [
+      "#7c722c",
+      138
+     ]
+    ],
+    "figure": [
+     [
+      "#448a69",
+      71
+     ],
+     [
+      "#0e7751",
+      60
+     ],
+     [
+      "#bd4e27",
+      32
+     ],
+     [
+      "#f67e34",
+      28
+     ],
+     [
+      "#fb9335",
+      21
+     ]
+    ],
+    "figure_spatial": [
+     [
+      "#bd4e27",
+      32
+     ],
+     [
+      "#f67e34",
+      28
+     ],
+     [
+      "#fb9335",
+      21
+     ]
+    ],
+    "ground_spatial": [
+     [
+      "#a99231",
+      176
+     ],
+     [
+      "#65592d",
+      174
+     ],
+     [
+      "#7c722c",
+      138
+     ],
+     [
+      "#448a69",
+      71
+     ],
+     [
+      "#0e7751",
+      60
+     ]
+    ]
+   },
+   {
+    "no": 9,
+    "answer": "45",
+    "confusion": null,
+    "type": "vanishing",
+    "ground": [
+     [
+      "#a99231",
+      146
+     ],
+     [
+      "#65592d",
+      128
+     ],
+     [
+      "#7c722c",
+      95
+     ]
+    ],
+    "figure": [
+     [
+      "#448a69",
+      59
+     ],
+     [
+      "#bd4e27",
+      39
+     ],
+     [
+      "#fb9335",
+      33
+     ],
+     [
+      "#0e7751",
+      33
+     ],
+     [
+      "#f67e34",
+      29
+     ]
+    ],
+    "figure_spatial": [
+     [
+      "#bd4e27",
+      39
+     ],
+     [
+      "#fb9335",
+      33
+     ],
+     [
+      "#f67e34",
+      29
+     ]
+    ],
+    "ground_spatial": [
+     [
+      "#a99231",
+      146
+     ],
+     [
+      "#65592d",
+      128
+     ],
+     [
+      "#7c722c",
+      95
+     ],
+     [
+      "#448a69",
+      59
+     ],
+     [
+      "#0e7751",
+      33
+     ]
+    ]
+   },
+   {
+    "no": 10,
+    "answer": "5",
+    "confusion": null,
+    "type": "vanishing",
+    "ground": [
+     [
+      "#d87c63",
+      226
+     ],
+     [
+      "#ad3123",
+      208
+     ],
+     [
+      "#c95c45",
+      109
+     ]
+    ],
+    "figure": [
+     [
+      "#ffd300",
+      72
+     ],
+     [
+      "#ffa100",
+      55
+     ],
+     [
+      "#006027",
+      30
+     ],
+     [
+      "#4f9d53",
+      26
+     ],
+     [
+      "#208545",
+      20
+     ]
+    ],
+    "figure_spatial": [
+     [
+      "#006027",
+      30
+     ],
+     [
+      "#4f9d53",
+      26
+     ],
+     [
+      "#208545",
+      20
+     ]
+    ],
+    "ground_spatial": [
+     [
+      "#d87c63",
+      226
+     ],
+     [
+      "#ad3123",
+      208
+     ],
+     [
+      "#c95c45",
+      109
+     ],
+     [
+      "#ffd300",
+      72
+     ],
+     [
+      "#ffa100",
+      55
+     ]
+    ]
+   },
+   {
+    "no": 15,
+    "answer": "nothing",
+    "confusion": "45",
+    "type": "hidden digit",
+    "ground": [
+     [
+      "#c16529",
+      160
+     ],
+     [
+      "#f67e34",
+      148
+     ],
+     [
+      "#8f8927",
+      106
+     ]
+    ],
+    "figure": [
+     [
+      "#e50019",
+      40
+     ],
+     [
+      "#00973d",
+      34
+     ],
+     [
+      "#f28174",
+      33
+     ],
+     [
+      "#5b665b",
+      30
+     ],
+     [
+      "#6baa7b",
+      26
+     ],
+     [
+      "#661a00",
+      25
+     ]
+    ],
+    "figure_spatial": [
+     [
+      "#f28174",
+      33
+     ],
+     [
+      "#5b665b",
+      30
+     ],
+     [
+      "#6baa7b",
+      26
+     ]
+    ],
+    "ground_spatial": [
+     [
+      "#c16529",
+      160
+     ],
+     [
+      "#f67e34",
+      148
+     ],
+     [
+      "#8f8927",
+      106
+     ],
+     [
+      "#e50019",
+      40
+     ],
+     [
+      "#00973d",
+      34
+     ],
+     [
+      "#661a00",
+      25
+     ]
+    ]
+   }
+  ],
+  "_correction_2026_08_09": "figure_spatial/ground_spatial assign by radius of gyration relative to the plate (<0.85 = compact = figure). The original figure/ground fields were assigned by dot count, which mislabels any plate carrying a plate-wide colour outside the two largest classes - confirmed on plates 2, 4 and 10. Use the _spatial fields."
+ },
+ "colorblind_io": {
+  "site": "colorblind.io",
+  "source": "_next/static/chunks/1d2qlrcs2mr6v.js \u2014 arrays `c` (red-green) and `l` (tritan), each palette an object with `background` and `foreground` keys of 12 hex values",
+  "delivery": "procedural_canvas",
+  "caveat": "These are the DESIGNED palettes. Rendered dots differ: every dot gets independent per-channel jitter of +/-10 in 8-bit sRGB, and red-green SCREENING plates are additionally remapped to a random target luminance in [0.30, 0.52] by a method that clamps at 1 and adds a flat linear offset, which distorts chromaticity and is not gamut-safe. Tritan plates receive no luminance matching (the call passes 5 args so the options object defaults empty). So for red-green plates this measures design intent, not the delivered stimulus.",
+  "palettes": {
+   "rg0": {
+    "axis": "red-green",
+    "note": "warm figure on olive ground",
+    "background": [
+     "#787848",
+     "#909048",
+     "#909060",
+     "#A8A848",
+     "#A8A860",
+     "#B4A854",
+     "#C0C060",
+     "#C0C078",
+     "#D8C060",
+     "#D8D860",
+     "#D8D8A8",
+     "#90A860"
+    ],
+    "foreground": [
+     "#D86048",
+     "#D87848",
+     "#D87860",
+     "#D89060",
+     "#E48454",
+     "#F09060",
+     "#F09078",
+     "#F0A848",
+     "#F0A878",
+     "#F0C078",
+     "#D86060",
+     "#F0A890"
+    ]
+   },
+   "rg1": {
+    "axis": "red-green",
+    "note": "POLARITY INVERTED vs rg0: warm is ground, green is figure",
+    "background": [
+     "#D87848",
+     "#D87860",
+     "#D89060",
+     "#E48460",
+     "#F09060",
+     "#F0A848",
+     "#F0A860",
+     "#F0A878",
+     "#F09078",
+     "#F0C078",
+     "#D8A878",
+     "#F0C0A8"
+    ],
+    "foreground": [
+     "#789030",
+     "#789048",
+     "#909048",
+     "#90A860",
+     "#A8A848",
+     "#A8C078",
+     "#C0C060",
+     "#C0D878",
+     "#909078",
+     "#A8A878",
+     "#B4B460",
+     "#D8D860"
+    ]
+   },
+   "rg2": {
+    "axis": "red-green",
+    "note": "desaturated taupe ground, pink/magenta figure",
+    "background": [
+     "#605448",
+     "#787860",
+     "#786C60",
+     "#909078",
+     "#A89078",
+     "#A89C78",
+     "#9C9C84",
+     "#B4A890",
+     "#CCC0A8",
+     "#909060",
+     "#A8A878",
+     "#847860"
+    ],
+    "foreground": [
+     "#E4606C",
+     "#D87860",
+     "#F09078",
+     "#F0909C",
+     "#D8849C",
+     "#A84860",
+     "#D86060",
+     "#E48460",
+     "#F0A878",
+     "#907878",
+     "#B45484",
+     "#E4846C"
+    ]
+   },
+   "rg3": {
+    "axis": "red-green",
+    "note": "foreground includes #FCE448, a saturated yellow sitting in the same yellow region as the olive ground",
+    "background": [
+     "#789048",
+     "#90A860",
+     "#9CB46C",
+     "#A8C078",
+     "#C0C060",
+     "#C0D878",
+     "#CCD884",
+     "#D8D860",
+     "#D8D878",
+     "#B4C078",
+     "#E4E4B4",
+     "#A8B478"
+    ],
+    "foreground": [
+     "#D86060",
+     "#D86C60",
+     "#D87848",
+     "#E47854",
+     "#F09078",
+     "#FC9C78",
+     "#FCB448",
+     "#FCB484",
+     "#FCE448",
+     "#F09084",
+     "#FC9C84",
+     "#E49C84"
+    ]
+   },
+   "tri0": {
+    "axis": "tritan",
+    "background": [
+     "#8A7A32",
+     "#968838",
+     "#7E702A",
+     "#928234",
+     "#867630",
+     "#8E7E38",
+     "#A08C3C",
+     "#B49840",
+     "#7A6C28",
+     "#9C8A30",
+     "#A89440",
+     "#887430"
+    ],
+    "foreground": [
+     "#6E6EC0",
+     "#6464B6",
+     "#7676C8",
+     "#5C5CAE",
+     "#7C7CCC",
+     "#7272BE",
+     "#5858A8",
+     "#6868B8",
+     "#8080D0",
+     "#5050A0",
+     "#7474C4",
+     "#6060B0"
+    ]
+   },
+   "tri1": {
+    "axis": "tritan",
+    "background": [
+     "#887838",
+     "#947E40",
+     "#7C7030",
+     "#908034",
+     "#867438",
+     "#8A7C3C",
+     "#A08844",
+     "#7A6C2C",
+     "#968640",
+     "#8C7A34",
+     "#9C8C48",
+     "#B09848"
+    ],
+    "foreground": [
+     "#6080B8",
+     "#5678B0",
+     "#6888C0",
+     "#4E70A8",
+     "#5C7CB4",
+     "#6484BC",
+     "#4868A0",
+     "#5070AC",
+     "#7090C8",
+     "#4060A0",
+     "#5878B8",
+     "#6C8CC4"
+    ]
+   },
+   "tri2": {
+    "axis": "tritan",
+    "note": "agent flagged this one: ground is green-olive and figure is purple, which is a red-green direction rather than a tritan one",
+    "background": [
+     "#6E8A30",
+     "#648028",
+     "#769238",
+     "#5C7824",
+     "#6A8632",
+     "#7E9A40",
+     "#567020",
+     "#728E34",
+     "#88A448",
+     "#507018",
+     "#7C963C",
+     "#8CA84C"
+    ],
+    "foreground": [
+     "#8868B4",
+     "#7E60AC",
+     "#9070BC",
+     "#7658A4",
+     "#8C6CB8",
+     "#9474C0",
+     "#6C50A0",
+     "#7458A8",
+     "#9878C4",
+     "#6448A0",
+     "#8464B0",
+     "#9C7CC8"
+    ]
+   },
+   "tri3": {
+    "axis": "tritan",
+    "background": [
+     "#9A8020",
+     "#928828",
+     "#A48830",
+     "#8C7A1C",
+     "#968224",
+     "#9E8C2C",
+     "#B09838",
+     "#867418",
+     "#A89030",
+     "#7C6C14",
+     "#B49C3C",
+     "#908028"
+    ],
+    "foreground": [
+     "#5C7CC0",
+     "#5274B8",
+     "#6484C8",
+     "#4A6CB0",
+     "#5878BC",
+     "#6888C4",
+     "#4060A8",
+     "#4868B0",
+     "#7090D0",
+     "#3858A0",
+     "#5474B4",
+     "#6C8CCC"
+    ]
+   }
   },
-
-  "ours": {
-    "site": "opticquiz.com",
-    "source": "color/index.html PALETTES, declared HSL ranges",
-    "delivery": "procedural_canvas",
-    "note": "Included as one audited row. Ranges rather than discrete hexes, so measured by tools/plate_colorimetry.py; reproduced here for completeness only."
+  "plate_map_rg": [
+   {
+    "no": 1,
+    "digit": "12",
+    "palette": "rg0",
+    "purpose": "demonstration"
+   },
+   {
+    "no": 2,
+    "digit": "8",
+    "palette": "rg1",
+    "purpose": "screening"
+   },
+   {
+    "no": 3,
+    "digit": "29",
+    "palette": "rg2",
+    "purpose": "screening"
+   },
+   {
+    "no": 4,
+    "digit": "5",
+    "palette": "rg3",
+    "purpose": "screening"
+   },
+   {
+    "no": 5,
+    "digit": "3",
+    "palette": "rg0",
+    "purpose": "screening"
+   },
+   {
+    "no": 6,
+    "digit": "74",
+    "palette": "rg1",
+    "purpose": "screening"
+   },
+   {
+    "no": 7,
+    "digit": "6",
+    "palette": "rg2",
+    "purpose": "screening"
+   },
+   {
+    "no": 8,
+    "digit": "45",
+    "palette": "rg3",
+    "purpose": "screening"
+   },
+   {
+    "no": 9,
+    "digit": "2",
+    "palette": "rg0",
+    "purpose": "screening"
+   },
+   {
+    "no": 10,
+    "digit": "97",
+    "palette": "rg1",
+    "purpose": "screening"
+   }
+  ],
+  "plate_map_tritan": [
+   {
+    "no": 101,
+    "digit": "56",
+    "palette": "tri0"
+   },
+   {
+    "no": 102,
+    "digit": "3",
+    "palette": "tri1"
+   },
+   {
+    "no": 103,
+    "digit": "18",
+    "palette": "tri2"
+   },
+   {
+    "no": 104,
+    "digit": "7",
+    "palette": "tri3"
+   },
+   {
+    "no": 105,
+    "digit": "42",
+    "palette": "tri0"
+   },
+   {
+    "no": 106,
+    "digit": "9",
+    "palette": "tri1"
+   },
+   {
+    "no": 107,
+    "digit": "63",
+    "palette": "tri2"
+   },
+   {
+    "no": 108,
+    "digit": "4",
+    "palette": "tri3"
+   },
+   {
+    "no": 109,
+    "digit": "81",
+    "palette": "tri0"
+   },
+   {
+    "no": 110,
+    "digit": "35",
+    "palette": "tri1"
+   }
+  ],
+  "self_reported": {
+   "note": "colorblind.io grades its own red-green plates in-browser and emits the result as data-* attributes, simulating protanopia/deuteranopia over the plate's own dots and taking mean-difference over pooled-sd as signal-to-noise. Tritan plates carry no such attributes. Useful as an independent cross-check on any measurement of ours.",
+   "plate1_live": {
+    "status": "strong",
+    "normal_signal": 1.276,
+    "protan_signal": 0.559,
+    "deutan_signal": 0.08,
+    "cvd_retention": 0.438
+   },
+   "thresholds": "strong if normalSNR>=1.15 and retention<=0.5; review if normalSNR>=0.85 and retention<=0.7; else weak"
   }
+ },
+ "ours": {
+  "site": "opticquiz.com",
+  "source": "color/index.html PALETTES, declared HSL ranges",
+  "delivery": "procedural_canvas",
+  "note": "Included as one audited row. Ranges rather than discrete hexes, so measured by tools/plate_colorimetry.py; reproduced here for completeness only."
+ }
 }
