@@ -47,7 +47,16 @@ import sys
 
 import numpy as np
 
-COPUNCTAL = {"protan": (0.747, 0.253), "deutan": (1.080, -0.080), "tritan": (0.171, 0.000)}
+# Copunctal points in CIE 1931 xy: the chromaticities of stimuli that excite one cone
+# class alone, where that deficiency's confusion lines meet.
+#
+# The deutan value was (1.080, -0.080) until 2026-08-09 and that was WRONG. Constructing the
+# confusion lines from the Smith & Pokorny (1975) cone fundamentals and solving for where they
+# converge gives (1.3999, -0.3999) with a least-squares residual of 6e-15, and the published
+# value is (1.40, -0.40) - see tools/confusion_geometry.py --validate, which reproduces protan
+# to 0.0007 and tritan to 0.0038 by the same construction. Every deutan figure computed before
+# that date was measured against an axis 0.45 units away from the real one.
+COPUNCTAL = {"protan": (0.747, 0.253), "deutan": (1.400, -0.400), "tritan": (0.171, 0.000)}
 WARN_DEG = 25.0
 
 
