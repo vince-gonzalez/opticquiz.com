@@ -1,0 +1,303 @@
+{
+ "border_radii": 2.2,
+ "warn_deg": 25.0,
+ "rows": [
+  {
+   "plate": 1,
+   "type": "demonstration",
+   "answer": "12",
+   "n_figure": 101,
+   "n_ground": 484,
+   "axes": {
+    "protan": {
+     "n_pairs": 465,
+     "n_border_figure_dots": 100,
+     "median_deg": 26.8,
+     "q25_deg": 26.8,
+     "q75_deg": 26.8,
+     "frac_aligned": 0.0,
+     "median_xy_sep": 0.3057
+    },
+    "deutan": {
+     "n_pairs": 465,
+     "n_border_figure_dots": 100,
+     "median_deg": 43.1,
+     "q25_deg": 43.1,
+     "q75_deg": 43.1,
+     "frac_aligned": 0.0,
+     "median_xy_sep": 0.3057
+    }
+   }
+  },
+  {
+   "plate": 2,
+   "type": "transformation",
+   "answer": "8",
+   "n_figure": 275,
+   "n_ground": 433,
+   "axes": {
+    "protan": {
+     "n_pairs": 1358,
+     "n_border_figure_dots": 271,
+     "median_deg": 63.3,
+     "q25_deg": 13.5,
+     "q75_deg": 64.6,
+     "frac_aligned": 0.309,
+     "median_xy_sep": 0.0592
+    },
+    "deutan": {
+     "n_pairs": 1358,
+     "n_border_figure_dots": 271,
+     "median_deg": 72.6,
+     "q25_deg": 25.1,
+     "q75_deg": 74.6,
+     "frac_aligned": 0.243,
+     "median_xy_sep": 0.0592
+    }
+   }
+  },
+  {
+   "plate": 3,
+   "type": "transformation",
+   "answer": "29",
+   "n_figure": 148,
+   "n_ground": 490,
+   "axes": {
+    "protan": {
+     "n_pairs": 693,
+     "n_border_figure_dots": 145,
+     "median_deg": 33.3,
+     "q25_deg": 11.5,
+     "q75_deg": 47.4,
+     "frac_aligned": 0.374,
+     "median_xy_sep": 0.131
+    },
+    "deutan": {
+     "n_pairs": 693,
+     "n_border_figure_dots": 145,
+     "median_deg": 26.0,
+     "q25_deg": 11.7,
+     "q75_deg": 38.0,
+     "frac_aligned": 0.485,
+     "median_xy_sep": 0.131
+    }
+   }
+  },
+  {
+   "plate": 4,
+   "type": "transformation",
+   "answer": "5",
+   "n_figure": 204,
+   "n_ground": 542,
+   "axes": {
+    "protan": {
+     "n_pairs": 1199,
+     "n_border_figure_dots": 204,
+     "median_deg": 24.4,
+     "q25_deg": 13.5,
+     "q75_deg": 32.0,
+     "frac_aligned": 0.543,
+     "median_xy_sep": 0.0809
+    },
+    "deutan": {
+     "n_pairs": 1199,
+     "n_border_figure_dots": 204,
+     "median_deg": 23.9,
+     "q25_deg": 23.9,
+     "q75_deg": 33.5,
+     "frac_aligned": 0.565,
+     "median_xy_sep": 0.0809
+    }
+   }
+  },
+  {
+   "plate": 5,
+   "type": "transformation",
+   "answer": "3",
+   "n_figure": 117,
+   "n_ground": 538,
+   "axes": {
+    "protan": {
+     "n_pairs": 470,
+     "n_border_figure_dots": 109,
+     "median_deg": 14.9,
+     "q25_deg": 7.8,
+     "q75_deg": 18.5,
+     "frac_aligned": 0.815,
+     "median_xy_sep": 0.2325
+    },
+    "deutan": {
+     "n_pairs": 470,
+     "n_border_figure_dots": 109,
+     "median_deg": 18.6,
+     "q25_deg": 18.1,
+     "q75_deg": 28.6,
+     "frac_aligned": 0.542,
+     "median_xy_sep": 0.2325
+    }
+   }
+  },
+  {
+   "plate": 6,
+   "type": "transformation",
+   "answer": "15",
+   "n_figure": 142,
+   "n_ground": 608,
+   "axes": {
+    "protan": {
+     "n_pairs": 668,
+     "n_border_figure_dots": 141,
+     "median_deg": 9.3,
+     "q25_deg": 8.1,
+     "q75_deg": 13.5,
+     "frac_aligned": 0.94,
+     "median_xy_sep": 0.1721
+    },
+    "deutan": {
+     "n_pairs": 668,
+     "n_border_figure_dots": 141,
+     "median_deg": 15.8,
+     "q25_deg": 9.9,
+     "q75_deg": 25.1,
+     "frac_aligned": 0.747,
+     "median_xy_sep": 0.1721
+    }
+   }
+  },
+  {
+   "plate": 7,
+   "type": "transformation",
+   "answer": "74",
+   "n_figure": 188,
+   "n_ground": 520,
+   "axes": {
+    "protan": {
+     "n_pairs": 694,
+     "n_border_figure_dots": 170,
+     "median_deg": 13.8,
+     "q25_deg": 6.0,
+     "q75_deg": 18.7,
+     "frac_aligned": 0.809,
+     "median_xy_sep": 0.1543
+    },
+    "deutan": {
+     "n_pairs": 694,
+     "n_border_figure_dots": 170,
+     "median_deg": 23.3,
+     "q25_deg": 6.2,
+     "q75_deg": 29.1,
+     "frac_aligned": 0.649,
+     "median_xy_sep": 0.1543
+    }
+   }
+  },
+  {
+   "plate": 8,
+   "type": "vanishing",
+   "answer": "6",
+   "n_figure": 212,
+   "n_ground": 488,
+   "axes": {
+    "protan": {
+     "n_pairs": 1082,
+     "n_border_figure_dots": 207,
+     "median_deg": 34.5,
+     "q25_deg": 6.0,
+     "q75_deg": 35.2,
+     "frac_aligned": 0.476,
+     "median_xy_sep": 0.1465
+    },
+    "deutan": {
+     "n_pairs": 1082,
+     "n_border_figure_dots": 207,
+     "median_deg": 44.7,
+     "q25_deg": 15.3,
+     "q75_deg": 47.2,
+     "frac_aligned": 0.313,
+     "median_xy_sep": 0.1465
+    }
+   }
+  },
+  {
+   "plate": 9,
+   "type": "vanishing",
+   "answer": "45",
+   "n_figure": 193,
+   "n_ground": 369,
+   "axes": {
+    "protan": {
+     "n_pairs": 876,
+     "n_border_figure_dots": 188,
+     "median_deg": 22.8,
+     "q25_deg": 5.5,
+     "q75_deg": 35.2,
+     "frac_aligned": 0.537,
+     "median_xy_sep": 0.1459
+    },
+    "deutan": {
+     "n_pairs": 876,
+     "n_border_figure_dots": 188,
+     "median_deg": 34.0,
+     "q25_deg": 13.1,
+     "q75_deg": 47.2,
+     "frac_aligned": 0.398,
+     "median_xy_sep": 0.1459
+    }
+   }
+  },
+  {
+   "plate": 10,
+   "type": "vanishing",
+   "answer": "5",
+   "n_figure": 203,
+   "n_ground": 543,
+   "axes": {
+    "protan": {
+     "n_pairs": 1053,
+     "n_border_figure_dots": 196,
+     "median_deg": 21.3,
+     "q25_deg": 13.4,
+     "q75_deg": 60.9,
+     "frac_aligned": 0.579,
+     "median_xy_sep": 0.1183
+    },
+    "deutan": {
+     "n_pairs": 1053,
+     "n_border_figure_dots": 196,
+     "median_deg": 13.7,
+     "q25_deg": 7.9,
+     "q75_deg": 51.8,
+     "frac_aligned": 0.579,
+     "median_xy_sep": 0.1183
+    }
+   }
+  },
+  {
+   "plate": 15,
+   "type": "hidden digit",
+   "answer": "nothing",
+   "n_figure": 188,
+   "n_ground": 414,
+   "axes": {
+    "protan": {
+     "n_pairs": 988,
+     "n_border_figure_dots": 186,
+     "median_deg": 19.5,
+     "q25_deg": 2.3,
+     "q75_deg": 56.0,
+     "frac_aligned": 0.556,
+     "median_xy_sep": 0.1357
+    },
+    "deutan": {
+     "n_pairs": 988,
+     "n_border_figure_dots": 186,
+     "median_deg": 31.4,
+     "q25_deg": 9.3,
+     "q75_deg": 65.9,
+     "frac_aligned": 0.467,
+     "median_xy_sep": 0.1357
+    }
+   }
+  }
+ ]
+}
