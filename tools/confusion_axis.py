@@ -34,16 +34,19 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 # Copunctal points: where all confusion lines for a deficiency converge, in CIE 1931 xy.
-# Copunctal points in CIE 1931 xy: the chromaticities of stimuli that excite one cone
-# class alone, where that deficiency's confusion lines meet.
+# Copunctal points in CIE 1931 xy for the Smith & Pokorny (1975) fundamentals: the
+# chromaticities of stimuli exciting one cone class alone, where that deficiency's confusion
+# lines meet. These are NOT free constants - the matrix determines them.
 #
-# The deutan value was (1.080, -0.080) until 2026-08-09 and that was WRONG. Constructing the
-# confusion lines from the Smith & Pokorny (1975) cone fundamentals and solving for where they
-# converge gives (1.3999, -0.3999) with a least-squares residual of 6e-15, and the published
-# value is (1.40, -0.40) - see tools/confusion_geometry.py --validate, which reproduces protan
-# to 0.0007 and tritan to 0.0038 by the same construction. Every deutan figure computed before
-# that date was measured against an axis 0.45 units away from the real one.
-COPUNCTAL = {"protan": (0.747, 0.253), "deutan": (1.400, -0.400), "tritan": (0.171, 0.000)}
+# VERIFY ANY CANDIDATE IN ONE LINE: feed (x, y, 1-x-y) through SP and check that the other two
+# cones null. Residuals for the values below are <= 3e-4. Two values that were in this file and
+# are wrong for this matrix, both caught by that test:
+#   deutan (1.080, -0.080)  - wrong until 2026-08-09; correct is (1.400, -0.400)
+#   tritan (0.171,  0.000)  - wrong until 2026-08-10, residual 7e-4; correct is (0.1748, 0.000),
+#                             which is also the published Smith & Pokorny value
+# A protan value of (0.7635, 0.2365) circulates and does NOT belong to this matrix - it leaves
+# M at -0.0104. Do not substitute it.
+COPUNCTAL = {"protan": (0.747, 0.253), "deutan": (1.400, -0.400), "tritan": (0.1748, 0.000)}
 
 SKIP_DIRS = {"node_modules", ".git", "dist", "__pycache__"}
 

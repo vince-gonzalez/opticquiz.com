@@ -1,0 +1,20 @@
+design_id,source,design,plate_type,answer,confusion_digit,n_figure_classes,n_ground_classes,n_colour_classes,figure_dots,ground_dots,total_dots,axes_evaluated,pairs_contributed
+Z01,ZEISS,ishihara_1,demonstration,12,,1,1,2,101,484,585,protan|deutan,2
+Z02,ZEISS,ishihara_2,transformation,8,3,2,3,5,101,607,708,protan|deutan,12
+Z03,ZEISS,ishihara_3,transformation,29,70,7,3,10,148,490,638,protan|deutan,42
+Z04,ZEISS,ishihara_4,transformation,5,2,4,3,7,99,647,746,protan|deutan,24
+Z05,ZEISS,ishihara_5,transformation,3,5,7,3,10,117,538,655,protan|deutan,42
+Z06,ZEISS,ishihara_6,transformation,15,17,3,3,6,142,608,750,protan|deutan,18
+Z07,ZEISS,ishihara_7,transformation,74,21,7,3,10,188,520,708,protan|deutan,42
+Z08,ZEISS,ishihara_8,vanishing,6,,3,5,8,81,619,700,protan|deutan,30
+Z09,ZEISS,ishihara_9,vanishing,45,,3,5,8,101,461,562,protan|deutan,30
+Z10,ZEISS,ishihara_10,vanishing,5,,3,5,8,76,670,746,protan|deutan,30
+Z15,ZEISS,ishihara_15,hidden digit,nothing,45,3,6,9,89,513,602,protan|deutan,36
+C-rg0,colorblind.io,rg0,palette (red-green),,,12,12,24,12,12,24,protan|deutan,288
+C-rg1,colorblind.io,rg1,palette (red-green),,,12,12,24,12,12,24,protan|deutan,288
+C-rg2,colorblind.io,rg2,palette (red-green),,,12,12,24,12,12,24,protan|deutan,288
+C-rg3,colorblind.io,rg3,palette (red-green),,,12,12,24,12,12,24,protan|deutan,288
+C-tri0,colorblind.io,tri0,palette (tritan),,,12,12,24,12,12,24,tritan,144
+C-tri1,colorblind.io,tri1,palette (tritan),,,12,12,24,12,12,24,tritan,144
+C-tri2,colorblind.io,tri2,palette (tritan),,,12,12,24,12,12,24,tritan,144
+C-tri3,colorblind.io,tri3,palette (tritan),,,12,12,24,12,12,24,tritan,144
