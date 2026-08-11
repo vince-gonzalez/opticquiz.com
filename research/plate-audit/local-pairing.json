@@ -21,9 +21,9 @@
     "deutan": {
      "n_pairs": 465,
      "n_border_figure_dots": 100,
-     "median_deg": 43.1,
-     "q25_deg": 43.1,
-     "q75_deg": 43.1,
+     "median_deg": 47.3,
+     "q25_deg": 47.3,
+     "q75_deg": 47.3,
      "frac_aligned": 0.0,
      "median_xy_sep": 0.3057
     }
@@ -48,9 +48,9 @@
     "deutan": {
      "n_pairs": 482,
      "n_border_figure_dots": 100,
-     "median_deg": 18.0,
-     "q25_deg": 9.9,
-     "q75_deg": 21.9,
+     "median_deg": 20.6,
+     "q25_deg": 11.9,
+     "q75_deg": 24.7,
      "frac_aligned": 0.847,
      "median_xy_sep": 0.1942
     }
@@ -75,10 +75,10 @@
     "deutan": {
      "n_pairs": 693,
      "n_border_figure_dots": 145,
-     "median_deg": 26.0,
-     "q25_deg": 11.7,
-     "q75_deg": 38.0,
-     "frac_aligned": 0.485,
+     "median_deg": 23.2,
+     "q25_deg": 11.8,
+     "q75_deg": 35.3,
+     "frac_aligned": 0.585,
      "median_xy_sep": 0.131
     }
    }
@@ -102,10 +102,10 @@
     "deutan": {
      "n_pairs": 535,
      "n_border_figure_dots": 99,
-     "median_deg": 21.9,
-     "q25_deg": 15.8,
-     "q75_deg": 52.9,
-     "frac_aligned": 0.58,
+     "median_deg": 24.7,
+     "q25_deg": 17.7,
+     "q75_deg": 54.2,
+     "frac_aligned": 0.531,
      "median_xy_sep": 0.1151
     }
    }
@@ -129,9 +129,9 @@
     "deutan": {
      "n_pairs": 470,
      "n_border_figure_dots": 109,
-     "median_deg": 18.6,
-     "q25_deg": 18.1,
-     "q75_deg": 28.6,
+     "median_deg": 21.4,
+     "q25_deg": 20.7,
+     "q75_deg": 32.0,
      "frac_aligned": 0.542,
      "median_xy_sep": 0.2325
     }
@@ -156,9 +156,9 @@
     "deutan": {
      "n_pairs": 668,
      "n_border_figure_dots": 141,
-     "median_deg": 15.8,
-     "q25_deg": 9.9,
-     "q75_deg": 25.1,
+     "median_deg": 17.7,
+     "q25_deg": 11.9,
+     "q75_deg": 28.1,
      "frac_aligned": 0.747,
      "median_xy_sep": 0.1721
     }
@@ -183,10 +183,10 @@
     "deutan": {
      "n_pairs": 694,
      "n_border_figure_dots": 170,
-     "median_deg": 23.3,
-     "q25_deg": 6.2,
-     "q75_deg": 29.1,
-     "frac_aligned": 0.649,
+     "median_deg": 26.1,
+     "q25_deg": 8.3,
+     "q75_deg": 32.7,
+     "frac_aligned": 0.5,
      "median_xy_sep": 0.1543
     }
    }
@@ -210,10 +210,10 @@
     "deutan": {
      "n_pairs": 457,
      "n_border_figure_dots": 80,
-     "median_deg": 21.2,
-     "q25_deg": 6.8,
-     "q75_deg": 28.4,
-     "frac_aligned": 0.617,
+     "median_deg": 23.6,
+     "q25_deg": 8.6,
+     "q75_deg": 32.0,
+     "frac_aligned": 0.574,
      "median_xy_sep": 0.1543
     }
    }
@@ -237,10 +237,10 @@
     "deutan": {
      "n_pairs": 539,
      "n_border_figure_dots": 100,
-     "median_deg": 21.2,
-     "q25_deg": 6.8,
-     "q75_deg": 28.4,
-     "frac_aligned": 0.616,
+     "median_deg": 23.6,
+     "q25_deg": 8.6,
+     "q75_deg": 32.0,
+     "frac_aligned": 0.589,
      "median_xy_sep": 0.1459
     }
    }
@@ -264,9 +264,9 @@
     "deutan": {
      "n_pairs": 420,
      "n_border_figure_dots": 76,
-     "median_deg": 11.1,
-     "q25_deg": 5.7,
-     "q75_deg": 25.6,
+     "median_deg": 14.0,
+     "q25_deg": 3.9,
+     "q75_deg": 27.6,
      "frac_aligned": 0.685,
      "median_xy_sep": 0.2311
     }
@@ -291,9 +291,9 @@
     "deutan": {
      "n_pairs": 543,
      "n_border_figure_dots": 89,
-     "median_deg": 47.8,
-     "q25_deg": 35.0,
-     "q75_deg": 74.6,
+     "median_deg": 49.6,
+     "q25_deg": 35.2,
+     "q75_deg": 77.6,
      "frac_aligned": 0.047,
      "median_xy_sep": 0.1596
     }
