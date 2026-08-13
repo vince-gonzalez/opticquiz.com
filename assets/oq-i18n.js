@@ -14,7 +14,14 @@
   var DICT = window.OQ_I18N || {};
   var LANGS = window.OQ_LANGS || [];
 
+  // A generated language URL (/fr/color/) pins its own language. tools/build-i18n-pages.js
+  // sets OQ_PAGE_LANG on the variants it stamps out; without it, an English-locale visitor
+  // landing on /fr/color/ would have the prerendered French overwritten with English on load,
+  // which is both wrong for the reader and a content/URL mismatch for a crawler.
+  var PAGE_LANG = (window.OQ_PAGE_LANG || "").slice(0, 2).toLowerCase();
+
   function cur() {
+    if (PAGE_LANG && DICT[PAGE_LANG]) return PAGE_LANG;
     var s = null;
     try { s = localStorage.getItem(STORE); } catch (e) {}
     if (s && DICT[s]) return s;
@@ -68,7 +75,16 @@
       sel.appendChild(o);
     }
     sel.value = cur();
-    sel.onchange = function () { apply(sel.value); };
+    sel.onchange = function () {
+      // On a page that has indexable siblings, switching language navigates to the sibling
+      // URL rather than swapping text in place, so the URL keeps matching its content.
+      var urls = window.OQ_LANG_URLS || null;
+      if (urls && urls[sel.value] && urls[sel.value] !== location.pathname) {
+        location.href = urls[sel.value];
+        return;
+      }
+      apply(sel.value);
+    };
     host.appendChild(sel);
   }
 

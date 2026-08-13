@@ -173,3 +173,85 @@ window.OQ_I18N = {
     "link.alltests": "← सभी निःशुल्क दृष्टि परीक्षण"
   }
 };
+
+/* ---------------------------------------------------------------------------
+   SEO / head strings. Read by tools/build-i18n-pages.js to stamp <title>, the
+   meta description and the Open Graph tags into each generated language variant.
+
+   A language missing any of these four keys is SKIPPED by the generator. That is
+   deliberate: an English <title> on a French URL is worse than having no French
+   page at all, because it tells Google the page is English and gives the reader a
+   result they cannot read.
+
+   These cover the instrument, the procedure and the privacy claim only. Per the
+   note at the top of this file, the detailed medical result text stays English
+   until a native speaker verifies it, so nothing here interprets a result.
+   --------------------------------------------------------------------------- */
+(function (D) {
+  var SEO = {
+    en: {
+      "seo.title": "Color Blindness Test — Free Online Ishihara Plates — OpticQuiz",
+      "seo.desc": "Free color blindness test — procedurally generated Ishihara plates screen red-green and blue-yellow deficiency per eye, with an honest severity read. On-device.",
+      "seo.og.title": "OpticQuiz — Color Vision Screening",
+      "seo.og.desc": "8 Ishihara-style plates, drawn fresh each time. Screens red-green and blue-yellow color vision. Free. No account. Results stay on your device."
+    },
+    fr: {
+      "seo.title": "Test de daltonisme — planches d'Ishihara en ligne, gratuit — OpticQuiz",
+      "seo.desc": "Test de daltonisme gratuit — des planches d'Ishihara redessinées à chaque essai dépistent les déficiences rouge-vert et bleu-jaune, œil par œil. Tout reste sur votre appareil.",
+      "seo.og.title": "OpticQuiz — Dépistage de la vision des couleurs",
+      "seo.og.desc": "8 planches de type Ishihara, redessinées à chaque fois. Dépiste la vision des couleurs rouge-vert et bleu-jaune. Gratuit. Sans compte. Les résultats restent sur votre appareil."
+    },
+    de: {
+      "seo.title": "Farbenblindheitstest — kostenlose Ishihara-Tafeln online — OpticQuiz",
+      "seo.desc": "Kostenloser Farbenblindheitstest — bei jedem Durchlauf neu erzeugte Ishihara-Tafeln prüfen Rot-Grün- und Blau-Gelb-Schwächen, getrennt für jedes Auge. Alles bleibt auf Ihrem Gerät.",
+      "seo.og.title": "OpticQuiz — Screening des Farbsehens",
+      "seo.og.desc": "8 Tafeln im Ishihara-Stil, jedes Mal neu gezeichnet. Prüft das Rot-Grün- und Blau-Gelb-Farbsehen. Kostenlos. Ohne Konto. Ergebnisse bleiben auf Ihrem Gerät."
+    }
+  };
+  for (var l in SEO) { if (D[l]) { for (var k in SEO[l]) { D[l][k] = SEO[l][k]; } } }
+})(window.OQ_I18N);
+
+/* SEO / head strings, wave 2. Each title leads with the SAME term this language's own
+   intro.h1 already uses, because /de/ shipped with an h1 saying "Farbsehtest" under a title
+   saying "Farbenblindheitstest" — two different terms on one page, the title bidding for a
+   phrase the page did not deliver. Consistency here is a correctness choice, not a keyword
+   choice: none of these terms has been validated against search volume, and Search Console
+   query data per /{lang}/color/ is the instrument that will settle that.
+
+   As above, these describe the instrument, the procedure and the privacy claim. None
+   interprets a result. */
+(function (D) {
+  var SEO = {
+    es: {
+      "seo.title": "Test de visión del color — láminas de Ishihara online, gratis — OpticQuiz",
+      "seo.desc": "Test de visión del color gratuito: láminas de Ishihara generadas de nuevo en cada intento detectan deficiencias rojo-verde y azul-amarillo, ojo por ojo. Todo queda en tu dispositivo.",
+      "seo.og.title": "OpticQuiz — Cribado de la visión del color",
+      "seo.og.desc": "8 láminas estilo Ishihara, dibujadas de nuevo cada vez. Detecta la visión del color rojo-verde y azul-amarillo. Gratis. Sin cuenta. Los resultados quedan en tu dispositivo."
+    },
+    pt: {
+      "seo.title": "Teste de visão de cores — lâminas de Ishihara online, grátis — OpticQuiz",
+      "seo.desc": "Teste de visão de cores gratuito: lâminas de Ishihara geradas na hora a cada tentativa rastreiam deficiências vermelho-verde e azul-amarelo, olho a olho. Tudo fica no seu dispositivo.",
+      "seo.og.title": "OpticQuiz — Rastreio da visão de cores",
+      "seo.og.desc": "8 lâminas no estilo Ishihara, desenhadas de novo a cada vez. Rastreia a visão de cores vermelho-verde e azul-amarelo. Grátis. Sem conta. Os resultados ficam no seu dispositivo."
+    },
+    it: {
+      "seo.title": "Test della visione dei colori — tavole di Ishihara online, gratis — OpticQuiz",
+      "seo.desc": "Test della visione dei colori gratuito: tavole di Ishihara generate ogni volta rilevano le deficienze rosso-verde e blu-giallo, occhio per occhio. Tutto resta sul tuo dispositivo.",
+      "seo.og.title": "OpticQuiz — Screening della visione dei colori",
+      "seo.og.desc": "8 tavole in stile Ishihara, ridisegnate ogni volta. Rileva la visione dei colori rosso-verde e blu-giallo. Gratis. Senza account. I risultati restano sul tuo dispositivo."
+    },
+    zh: {
+      "seo.title": "色觉测试 — 免费在线石原氏色盘 — OpticQuiz",
+      "seo.desc": "免费色觉测试：每次重新生成的石原氏风格色盘，分别检测左右眼的红绿与蓝黄色觉缺陷。所有结果只保留在你的设备上。",
+      "seo.og.title": "OpticQuiz — 色觉筛查",
+      "seo.og.desc": "8 张石原氏风格色盘，每次重新绘制。检测红绿与蓝黄色觉。免费，无需账号，结果只留在你的设备上。"
+    },
+    hi: {
+      "seo.title": "रंग दृष्टि परीक्षण — मुफ़्त ऑनलाइन इशिहारा प्लेटें — OpticQuiz",
+      "seo.desc": "मुफ़्त रंग दृष्टि परीक्षण: हर बार नए सिरे से बनने वाली इशिहारा प्लेटें प्रत्येक आँख की लाल-हरी और नीली-पीली रंग-दृष्टि कमी की जाँच करती हैं। परिणाम आपके डिवाइस पर ही रहते हैं।",
+      "seo.og.title": "OpticQuiz — रंग दृष्टि जाँच",
+      "seo.og.desc": "इशिहारा शैली की 8 प्लेटें, हर बार नए सिरे से बनतीं। लाल-हरी और नीली-पीली रंग दृष्टि की जाँच। मुफ़्त। खाता नहीं चाहिए। परिणाम आपके डिवाइस पर ही रहते हैं।"
+    }
+  };
+  for (var l in SEO) { if (D[l]) { for (var k in SEO[l]) { D[l][k] = SEO[l][k]; } } }
+})(window.OQ_I18N);

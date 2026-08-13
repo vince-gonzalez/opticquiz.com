@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://opticquiz.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://opticquiz.com/color/</loc><priority>0.9</priority></url>
+  <url><loc>https://opticquiz.com/hi/color/</loc><priority>0.9</priority></url>
+  <url><loc>https://opticquiz.com/zh/color/</loc><priority>0.9</priority></url>
+  <url><loc>https://opticquiz.com/it/color/</loc><priority>0.9</priority></url>
+  <url><loc>https://opticquiz.com/pt/color/</loc><priority>0.9</priority></url>
+  <url><loc>https://opticquiz.com/es/color/</loc><priority>0.9</priority></url>
+  <url><loc>https://opticquiz.com/de/color/</loc><priority>0.9</priority></url>
+  <url><loc>https://opticquiz.com/fr/color/</loc><priority>0.9</priority></url>
   <url><loc>https://opticquiz.com/color/kids/</loc><priority>0.9</priority></url>
   <url><loc>https://opticquiz.com/acuity/</loc><priority>0.9</priority></url>
   <url><loc>https://opticquiz.com/anomal/</loc><priority>0.8</priority></url>
