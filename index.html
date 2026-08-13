@@ -219,10 +219,21 @@ footer a{color:var(--gray);text-decoration:none;}footer a:hover{color:var(--red-
   </div>
 </main>
 
+<section class="oq-support" style="text-align:center;padding:14px 16px 0;">
+  <tip-stream name="OpticQuiz" accent="#C23410" theme="light" style="display:inline-block;text-align:left;">
+    <script type="application/json">
+    { "heading": "Support OpticQuiz",
+      "methods": [
+        { "type": "kofi", "label": "Ko-fi", "url": "https://ko-fi.com/opticquiz" } ] }
+    </script>
+  </tip-stream>
+</section>
+
 <footer>
   Free online vision tests &amp; color-accessibility tools &nbsp;|&nbsp; © 2026 opticquiz.com &nbsp;|&nbsp; <a href="/about/">About</a> · <a href="/platform/">Platform</a> · <a href="/setup/">Set up</a> · <a href="/research/">Research</a> · <a href="/impact/">Impact</a> · <a href="/privacy/">Privacy</a> &nbsp;|&nbsp; educational &amp; accessibility use, not a medical diagnostic
 </footer>
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="https://cdn.jsdelivr.net/npm/@f-keys/tip-widget@0.1.2/tip-stream.js" defer></script>
 </body>
 </html>
