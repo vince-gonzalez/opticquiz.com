@@ -31,7 +31,10 @@ const MARK_OPEN = "<!-- oq:hreflang -->";
 const MARK_CLOSE = "<!-- /oq:hreflang -->";
 
 // Pages that carry an i18n dictionary. Add a row when a page gets one.
-const PAGES = [{ dir: "color", dict: "assets/oq-i18n-color.js", priority: "0.9" }];
+const PAGES = [
+  { dir: "color", dict: "assets/oq-i18n-color.js", priority: "0.9" },
+  { dir: "flicker", dict: "assets/oq-i18n-flicker.js", priority: "0.7" },
+];
 
 const CHECK_ONLY = process.argv.includes("--check");
 let failures = [];
@@ -48,21 +51,41 @@ function loadDict(rel) {
   return { dict, langs };
 }
 
+// Which keys are stamped into the HTML at build time? Exactly the ones some element references.
+// Everything else — seo.* in the <head>, and every string the page's own JavaScript builds at
+// runtime (round counters, result bands, share text) — lives only in the dictionary the page
+// loads. Deriving this from the markup instead of from a list of key prefixes means adding a new
+// runtime string never again trips the verifier, which it did twice.
+function keysUsedInMarkup(html) {
+  const out = new Set();
+  for (const m of html.matchAll(/data-i18n(?:-html)?="([^"]+)"/g)) out.add(m[1]);
+  for (const m of html.matchAll(/data-i18n-attr="([^"]+)"/g)) {
+    for (const pair of m[1].split(";")) {
+      const k = pair.split(":")[1];
+      if (k) out.add(k.trim());
+    }
+  }
+  return [...out];
+}
+
 function eligible(dict, langs) {
-  const uiKeys = Object.keys(dict.en).filter((k) => !k.startsWith("seo."));
+  // Completeness is checked against EVERY English key, markup and runtime alike: a language
+  // missing tmpl.round would show English in the middle of the test, and one missing band.calm
+  // would show it on the results screen.
+  const allKeys = Object.keys(dict.en);
   const out = [];
   for (const { code } of langs) {
     if (code === "en") continue;
     const d = dict[code];
     if (!d) continue;
-    const missing = [...uiKeys, ...SEO_KEYS].filter((k) => !(k in d));
+    const missing = [...allKeys, ...SEO_KEYS].filter((k) => !(k in d));
     if (missing.length) {
       console.log(`   skip ${code}: missing ${missing.length} key(s) — ${missing.slice(0, 4).join(", ")}`);
       continue;
     }
     out.push(code);
   }
-  return { list: out, uiKeys };
+  return out;
 }
 
 // ---------------------------------------------------------------- html rewriting
@@ -100,16 +123,28 @@ function replaceOnce(html, re, value, ctx, what) {
   return html.replace(re, () => value);
 }
 
-function hreflangBlock(dir, langs) {
+// Everything language-specific lives BETWEEN the markers so a rebuild replaces all of it.
+// Putting the OQ_PAGE_LANG script outside them left the English copy behind on every rebuild:
+// each variant ended up with its own script followed by the English one, the later assignment
+// won, and every translated page declared itself English at runtime. The file looked right to a
+// first-match regex and was wrong in the browser.
+function clusterBlock(dir, lang, langs) {
   const rows = [`  <link rel="alternate" hreflang="x-default" href="${ORIGIN}/${dir}/">`,
                 `  <link rel="alternate" hreflang="en" href="${ORIGIN}/${dir}/">`];
   for (const l of langs) rows.push(`  <link rel="alternate" hreflang="${l}" href="${ORIGIN}/${l}/${dir}/">`);
+  const urls = { en: `/${dir}/` };
+  for (const l of langs) urls[l] = `/${l}/${dir}/`;
+  rows.push(`  <script>window.OQ_PAGE_LANG=${JSON.stringify(lang)};window.OQ_LANG_URLS=${JSON.stringify(urls)};</script>`);
   return [MARK_OPEN, ...rows, MARK_CLOSE].join("\n");
 }
 
 function injectHreflang(html, block, ctx) {
-  const existing = new RegExp(`${MARK_OPEN}[\\s\\S]*?${MARK_CLOSE}`);
-  if (existing.test(html)) return html.replace(existing, () => block);   // idempotent
+  // Self-healing, in this order: drop any previous marker block, then sweep up stray
+  // OQ_PAGE_LANG scripts left OUTSIDE the markers by an earlier version of this script, then
+  // insert one fresh block. Without the sweep the strays accumulate on every run and the LAST
+  // assignment wins, which is how every translated page came to declare itself English.
+  html = html.replace(new RegExp(`${MARK_OPEN}[\\s\\S]*?${MARK_CLOSE}\\n?`), "");
+  html = html.replace(/^[ \t]*<script>window\.OQ_PAGE_LANG=[\s\S]*?<\/script>\n?/gm, "");
   if (!/<\/head>/i.test(html)) { fail(`${ctx}: no </head> to inject into`); return html; }
   return html.replace(/<\/head>/i, () => block + "\n</head>");
 }
@@ -149,11 +184,7 @@ function buildVariant(src, dir, lang, langs, dict, uiKeys) {
   // English FAQ markup must not ride along on a translated page.
   h = h.replace(/<script type="application\/ld\+json">[\s\S]*?"FAQPage"[\s\S]*?<\/script>\s*/i, "");
 
-  const urls = { en: `/${dir}/` };
-  for (const l of langs) urls[l] = `/${l}/${dir}/`;
-  h = injectHreflang(h, hreflangBlock(dir, langs) + "\n" +
-    `  <script>window.OQ_PAGE_LANG=${JSON.stringify(lang)};window.OQ_LANG_URLS=${JSON.stringify(urls)};</script>`,
-    ctx);
+  h = injectHreflang(h, clusterBlock(dir, lang, langs), ctx);
   return h;
 }
 
@@ -179,7 +210,12 @@ function verify(out, dir, lang, dict, uiKeys) {
   const can = out.match(/<link rel="canonical" href="([^"]+)"/);
   if (!can || can[1] !== `${ORIGIN}/${lang}/${dir}/`) fail(`${ctx}: canonical is ${can && can[1]}`);
   if (/"FAQPage"/.test(out)) fail(`${ctx}: English FAQPage JSON-LD survived`);
-  if (!out.includes(`window.OQ_PAGE_LANG="${lang}"`)) fail(`${ctx}: OQ_PAGE_LANG not set`);
+  // Count, don't just find. A first-match check passed while a second, later assignment set the
+  // language back to English — the last one is the one the browser obeys.
+  const pl = out.match(/OQ_PAGE_LANG="([a-z-]+)"/g) || [];
+  if (pl.length !== 1) fail(`${ctx}: ${pl.length} OQ_PAGE_LANG assignments (${pl.join(", ")}), expected exactly 1`);
+  else if (!out.includes(`window.OQ_PAGE_LANG="${lang}"`)) fail(`${ctx}: OQ_PAGE_LANG is not ${lang}`);
+  if ((out.match(/<!-- oq:hreflang -->/g) || []).length !== 1) fail(`${ctx}: duplicated hreflang block`);
   for (const l of ["x-default", "en", lang]) {
     if (!new RegExp(`hreflang="${l}"`).test(out)) fail(`${ctx}: hreflang="${l}" missing`);
   }
@@ -210,27 +246,41 @@ function updateSitemap(dir, langs, priority) {
 console.log(CHECK_ONLY ? "VERIFY ONLY — nothing will be written\n" : "BUILD\n");
 for (const page of PAGES) {
   const { dict, langs } = loadDict(page.dict);
-  const { list, uiKeys } = eligible(dict, langs);
-  console.log(`/${page.dir}/  ${uiKeys.length} ui keys  →  ${list.length ? list.join(", ") : "(no eligible language)"}`);
-  if (!list.length) continue;
-
+  const list = eligible(dict, langs);
   const srcPath = path.join(ROOT, page.dir, "index.html");
   const src = fs.readFileSync(srcPath, "utf8");
+  const uiKeys = keysUsedInMarkup(src);
+
+  // A marker pointing at a key the dictionary does not define would silently stamp nothing.
+  const orphan = uiKeys.filter((k) => !(k in dict.en));
+  if (orphan.length) fail(`${page.dir}: markup references undefined key(s) ${orphan.join(", ")}`);
+
+  console.log(`/${page.dir}/  ${uiKeys.length} keys in markup, ${Object.keys(dict.en).length} in dictionary  →  ${list.length ? list.join(", ") : "(no eligible language)"}`);
+  if (!list.length) continue;
 
   for (const lang of list) {
     const out = buildVariant(src, page.dir, lang, list, dict, uiKeys);
+    // Verify BEFORE writing, and skip the write if this variant produced any failure. The
+    // previous version wrote first and exited non-zero at the end, so a page that failed its
+    // own checks still landed on disk — the docstring said "writes no files" and the code did
+    // not agree with it.
+    const before = failures.length;
     verify(out, page.dir, lang, dict, uiKeys);
+    const broke = failures.length > before;
     const dest = path.join(ROOT, lang, page.dir, "index.html");
-    if (!CHECK_ONLY) {
+    if (!CHECK_ONLY && !broke) {
       fs.mkdirSync(path.dirname(dest), { recursive: true });
       fs.writeFileSync(dest, out);
     }
-    console.log(`   ${CHECK_ONLY ? "checked" : "wrote  "} ${lang}/${page.dir}/index.html   ${(out.length / 1024).toFixed(1)} kB`);
+    console.log(`   ${broke ? "FAILED " : CHECK_ONLY ? "checked" : "wrote  "} ${lang}/${page.dir}/index.html   ${(out.length / 1024).toFixed(1)} kB`);
   }
 
   // Reciprocity: the English original must point back at every variant, or the cluster is
-  // one-way and Google ignores it.
-  let en = injectHreflang(src, hreflangBlock(page.dir, list), `en/${page.dir}`);
+  // one-way and Google ignores it. It also gets OQ_PAGE_LANG="en" and the sibling URL map —
+  // without them, cur() falls back to localStorage, so a visitor who once picked German saw the
+  // ENGLISH url render in German, and the switcher swapped text in place instead of navigating
+  // to /de/. Caught in the browser, not by any static check.
+  let en = injectHreflang(src, clusterBlock(page.dir, "en", list), `en/${page.dir}`);
   for (const l of [...list, "x-default", "en"]) {
     if (!new RegExp(`hreflang="${l}"`).test(en)) fail(`en/${page.dir}: hreflang="${l}" missing from the source page`);
   }

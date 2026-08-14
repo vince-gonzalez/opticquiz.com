@@ -249,6 +249,8 @@ footer { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spa
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "WebApplication", "name": "Color Blindness Test — Free Online Ishihara Plates", "url": "https://opticquiz.com/color/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz Color Vision Test — procedurally generated Ishihara-style plates. Screens for red-green and blue-yellow color vision deficiency. Free, on-device, educational only."}
 </script>
+
+
 <!-- oq:hreflang -->
   <link rel="alternate" hreflang="x-default" href="https://opticquiz.com/color/">
   <link rel="alternate" hreflang="en" href="https://opticquiz.com/color/">
@@ -259,8 +261,8 @@ footer { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spa
   <link rel="alternate" hreflang="it" href="https://opticquiz.com/it/color/">
   <link rel="alternate" hreflang="zh" href="https://opticquiz.com/zh/color/">
   <link rel="alternate" hreflang="hi" href="https://opticquiz.com/hi/color/">
-<!-- /oq:hreflang -->
   <script>window.OQ_PAGE_LANG="zh";window.OQ_LANG_URLS={"en":"/color/","es":"/es/color/","fr":"/fr/color/","de":"/de/color/","pt":"/pt/color/","it":"/it/color/","zh":"/zh/color/","hi":"/hi/color/"};</script>
+<!-- /oq:hreflang -->
 </head>
 <body>
 
@@ -396,31 +398,31 @@ footer { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spa
 </main>
 
 <section class="seo" aria-label="About the color vision test">
-  <h2>About this color blindness test</h2>
-  <p>This free online color blindness test uses <strong>Ishihara-style dot plates</strong> — the hidden-number design used in eye clinics for over a century. Each plate is generated fresh in your browser: a digit is drawn in dots that differ from the background only in <strong>hue</strong>, along a red-green or blue-yellow confusion line, while dot size and brightness are randomized so you can't cheat by shape or shading. If your color vision separates those hues, the number pops out; if it doesn't, you see a uniform field.</p>
-  <p><strong>How these plates are generated.</strong> Every plate is drawn procedurally in JavaScript the moment the test loads — there are <strong>no stored, scanned, or scraped Ishihara images</strong> anywhere on this site. The dots are packed live, the hidden figure is separated from the background only along a color-confusion axis, and the lightness of every dot is randomized within a shared band on each run. Because of that, <strong>no two runs are identical</strong>: a plate can't be memorized, screenshotted, or traced by brightness — only genuine hue discrimination reveals the figure. Most free online color tests reuse the same fixed public-domain plate images; this one does not, which is what makes it a fresh screen every time rather than a picture quiz.</p>
-  <p>You'll see 8 plates per eye — five red-green, two blue-yellow (tritan), and one lightness-only control that everyone can read. Scoring is a plain count of how many you read correctly on each axis, not a black-box "AI" verdict or invented probability. The result is an honest screen: it can flag a likely <strong>red-green</strong> or <strong>tritan</strong> deficiency and give a coarse severity band, but a screen cannot separate protanopia from deuteranopia, and it is never a diagnosis.</p>
+  <h2 data-i18n="about.h2">关于这个色盲测试</h2>
+  <p data-i18n-html="about.p1">这个免费的在线色觉测试使用<strong>石原氏风格的圆点色盘</strong>——一个多世纪以来眼科诊室一直使用的隐藏数字设计。每张色盘都在你的浏览器里重新生成：数字由一些圆点组成，它们与背景仅在<strong>色调</strong>上不同，沿着红绿或蓝黄混淆线排布；同时圆点的大小和亮度被随机化，因此你无法靠形状或明暗作弊。如果你的色觉能分辨这些色调，数字就会跳出来；如果不能，你只会看到一片均匀的圆点。</p>
+  <p data-i18n-html="about.p2"><strong>这些色盘是如何生成的。</strong>每张色盘都在测试加载的那一刻由 JavaScript 程序化绘制——本站<strong>没有任何存储、扫描或抓取的石原氏图片</strong>。圆点是实时排布的，隐藏图形只沿颜色混淆轴与背景分离，且每次运行时每个圆点的明度都会在同一区间内随机取值。正因如此，<strong>没有两次运行是完全相同的</strong>：色盘无法被背下来、截图保存或按亮度描摹——只有真正的色调辨别才能看出图形。大多数免费在线色觉测试反复使用同一组公有领域的固定图片；本测试不是，这正是它每次都是一次全新筛查、而不是一场看图问答的原因。</p>
+  <p data-i18n-html="about.p3">每只眼睛会看到 8 张色盘——五张红绿、两张蓝黄（三色异常），以及一张所有人都能读出的纯明度对照盘。评分只是简单统计你在每条轴上读对了几张，而不是不透明的“人工智能”判定或凭空生成的概率。结果是一次诚实的筛查：它能提示可能的<strong>红绿</strong>或<strong>蓝黄</strong>色觉缺陷，并给出一个粗略的严重程度区间，但屏幕无法区分红色盲与绿色盲，而且它绝不是诊断。</p>
   <div class="learn-links">
-    <a href="/research/"><strong>This test's method is published</strong> — read the open-access paper &amp; open source →</a>
-    <a href="/checker/">Designing something? Check your color palette is colorblind-safe →</a>
-    <a href="/color/kids/">Testing a young child? Use the shape-based Color Test for Kids →</a>
-    <a href="/learn/color-blindness-explained/">Read: Color Blindness, Explained →</a>
-    <a href="/learn/how-ishihara-plates-work/">Read: How Ishihara Plates Work →</a>
-    <a href="/learn/how-accurate-are-online-color-blindness-tests/">Read: How Accurate Are Online Color Blindness Tests? →</a>
-    <a href="/learn/which-color-vision-test-is-most-accurate/">Read: Which Color Vision Test Is Most Accurate? →</a>
-    <a href="/anomal/">Try: the Anomaloscope red-green matching test →</a>
+    <a href="/research/" data-i18n-html="links.0"><strong>本测试的方法已公开发表</strong>——阅读开放获取论文与开源代码 →</a>
+    <a href="/checker/" data-i18n="links.1">在做设计吗？检查你的配色方案对色觉缺陷者是否友好 →</a>
+    <a href="/color/kids/" data-i18n="links.2">要测试幼儿吗？请使用基于图形的儿童色觉测试 →</a>
+    <a href="/learn/color-blindness-explained/" data-i18n="links.3">阅读：色盲是怎么回事 →</a>
+    <a href="/learn/how-ishihara-plates-work/" data-i18n="links.4">阅读：石原氏色盘的工作原理 →</a>
+    <a href="/learn/how-accurate-are-online-color-blindness-tests/" data-i18n="links.5">阅读：在线色盲测试有多准确？ →</a>
+    <a href="/learn/which-color-vision-test-is-most-accurate/" data-i18n="links.6">阅读：哪种色觉测试最准确？ →</a>
+    <a href="/anomal/" data-i18n="links.7">试试：色觉异常镜，红绿匹配测试 →</a>
   </div>
-  <h2>Frequently asked questions</h2>
-  <div class="faq-q">How accurate is an online color blindness test?</div>
-  <div class="faq-a">It's a useful screen, not a diagnosis. Uncalibrated screens shift results between devices, but a plate test built from real confusion-axis colors can reliably flag a likely deficiency. Confirm anything meaningful with an eye-care professional.</div>
-  <div class="faq-q">Can this test tell if I'm protan or deutan?</div>
-  <div class="faq-a">No — it detects the shared red-green confusion pattern, but separating protan from deutan needs a clinician's anomaloscope or diagnostic plates.</div>
-  <div class="faq-q">Does this test show how severe my color blindness is?</div>
-  <div class="faq-a">Yes — it gives an honest severity read (none, borderline, mild, moderate, or strong) from how many red-green plates you missed, and shows the exact count it's based on. On five plates that band is coarse: a single plate can shift it, and an uncalibrated screen can too. For a finer read, the saturation and red-green match tests grade further — and a clinician's anomaloscope grades it properly.</div>
-  <div class="faq-q">Why test each eye separately?</div>
-  <div class="faq-a">Inherited color blindness is the same in both eyes, but a one-eye difference can point to an acquired change worth examining — and per-eye testing improves reliability.</div>
-  <div class="faq-q">Is this test free?</div>
-  <div class="faq-a">Yes — free, no account, and it runs entirely on your device. Nothing is uploaded or stored.</div>
+  <h2 data-i18n="faq.h2">常见问题</h2>
+  <div class="faq-q" data-i18n="faq.0.q">在线色盲测试有多准确？</div>
+  <div class="faq-a" data-i18n="faq.0.a">它是一次有用的筛查，不是诊断。未经校准的屏幕会让结果在不同设备之间发生偏移，但用真实混淆轴颜色构建的色盘测试能够可靠地提示一种可能的模式。确诊需要经过临床校准的色盘或色觉异常镜。</div>
+  <div class="faq-q" data-i18n="faq.1.q">这个测试能分辨我是红色弱还是绿色弱吗？</div>
+  <div class="faq-a" data-i18n="faq.1.a">不能——它检测的是两者共有的红绿混淆模式，而区分红色弱与绿色弱需要临床医生的色觉异常镜或诊断用色盘。</div>
+  <div class="faq-q" data-i18n="faq.2.q">这个测试会显示我的色盲有多严重吗？</div>
+  <div class="faq-a" data-i18n="faq.2.a">会——它会根据你错过了多少张红绿色盘给出一个诚实的严重程度（无、临界、轻度、中度或重度），并显示得出该区间的确切张数。只有五张色盘时区间比较粗，未校准的屏幕也会让它偏移，所以这是一个估计值，而不是临床分级。</div>
+  <div class="faq-q" data-i18n="faq.3.q">为什么要分别测试每只眼睛？</div>
+  <div class="faq-a" data-i18n="faq.3.a">遗传性色盲在两只眼睛上是相同的，但单眼出现差异可能提示某种后天变化，值得进一步检查——而且逐眼测试还能发现某一侧的注意力失误，从而提高可靠性。</div>
+  <div class="faq-q" data-i18n="faq.4.q">这个测试免费吗？</div>
+  <div class="faq-a" data-i18n="faq.4.a">免费——无需账号，并且完全在你的设备上运行。没有任何内容被上传或存储。</div>
 </section>
 
 <div id="oq-feedback" data-surface="color-test"></div>

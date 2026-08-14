@@ -249,6 +249,8 @@ footer { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spa
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "WebApplication", "name": "Color Blindness Test — Free Online Ishihara Plates", "url": "https://opticquiz.com/color/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz Color Vision Test — procedurally generated Ishihara-style plates. Screens for red-green and blue-yellow color vision deficiency. Free, on-device, educational only."}
 </script>
+
+
 <!-- oq:hreflang -->
   <link rel="alternate" hreflang="x-default" href="https://opticquiz.com/color/">
   <link rel="alternate" hreflang="en" href="https://opticquiz.com/color/">
@@ -259,8 +261,8 @@ footer { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spa
   <link rel="alternate" hreflang="it" href="https://opticquiz.com/it/color/">
   <link rel="alternate" hreflang="zh" href="https://opticquiz.com/zh/color/">
   <link rel="alternate" hreflang="hi" href="https://opticquiz.com/hi/color/">
-<!-- /oq:hreflang -->
   <script>window.OQ_PAGE_LANG="fr";window.OQ_LANG_URLS={"en":"/color/","es":"/es/color/","fr":"/fr/color/","de":"/de/color/","pt":"/pt/color/","it":"/it/color/","zh":"/zh/color/","hi":"/hi/color/"};</script>
+<!-- /oq:hreflang -->
 </head>
 <body>
 
@@ -396,31 +398,31 @@ footer { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spa
 </main>
 
 <section class="seo" aria-label="About the color vision test">
-  <h2>About this color blindness test</h2>
-  <p>This free online color blindness test uses <strong>Ishihara-style dot plates</strong> — the hidden-number design used in eye clinics for over a century. Each plate is generated fresh in your browser: a digit is drawn in dots that differ from the background only in <strong>hue</strong>, along a red-green or blue-yellow confusion line, while dot size and brightness are randomized so you can't cheat by shape or shading. If your color vision separates those hues, the number pops out; if it doesn't, you see a uniform field.</p>
-  <p><strong>How these plates are generated.</strong> Every plate is drawn procedurally in JavaScript the moment the test loads — there are <strong>no stored, scanned, or scraped Ishihara images</strong> anywhere on this site. The dots are packed live, the hidden figure is separated from the background only along a color-confusion axis, and the lightness of every dot is randomized within a shared band on each run. Because of that, <strong>no two runs are identical</strong>: a plate can't be memorized, screenshotted, or traced by brightness — only genuine hue discrimination reveals the figure. Most free online color tests reuse the same fixed public-domain plate images; this one does not, which is what makes it a fresh screen every time rather than a picture quiz.</p>
-  <p>You'll see 8 plates per eye — five red-green, two blue-yellow (tritan), and one lightness-only control that everyone can read. Scoring is a plain count of how many you read correctly on each axis, not a black-box "AI" verdict or invented probability. The result is an honest screen: it can flag a likely <strong>red-green</strong> or <strong>tritan</strong> deficiency and give a coarse severity band, but a screen cannot separate protanopia from deuteranopia, and it is never a diagnosis.</p>
+  <h2 data-i18n="about.h2">À propos de ce test de daltonisme</h2>
+  <p data-i18n-html="about.p1">Ce test de vision des couleurs gratuit en ligne utilise des <strong>planches de points de type Ishihara</strong> — le principe du nombre caché employé en cabinet d'ophtalmologie depuis plus d'un siècle. Chaque planche est générée à neuf dans votre navigateur : un chiffre est dessiné avec des points qui ne diffèrent du fond que par la <strong>teinte</strong>, le long d'une ligne de confusion rouge-vert ou bleu-jaune, tandis que la taille et la luminosité des points sont randomisées pour que vous ne puissiez pas tricher par la forme ou l'ombrage. Si votre vision des couleurs sépare ces teintes, le chiffre saute aux yeux ; sinon, vous voyez un champ uniforme.</p>
+  <p data-i18n-html="about.p2"><strong>Comment ces planches sont générées.</strong> Chaque planche est dessinée de façon procédurale en JavaScript au moment où le test se charge — il n'y a <strong>aucune image d'Ishihara stockée, scannée ou récupérée</strong> nulle part sur ce site. Les points sont assemblés en direct, la figure cachée n'est séparée du fond que le long d'un axe de confusion des couleurs, et la clarté de chaque point est randomisée dans une bande commune à chaque exécution. De ce fait, <strong>deux exécutions ne sont jamais identiques</strong> : une planche ne peut être mémorisée, capturée en image ni tracée par la luminosité — seule une véritable discrimination de teinte révèle la figure. La plupart des tests de couleur gratuits en ligne réutilisent les mêmes images fixes du domaine public ; celui-ci non, et c'est ce qui en fait un dépistage neuf à chaque fois plutôt qu'un questionnaire illustré.</p>
+  <p data-i18n-html="about.p3">Vous verrez 8 planches par œil — cinq rouge-vert, deux bleu-jaune (tritan) et un contrôle en clarté seule que tout le monde peut lire. La notation est un simple décompte des planches lues correctement sur chaque axe, et non un verdict opaque « d'IA » ni une probabilité inventée. Le résultat est un dépistage honnête : il peut signaler une probable déficience <strong>rouge-vert</strong> ou <strong>tritan</strong> et donner une bande de sévérité grossière, mais un écran ne peut pas séparer la protanopie de la deutéranopie, et ce n'est jamais un diagnostic.</p>
   <div class="learn-links">
-    <a href="/research/"><strong>This test's method is published</strong> — read the open-access paper &amp; open source →</a>
-    <a href="/checker/">Designing something? Check your color palette is colorblind-safe →</a>
-    <a href="/color/kids/">Testing a young child? Use the shape-based Color Test for Kids →</a>
-    <a href="/learn/color-blindness-explained/">Read: Color Blindness, Explained →</a>
-    <a href="/learn/how-ishihara-plates-work/">Read: How Ishihara Plates Work →</a>
-    <a href="/learn/how-accurate-are-online-color-blindness-tests/">Read: How Accurate Are Online Color Blindness Tests? →</a>
-    <a href="/learn/which-color-vision-test-is-most-accurate/">Read: Which Color Vision Test Is Most Accurate? →</a>
-    <a href="/anomal/">Try: the Anomaloscope red-green matching test →</a>
+    <a href="/research/" data-i18n-html="links.0"><strong>La méthode de ce test est publiée</strong> — lisez l'article en accès libre et le code source →</a>
+    <a href="/checker/" data-i18n="links.1">Vous concevez quelque chose ? Vérifiez que votre palette est sûre pour les daltoniens →</a>
+    <a href="/color/kids/" data-i18n="links.2">Vous testez un jeune enfant ? Utilisez le test de couleur par formes pour enfants →</a>
+    <a href="/learn/color-blindness-explained/" data-i18n="links.3">À lire : le daltonisme, expliqué →</a>
+    <a href="/learn/how-ishihara-plates-work/" data-i18n="links.4">À lire : comment fonctionnent les planches d'Ishihara →</a>
+    <a href="/learn/how-accurate-are-online-color-blindness-tests/" data-i18n="links.5">À lire : quelle est la fiabilité des tests de daltonisme en ligne ? →</a>
+    <a href="/learn/which-color-vision-test-is-most-accurate/" data-i18n="links.6">À lire : quel test de vision des couleurs est le plus précis ? →</a>
+    <a href="/anomal/" data-i18n="links.7">À essayer : l'anomaloscope, test d'égalisation rouge-vert →</a>
   </div>
-  <h2>Frequently asked questions</h2>
-  <div class="faq-q">How accurate is an online color blindness test?</div>
-  <div class="faq-a">It's a useful screen, not a diagnosis. Uncalibrated screens shift results between devices, but a plate test built from real confusion-axis colors can reliably flag a likely deficiency. Confirm anything meaningful with an eye-care professional.</div>
-  <div class="faq-q">Can this test tell if I'm protan or deutan?</div>
-  <div class="faq-a">No — it detects the shared red-green confusion pattern, but separating protan from deutan needs a clinician's anomaloscope or diagnostic plates.</div>
-  <div class="faq-q">Does this test show how severe my color blindness is?</div>
-  <div class="faq-a">Yes — it gives an honest severity read (none, borderline, mild, moderate, or strong) from how many red-green plates you missed, and shows the exact count it's based on. On five plates that band is coarse: a single plate can shift it, and an uncalibrated screen can too. For a finer read, the saturation and red-green match tests grade further — and a clinician's anomaloscope grades it properly.</div>
-  <div class="faq-q">Why test each eye separately?</div>
-  <div class="faq-a">Inherited color blindness is the same in both eyes, but a one-eye difference can point to an acquired change worth examining — and per-eye testing improves reliability.</div>
-  <div class="faq-q">Is this test free?</div>
-  <div class="faq-a">Yes — free, no account, and it runs entirely on your device. Nothing is uploaded or stored.</div>
+  <h2 data-i18n="faq.h2">Questions fréquentes</h2>
+  <div class="faq-q" data-i18n="faq.0.q">Quelle est la fiabilité d'un test de daltonisme en ligne ?</div>
+  <div class="faq-a" data-i18n="faq.0.a">C'est un dépistage utile, pas un diagnostic. Les écrans non calibrés décalent les résultats d'un appareil à l'autre, mais un test de planches construit à partir de vraies couleurs d'axes de confusion peut signaler de façon fiable un profil probable. La confirmation exige des planches calibrées cliniquement ou un anomaloscope.</div>
+  <div class="faq-q" data-i18n="faq.1.q">Ce test peut-il dire si je suis protan ou deutan ?</div>
+  <div class="faq-a" data-i18n="faq.1.a">Non — il détecte le schéma de confusion rouge-vert commun aux deux, mais séparer protan de deutan demande l'anomaloscope d'un clinicien ou des planches diagnostiques.</div>
+  <div class="faq-q" data-i18n="faq.2.q">Ce test indique-t-il la sévérité de mon daltonisme ?</div>
+  <div class="faq-a" data-i18n="faq.2.a">Oui — il donne une lecture honnête de sévérité (aucune, limite, légère, modérée ou forte) à partir du nombre de planches rouge-vert manquées, et affiche le décompte exact dont provient cette bande. Sur cinq planches la bande est grossière, et un écran non calibré la décale aussi : c'est une estimation, pas un grade clinique.</div>
+  <div class="faq-q" data-i18n="faq.3.q">Pourquoi tester chaque œil séparément ?</div>
+  <div class="faq-a" data-i18n="faq.3.a">Le daltonisme héréditaire est identique dans les deux yeux, mais une différence sur un seul œil peut signaler un changement acquis qui mérite un examen — et tester œil par œil améliore la fiabilité en repérant un moment d'inattention d'un côté ou de l'autre.</div>
+  <div class="faq-q" data-i18n="faq.4.q">Ce test est-il gratuit ?</div>
+  <div class="faq-a" data-i18n="faq.4.a">Oui — gratuit, sans compte, et il fonctionne entièrement sur votre appareil. Rien n'est envoyé ni conservé.</div>
 </section>
 
 <div id="oq-feedback" data-surface="color-test"></div>
