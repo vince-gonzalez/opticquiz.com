@@ -11,7 +11,7 @@
 <meta name="description" content="About OpticQuiz — who builds it, how the tests work, and the honesty policy: every test states exactly what a screen can and cannot measure. Educational only, never a diagnosis.">
 <meta name="theme-color" content="#F8F6F2">
 <meta property="og:title" content="About OpticQuiz">
-<meta property="og:description" content="One person, fourteen honest vision tests, and a strict rule: say exactly what a screen can and can't measure.">
+<meta property="og:description" content="One person, sixteen honest vision tests, and a strict rule: say exactly what a screen can and can't measure.">
 <meta property="og:image" content="https://opticquiz.com/og-card.png">
 <meta property="og:url" content="https://opticquiz.com/about/">
 <link rel="canonical" href="https://opticquiz.com/about/">
@@ -53,11 +53,49 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
 </style>
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="About OpticQuiz">
-<meta name="twitter:description" content="One person, fourteen honest vision tests, and a strict rule: say exactly what a screen can and can't measure.">
+<meta name="twitter:description" content="One person, sixteen honest vision tests, and a strict rule: say exactly what a screen can and can't measure.">
 <meta name="twitter:image" content="https://opticquiz.com/og-card.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Person",
+ "name": "Vincent Gonzalez",
+ "givenName": "Vincent",
+ "familyName": "Gonzalez",
+ "jobTitle": "Independent researcher",
+ "description": "Independent researcher working on colorimetric measurement of screen-delivered vision tests and the calibration limits of uncalibrated displays. Sole author and maintainer of OpticQuiz.",
+ "identifier": "https://orcid.org/0009-0005-3640-014X",
+ "address": {
+  "@type": "PostalAddress",
+  "addressLocality": "Punta Gorda",
+  "addressRegion": "Florida",
+  "addressCountry": "US"
+ },
+ "email": "mailto:vincegonzalez@me.com",
+ "url": "https://opticquiz.com/about/",
+ "sameAs": [
+  "https://orcid.org/0009-0005-3640-014X",
+  "https://www.wikidata.org/wiki/Q140936504",
+  "https://scholia.toolforge.org/orcid/0009-0005-3640-014X",
+  "https://github.com/zengineco/opticquiz.com"
+ ],
+ "knowsAbout": [
+  "colour vision deficiency",
+  "colorimetry",
+  "pseudoisochromatic plates",
+  "vision screening",
+  "display calibration"
+ ],
+ "worksFor": {
+  "@type": "Organization",
+  "name": "OpticQuiz",
+  "url": "https://opticquiz.com/"
+ }
+}
+</script>
 </head>
 <body>
 <header class="site-header" role="banner">
@@ -68,7 +106,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <span class="eyebrow">About</span>
   <h1>WHO'S<br>BEHIND<br>THIS?</h1>
 
-  <p>Hi — I'm <strong>Vince Gonzalez</strong>, and OpticQuiz is a one-person project with one goal: to be <strong>the home of free online vision testing</strong> — the honest one. I build browser tools, and this site exists because I got curious about which online vision tests were real and which were theater. The answer bothered me enough to build the honest version.</p>
+  <p>Hi — I'm <strong>Vince Gonzalez</strong>, and OpticQuiz is a one-person project with one goal: to be <strong>the home of "should I get my eyes checked?"</strong> — the honest answer to it. I build browser tools, and this site exists because I got curious about which online vision tests were real and which were theater. The answer bothered me enough to build the honest version.</p>
 
   <h2>THE HONESTY POLICY</h2>
   <div class="policy-card">
@@ -79,7 +117,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <div style="max-width:640px;margin:26px auto;padding:0 20px;text-align:center;"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8826956454892311" data-ad-slot="9391666635" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div>
   <h2>WHAT THESE TESTS ARE</h2>
   <p>Educational screening and honest curiosity tools. Some map to real clinical procedures (the tumbling-E chart, the Amsler grid, the D-15 arrangement, the Rayleigh anomaloscope match); others measure genuine perceptual thresholds that are simply interesting (flicker fusion, vernier hyperacuity, your blind spot). All of them run entirely in your browser — <strong>no account, and your test answers and scores are never uploaded or stored anywhere</strong>.</p>
-  <p style="font-size:13px;">One honest footnote so this claim stays true: the site itself uses Google Analytics and Google AdSense, which — like most of the web — set cookies and see standard visit data (page, device, rough location). Some guide pages also carry <strong>Amazon affiliate links</strong>, so a purchase there may earn the site a small commission at no extra cost to you — and only for things with real evidence behind them (never blue-light glasses, for instance). None of that touches the <em>test pages</em>, and all of it is separate from your <em>test results</em>, which are computed on your device and never sent to me or anyone else. If you'd rather block even the analytics, any content blocker or private window handles it.</p>
+  <p style="font-size:13px;">One honest footnote so this claim stays true: the site itself uses Google Analytics and Google AdSense, which — like most of the web — set cookies and see standard visit data (page, device, rough location). Some guide pages also carry <strong>Amazon affiliate links</strong>, so a purchase there may earn the site a small commission at no extra cost to you — and only for things with real evidence behind them (never blue-light glasses, for instance). The analytics run on the test pages too, and the colour test carries an ad unit. What none of it touches is your <em>test results</em>, which are computed on your device and never sent to me or anyone else. If you'd rather block even the analytics, any content blocker or private window handles it.</p>
 
   <h2>WHAT THEY ARE NOT</h2>
   <ul>
@@ -95,6 +133,22 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <div class="policy-card">
     <p>The method behind the color test isn't just open source — it's <strong>published open-access</strong>. The procedural plate-generation technique, and an honest account of exactly where it breaks (uncalibrated screens, sRGB limits, observer metamerism), are written up as a preprint with a permanent DOI, released under CC BY 4.0, with the source code deposited alongside it. Most online vision tests won't tell you how they work; this one hands you the paper.</p>
     <p style="margin-bottom:0;font-size:13px;">Gonzalez, V. (2026). <em>A Procedural Method for Generating Pseudoisochromatic Plates in the Browser, and the Calibration Limits of Screen-Based Colour-Vision Screening.</em> <a href="https://doi.org/10.5281/zenodo.21310578" rel="noopener">doi.org/10.5281/zenodo.21310578</a> · code: <a href="https://doi.org/10.5281/zenodo.21311369" rel="noopener">doi.org/10.5281/zenodo.21311369</a> · <a href="/research/">read the plain-English summary →</a></p>
+  </div>
+
+  <h2>WHO BUILT THIS</h2>
+  <div class="policy-card">
+    <p><strong>Vincent Gonzalez</strong> — independent researcher, Punta Gorda, Florida, United States.
+    ORCID <a href="https://orcid.org/0009-0005-3640-014X" rel="noopener me">0009-0005-3640-014X</a>.
+    Sole author and sole maintainer: every test, the colour engine, the papers and this page.</p>
+    <p>The work is colorimetric measurement of screen-delivered vision tests — what an uncalibrated
+    display can and cannot establish about someone's colour vision, and how to say so without
+    overstating it. It is published under a permanent DOI, the code is MIT licensed, and both are
+    listed against the ORCID above.</p>
+    <p style="margin-bottom:0;font-size:13px;">Publication record:
+    <a href="https://scholia.toolforge.org/orcid/0009-0005-3640-014X" rel="noopener">Scholia</a> ·
+    <a href="https://www.wikidata.org/wiki/Q140936504" rel="noopener">Wikidata</a> ·
+    <a href="https://github.com/zengineco/opticquiz.com" rel="noopener">source</a> ·
+    <a href="mailto:vincegonzalez@me.com">vincegonzalez@me.com</a></p>
   </div>
 
   <h2>SUPPORT THE PROJECT</h2>
