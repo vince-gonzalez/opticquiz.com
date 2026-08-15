@@ -180,7 +180,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
     <a href="/" class="backlink">← All free vision tests</a>
     <div class="disclaimer" role="note">
       <div class="disclaimer-title">Note</div>
-      <div class="disclaimer-body">Contrast sensitivity is a genuinely useful axis — it can dip before sharpness does in some eye conditions. But your screen's brightness and gamma are <strong>unknown and uncalibrated</strong>, so this is <strong>not a Pelli-Robson score</strong> and can't be compared between devices. It's most meaningful tracked against <strong>your own</strong> results on the same screen. A real contrast test is done by an eye clinic. Not a diagnosis.</div>
+      <div class="disclaimer-body">Contrast sensitivity is a genuinely useful axis — it can dip before sharpness does in some eye conditions. But your screen's brightness and gamma are <strong>unknown and uncalibrated</strong>, so this is <strong>not a Pelli-Robson score</strong> and can't be compared between devices. It's most meaningful tracked against <strong>your own</strong> results on the same screen. There is also a hard floor: an 8-bit display can only step luminance so finely, and that smallest step is about <strong>8% near black and 0.9% near white</strong>, so the faintest letter this page can draw depends on how bright its background is. This test stops at that floor rather than pretending to go below it, and tells you when your result landed there. A real contrast test is done by an eye clinic. Not a diagnosis.</div>
     </div>
   </div>
 </div>
@@ -236,6 +236,7 @@ var STATE = { trial:0, contrast:START_C, target:"", choices:[], stair:null, done
 
 // ── ENGINE ──
 function startTest(){
+  if (window.oqTrack) { oqTrack("test_start", "contrast"); }
   STATE.trial=0; STATE.contrast=START_C; STATE.done=false;
   // Never let the staircase descend below what the panel can render. Otherwise successive
   // steps produce an identical pixel value, the observer keeps answering correctly because
@@ -335,7 +336,7 @@ function answer(choice){
   }catch(err){ console.error("answer:",err); }
 }
 
-function finish(){ STATE.done=true; renderResults(); showScreen("screen-results"); }
+function finish(){ STATE.done=true; renderResults(); showScreen("screen-results"); if (window.oqTrack) { oqTrack("test_complete", "contrast"); }; }
 
 // ── RESULTS ──
 function renderResults(){
@@ -402,5 +403,6 @@ function announce(msg){
 }
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-analytics.js"></script>
 </body>
 </html>

@@ -198,6 +198,7 @@ var STATE = { answers: [] };
 
 // ── ENGINE ──
 function startTest(){
+  if (window.oqTrack) { oqTrack("test_start", "strain"); }
   STATE.answers = [];
   for (var i=0;i<SYMPTOMS.length;i++) STATE.answers.push(-1);
   renderList();
@@ -247,7 +248,7 @@ function finish(){
     announce(missing+" questions left blank; counting them as Never.");
   }
   renderResults();
-  showScreen("screen-results");
+  showScreen("screen-results"); if (window.oqTrack) { oqTrack("test_complete", "strain"); };
 }
 
 // ── RESULTS ──
@@ -321,5 +322,6 @@ function announce(msg){
 }
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-analytics.js"></script>
 </body>
 </html>

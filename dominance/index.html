@@ -258,6 +258,7 @@ var STATE = { rightKept:null, leftKept:null };
 
 // ── ENGINE ──
 function startTest(){
+  if (window.oqTrack) { oqTrack("test_start", "dominance"); }
   STATE.rightKept=null; STATE.leftKept=null;
   showScreen("screen-step1");
 }
@@ -268,7 +269,7 @@ function answerStep(eye, kept){
     if(eye==="right"){ STATE.rightKept=kept; showScreen("screen-step3"); return; }
     STATE.leftKept=kept;
     renderResults();
-    showScreen("screen-results");
+    showScreen("screen-results"); if (window.oqTrack) { oqTrack("test_complete", "dominance"); };
   }catch(err){ console.error("answerStep:",err); }
 }
 
@@ -327,5 +328,6 @@ function announce(msg){
 }
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-analytics.js"></script>
 </body>
 </html>

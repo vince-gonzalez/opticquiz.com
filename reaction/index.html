@@ -216,6 +216,7 @@ var STATE = { phase:"idle", trial:0, times:[], waitTimer:null, hotStart:0 };
 
 // ── ENGINE ──
 function startTest(){
+  if (window.oqTrack) { oqTrack("test_start", "reaction"); }
   // WRITES: STATE (reset)
   STATE.phase="idle"; STATE.trial=0; STATE.times=[]; STATE.hotStart=0;
   if(STATE.waitTimer){ clearTimeout(STATE.waitTimer); STATE.waitTimer=null; }
@@ -306,7 +307,7 @@ function onTap(){
 function finish(){
   // READS: STATE.times  WRITES: DOM
   renderResults();
-  showScreen("screen-results");
+  showScreen("screen-results"); if (window.oqTrack) { oqTrack("test_complete", "reaction"); };
 }
 
 // ── RENDER ──
@@ -376,5 +377,6 @@ function announce(msg){
 }
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-analytics.js"></script>
 </body>
 </html>

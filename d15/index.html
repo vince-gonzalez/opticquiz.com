@@ -555,6 +555,7 @@ var STATE = {
 // ── 3. ENGINE ─────────────────────────────────────────────
 
 function startTest() {
+  if (window.oqTrack) { oqTrack("test_start", "d15"); }
   // READS: nothing  WRITES: STATE (reset)
   STATE.currentEye = "right";
   STATE.results = { right: null, left: null };
@@ -1000,7 +1001,7 @@ function renderResults() {
 
   STATE.activeTab = "right";
   renderResultDetail("right");
-  showScreen("screen-results");
+  showScreen("screen-results"); if (window.oqTrack) { oqTrack("test_complete", "d15"); };
   announce("Results ready. Right eye: " + (r.right ? r.right.label : "not tested") + ". Left eye: " + (r.left ? r.left.label : "not tested") + ".");
 }
 
@@ -1157,5 +1158,6 @@ function shareResults() {
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <script src="/assets/oq-results.js"></script>
+<script src="/assets/oq-analytics.js"></script>
 </body>
 </html>

@@ -244,6 +244,7 @@ var STATE = { round:0, matches:[], mix:50, bri:60 };
 
 // ── ENGINE ──
 function startTest(){
+  if (window.oqTrack) { oqTrack("test_start", "anomal"); }
   STATE.round=0; STATE.matches=[];
   showScreen("screen-test");
   renderDots();
@@ -285,7 +286,7 @@ function lockRound(){
   announce("Match locked. Round "+(STATE.round+1)+".");
 }
 
-function finish(){ renderResults(); showScreen("screen-results"); }
+function finish(){ renderResults(); showScreen("screen-results"); if (window.oqTrack) { oqTrack("test_complete", "anomal"); }; }
 
 // ── RENDER ──
 function renderDots(){
@@ -370,5 +371,6 @@ function announce(msg){
 }
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-analytics.js"></script>
 </body>
 </html>

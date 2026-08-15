@@ -270,6 +270,7 @@ var STATE = { distCm:50, trial:0, offset:START_OFFSET, dir:1, lastCorrect:false,
 
 // ── ENGINE ──
 function startTest(){
+  if (window.oqTrack) { oqTrack("test_start", "vernier"); }
   var d=parseFloat(document.getElementById("dist-input").value);
   STATE.distCm=(isFinite(d)&&d>=20&&d<=120)?d:50;
   STATE.trial=0; STATE.offset=START_OFFSET; STATE.consecCorrect=0;
@@ -346,7 +347,7 @@ function answer(choice){
 function finish(){
   STATE.done=true;
   renderResults();
-  showScreen("screen-results");
+  showScreen("screen-results"); if (window.oqTrack) { oqTrack("test_complete", "vernier"); };
 }
 
 // ── RESULTS ──
@@ -410,5 +411,6 @@ function announce(msg){
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <script src="/assets/oq-calib.js"></script>
+<script src="/assets/oq-analytics.js"></script>
 </body>
 </html>

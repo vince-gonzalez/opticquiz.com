@@ -621,6 +621,7 @@ var STATE = {
 // ── 3. ENGINE ─────────────────────────────────────────────
 
 function startTest() {
+  if (window.oqTrack) { oqTrack("test_start", "amsler"); }
   // READS: nothing  WRITES: STATE (reset)
   STATE.currentEye = "right";
   STATE.currentQ = 0;
@@ -907,7 +908,7 @@ function renderResults() {
 
   STATE.activeTab = "right";
   renderResultDetail("right");
-  showScreen("screen-results");
+  showScreen("screen-results"); if (window.oqTrack) { oqTrack("test_complete", "amsler"); };
   announce("Results ready. Right eye: " + (r.right ? r.right.label : "not tested") + ". Left eye: " + (r.left ? r.left.label : "not tested") + ".");
 }
 
@@ -1035,5 +1036,6 @@ function shareResults() {
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <script src="/assets/oq-calib.js"></script>
+<script src="/assets/oq-analytics.js"></script>
 </body>
 </html>

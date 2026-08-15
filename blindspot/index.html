@@ -283,6 +283,7 @@ function selectEye(eye){
 }
 
 function startTest(){
+  if (window.oqTrack) { oqTrack("test_start", "blindspot"); }
   // READS: dist input  WRITES: STATE
   var d=parseFloat(document.getElementById("dist-input").value);
   STATE.distCm = (isFinite(d)&&d>=20&&d<=120) ? d : 50;
@@ -362,7 +363,7 @@ function markEvent(){
 function finish(){
   if(STATE.rafId){ cancelAnimationFrame(STATE.rafId); STATE.rafId=null; }
   renderResults();
-  showScreen("screen-results");
+  showScreen("screen-results"); if (window.oqTrack) { oqTrack("test_complete", "blindspot"); };
 }
 
 // ── RESULTS ──
@@ -425,5 +426,6 @@ function announce(msg){
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <script src="/assets/oq-calib.js"></script>
+<script src="/assets/oq-analytics.js"></script>
 </body>
 </html>

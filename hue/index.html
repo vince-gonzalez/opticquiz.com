@@ -710,6 +710,7 @@ var STATE = {
 // ── 4. ENGINE ─────────────────────────────────────────────
 
 function startTest() {
+  if (window.oqTrack) { oqTrack("test_start", "hue"); }
   // READS: nothing  WRITES: STATE (full reset)
   STATE.currentEye     = "right";
   STATE.currentNbhdIdx = 0;
@@ -1147,7 +1148,7 @@ function renderResults() {
   document.getElementById("tab-left").classList.toggle("active", STATE.activeTab === "left");
   document.getElementById("tab-left").setAttribute("aria-selected", STATE.activeTab === "left" ? "true" : "false");
 
-  showScreen("screen-results");
+  showScreen("screen-results"); if (window.oqTrack) { oqTrack("test_complete", "hue"); };
   var testedEye = STATE.activeTab;
   announce("Results ready. " + testedEye + " eye: " + (r[testedEye] && r[testedEye] !== "skipped" ? r[testedEye].label : "not tested") + ".");
 }
@@ -1353,5 +1354,6 @@ function shareResults() {
 renderIntroStrip();
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-analytics.js"></script>
 </body>
 </html>

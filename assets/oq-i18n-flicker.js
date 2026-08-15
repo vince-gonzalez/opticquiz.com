@@ -518,3 +518,21 @@ window.OQ_I18N = {
   };
   for (var l in R) { if (!D[l]) { D[l] = {}; } for (var k in R[l]) { D[l][k] = R[l][k]; } }
 })(window.OQ_I18N);
+
+/* Footer. Split into two keys so the medical disclaimer can never be dropped
+   while translating the tagline. It was English on all 14 translated pages until
+   2026-08-14, which left the disclaimer unreadable to exactly the readers it is
+   there to protect. */
+(function (D) {
+  var F = {
+    en: { "footer.tagline": "The home of \"should I get my eyes checked?\"", "footer.disclaimer": "Educational use only — not a medical diagnostic" },
+    es: { "footer.tagline": "El hogar de «¿debería revisarme la vista?»", "footer.disclaimer": "Solo para uso educativo — no es un diagnóstico médico" },
+    fr: { "footer.tagline": "La maison du « dois-je faire contrôler mes yeux ? »", "footer.disclaimer": "Usage éducatif uniquement — pas un diagnostic médical" },
+    de: { "footer.tagline": "Die Heimat von „sollte ich meine Augen untersuchen lassen?“", "footer.disclaimer": "Nur zu Bildungszwecken — keine medizinische Diagnose" },
+    pt: { "footer.tagline": "A casa de «devo ir examinar os olhos?»", "footer.disclaimer": "Apenas para fins educativos — não é um diagnóstico médico" },
+    it: { "footer.tagline": "La casa di «dovrei farmi controllare la vista?»", "footer.disclaimer": "Solo a scopo didattico — non è una diagnosi medica" },
+    zh: { "footer.tagline": "“我该去查一下眼睛吗？”的所在", "footer.disclaimer": "仅供教育用途 — 并非医学诊断" },
+    hi: { "footer.tagline": "“क्या मुझे अपनी आँखें जँचवानी चाहिए?” का ठिकाना", "footer.disclaimer": "केवल शैक्षिक उपयोग के लिए — यह चिकित्सा निदान नहीं है" }
+  };
+  for (var l in F) { if (!D[l]) { D[l] = {}; } for (var k in F[l]) { D[l][k] = F[l][k]; } }
+})(window.OQ_I18N);
