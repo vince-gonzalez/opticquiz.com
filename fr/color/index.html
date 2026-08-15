@@ -251,6 +251,7 @@ footer { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spa
 </script>
 
 
+
 <!-- oq:hreflang -->
   <link rel="alternate" hreflang="x-default" href="https://opticquiz.com/color/">
   <link rel="alternate" hreflang="en" href="https://opticquiz.com/color/">
@@ -422,14 +423,14 @@ footer { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spa
   <div class="faq-q" data-i18n="faq.3.q">Pourquoi tester chaque œil séparément ?</div>
   <div class="faq-a" data-i18n="faq.3.a">Le daltonisme héréditaire est identique dans les deux yeux, mais une différence sur un seul œil peut signaler un changement acquis qui mérite un examen — et tester œil par œil améliore la fiabilité en repérant un moment d'inattention d'un côté ou de l'autre.</div>
   <div class="faq-q" data-i18n="faq.4.q">Ce test est-il gratuit ?</div>
-  <div class="faq-a" data-i18n="faq.4.a">Oui — gratuit, sans compte, et il fonctionne entièrement sur votre appareil. Rien n'est envoyé ni conservé.</div>
+  <div class="faq-a" data-i18n="faq.4.a">Oui — gratuit, sans compte, et le test s'exécute entièrement sur votre appareil. Vos réponses et vos scores ne sont jamais envoyés ni conservés.</div>
 </section>
 
 <div id="oq-feedback" data-surface="color-test"></div>
 <script src="/assets/oq-feedback.js" defer></script>
 
 <footer role="contentinfo">
-  The home of free online vision tests &nbsp;|&nbsp; © 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic
+  The home of "should I get my eyes checked?" &nbsp;|&nbsp; © 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic
 </footer>
 
 <script>
@@ -698,6 +699,7 @@ var STATE = {
 // ── 5. ENGINE ─────────────────────────────────────────────
 
 function startTest() {
+  if (window.oqTrack) { oqTrack("test_start", "color"); }
   // READS: STATE.firstEye  WRITES: STATE (reset)
   STATE.currentEye = STATE.firstEye;
   STATE.answers = { right: [], left: [] };
@@ -845,6 +847,7 @@ function renderResults() {
   document.getElementById("tab-left").setAttribute("aria-selected", STATE.activeResultTab === "left" ? "true" : "false");
 
   showScreen("screen-results");
+  if (window.oqTrack) { oqTrack("test_complete", "color"); }
   announce("Results ready. " +
     (r.right ? "Right eye: " + RESULT_INFO[r.right.category].title + ". " : "") +
     (r.left ? "Left eye: " + RESULT_INFO[r.left.category].title + "." : ""));
@@ -1022,5 +1025,6 @@ function shareResults() {
 <script src="/assets/oq-i18n.js"></script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <script src="/assets/oq-results.js"></script>
+<script src="/assets/oq-analytics.js"></script>
 </body>
 </html>

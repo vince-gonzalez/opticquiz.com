@@ -122,6 +122,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
 {"@context": "https://schema.org", "@type": "WebApplication", "name": "Flicker Fusion Test — Critical Flicker Frequency (CFF, Hz)", "url": "https://opticquiz.com/flicker/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz Flicker Fusion — raise the flicker until it looks steady. Estimates your critical flicker fusion threshold in Hz, capped honestly by your screen's refresh rate."}
 </script>
 
+
 <!-- oq:hreflang -->
   <link rel="alternate" hreflang="x-default" href="https://opticquiz.com/flicker/">
   <link rel="alternate" hreflang="en" href="https://opticquiz.com/flicker/">
@@ -216,7 +217,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <div class="faq-a" data-i18n="faq.3.a">È una misura percettiva divertente che cambia con l'illuminazione, la dimensione dello stimolo e la stanchezza. Non è un test medico né diagnostico.</div>
 </section>
 
-<footer role="contentinfo">The home of free online vision tests &nbsp;|&nbsp; © 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
+<footer role="contentinfo">The home of "should I get my eyes checked?" &nbsp;|&nbsp; © 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
 
 <!-- Loaded BEFORE the page script so window.OQI18N exists when T() first runs. Loading them
      after left the three runtime-built strings falling back to English on translated pages. -->
@@ -317,6 +318,7 @@ function probeRefresh(cb){
 
 // ── ENGINE ──
 function startTest(){
+  if (window.oqTrack) { oqTrack("test_start", "flicker"); }
   // WRITES: STATE (reset)
   STATE.round=0; STATE.locks=[];
   showScreen("screen-test");
@@ -387,7 +389,8 @@ function lockRound(){
              {hz: STATE.hz.toFixed(1), n: STATE.round+1}));
 }
 
-function finish(){ renderResults(); showScreen("screen-results"); }
+function finish(){ renderResults(); showScreen("screen-results");
+  if (window.oqTrack) { oqTrack("test_complete", "flicker"); } }
 
 // ── RENDER ──
 function renderDots(){
@@ -467,5 +470,6 @@ probeRefresh(function(){
 });
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-analytics.js"></script>
 </body>
 </html>

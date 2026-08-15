@@ -266,7 +266,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <div class="faq-a">No — it estimates current sharpness at a set distance, but can't refract, detect disease, or prescribe. A surprising result is a reason to book an exam.</div>
 </section>
 
-<footer role="contentinfo">The home of free online vision tests &nbsp;|&nbsp; © 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
+<footer role="contentinfo">The home of "should I get my eyes checked?" &nbsp;|&nbsp; © 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
 
 <script src="/assets/oq-calib.js"></script>
 <script>
@@ -352,6 +352,7 @@ function updateFloorNote(){
 
 // ── ENGINE ──
 function startTest(){
+  if (window.oqTrack) { oqTrack("test_start", "acuity"); }
   // READS: calibration inputs  WRITES: STATE (reset)
   onCal(document.getElementById("cal-slider").value);
   updateFloorNote();
@@ -435,7 +436,8 @@ function finishEye(hitFloor){
   STATE.results[STATE.currentEye]={ best:best, hitFloor:!!hitFloor, floorLabel:STATE.floorLabel };
 
   if(STATE.currentEye==="right"){ showScreen("screen-switch"); announce("Right eye complete."); }
-  else { renderResults(); showScreen("screen-results"); }
+  else { renderResults(); showScreen("screen-results");
+         if (window.oqTrack) { oqTrack("test_complete", "acuity"); } }
 }
 
 function startSecondEye(){ STATE.currentEye="left"; beginEye(); }
@@ -490,5 +492,6 @@ function announce(msg){
 document.getElementById("dist-input").addEventListener("input", updateFloorNote);
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-analytics.js"></script>
 </body>
 </html>

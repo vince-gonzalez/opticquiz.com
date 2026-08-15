@@ -172,7 +172,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <div class="faq-q">What is a good WCAG contrast ratio?</div>
   <p class="faq-a">AA wants at least 4.5:1 for normal text and 7:1 for AAA. Large text (≥18pt, or 14pt bold) needs 3:1 for AA and 4.5:1 for AAA. UI components and meaningful graphics need at least 3:1. Higher is always more legible; 21:1 is the max — black on white.</p>
   <div class="faq-q">How is it calculated?</div>
-  <p class="faq-a">Each color is linearized from sRGB and weighted 0.2126 red, 0.7152 green, 0.0722 blue to get its relative luminance. The ratio is (lighter + 0.05) / (darker + 0.05). This page runs that exact formula on your device — nothing is uploaded.</p>
+  <p class="faq-a">Each color is linearized from sRGB and weighted 0.2126 red, 0.7152 green, 0.0722 blue to get its relative luminance. The ratio is (lighter + 0.05) / (darker + 0.05). This page runs that exact formula on your device — the colors you enter are never uploaded.</p>
   <div class="faq-q">Does passing contrast make my site WCAG compliant?</div>
   <p class="faq-a">No. Contrast is one criterion among many. Use this to fix color legibility early, and a full review for conformance.</p>
   <div class="faq-q">Is this the same as the contrast sensitivity test?</div>
