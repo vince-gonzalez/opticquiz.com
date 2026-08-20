@@ -58,12 +58,12 @@ a{color:var(--red-text);}
 .btn-danger{color:var(--red-text);}
 .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
 table{width:100%;border-collapse:collapse;margin:8px 0 4px;}
-th{font-family:var(--fm);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);text-align:left;padding:6px 8px;border-bottom:1px solid var(--lgray);}
+th{font-family:var(--fm);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);text-align:left;padding:6px 8px;border-bottom:1px solid var(--lgray);}
 td{font-size:14px;color:var(--black);padding:8px;border-bottom:1px solid var(--cream);}
 td.num{font-family:var(--fm);font-weight:600;}
 td.band{color:var(--gray);font-size:13px;}
 .spark{display:block;margin:4px 0 10px;}
-.delta{font-family:var(--fm);font-size:12px;}
+.delta{font-family:var(--fm);font-size:13px;}
 .up{color:var(--green);}.down{color:var(--red-text);}.flat{color:var(--gray);}
 .empty{font-size:14px;color:var(--gray);line-height:1.8;}
 footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
@@ -171,7 +171,7 @@ function exportCopy(){
   if (!w) { alert(txt); return; }
   w.document.write('<title>OpticQuiz history</title><p style="font-family:Courier New,monospace;'+
     'font-size:13px">Select all and copy. This never left your device.</p>'+
-    '<textarea style="width:98%;height:80vh;font-family:Courier New,monospace;font-size:12px">'+
+    '<textarea style="width:98%;height:80vh;font-family:Courier New,monospace;font-size:13px">'+
     txt.replace(/</g,"&lt;")+'</textarea>');
   w.document.close();
 }

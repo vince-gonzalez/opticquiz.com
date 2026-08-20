@@ -50,12 +50,37 @@ def load_config():
     return json.loads(CONFIG.read_text(encoding="utf-8"))
 
 
+# A hit inside JavaScript has no CSS selector, but selector_for() will happily
+# invent one, because the nearest preceding "{" is a JS block. A 12px textarea
+# built in a string was reported as the selector `if (!w)`, which reads as a
+# stylesheet rule, sends the reader looking for one that does not exist, and
+# cost a wrong diagnosis. When the guess does not look like a selector, say so.
+_JS_LIKE = re.compile(
+    r"(?:^|[\s;{}])(?:if|for|while|function|return|var|let|const|else|switch|try|catch)\b"
+    r"|[!<>=&|]=|=[=>]|\(\s*!")
+
+
+def _looks_like_selector(sel):
+    return bool(sel) and sel != "?" and not _JS_LIKE.search(sel)
+
+
+def _inline_label(text, pos):
+    """Name a hit that lives in a string rather than a stylesheet."""
+    start = text.rfind("style=", max(0, pos - 300), pos)
+    if start != -1:
+        frag = text[start + 6:pos + 30].strip("\"' ")
+        return "inline style: " + re.sub(r"\s+", " ", frag)[:56]
+    line_start = text.rfind("\n", 0, pos) + 1
+    frag = text[line_start:pos + 30].strip()
+    return "in script: " + re.sub(r"\s+", " ", frag)[:56]
+
+
 def selector_for(text, pos):
     """Best-effort CSS selector for a hit, so an exception can name something stable."""
     head = text[:pos]
     brace = head.rfind("{")
     if brace == -1:
-        return "?"
+        return _inline_label(text, pos)
     # Start after whichever delimiter ends the PREVIOUS rule. Each candidate contributes the
     # index just past itself, so a two-character delimiter like */ does not leave its slash
     # glued to the front of the selector.
@@ -65,7 +90,8 @@ def selector_for(text, pos):
         if i != -1:
             ends.append(i + len(delim))
     sel = head[max(ends):brace].strip().replace("\n", " ")
-    return re.sub(r"\s+", " ", sel)[-90:] or "?"
+    sel = re.sub(r"\s+", " ", sel)[-90:]
+    return sel if _looks_like_selector(sel) else _inline_label(text, pos)
 
 
 def scan(floor, exceptions):
