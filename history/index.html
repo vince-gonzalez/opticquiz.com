@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ============================================================
+  OPTICQUIZ — Your History  v1.0.0
+  Opt-in, on-device record of your own results over time.
+  opticquiz.com
+  ============================================================
+  WORKFLOW STACK: assets/oq-history.js (localStorage) -> render -> export/erase
+  HONESTY: /about/ says test answers and scores are never uploaded or stored
+           anywhere. Keeping a history contradicts the second half of that on
+           the user's own machine, so it is OFF until asked for, turning it off
+           erases what was kept, and there is no network call in the code path.
+  ============================================================ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="An optional record of your own OpticQuiz results over time, kept on your device and never uploaded. Off by default; turning it off erases it.">
+<meta name="theme-color" content="#F8F6F2">
+<meta name="robots" content="noindex, follow">
+<meta property="og:title" content="Your OpticQuiz history">
+<meta property="og:description" content="Optional, on-device record of your results over time. Never uploaded.">
+<meta property="og:url" content="https://opticquiz.com/history/">
+<link rel="canonical" href="https://opticquiz.com/history/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Your History — On Your Device Only — OpticQuiz</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#C23410;--red-text:#9E2A0D;--redd:#9E2A0D;--green:#3F7836;--greend:#38692F;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:9999;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:12px;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:var(--r);}
+.wrap{max-width:620px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:620px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red-text);}
+.ver-badge{font-family:var(--fm);font-size:13px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.eyebrow{font-family:var(--fm);font-size:13px;letter-spacing:.14em;color:var(--red-text);text-transform:uppercase;display:block;margin:30px 0 10px;}
+h1{font-family:var(--fd);font-size:clamp(44px,11vw,68px);color:var(--black);line-height:.92;letter-spacing:.02em;margin-bottom:16px;}
+h2{font-family:var(--fd);font-size:clamp(24px,5vw,30px);color:var(--black);line-height:1;letter-spacing:.02em;margin:26px 0 10px;}
+p{font-size:15px;color:var(--gray);line-height:1.8;margin-bottom:14px;}
+p strong{color:var(--black);}
+a{color:var(--red-text);}
+.card{background:#fff;border:1.5px solid var(--lgray);border-left:4px solid var(--green);border-radius:var(--rc);padding:20px;margin:18px 0;}
+.card.off{border-left-color:var(--lgray);}
+.btn{display:inline-block;padding:12px 20px;font-family:var(--fs);font-size:15px;font-weight:600;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;text-align:center;}
+.btn:hover{border-color:var(--black);background:var(--cream);}
+.btn-primary{background:var(--green);color:#fff;border-color:transparent;}
+.btn-primary:hover{background:var(--greend);}
+.btn-danger{color:var(--red-text);}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+table{width:100%;border-collapse:collapse;margin:8px 0 4px;}
+th{font-family:var(--fm);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);text-align:left;padding:6px 8px;border-bottom:1px solid var(--lgray);}
+td{font-size:14px;color:var(--black);padding:8px;border-bottom:1px solid var(--cream);}
+td.num{font-family:var(--fm);font-weight:600;}
+td.band{color:var(--gray);font-size:13px;}
+.spark{display:block;margin:4px 0 10px;}
+.delta{font-family:var(--fm);font-size:12px;}
+.up{color:var(--green);}.down{color:var(--red-text);}.flat{color:var(--gray);}
+.empty{font-size:14px;color:var(--gray);line-height:1.8;}
+footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">HISTORY</div>
+</header>
+<main id="main" class="wrap" role="main">
+  <span class="eyebrow">Your device</span>
+  <h1>YOUR<br>HISTORY</h1>
+
+  <p>A screen-based test can't tell you much on its own — your display, your lighting and your
+  distance all move the number. What it <em>can</em> do is compare you against yourself on the same
+  screen. That needs a record, and a record needs somewhere to live.</p>
+
+  <p>This one lives on your device, in your browser's own storage. <strong>It is off until you
+  switch it on</strong>, nothing is written before that, and switching it off erases what was kept.
+  There is no upload — the code that stores it has no way to send anything anywhere.</p>
+
+  <div id="switch" class="card off"></div>
+  <div id="body"></div>
+
+  <a href="/" class="backlink">← All free vision tests</a>
+</main>
+<footer role="contentinfo"><span data-i18n="footer.tagline">The home of "should I get my eyes checked?"</span> &nbsp;|&nbsp; © 2026 opticquiz.com &nbsp;|&nbsp; <span data-i18n="footer.disclaimer">Educational use only — not a medical diagnostic</span></footer>
+
+<script src="/assets/oq-history.js"></script>
+<script>
+// ── CONFIG ──
+var LABELS = {
+  "flicker":"Flicker fusion", "contrast":"Contrast sensitivity",
+  "acuity-right":"Visual acuity, right eye", "acuity-left":"Visual acuity, left eye"
+};
+// Which direction counts as an improvement. logMAR goes DOWN as sharpness goes up.
+var LOWER_IS_BETTER = { "acuity-right":1, "acuity-left":1 };
+
+// ── RENDER ──
+function esc(s){
+  // Test ids and band labels come from our own code, but they are interpolated into innerHTML
+  // below, so escape them anyway — a value that never reaches the DOM as markup can never inject.
+  return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+  });
+}
+function fmtDate(t){
+  var d = new Date(t);
+  return d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+}
+
+function sparkline(vals){
+  if (vals.length < 2) return "";
+  var w=280, h=38, pad=3;
+  var lo=Math.min.apply(null,vals), hi=Math.max.apply(null,vals);
+  var span=(hi-lo)||1;
+  var pts=vals.map(function(v,i){
+    var x=pad+(w-2*pad)*(vals.length===1?0:i/(vals.length-1));
+    var y=h-pad-(h-2*pad)*((v-lo)/span);
+    return x.toFixed(1)+","+y.toFixed(1);
+  }).join(" ");
+  return '<svg class="spark" width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="trend over time">'+
+         '<polyline points="'+pts+'" fill="none" stroke="#C23410" stroke-width="1.6"/></svg>';
+}
+
+function deltaCell(cur, prev, test){
+  if (prev == null) return '<span class="delta flat">first</span>';
+  var d = cur - prev;
+  if (Math.abs(d) < 1e-9) return '<span class="delta flat">no change</span>';
+  var better = LOWER_IS_BETTER[test] ? d < 0 : d > 0;
+  var arrow = d > 0 ? "+" : "";
+  return '<span class="delta '+(better?"up":"down")+'">'+arrow+d.toFixed(2)+'</span>';
+}
+
+function renderSwitch(){
+  var on = oqHistory.enabled();
+  var el = document.getElementById("switch");
+  el.className = "card" + (on ? "" : " off");
+  el.innerHTML = on
+    ? '<p style="margin-bottom:0;"><strong>History is on.</strong> Results from the tests below are '+
+      'saved to this device as you finish them.</p>'+
+      '<div class="btn-row">'+
+      '<button class="btn" id="exp">Download a copy</button>'+
+      '<button class="btn btn-danger" id="clr">Erase the records</button>'+
+      '<button class="btn btn-danger" id="off">Turn off and erase</button></div>'
+    : '<p style="margin-bottom:0;"><strong>History is off.</strong> Nothing is being saved. '+
+      'Turn it on and each test you finish from then on will add one line — a number, a date, and '+
+      'nothing about which answers you gave.</p>'+
+      '<div class="btn-row"><button class="btn btn-primary" id="on">Keep a history on this device</button></div>';
+  var b;
+  if ((b=document.getElementById("on")))  b.onclick=function(){ oqHistory.enable();  render(); };
+  if ((b=document.getElementById("off"))) b.onclick=function(){ oqHistory.disable(); render(); };
+  if ((b=document.getElementById("clr"))) b.onclick=function(){ oqHistory.clear();   render(); };
+  if ((b=document.getElementById("exp"))) b.onclick=exportCopy;
+}
+
+function exportCopy(){
+  // Shown in a new window rather than triggered as a download: a download inside an embedded
+  // viewer is silently blocked, and a silent failure is worse than a visible textarea.
+  var txt = oqHistory.exportJSON();
+  var w = window.open("", "_blank");
+  if (!w) { alert(txt); return; }
+  w.document.write('<title>OpticQuiz history</title><p style="font-family:Courier New,monospace;'+
+    'font-size:13px">Select all and copy. This never left your device.</p>'+
+    '<textarea style="width:98%;height:80vh;font-family:Courier New,monospace;font-size:12px">'+
+    txt.replace(/</g,"&lt;")+'</textarea>');
+  w.document.close();
+}
+
+function render(){
+  renderSwitch();
+  var out = document.getElementById("body");
+  if (!oqHistory.enabled()) { out.innerHTML = ""; return; }
+
+  var groups = {}, any = false;
+  oqHistory.all().forEach(function(e){ (groups[e.test] = groups[e.test] || []).push(e); any = true; });
+
+  if (!any) {
+    out.innerHTML = '<p class="empty">Nothing recorded yet. Finish a test and it will appear here.'+
+      ' Currently kept for: <a href="/flicker/">flicker fusion</a>, '+
+      '<a href="/contrast/">contrast sensitivity</a> and <a href="/acuity/">visual acuity</a>.</p>';
+    return;
+  }
+
+  var html = "";
+  Object.keys(groups).forEach(function(test){
+    var rows = groups[test];                       // newest first
+    var asc  = rows.slice().reverse();
+    html += '<h2>'+esc(LABELS[test]||test)+'</h2>';
+    html += sparkline(asc.map(function(e){ return e.v; }));
+    html += '<table><thead><tr><th>Date</th><th>Result</th><th>Change</th><th>Band</th></tr></thead><tbody>';
+    rows.forEach(function(e, i){
+      var prev = rows[i+1] ? rows[i+1].v : null;
+      html += '<tr><td>'+fmtDate(e.t)+'</td>'+
+              '<td class="num">'+e.v+(e.u?(" "+e.u):"")+'</td>'+
+              '<td>'+deltaCell(e.v, prev, test)+'</td>'+
+              '<td class="band">'+esc(e.b||"")+'</td></tr>';
+    });
+    html += '</tbody></table>';
+  });
+  html += '<p class="empty" style="margin-top:20px;">A change here is only meaningful if the screen, '+
+          'the lighting and your distance were the same. Compare like with like, and take a run of '+
+          'readings over a real trend rather than two.</p>';
+  out.innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>

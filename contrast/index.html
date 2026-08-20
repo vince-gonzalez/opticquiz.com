@@ -371,6 +371,9 @@ function renderResults(){
      '<div class="mini"><div class="mini-val">'+sensitivity.toFixed(0)+'×</div><div class="mini-lbl">Sensitivity</div></div></div>';
   h+='<div class="interp-card"><div class="interp-text">'+interp+'</div></div>';
   document.getElementById("result-detail").innerHTML=h;
+  // Local history, opt-in only. logCS is the number comparable across sessions; atFloor means
+  // the screen ran out of steps, so it is a bound on the display and not worth storing.
+  if (window.oqHistory && !atFloor) { oqHistory.save("contrast", logCS, "logCS", band); }
 }
 
 function retakeTest(){ showScreen("screen-intro"); }
@@ -404,5 +407,6 @@ function announce(msg){
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <script src="/assets/oq-analytics.js"></script>
+<script src="/assets/oq-history.js"></script>
 </body>
 </html>

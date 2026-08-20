@@ -446,12 +446,12 @@ function retakeTest(){ showScreen("screen-intro"); }
 // ── RESULTS ──
 function eyeLine(eye){
   var r=STATE.results[eye];
-  if(!r) return {val:"—",note:""};
-  if(!r.best) return {val:"< 20/200", note:"Could not read the largest letters at this distance — worth a professional exam."};
+  if(!r) return {val:"—",note:"",logmar:null};
+  if(!r.best) return {val:"< 20/200", note:"Could not read the largest letters at this distance — worth a professional exam.", logmar:null};
   var note = r.hitFloor
     ? "You read everything this screen could render at your distance ("+r.best.label+"). Your true acuity may be better — retake from farther away to measure beyond it."
     : (r.best.label==="20/16" ? "You cleared the entire ladder — sharper than 20/20 on this setup." : "");
-  return { val:r.best.label, note:note };
+  return { val:r.best.label, note:note, logmar:r.best.logmar };
 }
 
 function renderResults(){
@@ -465,6 +465,12 @@ function renderResults(){
   var interp="Snellen notation compares you to a reference eye: 20/40 means you read at 20 feet what a typical eye reads at 40. 20/20 is the conventional \"normal,\" not the human maximum — many people resolve 20/16 or better. Measured at "+STATE.distCm+" cm with card-calibrated letter sizes."+(notes.length?" "+notes.join(" "):"");
   h+='<div class="interp-card"><div class="interp-text">'+interp+'</div></div>';
   document.getElementById("result-detail").innerHTML=h;
+  // Local history, opt-in only. Stored per eye, since they can differ and that difference is
+  // the thing worth watching over time.
+  if (window.oqHistory) {
+    if (R.logmar != null) { oqHistory.save("acuity-right", R.logmar, "logMAR", R.val); }
+    if (L.logmar != null) { oqHistory.save("acuity-left",  L.logmar, "logMAR", L.val); }
+  }
 }
 
 function shareResults(){
@@ -493,5 +499,6 @@ document.getElementById("dist-input").addEventListener("input", updateFloorNote)
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <script src="/assets/oq-analytics.js"></script>
+<script src="/assets/oq-history.js"></script>
 </body>
 </html>

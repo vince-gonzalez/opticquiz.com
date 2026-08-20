@@ -435,6 +435,8 @@ function renderResults(){
         T("results.hzlabel","Hz — {band}",{band:band})+'</div></div>';
   h+='<div class="interp-card"><div class="interp-text">'+interp+'</div></div>';
   document.getElementById("result-detail").innerHTML=h;
+  // Local history, only if the reader switched it on. See assets/oq-history.js.
+  if (window.oqHistory) { oqHistory.save("flicker", avg, "Hz", band); }
 }
 
 function retakeTest(){ showScreen("screen-intro"); }

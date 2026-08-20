@@ -71,7 +71,7 @@ def hex_to_rgb(h):
         h = "".join(c * 2 for c in h)
     if len(h) == 8:
         h = h[:6]
-    if len(h) != 6:
+    if len(h) != 6 or any(c not in "0123456789abcdefABCDEF" for c in h):
         return None
     return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 

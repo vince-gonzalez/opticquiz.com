@@ -39,6 +39,7 @@
   <url><loc>https://opticquiz.com/widget/</loc><priority>0.8</priority></url>
   <url><loc>https://opticquiz.com/live/</loc><priority>0.8</priority></url>
   <url><loc>https://opticquiz.com/about/</loc><priority>0.6</priority></url>
+  <url><loc>https://opticquiz.com/history/</loc><priority>0.4</priority></url>
   <url><loc>https://opticquiz.com/learn/</loc><priority>0.7</priority></url>
   <url><loc>https://opticquiz.com/learn/color-blindness-explained/</loc><priority>0.7</priority></url>
   <url><loc>https://opticquiz.com/learn/how-ishihara-plates-work/</loc><priority>0.7</priority></url>
