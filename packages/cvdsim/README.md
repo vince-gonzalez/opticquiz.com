@@ -1,16 +1,16 @@
-# colorblind
+# cvdsim
 
 **See a color, a palette, or a whole image the way a colorblind person does.** Where
 [`cvdsafe`](https://www.npmjs.com/package/cvdsafe) *judges* whether colors are safe,
-`colorblind` *shows* you — it recolors a hex, or an entire PNG/JPEG, as protanopia, deuteranopia,
+`cvdsim` *shows* you — it recolors a hex, or an entire PNG/JPEG, as protanopia, deuteranopia,
 or tritanopia renders it.
 
 ```bash
-npm install colorblind
+npm install cvdsim
 ```
 
 ```js
-const dalton = require("colorblind");
+const dalton = require("cvdsim");
 
 dalton.simulate("#d7191c", "deutan");   // "#8a7b0c" — that warning red, to a deuteranope
 dalton.simulateAll("#1a9641");          // { protan: "#988839", deutan: "#8a7f48", tritan: "#009383" }
@@ -34,7 +34,7 @@ case — `simulate("#d7191c", "deutan", 0.5)` is a milder deuteranomaly.
 
 ## How it works
 
-`colorblind` is a thin lens over [`opticquiz-cvd`](https://www.npmjs.com/package/opticquiz-cvd):
+`cvdsim` is a thin lens over [`opticquiz-cvd`](https://www.npmjs.com/package/opticquiz-cvd):
 every pixel's transform is that engine's `simulate()`, which uses the Machado, Oliveira & Fernandes
 (2009) deficiency matrices. The image path just decodes, runs each distinct color through the
 engine once via a lookup table, and re-encodes — there is no second copy of the colorimetry to

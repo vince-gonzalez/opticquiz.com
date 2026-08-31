@@ -1,11 +1,11 @@
-// colorblind — see a color, a palette, or a whole image as a colorblind person does.
+// cvdsim — see a color, a palette, or a whole image as a colorblind person does.
 //
 // Named for daltonism (color blindness, after John Dalton). Where `cvdsafe` judges whether
-// colors are safe, colorblind shows you what they look like through a color-vision deficiency —
+// colors are safe, cvdsim shows you what they look like through a color-vision deficiency —
 // a single color, or an entire image recolored. The per-color transform is opticquiz-cvd's
 // simulate() (Machado, Oliveira & Fernandes 2009); nothing about the simulation is reinvented.
 //
-//   const dalton = require("colorblind");
+//   const dalton = require("cvdsim");
 //   dalton.simulate("#d7191c", "deutan");        // "#8a7b0c" — that red, to a deuteranope
 //   dalton.simulateAll("#d7191c");               // { protan, deutan, tritan }
 //   const png = dalton.simulateImage("chart.png", "deutan");   // a PNG Buffer of the recolored image

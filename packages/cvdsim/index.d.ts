@@ -1,4 +1,4 @@
-// Type definitions for colorblind
+// Type definitions for cvdsim
 
 export type DeficiencyType = "protan" | "deutan" | "tritan";
 
