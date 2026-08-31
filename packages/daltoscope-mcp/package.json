@@ -1,0 +1,42 @@
+{
+  "name": "daltoscope-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that lets an LLM (Claude, Cursor, etc.) see a color or an image the way a colorblind person does — recolors PNG/JPEG for protan/deutan/tritan. Built on the published OpticQuiz engine (Machado 2009).",
+  "type": "module",
+  "bin": {
+    "daltoscope-mcp": "server.js"
+  },
+  "main": "server.js",
+  "files": [
+    "server.js",
+    "imageSim.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "colorblind",
+    "daltonism",
+    "cvd",
+    "simulate",
+    "llm",
+    "tool",
+    "image",
+    "accessibility"
+  ],
+  "author": "Vince Gonzalez",
+  "license": "MIT",
+  "homepage": "https://opticquiz.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vince-gonzalez/opticquiz.com"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "opticquiz-cvd": "^1.1.0",
+    "zod": "^3.23.0",
+    "pngjs": "^7.0.0",
+    "jpeg-js": "^0.4.4"
+  }
+}

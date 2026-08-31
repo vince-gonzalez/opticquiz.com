@@ -1,0 +1,40 @@
+{
+  "name": "daltoscope",
+  "version": "0.1.0",
+  "description": "See a color, a palette, or a whole image as a colorblind person does. Recolors PNG/JPEG for protanopia, deuteranopia, and tritanopia — built on the published OpticQuiz engine (Machado, Oliveira & Fernandes 2009).",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "imageSim.js",
+    "index.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "colorblind",
+    "color-blindness",
+    "daltonism",
+    "cvd",
+    "color-vision-deficiency",
+    "simulate",
+    "protanopia",
+    "deuteranopia",
+    "tritanopia",
+    "accessibility",
+    "a11y",
+    "image"
+  ],
+  "author": "Vince Gonzalez",
+  "license": "MIT",
+  "homepage": "https://opticquiz.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vince-gonzalez/opticquiz.com"
+  },
+  "dependencies": {
+    "opticquiz-cvd": "^1.1.0",
+    "pngjs": "^7.0.0",
+    "jpeg-js": "^0.4.4"
+  }
+}
