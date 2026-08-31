@@ -1,0 +1,43 @@
+{
+  "name": "hueristic-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that lets an LLM (Claude, Cursor, etc.) check whether a palette OR an image is colorblind-safe, simulate color-vision deficiency, and check WCAG contrast — built on the published OpticQuiz engine (Machado 2009 + CIEDE2000).",
+  "type": "module",
+  "bin": {
+    "hueristic-mcp": "server.js"
+  },
+  "main": "server.js",
+  "files": [
+    "server.js",
+    "imageCheck.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "colorblind",
+    "colorblind-safe",
+    "accessibility",
+    "a11y",
+    "llm",
+    "tool",
+    "cvd",
+    "image",
+    "palette"
+  ],
+  "author": "Vince Gonzalez",
+  "license": "MIT",
+  "homepage": "https://opticquiz.com/checker/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vince-gonzalez/opticquiz.com"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "opticquiz-cvd": "^1.1.0",
+    "zod": "^3.23.0",
+    "pngjs": "^7.0.0",
+    "jpeg-js": "^0.4.4"
+  }
+}

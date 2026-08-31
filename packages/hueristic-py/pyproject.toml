@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hueristic"
+version = "0.1.0"
+description = "Is your palette colorblind-safe? Check and fix color palettes for color-vision deficiency with the published OpticQuiz engine (Machado 2009 + CIEDE2000)."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Vincent Gonzalez", email = "vincegonzalez@me.com" }]
+keywords = ["colorblind", "color blindness", "cvd", "accessibility", "palette",
+            "protanopia", "deuteranopia", "tritanopia", "color vision", "daltonize"]
+classifiers = [
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Multimedia :: Graphics",
+  "Topic :: Scientific/Engineering :: Visualization",
+]
+dependencies = ["opticquiz-cvd>=1.1.0"]
+
+[project.urls]
+Homepage = "https://opticquiz.com/checker/"
+Source = "https://github.com/vince-gonzalez/opticquiz.com"
+"Method paper" = "https://doi.org/10.5281/zenodo.21310578"
+
+[tool.setuptools]
+packages = ["hueristic"]

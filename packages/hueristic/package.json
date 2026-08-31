@@ -1,0 +1,39 @@
+{
+  "name": "hueristic",
+  "version": "0.1.0",
+  "description": "Is your palette colorblind-safe? Check and fix color palettes for color-vision deficiency (protan, deutan, tritan) with the published OpticQuiz engine — Machado 2009 + CIEDE2000.",
+  "keywords": [
+    "colorblind",
+    "color-blindness",
+    "colorblind-safe",
+    "cvd",
+    "accessibility",
+    "a11y",
+    "palette",
+    "protanopia",
+    "deuteranopia",
+    "tritanopia",
+    "daltonize",
+    "color-vision",
+    "wcag",
+    "contrast"
+  ],
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "opticquiz-cvd": "^1.1.0"
+  },
+  "author": "Vince Gonzalez",
+  "license": "MIT",
+  "homepage": "https://opticquiz.com/checker/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vince-gonzalez/opticquiz.com"
+  }
+}
