@@ -1,17 +1,17 @@
-# protan
+# protanopia
 
 Simulate **protanopia** (red-blind) color vision — the color, or a whole image, as a protanopia viewer sees it.
 A typed shortcut over [`cvdsim`](https://www.npmjs.com/package/cvdsim): every call is `cvdsim`'s
 with the deficiency fixed to `protan`.
 
 ```bash
-npm install protan
+npm install protanopia
 ```
 
 ```js
-const protan = require("protan");
-protan.simulate("#d7191c");                 // that red as protanopia sees it
-const png = protan.simulateImage("./chart.png");  // PNG Buffer, recolored
+const protanopia = require("protanopia");
+protanopia.simulate("#d7191c");                 // that red as protanopia sees it
+const png = protanopia.simulateImage("./chart.png");  // PNG Buffer, recolored
 require("fs").writeFileSync("chart-protan.png", png);
 ```
 

@@ -1,0 +1,13 @@
+{
+  "name": "cvdplate",
+  "version": "0.1.0",
+  "description": "Generate Ishihara-style pseudoisochromatic color-vision test plates — a digit hidden in a dot field that collapses under protanopia, deuteranopia, or tritanopia. Reproducible from a seed. Built on the OpticQuiz engine (Machado 2009 + CIEDE2000).",
+  "main": "index.js",
+  "files": ["index.js", "plate.js", "README.md", "LICENSE"],
+  "keywords": ["ishihara", "pseudoisochromatic", "colorblind", "color-vision", "plate", "cvd", "test", "protanopia", "deuteranopia", "tritanopia"],
+  "author": "Vince Gonzalez",
+  "license": "MIT",
+  "homepage": "https://opticquiz.com/",
+  "repository": { "type": "git", "url": "https://github.com/vince-gonzalez/opticquiz.com" },
+  "dependencies": { "opticquiz-cvd": "^1.1.0", "pngjs": "^7.0.0" }
+}

@@ -1,5 +1,5 @@
 {
-  "name": "protan",
+  "name": "protanopia",
   "version": "0.1.0",
   "description": "Simulate protanopia (red-blind) color vision — a typed shortcut over cvdsim / the OpticQuiz engine (Machado, Oliveira & Fernandes 2009).",
   "main": "index.js",
