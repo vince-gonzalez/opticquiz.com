@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "safepalette"
+version = "0.1.0"
+description = "Generate, check, and fix colorblind-safe color palettes (protan/deutan/tritan) — Machado 2009 + CIEDE2000, seeded with the Okabe-Ito safe palette."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Vince Gonzalez" }]
+keywords = ["palette", "colorblind", "color-blindness", "colorblind-safe", "cvd", "accessibility", "a11y", "okabe-ito", "matplotlib", "colors"]
+dependencies = ["opticquiz-cvd>=1.1.0"]
+
+[project.urls]
+Homepage = "https://opticquiz.com/checker/"
+Source = "https://github.com/vince-gonzalez/opticquiz.com"
+
+[tool.setuptools]
+packages = ["safepalette"]
