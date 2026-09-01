@@ -1,0 +1,12 @@
+{
+  "name": "dichromacy",
+  "version": "0.1.0",
+  "description": "Simulate the three dichromacies — protanopia, deuteranopia, tritanopia — for a color or a whole image. Umbrella over cvdsim / the OpticQuiz engine (Machado 2009).",
+  "main": "index.js",
+  "files": ["index.js", "README.md", "LICENSE"],
+  "keywords": ["dichromacy", "dichromat", "protanopia", "deuteranopia", "tritanopia", "colorblind", "color-blindness", "cvd", "simulate"],
+  "author": "Vince Gonzalez", "license": "MIT",
+  "homepage": "https://opticquiz.com/",
+  "repository": { "type": "git", "url": "https://github.com/vince-gonzalez/opticquiz.com" },
+  "dependencies": { "cvdsim": "^0.1.0" }
+}

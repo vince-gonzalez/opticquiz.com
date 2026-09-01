@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "achromatopsia"
+version = "0.1.0"
+description = "Simulate total color blindness (achromatopsia / complete monochromacy) — collapse a color or image to WCAG luminance."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Vince Gonzalez" }]
+dependencies = ["opticquiz-cvd>=1.1.0"]
+
+[project.optional-dependencies]
+image = ["pillow>=9.0", "numpy>=1.21"]
+
+[project.urls]
+Homepage = "https://opticquiz.com/"
+Source = "https://github.com/vince-gonzalez/opticquiz.com"
+
+[tool.setuptools]
+packages = ["achromatopsia"]

@@ -1,0 +1,12 @@
+{
+  "name": "achromatopsia",
+  "version": "0.1.0",
+  "description": "Simulate total color blindness (achromatopsia / complete monochromacy) — collapse a color or an image to its WCAG luminance. Built on the OpticQuiz engine.",
+  "main": "index.js",
+  "files": ["index.js", "imageGray.js", "README.md", "LICENSE"],
+  "keywords": ["achromatopsia", "monochromacy", "colorblind", "color-blindness", "grayscale", "luminance", "cvd", "accessibility"],
+  "author": "Vince Gonzalez", "license": "MIT",
+  "homepage": "https://opticquiz.com/",
+  "repository": { "type": "git", "url": "https://github.com/vince-gonzalez/opticquiz.com" },
+  "dependencies": { "opticquiz-cvd": "^1.1.0", "pngjs": "^7.0.0", "jpeg-js": "^0.4.4" }
+}

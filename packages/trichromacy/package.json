@@ -1,0 +1,12 @@
+{
+  "name": "trichromacy",
+  "version": "0.1.0",
+  "description": "Normal (three-cone) color vision and anomalous trichromacy (protanomaly/deuteranomaly/tritanomaly) — the mild, partial deficiency. Built on cvdsim / the OpticQuiz engine.",
+  "main": "index.js",
+  "files": ["index.js", "README.md", "LICENSE"],
+  "keywords": ["trichromacy", "anomalous-trichromacy", "protanomaly", "deuteranomaly", "tritanomaly", "colorblind", "color-vision", "cvd", "simulate"],
+  "author": "Vince Gonzalez", "license": "MIT",
+  "homepage": "https://opticquiz.com/",
+  "repository": { "type": "git", "url": "https://github.com/vince-gonzalez/opticquiz.com" },
+  "dependencies": { "cvdsim": "^0.1.0" }
+}

@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dichromacy"
+version = "0.1.0"
+description = "Simulate the three dichromacies — protanopia, deuteranopia, tritanopia — for a color or image (Machado 2009)."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Vince Gonzalez" }]
+dependencies = ["cvdsim>=0.1.0"]
+
+[project.optional-dependencies]
+image = ["cvdsim[image]>=0.1.0"]
+
+[project.urls]
+Homepage = "https://opticquiz.com/"
+Source = "https://github.com/vince-gonzalez/opticquiz.com"
+
+[tool.setuptools]
+packages = ["dichromacy"]
