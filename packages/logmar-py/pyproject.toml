@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "logmar"
+version = "0.1.0"
+description = "Convert between visual-acuity notations: logMAR, Snellen (20/x or 6/x), and decimal. Pure arithmetic, no dependencies."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Vince Gonzalez" }]
+keywords = ["logmar", "visual-acuity", "snellen", "acuity", "vision", "optometry", "ophthalmology", "eye-test"]
+
+[project.urls]
+Homepage = "https://opticquiz.com/"
+Source = "https://github.com/vince-gonzalez/opticquiz.com"
+
+[tool.setuptools]
+packages = ["logmar"]

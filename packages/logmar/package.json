@@ -1,0 +1,12 @@
+{
+  "name": "logmar",
+  "version": "0.1.0",
+  "description": "Convert between visual-acuity notations: logMAR, Snellen (20/x or 6/x), and decimal. Pure arithmetic, no dependencies.",
+  "main": "index.js",
+  "files": ["index.js", "README.md", "LICENSE"],
+  "keywords": ["logmar", "visual-acuity", "snellen", "acuity", "vision", "optometry", "ophthalmology", "eye-test", "conversion"],
+  "author": "Vince Gonzalez",
+  "license": "MIT",
+  "homepage": "https://opticquiz.com/",
+  "repository": { "type": "git", "url": "https://github.com/vince-gonzalez/opticquiz.com" }
+}
