@@ -1,7 +1,8 @@
 {
   "name": "colorblind-mcp",
-  "version": "0.1.0",
-  "description": "MCP server that lets an LLM (Claude, Cursor, etc.) see a color or an image the way a colorblind person does — recolors PNG/JPEG for protan/deutan/tritan. Built on the published OpticQuiz engine (Machado 2009).",
+  "version": "0.1.1",
+  "mcpName": "io.github.vince-gonzalez/colorblind",
+  "description": "MCP server that lets an LLM (Claude, Cursor, etc.) see a color or an image the way a colorblind person does \u2014 recolors PNG/JPEG for protan/deutan/tritan. Built on the published OpticQuiz engine (Machado 2009).",
   "type": "module",
   "bin": {
     "colorblind-mcp": "server.js"
@@ -11,7 +12,8 @@
     "server.js",
     "imageSim.js",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "keywords": [
     "mcp",

@@ -5,7 +5,7 @@ import { z } from "zod";
 import cvd from "opticquiz-cvd";
 import { analyzeImage } from "./imageCheck.js";
 
-const server = new McpServer({ name: "cvdsafe", version: "0.1.0" });
+const server = new McpServer({ name: "cvdsafe", version: "0.1.1" });
 
 server.registerTool(
   "checkPalette",

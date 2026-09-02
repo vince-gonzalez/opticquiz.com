@@ -5,7 +5,7 @@ import { z } from "zod";
 import cvd from "opticquiz-cvd";
 import { simulateImage } from "./imageSim.js";
 
-const server = new McpServer({ name: "colorblind", version: "0.1.0" });
+const server = new McpServer({ name: "colorblind", version: "0.1.1" });
 
 server.registerTool(
   "simulateColor",

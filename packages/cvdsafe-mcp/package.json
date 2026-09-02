@@ -1,7 +1,8 @@
 {
   "name": "cvdsafe-mcp",
-  "version": "0.1.0",
-  "description": "MCP server that lets an LLM (Claude, Cursor, etc.) check whether a palette OR an image is colorblind-safe, simulate color-vision deficiency, and check WCAG contrast — built on the published OpticQuiz engine (Machado 2009 + CIEDE2000).",
+  "version": "0.1.1",
+  "mcpName": "io.github.vince-gonzalez/cvdsafe",
+  "description": "MCP server that lets an LLM (Claude, Cursor, etc.) check whether a palette OR an image is colorblind-safe, simulate color-vision deficiency, and check WCAG contrast \u2014 built on the published OpticQuiz engine (Machado 2009 + CIEDE2000).",
   "type": "module",
   "bin": {
     "cvdsafe-mcp": "server.js"
@@ -11,7 +12,8 @@
     "server.js",
     "imageCheck.js",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "keywords": [
     "mcp",
