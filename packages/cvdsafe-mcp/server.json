@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.vince-gonzalez/cvdsafe",
-  "description": "Check whether a color palette or an image is colorblind-safe, simulate color-vision deficiency, and check WCAG contrast \u2014 built on the published OpticQuiz engine (Machado 2009 + CIEDE2000).",
+  "description": "Check if a palette or image is colorblind-safe, generate safe palettes, check WCAG contrast.",
   "repository": {
     "url": "https://github.com/vince-gonzalez/opticquiz.com",
     "source": "github"

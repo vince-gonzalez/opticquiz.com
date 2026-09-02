@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.vince-gonzalez/colorblind",
-  "description": "See a color or an image the way a colorblind person does \u2014 recolor PNG/JPEG for protanopia, deuteranopia, and tritanopia. Built on the OpticQuiz engine (Machado 2009).",
+  "description": "See a color or image as a colorblind person does; recolor images and make Ishihara plates.",
   "repository": {
     "url": "https://github.com/vince-gonzalez/opticquiz.com",
     "source": "github"
