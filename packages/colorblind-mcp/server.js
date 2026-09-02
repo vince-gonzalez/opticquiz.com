@@ -3,9 +3,10 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import cvd from "opticquiz-cvd";
+import cvdplate from "cvdplate";
 import { simulateImage } from "./imageSim.js";
 
-const server = new McpServer({ name: "colorblind", version: "0.1.1" });
+const server = new McpServer({ name: "colorblind", version: "0.2.0" });
 
 server.registerTool(
   "simulateColor",
@@ -62,6 +63,29 @@ server.registerTool(
       content: [
         { type: "text", text: `Recolored as ${r.type} sees it (${r.width}x${r.height}).` },
         { type: "image", data: r.base64, mimeType: "image/png" }
+      ]
+    };
+  }
+);
+
+server.registerTool(
+  "plate",
+  {
+    title: "Generate an Ishihara-style color-vision test plate",
+    description:
+      "Generate a pseudoisochromatic (Ishihara-style) test plate: a digit hidden in a field of dots whose colors are distinct to normal vision but collapse under the chosen deficiency. Returns the plate image. Use when asked to create a colorblindness test plate or demonstrate what a plate looks like. Reproducible from a seed.",
+    inputSchema: {
+      number: z.string().describe('The digit(s) to hide, e.g. "7" or "29"'),
+      type: z.enum(["protan", "deutan", "tritan"]).optional().describe("Which deficiency the figure should collapse under (default deutan)"),
+      seed: z.number().int().optional().describe("Same seed -> identical plate (default 1)")
+    }
+  },
+  async ({ number, type, seed }) => {
+    const png = cvdplate.plate(String(number), { type: type ?? "deutan", seed: seed == null ? 1 : seed, size: 480 });
+    return {
+      content: [
+        { type: "text", text: `Ishihara-style plate hiding "${number}", collapsing under ${type ?? "deutan"}.` },
+        { type: "image", data: png.toString("base64"), mimeType: "image/png" }
       ]
     };
   }

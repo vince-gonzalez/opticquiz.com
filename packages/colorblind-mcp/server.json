@@ -1,10 +1,20 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.vince-gonzalez/colorblind",
-  "description": "See a color or an image the way a colorblind person does — recolor PNG/JPEG for protanopia, deuteranopia, and tritanopia. Built on the OpticQuiz engine (Machado 2009).",
-  "repository": { "url": "https://github.com/vince-gonzalez/opticquiz.com", "source": "github" },
-  "version": "0.1.1",
+  "description": "See a color or an image the way a colorblind person does \u2014 recolor PNG/JPEG for protanopia, deuteranopia, and tritanopia. Built on the OpticQuiz engine (Machado 2009).",
+  "repository": {
+    "url": "https://github.com/vince-gonzalez/opticquiz.com",
+    "source": "github"
+  },
+  "version": "0.2.0",
   "packages": [
-    { "registryType": "npm", "identifier": "colorblind-mcp", "version": "0.1.1", "transport": { "type": "stdio" } }
+    {
+      "registryType": "npm",
+      "identifier": "colorblind-mcp",
+      "version": "0.2.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
   ]
 }

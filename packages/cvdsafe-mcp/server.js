@@ -3,9 +3,10 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import cvd from "opticquiz-cvd";
+import safepalette from "safepalette";
 import { analyzeImage } from "./imageCheck.js";
 
-const server = new McpServer({ name: "cvdsafe", version: "0.1.1" });
+const server = new McpServer({ name: "cvdsafe", version: "0.2.0" });
 
 server.registerTool(
   "checkPalette",
@@ -123,6 +124,25 @@ server.registerTool(
       content.push({ type: "image", data: r.simulated, mimeType: "image/png" });
     }
     return { content };
+  }
+);
+
+server.registerTool(
+  "generateSafePalette",
+  {
+    title: "Generate a colorblind-safe palette",
+    description:
+      "Return N colorblind-safe hex colors — distinct to each other under protanopia, deuteranopia and tritanopia. Seeded with the Okabe-Ito palette and safely extended above eight. Use when asked for accessible / colorblind-safe / colorblind-friendly colors for a chart, plot, map or UI. Never returns an unsafe color.",
+    inputSchema: {
+      count: z.number().int().min(1).max(24).describe("How many colorblind-safe colors to return")
+    }
+  },
+  async ({ count }) => {
+    const colors = safepalette.generate(count);
+    const note = colors.length < count
+      ? ` (asked for ${count}; ${colors.length} is the most that stay mutually distinct under all three deficiencies)`
+      : "";
+    return { content: [{ type: "text", text: `${colors.length} colorblind-safe colors${note}:\n${colors.join(" ")}\n\n` + JSON.stringify(colors) }] };
   }
 );
 
