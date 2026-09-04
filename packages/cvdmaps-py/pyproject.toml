@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cvdmaps"
+version = "0.1.0"
+description = "Colorblind-safe colormaps and color cycles for matplotlib — one call to make every plot colorblind-safe (Okabe-Ito, verified under protan/deutan/tritan)."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Vince Gonzalez" }]
+keywords = ["matplotlib", "colormap", "colorblind", "color-blindness", "cvd", "okabe-ito", "accessibility", "a11y", "palette", "data-visualization"]
+dependencies = ["matplotlib>=3.3"]
+
+[project.urls]
+Homepage = "https://opticquiz.com/"
+Source = "https://github.com/vince-gonzalez/opticquiz.com"
+
+[tool.setuptools]
+packages = ["cvdmaps"]
