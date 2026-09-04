@@ -1,14 +1,39 @@
 {
   "name": "safepalette",
-  "version": "0.1.0",
-  "description": "Generate, check, and fix colorblind-safe color palettes — protanopia, deuteranopia, tritanopia. Built on the published OpticQuiz engine (Machado 2009 + CIEDE2000) with the Okabe-Ito safe palette.",
+  "version": "0.2.0",
+  "description": "Generate, check, and fix colorblind-safe color palettes \u2014 protanopia, deuteranopia, tritanopia. Built on the published OpticQuiz engine (Machado 2009 + CIEDE2000) with the Okabe-Ito safe palette.",
   "main": "index.js",
   "types": "index.d.ts",
-  "files": ["index.js", "index.d.ts", "README.md", "LICENSE"],
-  "keywords": ["palette", "colorblind", "color-blindness", "colorblind-safe", "cvd", "accessibility", "a11y", "okabe-ito", "data-visualization", "colors"],
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "LICENSE",
+    "cli.js"
+  ],
+  "keywords": [
+    "palette",
+    "colorblind",
+    "color-blindness",
+    "colorblind-safe",
+    "cvd",
+    "accessibility",
+    "a11y",
+    "okabe-ito",
+    "data-visualization",
+    "colors"
+  ],
   "author": "Vince Gonzalez",
   "license": "MIT",
   "homepage": "https://opticquiz.com/checker/",
-  "repository": { "type": "git", "url": "https://github.com/vince-gonzalez/opticquiz.com" },
-  "dependencies": { "opticquiz-cvd": "^1.1.0" }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vince-gonzalez/opticquiz.com"
+  },
+  "dependencies": {
+    "opticquiz-cvd": "^1.1.0"
+  },
+  "bin": {
+    "safepalette": "cli.js"
+  }
 }

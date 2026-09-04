@@ -1,7 +1,7 @@
 {
   "name": "cvdsim",
-  "version": "0.1.0",
-  "description": "See a color, a palette, or a whole image as a colorblind person does. Recolors PNG/JPEG for protanopia, deuteranopia, and tritanopia — built on the published OpticQuiz engine (Machado, Oliveira & Fernandes 2009).",
+  "version": "0.2.0",
+  "description": "See a color, a palette, or a whole image as a colorblind person does. Recolors PNG/JPEG for protanopia, deuteranopia, and tritanopia \u2014 built on the published OpticQuiz engine (Machado, Oliveira & Fernandes 2009).",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
@@ -9,7 +9,8 @@
     "imageSim.js",
     "index.d.ts",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "cli.js"
   ],
   "keywords": [
     "colorblind",
@@ -36,5 +37,8 @@
     "opticquiz-cvd": "^1.1.0",
     "pngjs": "^7.0.0",
     "jpeg-js": "^0.4.4"
+  },
+  "bin": {
+    "cvdsim": "cli.js"
   }
 }
