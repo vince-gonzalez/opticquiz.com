@@ -136,3 +136,22 @@
   .oq-carousel__track { scroll-behavior: auto; }
   .oq-card:hover { transform: none; }
 }
+
+/* ---------- reviewed & listed strip (top of the footer) ---------- */
+.oq-verified {
+  max-width: 1120px; margin: 0 auto 26px; padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 22px;
+}
+.oq-verified h2 {
+  font-family: var(--fm, "Courier New", monospace);
+  font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+  color: #8d867c; margin: 0; font-weight: 400; flex: 0 0 auto;
+}
+.oq-verified ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.oq-verified li { margin: 0; }
+.oq-verified a {
+  color: #cfc9c0; text-decoration: none; font-size: 14.5px;
+  border-bottom: 1px solid transparent; white-space: nowrap;
+}
+.oq-verified a:hover, .oq-verified a:focus-visible { color: #fff; border-bottom-color: var(--red-on-dark, #F1927A); }

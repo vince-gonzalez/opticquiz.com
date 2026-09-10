@@ -20,7 +20,7 @@
 {"@type":"Question","name":"What calibration assumptions does it make?","acceptedAnswer":{"@type":"Answer","text":"It assumes an sRGB display and nothing else, because a web page cannot measure the things that matter. It does not know your display's actual gamut, gamma, brightness or white point; your ambient lighting; your viewing distance; or your pixel pitch. Every one of those changes results. Screen saturation is bounded by the sRGB gamut, so tests that depend on faint or highly saturated color are limited by the display itself, not by the method."}},
 {"@type":"Question","name":"Is the method published?","acceptedAnswer":{"@type":"Answer","text":"Yes, open access, with DOIs: 10.5281/zenodo.21310578 and 10.5281/zenodo.21311369. The color work is built on Machado, Oliveira and Fernandes (2009) for deficiency simulation and CIEDE2000 for color difference, both standard published methods rather than a private formula."}},
 {"@type":"Question","name":"Is the source code available?","acceptedAnswer":{"@type":"Answer","text":"Yes. The site and the engine are MIT licensed and public, the plate generator is deposited alongside the paper, and the same engine is published as installable packages on PyPI and npm so anyone can run the math themselves and check the numbers against ours."}},
-{"@type":"Question","name":"Have the tests been clinically validated?","acceptedAnswer":{"@type":"Answer","text":"The method is published with a DOI, the colorimetry is standard rather than proprietary, and the code is open and installable so anyone can reproduce the numbers independently. What has not happened is an independent clinical validation study of this browser implementation on an uncalibrated display — so no result here equals a Titmus, TNO, Randot, physical Ishihara or clinic acuity measurement. The third-party review that has happened is narrower: the Firefox extension passed Mozilla's add-on review, which vets security, privacy and source code, not color science."}},
+{"@type":"Question","name":"Have the tests been clinically validated?","acceptedAnswer":{"@type":"Answer","text":"The method is published with a DOI, the colorimetry is standard rather than proprietary, and the code is open and installable so anyone can reproduce the numbers independently. What has not happened is an independent clinical validation study of this browser implementation on an uncalibrated display — so no result here equals a Titmus, TNO, Randot, physical Ishihara or clinic acuity measurement. Independent review that has happened: the extension passed review at four separate stores - Mozilla's Firefox Add-ons, the Chrome Web Store, Microsoft Edge Add-ons and the VS Code Marketplace. Those vet security, privacy, permission scope and readable source; Mozilla's is the strictest. None of them reviews the color science."}},
 {"@type":"Question","name":"What can OpticQuiz not measure?","acceptedAnswer":{"@type":"Answer","text":"Eye health of any kind. It cannot measure intraocular pressure, examine the retina or optic nerve, detect glaucoma, cataract or macular disease, produce a spectacle prescription, or give a clinical diagnosis of color-vision deficiency. It cannot give stereoacuity in arc seconds. It is a screening and educational aid; anything it flags is a reason to see an optometrist or ophthalmologist, not a conclusion."}},
 {"@type":"Question","name":"Who pays for OpticQuiz?","acceptedAnswer":{"@type":"Answer","text":"Google AdSense on the site, voluntary Ko-fi contributions, and optional paid color-accessibility audits for teams. Critically, OpticQuiz does not sell eyewear, lenses, color-correcting glasses, or a refraction service, and takes no affiliate commission on any of them. No result on this site can steer you toward a product it profits from, because there is no such product."}}]}
 </script>
@@ -198,10 +198,12 @@ a{color:inherit;}
       <p>It still means no result here equals a Titmus, TNO or Randot stereo test, a physical
       Ishihara plate book under standard illumination, or a clinic acuity measurement. Anyone who
       tells you an online test is "as accurate as" those is selling something.</p>
-      <p>The third-party review that <em>has</em> happened is narrower and worth stating precisely:
-      the Firefox extension passed <strong>Mozilla's add-on review</strong>, which vets security,
-      privacy and readable source code. That is a real check on the software. It is not Mozilla
-      validating the color science, and it shouldn't be read as one.</p>
+      <p>Independent review that <em>has</em> happened, stated precisely: the extension passed review at
+      <strong>four separate stores</strong> — Mozilla's Firefox Add-ons, the Chrome Web Store,
+      Microsoft Edge Add-ons and the VS Code Marketplace. Those processes vet security, privacy,
+      permission scope and readable source; Mozilla's is the strictest of them. They are real checks
+      on the software, and none of them is a review of the color science — every link is in the
+      footer if you want to confirm them yourself.</p>
     </div>
   </section>
 
@@ -260,6 +262,18 @@ a{color:inherit;}
 
 <!-- oq:footer -->
 <footer class="oq-footer" role="contentinfo">
+  <div class="oq-verified">
+    <h2>Reviewed &amp; listed by</h2>
+    <ul>
+      <li><a href="https://chromewebstore.google.com/detail/opticquiz-%E2%80%94-colorblind-co/cigfnaekhndlablojacfdhmgcdnnfieo" rel="noopener">Chrome Web Store</a></li>
+      <li><a href="https://microsoftedge.microsoft.com/addons/detail/opticquiz-%E2%80%94-colorblind-co/maalcjohefglpnenmfjjkacgmomhofeh" rel="noopener">Microsoft Edge Add-ons</a></li>
+      <li><a href="https://addons.mozilla.org/en-US/firefox/addon/opticquiz-colorblind-corrector/" rel="noopener">Firefox Add-ons</a></li>
+      <li><a href="https://marketplace.visualstudio.com/items?itemName=opticquiz.opticquiz-colorblind-check" rel="noopener">VS Code Marketplace</a></li>
+      <li><a href="https://registry.modelcontextprotocol.io" rel="noopener">MCP Registry</a></li>
+      <li><a href="https://pypi.org/project/cvdsafe/" rel="noopener">PyPI</a></li>
+      <li><a href="https://www.npmjs.com/package/cvdsafe" rel="noopener">npm</a></li>
+    </ul>
+  </div>
   <div class="oq-footer__grid">
     <div>
       <h2>Vision tests</h2>
