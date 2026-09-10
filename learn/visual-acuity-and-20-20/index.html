@@ -79,8 +79,26 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<link rel="stylesheet" href="/assets/oq-chrome.css">
 </head>
 <body>
+
+<!-- oq:nav -->
+<nav class="oq-nav" aria-label="Primary">
+  <a href="/" class="oq-nav__brand" aria-label="OpticQuiz home">
+    <img class="oq-nav__mark" src="/opticquiz_icon.png" alt="" width="27" height="27">
+    <span class="oq-nav__name">OPTIC<b>QUIZ</b></span>
+  </a>
+  <div class="oq-nav__links">
+    <a href="/#tests">Vision tests</a>
+    <a href="/#color">Color tools</a>
+    <a href="/platform/">Developers</a>
+    <a href="/research/">Research</a>
+    <a href="/setup/" class="oq-nav__cta">Set up</a>
+  </div>
+</nav>
+<!-- /oq:nav -->
+
 <header class="site-header" role="banner">
   <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
   <div class="ver-badge">LEARN</div>
@@ -135,7 +153,56 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
 
   <a href="/learn/" class="backlink">← More guides</a>
 </main>
-<footer role="contentinfo">The home of "should I get my eyes checked?" &nbsp;|&nbsp; © 2026 opticquiz.com &nbsp;|&nbsp; Educational use only — not a medical diagnostic</footer>
+<!-- oq:footer -->
+<footer class="oq-footer" role="contentinfo">
+  <div class="oq-footer__grid">
+    <div>
+      <h2>Vision tests</h2>
+      <ul>
+        <li><a href="/color/">Color vision</a></li>
+        <li><a href="/d15/">Farnsworth D-15</a></li>
+        <li><a href="/acuity/">Visual acuity</a></li>
+        <li><a href="/flicker/">Flicker fusion</a></li>
+        <li><a href="/#tests">All 16 tests</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Color tools</h2>
+      <ul>
+        <li><a href="/checker/">Palette checker</a></li>
+        <li><a href="/contrast-checker/">Contrast checker</a></li>
+        <li><a href="/palettes/">Palette benchmark</a></li>
+        <li><a href="/widget/">One-line widget</a></li>
+        <li><a href="/extension/">Browser extension</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Developers</h2>
+      <ul>
+        <li><a href="/platform/">Platform &amp; API</a></li>
+        <li><a href="/setup/">Set up</a></li>
+        <li><a href="/live/">Live correction</a></li>
+        <li><a href="/use-cases/">Use cases</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>OpticQuiz</h2>
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/impact/">Impact archive</a></li>
+        <li><a href="/support/">Support</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="oq-footer__base">
+    <span>© 2026 opticquiz.com</span>
+    <span>One published method — <a href="https://doi.org/10.5281/zenodo.21310578">DOI 10.5281/zenodo.21310578</a></span>
+    <span class="oq-footer__note">Educational &amp; accessibility use — not a medical device, diagnosis, or a legal ADA/WCAG audit.</span>
+  </div>
+</footer>
+<!-- /oq:footer -->
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 </body>
 </html>

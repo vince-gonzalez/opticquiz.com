@@ -136,9 +136,27 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <link rel="alternate" hreflang="hi" href="https://opticquiz.com/hi/flicker/">
   <script>window.OQ_PAGE_LANG="es";window.OQ_LANG_URLS={"en":"/flicker/","es":"/es/flicker/","fr":"/fr/flicker/","de":"/de/flicker/","pt":"/pt/flicker/","it":"/it/flicker/","zh":"/zh/flicker/","hi":"/hi/flicker/"};</script>
 <!-- /oq:hreflang -->
+<link rel="stylesheet" href="/assets/oq-chrome.css">
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to main content</a>
+
+<!-- oq:nav -->
+<nav class="oq-nav" aria-label="Primary">
+  <a href="/" class="oq-nav__brand" aria-label="OpticQuiz home">
+    <img class="oq-nav__mark" src="/opticquiz_icon.png" alt="" width="27" height="27">
+    <span class="oq-nav__name">OPTIC<b>QUIZ</b></span>
+  </a>
+  <div class="oq-nav__links">
+    <a href="/#tests">Vision tests</a>
+    <a href="/#color">Color tools</a>
+    <a href="/platform/">Developers</a>
+    <a href="/research/">Research</a>
+    <a href="/setup/" class="oq-nav__cta">Set up</a>
+  </div>
+</nav>
+<!-- /oq:nav -->
+
 <div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
 <header class="site-header" role="banner">
   <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
@@ -218,7 +236,56 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <div class="faq-a" data-i18n="faq.3.a">Es una medida perceptiva divertida que cambia con la iluminación, el tamaño del estímulo y el cansancio. No es un test médico ni diagnóstico.</div>
 </section>
 
-<footer role="contentinfo"><span data-i18n="footer.tagline">El hogar de «¿debería revisarme la vista?»</span> &nbsp;|&nbsp; © 2026 opticquiz.com &nbsp;|&nbsp; <span data-i18n="footer.disclaimer">Solo para uso educativo — no es un diagnóstico médico</span></footer>
+<!-- oq:footer -->
+<footer class="oq-footer" role="contentinfo">
+  <div class="oq-footer__grid">
+    <div>
+      <h2>Vision tests</h2>
+      <ul>
+        <li><a href="/color/">Color vision</a></li>
+        <li><a href="/d15/">Farnsworth D-15</a></li>
+        <li><a href="/acuity/">Visual acuity</a></li>
+        <li><a href="/flicker/">Flicker fusion</a></li>
+        <li><a href="/#tests">All 16 tests</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Color tools</h2>
+      <ul>
+        <li><a href="/checker/">Palette checker</a></li>
+        <li><a href="/contrast-checker/">Contrast checker</a></li>
+        <li><a href="/palettes/">Palette benchmark</a></li>
+        <li><a href="/widget/">One-line widget</a></li>
+        <li><a href="/extension/">Browser extension</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Developers</h2>
+      <ul>
+        <li><a href="/platform/">Platform &amp; API</a></li>
+        <li><a href="/setup/">Set up</a></li>
+        <li><a href="/live/">Live correction</a></li>
+        <li><a href="/use-cases/">Use cases</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>OpticQuiz</h2>
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/impact/">Impact archive</a></li>
+        <li><a href="/support/">Support</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="oq-footer__base">
+    <span>© 2026 opticquiz.com</span>
+    <span>One published method — <a href="https://doi.org/10.5281/zenodo.21310578">DOI 10.5281/zenodo.21310578</a></span>
+    <span class="oq-footer__note">Educational &amp; accessibility use — not a medical device, diagnosis, or a legal ADA/WCAG audit.</span>
+  </div>
+</footer>
+<!-- /oq:footer -->
 
 <!-- Loaded BEFORE the page script so window.OQI18N exists when T() first runs. Loading them
      after left the three runtime-built strings falling back to English on translated pages. -->
