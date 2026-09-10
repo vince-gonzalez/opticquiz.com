@@ -1,0 +1,138 @@
+/* oq-chrome.css — the shared nav, footer and product carousel.
+   One source of truth for the site chrome. Namespaced oq-* so it never collides with a page's
+   own inline CSS. Every token has a literal fallback so it also works on the handful of pages
+   that don't declare :root. */
+
+/* ---------- nav ---------- */
+.oq-nav {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--ink, #141414);
+  border-bottom: 1px solid rgba(255, 255, 255, .10);
+  display: flex; align-items: center; gap: 20px;
+  padding: 10px clamp(14px, 4vw, 36px);
+}
+.oq-nav__brand { display: flex; align-items: center; gap: 9px; text-decoration: none; flex: 0 0 auto; }
+.oq-nav__mark {
+  width: 27px; height: 27px; border-radius: 50%;
+  display: block; flex: 0 0 auto; background: var(--bg, #F8F6F2);
+}
+.oq-nav__name {
+  font-family: var(--fd, "Bebas Neue", Impact, fantasy);
+  font-size: 21px; letter-spacing: .045em; color: #fff; line-height: 1; white-space: nowrap;
+}
+.oq-nav__name b { color: var(--red-on-dark, #F1927A); font-weight: inherit; }
+.oq-nav__links {
+  margin-left: auto; display: flex; align-items: center; gap: clamp(14px, 2.4vw, 30px);
+  overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
+}
+.oq-nav__links::-webkit-scrollbar { display: none; }
+.oq-nav__links a {
+  font-family: var(--fm, "Courier New", monospace);
+  font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase;
+  color: #cfc9c0; text-decoration: none; white-space: nowrap;
+  padding: 6px 0; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s;
+}
+.oq-nav__links a:hover, .oq-nav__links a:focus-visible {
+  color: #fff; border-bottom-color: var(--red-on-dark, #F1927A);
+}
+.oq-nav__links a[aria-current="page"] { color: #fff; border-bottom-color: var(--red-on-dark, #F1927A); }
+.oq-nav__cta {
+  font-family: var(--fm, "Courier New", monospace) !important;
+  background: var(--red, #C23410); color: #fff !important;
+  padding: 7px 14px !important; border-radius: var(--r, 6px);
+  border-bottom: 0 !important; letter-spacing: .08em !important;
+}
+.oq-nav__cta:hover { background: var(--redd, #9E2A0D); }
+
+/* ---------- footer ---------- */
+.oq-footer {
+  background: var(--ink, #141414); color: #cfc9c0;
+  font-family: var(--fs, "Source Serif 4", Georgia, serif);
+  padding: clamp(30px, 5vw, 54px) clamp(16px, 4vw, 40px) 26px;
+  margin-top: 56px; font-size: 15px; line-height: 1.6;
+}
+.oq-footer__grid {
+  max-width: 1120px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(168px, 1fr)); gap: 26px 30px;
+}
+.oq-footer h2 {
+  font-family: var(--fm, "Courier New", monospace);
+  font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: #8d867c; margin: 0 0 11px; font-weight: 400;
+}
+.oq-footer ul { list-style: none; margin: 0; padding: 0; }
+.oq-footer li { margin: 0 0 7px; }
+.oq-footer a { color: #e6e1d8; text-decoration: none; border-bottom: 1px solid transparent; }
+.oq-footer a:hover, .oq-footer a:focus-visible { color: #fff; border-bottom-color: var(--red-on-dark, #F1927A); }
+.oq-footer__base {
+  max-width: 1120px; margin: 30px auto 0; padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, .12);
+  display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline;
+  font-size: 13.5px; color: #8d867c;
+}
+.oq-footer__base a { color: #a9a29a; }
+.oq-footer__note { flex: 1 1 320px; min-width: 240px; }
+
+/* ---------- product carousel ---------- */
+.oq-carousel { max-width: 1120px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); }
+.oq-carousel__head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 16px; }
+.oq-carousel__head h2 {
+  font-family: var(--fd, "Bebas Neue", Impact, fantasy);
+  font-size: clamp(28px, 4.4vw, 42px); letter-spacing: .02em; margin: 0; color: var(--black, #1A1A1A);
+}
+.oq-carousel__nav { margin-left: auto; display: flex; gap: 8px; }
+.oq-carousel__btn {
+  width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+  border: 1px solid var(--lgray, #D4D0C8); background: var(--white, #fff);
+  color: var(--black, #1A1A1A); font-size: 17px; line-height: 1;
+  display: grid; place-items: center; transition: background .15s, border-color .15s;
+}
+.oq-carousel__btn:hover:not(:disabled) { background: var(--cream, #F0EDE6); border-color: var(--gray, #6B6B6B); }
+.oq-carousel__btn:disabled { opacity: .35; cursor: default; }
+.oq-carousel__track {
+  display: grid; grid-auto-flow: column; grid-auto-columns: minmax(258px, 1fr);
+  gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory;
+  scroll-behavior: smooth; padding-bottom: 8px;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.oq-carousel__track::-webkit-scrollbar { display: none; }
+@media (min-width: 860px) { .oq-carousel__track { grid-auto-columns: minmax(0, calc((100% - 36px) / 3)); } }
+.oq-card {
+  scroll-snap-align: start;
+  background: var(--white, #fff); border: 1px solid var(--lgray, #D4D0C8);
+  border-radius: var(--rc, 12px); overflow: hidden;
+  display: flex; flex-direction: column; text-decoration: none; color: inherit;
+  transition: border-color .15s, transform .15s;
+}
+.oq-card:hover { border-color: var(--gray, #6B6B6B); transform: translateY(-2px); }
+.oq-card__demo {
+  aspect-ratio: 16 / 9; background: var(--cream, #F0EDE6);
+  border-bottom: 1px solid var(--lgray, #D4D0C8);
+  display: grid; place-items: center; padding: 14px;
+}
+.oq-card__demo svg { width: 100%; height: 100%; display: block; }
+.oq-card__body { padding: 15px 16px 17px; }
+.oq-card__kicker {
+  font-family: var(--fm, "Courier New", monospace);
+  font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--red-text, #9E2A0D); display: block; margin-bottom: 6px;
+}
+.oq-card__body h3 {
+  font-family: var(--fd, "Bebas Neue", Impact, fantasy);
+  font-size: 23px; letter-spacing: .02em; margin: 0 0 6px; color: var(--black, #1A1A1A);
+}
+.oq-card__body p {
+  font-family: var(--fs, "Source Serif 4", Georgia, serif);
+  font-size: 14.5px; line-height: 1.5; margin: 0; color: var(--gray, #6B6B6B);
+}
+.oq-carousel__dots { display: flex; justify-content: center; gap: 7px; margin-top: 14px; }
+.oq-carousel__dot {
+  width: 7px; height: 7px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  background: var(--lgray, #D4D0C8);
+}
+.oq-carousel__dot[aria-current="true"] { background: var(--red, #C23410); }
+
+@media (prefers-reduced-motion: reduce) {
+  .oq-carousel__track { scroll-behavior: auto; }
+  .oq-card:hover { transform: none; }
+}

@@ -113,21 +113,26 @@ a{color:inherit;}
 footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.04em;text-align:center;padding:34px 0;margin-top:26px;border-top:1px solid var(--lgray);}
 footer a{color:var(--gray);text-decoration:none;}footer a:hover{color:var(--red-text);}
 </style>
+<link rel="stylesheet" href="/assets/oq-chrome.css">
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
 
-<header class="top">
-  <div class="wrap">
-    <a href="/" class="brand" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="OpticQuiz" width="34" height="34"><span class="n">OPTIC<span>QUIZ</span></span></a>
-    <nav class="nav" aria-label="Primary">
-      <a href="#color">Color tools</a>
-      <a href="#tests">Vision tests</a>
-      <a href="/platform/">Developers</a>
-      <a href="/research/">Research</a>
-    </nav>
+<!-- oq:nav -->
+<nav class="oq-nav" aria-label="Primary">
+  <a href="/" class="oq-nav__brand" aria-label="OpticQuiz home">
+    <img class="oq-nav__mark" src="/opticquiz_icon.png" alt="" width="27" height="27">
+    <span class="oq-nav__name">OPTIC<b>QUIZ</b></span>
+  </a>
+  <div class="oq-nav__links">
+    <a href="/#tests">Vision tests</a>
+    <a href="/#color">Color tools</a>
+    <a href="/platform/">Developers</a>
+    <a href="/research/">Research</a>
+    <a href="/setup/" class="oq-nav__cta">Set up</a>
   </div>
-</header>
+</nav>
+<!-- /oq:nav -->
 
 <section class="hero">
   <div class="wrap">
@@ -158,7 +163,7 @@ footer a{color:var(--gray);text-decoration:none;}footer a:hover{color:var(--red-
         <div class="linklist">
           <a href="/setup/"><span class="dot" style="background:var(--green)"></span><span class="t">Set it up</span><span class="s">browser, Windows, your site</span></a>
           <a href="/extension/"><span class="dot" style="background:var(--blue)"></span><span class="t">Browser extension</span><span class="s">correct any page</span></a>
-          <a href="/live"><span class="dot" style="background:var(--teal)"></span><span class="t">Phone camera</span><span class="s">correct the real world</span></a>
+          <a href="/live/"><span class="dot" style="background:var(--teal)"></span><span class="t">Phone camera</span><span class="s">correct the real world</span></a>
           <a href="/use-cases/"><span class="dot" style="background:var(--orange)"></span><span class="t">Desktop app</span><span class="s">correct your whole screen</span></a>
         </div>
 
@@ -229,9 +234,184 @@ footer a{color:var(--gray);text-decoration:none;}footer a:hover{color:var(--red-
   </tip-stream>
 </section>
 
-<footer>
-  The home of &quot;should I get my eyes checked?&quot; &nbsp;|&nbsp; © 2026 opticquiz.com &nbsp;|&nbsp; <a href="/about/">About</a> · <a href="/platform/">Platform</a> · <a href="/setup/">Set up</a> · <a href="/research/">Research</a> · <a href="/impact/">Impact</a> · <a href="/privacy/">Privacy</a> &nbsp;|&nbsp; educational &amp; accessibility use, not a medical diagnostic
+<section class="oq-carousel" aria-labelledby="oq-examples-h">
+  <div class="oq-carousel__head">
+    <h2 id="oq-examples-h">PRODUCT EXAMPLES</h2>
+    <div class="oq-carousel__nav">
+      <button class="oq-carousel__btn" type="button" data-oq="prev" aria-label="Previous examples">&#8592;</button>
+      <button class="oq-carousel__btn" type="button" data-oq="next" aria-label="Next examples">&#8594;</button>
+    </div>
+  </div>
+  <div class="oq-carousel__track" tabindex="0" aria-label="Product examples, scrollable">
+
+    <a class="oq-card" href="/checker/">
+      <div class="oq-card__demo">
+        <svg viewBox="0 0 160 90" role="img" aria-label="A red and a green that collapse to the same color under deuteranopia">
+          <rect x="8" y="18" width="44" height="24" rx="3" fill="#C23410"/>
+          <rect x="8" y="48" width="44" height="24" rx="3" fill="#3F7836"/>
+          <path d="M60 42h20" stroke="#6B6B6B" stroke-width="2"/><path d="M76 38l6 4-6 4" fill="none" stroke="#6B6B6B" stroke-width="2"/>
+          <rect x="90" y="18" width="44" height="24" rx="3" fill="#8a7b0c"/>
+          <rect x="90" y="48" width="44" height="24" rx="3" fill="#8a7f48"/>
+          <text x="112" y="84" font-size="9" text-anchor="middle" fill="#9E2A0D" font-family="monospace">DEUTAN</text>
+        </svg>
+      </div>
+      <div class="oq-card__body">
+        <span class="oq-card__kicker">Palette checker</span>
+        <h3>FIND THE CONFLICT</h3>
+        <p>Paste a palette and see which pairs collapse into each other — with the CIEDE2000 difference before and after.</p>
+      </div>
+    </a>
+
+    <a class="oq-card" href="/extension/">
+      <div class="oq-card__demo">
+        <svg viewBox="0 0 160 90" role="img" aria-label="A web page with one half color-corrected">
+          <rect x="10" y="12" width="140" height="66" rx="4" fill="#fff" stroke="#D4D0C8"/>
+          <rect x="10" y="12" width="140" height="12" rx="4" fill="#F0EDE6"/>
+          <circle cx="19" cy="18" r="2.2" fill="#C23410"/><circle cx="26" cy="18" r="2.2" fill="#E69F00"/><circle cx="33" cy="18" r="2.2" fill="#3F7836"/>
+          <rect x="18" y="32" width="54" height="6" rx="2" fill="#C23410"/>
+          <rect x="18" y="44" width="54" height="6" rx="2" fill="#3F7836"/>
+          <rect x="18" y="56" width="38" height="6" rx="2" fill="#D4D0C8"/>
+          <rect x="88" y="32" width="54" height="6" rx="2" fill="#0072B2"/>
+          <rect x="88" y="44" width="54" height="6" rx="2" fill="#E69F00"/>
+          <rect x="88" y="56" width="38" height="6" rx="2" fill="#D4D0C8"/>
+          <line x1="80" y1="26" x2="80" y2="72" stroke="#1A1A1A" stroke-width="1" stroke-dasharray="3 3"/>
+        </svg>
+      </div>
+      <div class="oq-card__body">
+        <span class="oq-card__kicker">Browser extension</span>
+        <h3>CORRECT ANY PAGE</h3>
+        <p>Recolor the web as you browse, so color-coded charts and status dots stop being guesswork.</p>
+      </div>
+    </a>
+
+    <a class="oq-card" href="/widget/">
+      <div class="oq-card__demo">
+        <svg viewBox="0 0 160 90" role="img" aria-label="One line of script and a colorblind-mode toggle">
+          <rect x="10" y="22" width="140" height="20" rx="4" fill="#1A1A1A"/>
+          <text x="18" y="36" font-size="8.5" fill="#F1927A" font-family="monospace">&lt;script src="oq-widget.js"&gt;</text>
+          <rect x="10" y="52" width="62" height="20" rx="10" fill="#3F7836"/>
+          <circle cx="62" cy="62" r="7" fill="#fff"/>
+          <text x="20" y="65.5" font-size="8" fill="#fff" font-family="monospace">CVD ON</text>
+          <rect x="88" y="52" width="20" height="20" rx="3" fill="#0072B2"/>
+          <rect x="112" y="52" width="20" height="20" rx="3" fill="#E69F00"/>
+        </svg>
+      </div>
+      <div class="oq-card__body">
+        <span class="oq-card__kicker">One-line widget</span>
+        <h3>A COLORBLIND MODE</h3>
+        <p>One script tag adds a color-vision mode to your own site. No build step, no account.</p>
+      </div>
+    </a>
+
+    <a class="oq-card" href="/palettes/">
+      <div class="oq-card__demo">
+        <svg viewBox="0 0 160 90" role="img" aria-label="A benchmark comparing colormaps">
+          <text x="12" y="20" font-size="8" fill="#6B6B6B" font-family="monospace">VIRIDIS</text>
+          <rect x="12" y="24" width="26" height="9" fill="#440154"/><rect x="38" y="24" width="26" height="9" fill="#3B528B"/><rect x="64" y="24" width="26" height="9" fill="#21918C"/><rect x="90" y="24" width="26" height="9" fill="#5EC962"/><rect x="116" y="24" width="26" height="9" fill="#FDE725"/>
+          <text x="146" y="32" font-size="9" fill="#3F7836" font-family="monospace">✓</text>
+          <text x="12" y="54" font-size="8" fill="#6B6B6B" font-family="monospace">JET</text>
+          <rect x="12" y="58" width="26" height="9" fill="#00008F"/><rect x="38" y="58" width="26" height="9" fill="#00D4FF"/><rect x="64" y="58" width="26" height="9" fill="#7CFF79"/><rect x="90" y="58" width="26" height="9" fill="#FF9A00"/><rect x="116" y="58" width="26" height="9" fill="#7F0000"/>
+          <text x="146" y="66" font-size="9" fill="#9E2A0D" font-family="monospace">✗</text>
+        </svg>
+      </div>
+      <div class="oq-card__body">
+        <span class="oq-card__kicker">Palette benchmark</span>
+        <h3>SCORED COLORMAPS</h3>
+        <p>viridis, jet, Tableau and more, measured on the same method — so you can pick one on evidence.</p>
+      </div>
+    </a>
+
+    <a class="oq-card" href="/live/">
+      <div class="oq-card__demo">
+        <svg viewBox="0 0 160 90" role="img" aria-label="A phone camera correcting the real world">
+          <rect x="54" y="10" width="52" height="70" rx="7" fill="#1A1A1A"/>
+          <rect x="58" y="17" width="44" height="56" rx="3" fill="#F0EDE6"/>
+          <circle cx="70" cy="32" r="7" fill="#C23410"/><circle cx="90" cy="32" r="7" fill="#3F7836"/>
+          <circle cx="70" cy="56" r="7" fill="#0072B2"/><circle cx="90" cy="56" r="7" fill="#E69F00"/>
+          <rect x="58" y="42" width="44" height="4" fill="#1A1A1A" opacity=".18"/>
+          <circle cx="80" cy="77" r="2" fill="#8d867c"/>
+        </svg>
+      </div>
+      <div class="oq-card__body">
+        <span class="oq-card__kicker">Phone camera</span>
+        <h3>THE REAL WORLD</h3>
+        <p>Point your camera at wiring, produce or a pill bottle and see the colors pulled apart live.</p>
+      </div>
+    </a>
+
+    <a class="oq-card" href="/platform/">
+      <div class="oq-card__demo">
+        <svg viewBox="0 0 160 90" role="img" aria-label="Installing the package and getting a verdict">
+          <rect x="10" y="14" width="140" height="62" rx="4" fill="#1A1A1A"/>
+          <text x="18" y="30" font-size="8" fill="#8d867c" font-family="monospace">$ pip install cvdsafe</text>
+          <text x="18" y="44" font-size="8" fill="#F1927A" font-family="monospace">&gt;&gt;&gt; is_safe(palette)</text>
+          <text x="18" y="58" font-size="8" fill="#5EC962" font-family="monospace">False</text>
+          <text x="18" y="70" font-size="7.5" fill="#6B6B6B" font-family="monospace">30 packages · PyPI + npm + MCP</text>
+        </svg>
+      </div>
+      <div class="oq-card__body">
+        <span class="oq-card__kicker">Packages &amp; API</span>
+        <h3>IN YOUR PIPELINE</h3>
+        <p>The same published method as a package, an API and an MCP server — so your build can fail on a bad palette.</p>
+      </div>
+    </a>
+
+  </div>
+  <div class="oq-carousel__dots" aria-hidden="true"></div>
+</section>
+
+<!-- oq:footer -->
+<footer class="oq-footer" role="contentinfo">
+  <div class="oq-footer__grid">
+    <div>
+      <h2>Vision tests</h2>
+      <ul>
+        <li><a href="/color/">Color vision</a></li>
+        <li><a href="/d15/">Farnsworth D-15</a></li>
+        <li><a href="/acuity/">Visual acuity</a></li>
+        <li><a href="/flicker/">Flicker fusion</a></li>
+        <li><a href="/#tests">All 16 tests</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Color tools</h2>
+      <ul>
+        <li><a href="/checker/">Palette checker</a></li>
+        <li><a href="/contrast-checker/">Contrast checker</a></li>
+        <li><a href="/palettes/">Palette benchmark</a></li>
+        <li><a href="/widget/">One-line widget</a></li>
+        <li><a href="/extension/">Browser extension</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Developers</h2>
+      <ul>
+        <li><a href="/platform/">Platform &amp; API</a></li>
+        <li><a href="/setup/">Set up</a></li>
+        <li><a href="/live/">Live correction</a></li>
+        <li><a href="/use-cases/">Use cases</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>OpticQuiz</h2>
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/impact/">Impact archive</a></li>
+        <li><a href="/support/">Support</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="oq-footer__base">
+    <span>© 2026 opticquiz.com</span>
+    <span>One published method — <a href="https://doi.org/10.5281/zenodo.21310578">DOI 10.5281/zenodo.21310578</a></span>
+    <span class="oq-footer__note">Educational &amp; accessibility use — not a medical device, diagnosis, or a legal ADA/WCAG audit.</span>
+  </div>
 </footer>
+<!-- /oq:footer -->
+
+<script src="/assets/oq-carousel.js" defer></script>
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
 <script src="https://cdn.jsdelivr.net/npm/@f-keys/tip-widget@0.1.2/tip-stream.js" defer></script>
