@@ -1,13 +1,33 @@
 {
   "name": "protanopia",
   "version": "0.1.0",
-  "description": "Simulate protanopia (red-blind) color vision — a typed shortcut over cvdsim / the OpticQuiz engine (Machado, Oliveira & Fernandes 2009).",
+  "description": "Simulate protanopia (red-blind) color vision \u2014 a typed shortcut over cvdsim / the OpticQuiz engine (Machado, Oliveira & Fernandes 2009).",
   "main": "index.js",
-  "files": ["index.js", "README.md", "LICENSE"],
-  "keywords": ["protan", "protan", "colorblind", "color-blindness", "cvd", "simulate", "color-vision", "accessibility", "a11y"],
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "protan",
+    "protan",
+    "colorblind",
+    "color-blindness",
+    "cvd",
+    "simulate",
+    "color-vision",
+    "accessibility",
+    "a11y"
+  ],
   "author": "Vince Gonzalez",
   "license": "MIT",
   "homepage": "https://opticquiz.com/",
-  "repository": { "type": "git", "url": "https://github.com/vince-gonzalez/opticquiz.com" },
-  "dependencies": { "cvdsim": "^0.1.0" }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vince-gonzalez/opticquiz.com",
+    "directory": "packages/protanopia"
+  },
+  "dependencies": {
+    "cvdsim": "^0.1.0"
+  }
 }

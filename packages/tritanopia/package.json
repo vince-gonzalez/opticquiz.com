@@ -1,13 +1,33 @@
 {
   "name": "tritanopia",
   "version": "0.1.0",
-  "description": "Simulate tritanopia (blue-yellow) color vision — a typed shortcut over cvdsim / the OpticQuiz engine (Machado, Oliveira & Fernandes 2009).",
+  "description": "Simulate tritanopia (blue-yellow) color vision \u2014 a typed shortcut over cvdsim / the OpticQuiz engine (Machado, Oliveira & Fernandes 2009).",
   "main": "index.js",
-  "files": ["index.js", "README.md", "LICENSE"],
-  "keywords": ["tritanopia", "tritan", "colorblind", "color-blindness", "cvd", "simulate", "color-vision", "accessibility", "a11y"],
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "tritanopia",
+    "tritan",
+    "colorblind",
+    "color-blindness",
+    "cvd",
+    "simulate",
+    "color-vision",
+    "accessibility",
+    "a11y"
+  ],
   "author": "Vince Gonzalez",
   "license": "MIT",
   "homepage": "https://opticquiz.com/",
-  "repository": { "type": "git", "url": "https://github.com/vince-gonzalez/opticquiz.com" },
-  "dependencies": { "cvdsim": "^0.1.0" }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vince-gonzalez/opticquiz.com",
+    "directory": "packages/tritanopia"
+  },
+  "dependencies": {
+    "cvdsim": "^0.1.0"
+  }
 }

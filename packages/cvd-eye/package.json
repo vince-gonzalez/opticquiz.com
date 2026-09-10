@@ -23,7 +23,8 @@
   "homepage": "https://opticquiz.com/widget/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zengineco/opticquiz.com"
+    "url": "https://github.com/zengineco/opticquiz.com",
+    "directory": "packages/cvd-eye"
   },
   "bugs": {
     "url": "https://github.com/zengineco/opticquiz.com/issues"

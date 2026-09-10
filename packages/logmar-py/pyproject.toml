@@ -15,6 +15,7 @@ keywords = ["logmar", "visual-acuity", "snellen", "acuity", "vision", "optometry
 [project.urls]
 Homepage = "https://opticquiz.com/"
 Source = "https://github.com/vince-gonzalez/opticquiz.com"
+Repository = "https://github.com/vince-gonzalez/opticquiz.com/tree/main/packages/logmar-py"
 
 [tool.setuptools]
 packages = ["logmar"]

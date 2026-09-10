@@ -31,7 +31,8 @@
   "homepage": "https://opticquiz.com/checker/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zengineco/opticquiz.com"
+    "url": "https://github.com/zengineco/opticquiz.com",
+    "directory": "packages/cvd-mcp"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",

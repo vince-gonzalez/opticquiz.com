@@ -19,6 +19,7 @@ image = ["cvdsim[image]>=0.1.0"]
 [project.urls]
 Homepage = "https://opticquiz.com/"
 Source = "https://github.com/vince-gonzalez/opticquiz.com"
+Repository = "https://github.com/vince-gonzalez/opticquiz.com/tree/main/packages/tritanopia-py"
 
 [tool.setuptools]
 packages = ["tritanopia"]

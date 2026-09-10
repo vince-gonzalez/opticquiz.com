@@ -8,14 +8,36 @@
     "test": "node test.js"
   },
   "keywords": [
-    "colorblind", "color-blindness", "accessibility", "a11y", "cvd",
-    "protanopia", "deuteranopia", "tritanopia", "color-vision-deficiency",
-    "ciede2000", "palette", "wcag", "contrast", "ishihara"
+    "colorblind",
+    "color-blindness",
+    "accessibility",
+    "a11y",
+    "cvd",
+    "protanopia",
+    "deuteranopia",
+    "tritanopia",
+    "color-vision-deficiency",
+    "ciede2000",
+    "palette",
+    "wcag",
+    "contrast",
+    "ishihara"
   ],
   "author": "Vince Gonzalez (OpticQuiz) <https://orcid.org/0009-0005-3640-014X>",
   "license": "MIT",
   "homepage": "https://opticquiz.com/checker/",
-  "repository": { "type": "git", "url": "https://github.com/zengineco/opticquiz.com" },
-  "bugs": { "url": "https://github.com/zengineco/opticquiz.com/issues" },
-  "files": ["index.js", "index.d.ts", "README.md", "LICENSE"]
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zengineco/opticquiz.com",
+    "directory": "packages/cvd-js"
+  },
+  "bugs": {
+    "url": "https://github.com/zengineco/opticquiz.com/issues"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "LICENSE"
+  ]
 }

@@ -32,7 +32,8 @@
   "homepage": "https://opticquiz.com/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vince-gonzalez/opticquiz.com"
+    "url": "https://github.com/vince-gonzalez/opticquiz.com",
+    "directory": "packages/colorblind-mcp"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",

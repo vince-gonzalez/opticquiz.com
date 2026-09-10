@@ -31,7 +31,8 @@
   "homepage": "https://opticquiz.com/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vince-gonzalez/opticquiz.com"
+    "url": "https://github.com/vince-gonzalez/opticquiz.com",
+    "directory": "packages/cvdsim"
   },
   "dependencies": {
     "opticquiz-cvd": "^1.1.0",

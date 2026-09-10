@@ -28,7 +28,8 @@
   "homepage": "https://opticquiz.com/checker/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vince-gonzalez/opticquiz.com"
+    "url": "https://github.com/vince-gonzalez/opticquiz.com",
+    "directory": "packages/safepalette"
   },
   "dependencies": {
     "opticquiz-cvd": "^1.1.0"
