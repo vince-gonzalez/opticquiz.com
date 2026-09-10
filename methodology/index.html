@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#1A1A1A">
 <meta name="keywords" content="online vision test methodology, is opticquiz legit, vision test calibration, color vision test accuracy, independent vision test">
 <meta property="og:title" content="Methodology &amp; Disclosure — Audit This Site | OpticQuiz">
-<meta property="og:description" content="Eight questions you should ask of any online vision test, answered plainly — including the ones without a flattering answer.">
+<meta property="og:description" content="Eight questions worth asking of any online vision test, answered in full — who made it, what it measures, what it assumes about your screen, and who pays for it.">
 <meta property="og:url" content="https://opticquiz.com/methodology/">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://opticquiz.com/methodology/">
@@ -20,7 +20,7 @@
 {"@type":"Question","name":"What calibration assumptions does it make?","acceptedAnswer":{"@type":"Answer","text":"It assumes an sRGB display and nothing else, because a web page cannot measure the things that matter. It does not know your display's actual gamut, gamma, brightness or white point; your ambient lighting; your viewing distance; or your pixel pitch. Every one of those changes results. Screen saturation is bounded by the sRGB gamut, so tests that depend on faint or highly saturated color are limited by the display itself, not by the method."}},
 {"@type":"Question","name":"Is the method published?","acceptedAnswer":{"@type":"Answer","text":"Yes, open access, with DOIs: 10.5281/zenodo.21310578 and 10.5281/zenodo.21311369. The color work is built on Machado, Oliveira and Fernandes (2009) for deficiency simulation and CIEDE2000 for color difference, both standard published methods rather than a private formula."}},
 {"@type":"Question","name":"Is the source code available?","acceptedAnswer":{"@type":"Answer","text":"Yes. The site and the engine are MIT licensed and public, the plate generator is deposited alongside the paper, and the same engine is published as installable packages on PyPI and npm so anyone can run the math themselves and check the numbers against ours."}},
-{"@type":"Question","name":"Have the tests been clinically validated?","acceptedAnswer":{"@type":"Answer","text":"No, and that is the honest answer. The underlying methods are published and standard, but this particular browser implementation, running on your uncalibrated screen, has not been through an independent clinical validation study against calibrated instruments. Nobody should treat a result here as equivalent to a Titmus, TNO, Randot, physical Ishihara or clinic acuity measurement. Third-party review that has happened is narrower: the Firefox extension passed Mozilla's add-on review, which vets security, privacy and source code, not color science."}},
+{"@type":"Question","name":"Have the tests been clinically validated?","acceptedAnswer":{"@type":"Answer","text":"The method is published with a DOI, the colorimetry is standard rather than proprietary, and the code is open and installable so anyone can reproduce the numbers independently. What has not happened is an independent clinical validation study of this browser implementation on an uncalibrated display — so no result here equals a Titmus, TNO, Randot, physical Ishihara or clinic acuity measurement. The third-party review that has happened is narrower: the Firefox extension passed Mozilla's add-on review, which vets security, privacy and source code, not color science."}},
 {"@type":"Question","name":"What can OpticQuiz not measure?","acceptedAnswer":{"@type":"Answer","text":"Eye health of any kind. It cannot measure intraocular pressure, examine the retina or optic nerve, detect glaucoma, cataract or macular disease, produce a spectacle prescription, or give a clinical diagnosis of color-vision deficiency. It cannot give stereoacuity in arc seconds. It is a screening and educational aid; anything it flags is a reason to see an optometrist or ophthalmologist, not a conclusion."}},
 {"@type":"Question","name":"Who pays for OpticQuiz?","acceptedAnswer":{"@type":"Answer","text":"Google AdSense on the site, voluntary Ko-fi contributions, and optional paid color-accessibility audits for teams. Critically, OpticQuiz does not sell eyewear, lenses, color-correcting glasses, or a refraction service, and takes no affiliate commission on any of them. No result on this site can steer you toward a product it profits from, because there is no such product."}}]}
 </script>
@@ -87,18 +87,17 @@ a{color:inherit;}
   <div class="wrap">
     <p class="kicker">Methodology &amp; disclosure</p>
     <h1>AUDIT<br>THIS SITE.</h1>
-    <p>Eight questions you should ask of any online vision test before you believe a word of it —
-    answered here for this one, including the two that don't have a flattering answer.</p>
+    <p>Eight questions worth asking of any online vision test. Here are this one's answers in full,
+    with the sources, so you can check every one of them yourself.</p>
   </div>
 </header>
 
 <main id="main" class="wrap" role="main">
 
   <div class="intro-note">
-    <p style="margin-bottom:0">Anyone can call their own test honest. The only thing that makes the
-    claim checkable is answering the awkward questions in public, in one place, where the answers can
-    be held against us. That's what this page is for. If any answer here stops being true, it is a
-    defect — <a href="/support/">tell us</a>.</p>
+    <p style="margin-bottom:0">Anyone can call their own test honest. What makes it checkable is answering the hard questions in
+    one place, in public, with sources attached. That's this page. If an answer here stops being
+    true, that's a defect — <a href="/support/">tell us</a>.</p>
   </div>
 
   <section class="q">
@@ -143,10 +142,12 @@ a{color:inherit;}
       changes the result. Screen saturation is bounded by the sRGB gamut, so any test that depends on
       very faint or very saturated color is limited by the display itself, not by the method.</p>
       <div class="hard">
-        <strong>The uncomfortable part</strong>
-        This is the single largest source of error on this site, it applies to every test here, and
-        it cannot be engineered away in a browser. A clinic controls illumination, distance and the
-        physical target. We control none of the three.
+        <strong>Where the error lives</strong>
+        Display calibration is the dominant error term here, and it applies to every test on the
+        site. No browser can remove it — a clinic controls illumination, viewing distance and a
+        physical target; a web page controls none of the three. That is exactly why every test
+        reports its raw measure and names its assumptions instead of manufacturing a precision it
+        hasn't earned.
       </div>
     </div>
   </section>
@@ -184,14 +185,19 @@ a{color:inherit;}
     <h2>HAS IT BEEN CLINICALLY VALIDATED?</h2>
     <div class="a">
       <div class="hard">
-        <strong>No. This is the answer that isn't flattering.</strong>
-        The underlying methods are published and standard. But <em>this</em> browser implementation,
+        <strong>Not clinically validated — and here is what has been</strong>
+        The underlying methods are published and standard. <em>This</em> browser implementation,
         running on <em>your</em> uncalibrated screen, has not been through an independent clinical
-        validation study against calibrated instruments.
+        validation study against calibrated instruments. Said plainly, because you should be able to
+        weigh it.
       </div>
-      <p>So no result here is equivalent to a Titmus, TNO or Randot stereo test, a physical Ishihara
-      plate book under standard illumination, or a clinic acuity measurement. Anyone who tells you an
-      online test is "as accurate as" those is selling something.</p>
+      <p>What is established instead is every layer underneath: the method is published with a DOI, the
+      colorimetry is standard rather than proprietary, the code is open and installable so you can
+      reproduce the numbers, and each test states its own measure. That is a stack you can check
+      line by line — which is more than most vision tests offer.</p>
+      <p>It still means no result here equals a Titmus, TNO or Randot stereo test, a physical
+      Ishihara plate book under standard illumination, or a clinic acuity measurement. Anyone who
+      tells you an online test is "as accurate as" those is selling something.</p>
       <p>The third-party review that <em>has</em> happened is narrower and worth stating precisely:
       the Firefox extension passed <strong>Mozilla's add-on review</strong>, which vets security,
       privacy and readable source code. That is a real check on the software. It is not Mozilla
