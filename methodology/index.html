@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Eight questions you should ask of any online vision test, answered for OpticQuiz: who made it, what it measures, its calibration assumptions, the published method, the source code, what has and has not been validated, what it cannot measure, and who pays for it.">
+<meta name="theme-color" content="#1A1A1A">
+<meta name="keywords" content="online vision test methodology, is opticquiz legit, vision test calibration, color vision test accuracy, independent vision test">
+<meta property="og:title" content="Methodology &amp; Disclosure — Audit This Site | OpticQuiz">
+<meta property="og:description" content="Eight questions you should ask of any online vision test, answered plainly — including the ones without a flattering answer.">
+<meta property="og:url" content="https://opticquiz.com/methodology/">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://opticquiz.com/methodology/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Methodology &amp; Disclosure — Audit This Site | OpticQuiz</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Who made OpticQuiz?","acceptedAnswer":{"@type":"Answer","text":"One person: Vince Gonzalez, an independent researcher in Punta Gorda, Florida, United States. Not a university department, not a hospital, and not a company that sells eyewear. There is no team, no institutional review board, and no outside funding behind it."}},
+{"@type":"Question","name":"What exactly do the tests measure?","acceptedAnswer":{"@type":"Answer","text":"Each test states its own measure on its own page rather than reporting a single vague score. The color tests measure CIEDE2000 difference between colors before and after a Machado, Oliveira and Fernandes (2009) simulation of color-vision deficiency. The acuity test measures the smallest optotype identified at a stated viewing distance. The stereo test reports the smallest horizontal disparity in screen pixels at which a random-dot shape was located. Where a quantity cannot be honestly derived, the test reports the raw measure and stops."}},
+{"@type":"Question","name":"What calibration assumptions does it make?","acceptedAnswer":{"@type":"Answer","text":"It assumes an sRGB display and nothing else, because a web page cannot measure the things that matter. It does not know your display's actual gamut, gamma, brightness or white point; your ambient lighting; your viewing distance; or your pixel pitch. Every one of those changes results. Screen saturation is bounded by the sRGB gamut, so tests that depend on faint or highly saturated color are limited by the display itself, not by the method."}},
+{"@type":"Question","name":"Is the method published?","acceptedAnswer":{"@type":"Answer","text":"Yes, open access, with DOIs: 10.5281/zenodo.21310578 and 10.5281/zenodo.21311369. The color work is built on Machado, Oliveira and Fernandes (2009) for deficiency simulation and CIEDE2000 for color difference, both standard published methods rather than a private formula."}},
+{"@type":"Question","name":"Is the source code available?","acceptedAnswer":{"@type":"Answer","text":"Yes. The site and the engine are MIT licensed and public, the plate generator is deposited alongside the paper, and the same engine is published as installable packages on PyPI and npm so anyone can run the math themselves and check the numbers against ours."}},
+{"@type":"Question","name":"Have the tests been clinically validated?","acceptedAnswer":{"@type":"Answer","text":"No, and that is the honest answer. The underlying methods are published and standard, but this particular browser implementation, running on your uncalibrated screen, has not been through an independent clinical validation study against calibrated instruments. Nobody should treat a result here as equivalent to a Titmus, TNO, Randot, physical Ishihara or clinic acuity measurement. Third-party review that has happened is narrower: the Firefox extension passed Mozilla's add-on review, which vets security, privacy and source code, not color science."}},
+{"@type":"Question","name":"What can OpticQuiz not measure?","acceptedAnswer":{"@type":"Answer","text":"Eye health of any kind. It cannot measure intraocular pressure, examine the retina or optic nerve, detect glaucoma, cataract or macular disease, produce a spectacle prescription, or give a clinical diagnosis of color-vision deficiency. It cannot give stereoacuity in arc seconds. It is a screening and educational aid; anything it flags is a reason to see an optometrist or ophthalmologist, not a conclusion."}},
+{"@type":"Question","name":"Who pays for OpticQuiz?","acceptedAnswer":{"@type":"Answer","text":"Google AdSense on the site, voluntary Ko-fi contributions, and optional paid color-accessibility audits for teams. Critically, OpticQuiz does not sell eyewear, lenses, color-correcting glasses, or a refraction service, and takes no affiliate commission on any of them. No result on this site can steer you toward a product it profits from, because there is no such product."}}]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/oq-chrome.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--ink:#141414;
+  --red:#C23410;--red-text:#9E2A0D;--redd:#9E2A0D;--red-on-dark:#F1927A;--green:#3F7836;--blue:#0072B2;--orange:#E69F00;--teal:#009E73;--pink:#CC79A7;
+  --fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:6px;--rc:12px;
+}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);line-height:1.65;-webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:2px;border-radius:var(--r);}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:99;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;}
+.skip-link:focus{top:12px;}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px;}
+.hero{background:radial-gradient(1000px 420px at 70% -10%, #23324a 0%, #141414 55%);color:#F4F1EA;padding:56px 0 60px;}
+.hero .kicker{font-family:var(--fm);font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#8ab4f8;}
+.hero h1{font-family:var(--fd);font-size:clamp(44px,9vw,86px);line-height:.92;margin:12px 0 16px;color:#fff;}
+.hero p{font-size:19px;color:#d7d2c9;max-width:620px;}
+.q{border-top:1px solid var(--lgray);padding:30px 0 4px;}
+.q:first-of-type{border-top:0;}
+.qn{font-family:var(--fm);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--red-text);}
+.q h2{font-family:var(--fd);font-size:clamp(27px,5vw,40px);letter-spacing:.02em;line-height:1.02;margin:7px 0 12px;}
+.q p{margin-bottom:14px;}
+.a{font-size:17.5px;}
+.hard{background:var(--cream);border-left:3px solid var(--red);padding:16px 18px;border-radius:0 var(--r) var(--r) 0;margin:16px 0;}
+.hard strong{display:block;font-family:var(--fm);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--red-text);margin-bottom:6px;}
+.facts{list-style:none;margin:14px 0;}
+.facts li{padding:9px 0;border-bottom:1px solid var(--lgray);display:flex;gap:14px;flex-wrap:wrap;}
+.facts b{font-family:var(--fm);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);min-width:130px;}
+.intro-note{background:#fff;border:1.5px solid var(--lgray);border-radius:var(--rc);padding:20px 22px;margin:26px 0;}
+.close{background:var(--ink);color:#cfc9c0;padding:34px 0;margin-top:44px;}
+.close h2{font-family:var(--fd);font-size:clamp(26px,4.6vw,36px);color:#fff;margin-bottom:10px;}
+.close a{color:var(--red-on-dark);}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<!-- oq:nav -->
+<nav class="oq-nav" aria-label="Primary">
+  <a href="/" class="oq-nav__brand" aria-label="OpticQuiz home">
+    <img class="oq-nav__mark" src="/opticquiz_icon.png" alt="" width="27" height="27">
+    <span class="oq-nav__name">OPTIC<b>QUIZ</b></span>
+  </a>
+  <div class="oq-nav__links">
+    <a href="/#tests">Vision tests</a>
+    <a href="/#color">Color tools</a>
+    <a href="/platform/">Developers</a>
+    <a href="/research/">Research</a>
+    <a href="/setup/" class="oq-nav__cta">Set up</a>
+  </div>
+</nav>
+<!-- /oq:nav -->
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">Methodology &amp; disclosure</p>
+    <h1>AUDIT<br>THIS SITE.</h1>
+    <p>Eight questions you should ask of any online vision test before you believe a word of it —
+    answered here for this one, including the two that don't have a flattering answer.</p>
+  </div>
+</header>
+
+<main id="main" class="wrap" role="main">
+
+  <div class="intro-note">
+    <p style="margin-bottom:0">Anyone can call their own test honest. The only thing that makes the
+    claim checkable is answering the awkward questions in public, in one place, where the answers can
+    be held against us. That's what this page is for. If any answer here stops being true, it is a
+    defect — <a href="/support/">tell us</a>.</p>
+  </div>
+
+  <section class="q">
+    <p class="qn">Question 1</p>
+    <h2>WHO MADE IT?</h2>
+    <div class="a">
+      <p>One person: <strong>Vince Gonzalez</strong>, an independent researcher in Punta Gorda,
+      Florida, United States.</p>
+      <p>Not a university department. Not a hospital. Not a company that sells eyewear. There is no
+      team behind this, no institutional review board, and no outside funding. That cuts both ways
+      and you should weigh it: there is no commercial incentive bending the results, and equally
+      there is no institution whose reputation is staked on them.</p>
+    </div>
+  </section>
+
+  <section class="q">
+    <p class="qn">Question 2</p>
+    <h2>WHAT EXACTLY IS BEING MEASURED?</h2>
+    <div class="a">
+      <p>Each test states its own measure on its own page, rather than collapsing everything into one
+      vague score.</p>
+      <ul class="facts">
+        <li><b>Color tests</b><span>CIEDE2000 difference between colors before and after a Machado, Oliveira &amp; Fernandes (2009) simulation of color-vision deficiency.</span></li>
+        <li><b>Acuity</b><span>The smallest optotype correctly identified, at a viewing distance you set.</span></li>
+        <li><b>Stereo depth</b><span>The smallest horizontal disparity, in screen pixels, at which a random-dot shape was located.</span></li>
+        <li><b>Flicker fusion</b><span>The frequency, in Hz, at which flicker stops being visible to you on your display.</span></li>
+      </ul>
+      <p>Where a quantity can't be honestly derived, the test reports the raw measure and stops. The
+      stereo test is the clearest case: it refuses to convert pixels into arc seconds, because doing
+      that needs your pixel pitch and viewing distance, and a web page knows neither.</p>
+    </div>
+  </section>
+
+  <section class="q">
+    <p class="qn">Question 3</p>
+    <h2>WHAT DOES IT ASSUME ABOUT YOUR SCREEN?</h2>
+    <div class="a">
+      <p>It assumes an sRGB display — and nothing else, because a browser cannot measure the things
+      that actually matter here.</p>
+      <p>It does not know your display's real gamut, gamma, brightness or white point. It does not
+      know your ambient lighting, your viewing distance, or your pixel pitch. Every one of those
+      changes the result. Screen saturation is bounded by the sRGB gamut, so any test that depends on
+      very faint or very saturated color is limited by the display itself, not by the method.</p>
+      <div class="hard">
+        <strong>The uncomfortable part</strong>
+        This is the single largest source of error on this site, it applies to every test here, and
+        it cannot be engineered away in a browser. A clinic controls illumination, distance and the
+        physical target. We control none of the three.
+      </div>
+    </div>
+  </section>
+
+  <section class="q">
+    <p class="qn">Question 4</p>
+    <h2>IS THE METHOD PUBLISHED?</h2>
+    <div class="a">
+      <p>Yes, open access, with DOIs you can check independently of anything said on this site:</p>
+      <ul class="facts">
+        <li><b>Method</b><span><a href="https://doi.org/10.5281/zenodo.21310578">10.5281/zenodo.21310578</a></span></li>
+        <li><b>Plate generation</b><span><a href="https://doi.org/10.5281/zenodo.21311369">10.5281/zenodo.21311369</a></span></li>
+      </ul>
+      <p>The color work rests on Machado, Oliveira &amp; Fernandes (2009) for deficiency simulation and
+      CIEDE2000 for color difference — standard published methods, not a private in-house formula
+      you're asked to take on trust. <a href="/research/">Read the research →</a></p>
+    </div>
+  </section>
+
+  <section class="q">
+    <p class="qn">Question 5</p>
+    <h2>CAN YOU READ THE CODE?</h2>
+    <div class="a">
+      <p>Yes. The site and the engine are MIT licensed and public, and the plate generator is
+      deposited alongside the paper.</p>
+      <p>The same engine is also published as installable packages on PyPI and npm, so you don't have
+      to trust our numbers — you can run the math yourself and compare. If your output disagrees with
+      ours, that's a bug worth reporting.
+      <a href="/platform/">The packages &amp; API →</a></p>
+    </div>
+  </section>
+
+  <section class="q">
+    <p class="qn">Question 6</p>
+    <h2>HAS IT BEEN CLINICALLY VALIDATED?</h2>
+    <div class="a">
+      <div class="hard">
+        <strong>No. This is the answer that isn't flattering.</strong>
+        The underlying methods are published and standard. But <em>this</em> browser implementation,
+        running on <em>your</em> uncalibrated screen, has not been through an independent clinical
+        validation study against calibrated instruments.
+      </div>
+      <p>So no result here is equivalent to a Titmus, TNO or Randot stereo test, a physical Ishihara
+      plate book under standard illumination, or a clinic acuity measurement. Anyone who tells you an
+      online test is "as accurate as" those is selling something.</p>
+      <p>The third-party review that <em>has</em> happened is narrower and worth stating precisely:
+      the Firefox extension passed <strong>Mozilla's add-on review</strong>, which vets security,
+      privacy and readable source code. That is a real check on the software. It is not Mozilla
+      validating the color science, and it shouldn't be read as one.</p>
+    </div>
+  </section>
+
+  <section class="q">
+    <p class="qn">Question 7</p>
+    <h2>WHAT CAN IT NOT MEASURE?</h2>
+    <div class="a">
+      <p>Eye health, in every sense. Specifically, it cannot:</p>
+      <ul class="facts">
+        <li><b>Pressure</b><span>Measure intraocular pressure or screen for glaucoma.</span></li>
+        <li><b>Structure</b><span>Examine the retina or optic nerve, or detect cataract or macular disease.</span></li>
+        <li><b>Refraction</b><span>Produce a spectacle or contact-lens prescription.</span></li>
+        <li><b>Diagnosis</b><span>Clinically diagnose color-vision deficiency, or its exact type and severity.</span></li>
+        <li><b>Stereoacuity</b><span>Give a stereo threshold in arc seconds.</span></li>
+      </ul>
+      <p>Everything here is a screening and educational aid. A flag on this site is a reason to see an
+      optometrist or ophthalmologist — never a conclusion, and never a substitute for a full exam.
+      For children this matters more, not less: untreated amblyopia is time-sensitive.</p>
+    </div>
+  </section>
+
+  <section class="q">
+    <p class="qn">Question 8</p>
+    <h2>WHO PAYS FOR IT?</h2>
+    <div class="a">
+      <p>Google AdSense on the site, voluntary <a href="https://ko-fi.com/opticquiz" rel="noopener">Ko-fi</a>
+      contributions, and optional <a href="/audit/">paid color-accessibility audits</a> for teams.
+      The tests themselves are free, with no paywall and no account.</p>
+      <p>What matters more is what is <em>not</em> here. OpticQuiz does not sell eyewear, lenses,
+      color-correcting glasses, or a refraction service, and takes no affiliate commission on any of
+      them.</p>
+      <div class="hard">
+        <strong>Why that question is the sharp one</strong>
+        A test that is free because it's a funnel into a $400 pair of glasses has a reason to tell you
+        something is wrong with your eyes. Ask that question of every vision test you take, including
+        this one. Here, no result can steer you toward a product we profit from, because there is no
+        such product.
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<section class="close">
+  <div class="wrap">
+    <h2>CHECK IT YOURSELF</h2>
+    <p>Every claim above is verifiable without our help: the DOIs resolve, the code installs, the
+    limitations are printed on the tests themselves.</p>
+    <p style="margin-bottom:0"><a href="/research/">The research</a> ·
+    <a href="/platform/">The packages</a> ·
+    <a href="/about/">About</a> ·
+    <a href="/privacy/">Privacy</a> ·
+    <a href="/support/">Report a defect</a></p>
+  </div>
+</section>
+
+<!-- oq:footer -->
+<footer class="oq-footer" role="contentinfo">
+  <div class="oq-footer__grid">
+    <div>
+      <h2>Vision tests</h2>
+      <ul>
+        <li><a href="/color/">Color vision</a></li>
+        <li><a href="/d15/">Farnsworth D-15</a></li>
+        <li><a href="/acuity/">Visual acuity</a></li>
+        <li><a href="/flicker/">Flicker fusion</a></li>
+        <li><a href="/#tests">All 17 tests</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Color tools</h2>
+      <ul>
+        <li><a href="/checker/">Palette checker</a></li>
+        <li><a href="/contrast-checker/">Contrast checker</a></li>
+        <li><a href="/palettes/">Palette benchmark</a></li>
+        <li><a href="/widget/">One-line widget</a></li>
+        <li><a href="/extension/">Browser extension</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Developers</h2>
+      <ul>
+        <li><a href="/platform/">Platform &amp; API</a></li>
+        <li><a href="/setup/">Set up</a></li>
+        <li><a href="/live/">Live correction</a></li>
+        <li><a href="/use-cases/">Use cases</a></li>
+        <li><a href="/audit/">Color audits</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>OpticQuiz</h2>
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/methodology/">Methodology</a></li>
+        <li><a href="/impact/">Impact archive</a></li>
+        <li><a href="/support/">Support</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="oq-footer__base">
+    <span>© 2026 opticquiz.com</span>
+    <span>One published method — <a href="https://doi.org/10.5281/zenodo.21310578">DOI 10.5281/zenodo.21310578</a></span>
+    <span class="oq-footer__note">Educational &amp; accessibility use — not a medical device, diagnosis, or a legal ADA/WCAG audit.</span>
+  </div>
+</footer>
+<!-- /oq:footer -->
+
+</body>
+</html>
