@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Free online stereo depth (stereopsis) test using a random-dot stereogram. Screens for depth perception with red-cyan glasses or free-fusion, on-device, and states exactly what a screen cannot measure.">
+<meta name="theme-color" content="#1A1A1A">
+<meta name="keywords" content="stereo test, stereopsis test, depth perception test, random dot stereogram, stereo vision test online, stereoacuity">
+<meta property="og:title" content="Stereo Depth Test — Random-Dot Stereogram | OpticQuiz">
+<meta property="og:description" content="A free random-dot stereogram screening for depth perception. Red-cyan glasses or free-fusion. On-device, no account.">
+<meta property="og:url" content="https://opticquiz.com/stereo/">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://opticquiz.com/stereo/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Stereo Depth Test — Random-Dot Stereogram (Free, On-Device) | OpticQuiz</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can a computer screen measure stereo vision?","acceptedAnswer":{"@type":"Answer","text":"Only partly. A flat screen shows both eyes the same image, so depth has to be created artificially — with red-cyan anaglyph glasses, or by free-fusing two side-by-side panels. Without one of those, no browser test can measure stereopsis at all. This test screens for whether gross stereopsis is present; it cannot produce a clinical stereoacuity value in arc seconds the way a Titmus, TNO or Randot test can."}},
+{"@type":"Question","name":"What is a random-dot stereogram?","acceptedAnswer":{"@type":"Answer","text":"A field of random dots that contains no visible shape to either eye alone. A region of the dots is shifted horizontally between the left and right images, so the shape only appears when the brain fuses the two views. It was introduced by Bela Julesz in 1960 and is the standard way to test stereopsis without monocular cues — you cannot pass it by guessing from one eye."}},
+{"@type":"Question","name":"Why did I fail if my eyes are fine?","acceptedAnswer":{"@type":"Answer","text":"Failing this screen does not necessarily mean absent stereopsis. In free-fusion mode, many people simply cannot free-fuse, which is a learned skill, not a vision defect. In anaglyph mode, poor-quality or wrongly-oriented red-cyan glasses, screen colour calibration, and low display brightness all interfere. A real result requires a clinician with calibrated targets."}},
+{"@type":"Question","name":"Do I need red-cyan glasses?","acceptedAnswer":{"@type":"Answer","text":"For the anaglyph mode, yes — standard red-left, cyan-right 3D glasses. If you do not have them, the free-fusion mode shows two panels side by side that you can fuse by crossing or diverging your eyes, though that mode is harder and its failures are less meaningful."}}]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/oq-chrome.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--ink:#141414;
+  --red:#C23410;--red-text:#9E2A0D;--redd:#9E2A0D;--red-on-dark:#F1927A;--green:#3F7836;--blue:#0072B2;--orange:#E69F00;--teal:#009E73;--pink:#CC79A7;
+  --fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:6px;--rc:12px;
+}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);line-height:1.6;-webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:2px;border-radius:var(--r);}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:99;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;}
+.skip-link:focus{top:12px;}
+.wrap{max-width:820px;margin:0 auto;padding:0 24px;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+h1{font-family:var(--fd);font-size:clamp(42px,9vw,80px);line-height:.92;letter-spacing:.01em;margin:18px 0 14px;}
+h2{font-family:var(--fd);font-size:clamp(26px,4.6vw,36px);letter-spacing:.02em;margin:30px 0 10px;}
+h3{font-family:var(--fs);font-size:18px;margin:20px 0 6px;}
+p{margin-bottom:14px;}
+.kicker{font-family:var(--fm);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--red-text);}
+.lede{font-size:19px;color:var(--gray);}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;font-size:16px;padding:13px 22px;border-radius:var(--r);border:0;cursor:pointer;font-family:var(--fs);}
+.btn.primary{background:var(--red);color:#fff;}.btn.primary:hover{background:var(--redd);}
+.btn.ghost{background:transparent;color:var(--black);border:1.5px solid var(--lgray);}
+.btn.ghost:hover{background:var(--cream);}
+.card{background:#fff;border:1.5px solid var(--lgray);border-radius:var(--rc);padding:22px;margin:18px 0;}
+.note{background:var(--cream);border-left:3px solid var(--red);padding:13px 16px;border-radius:0 var(--r) var(--r) 0;font-size:15px;margin:16px 0;}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0;}
+@media(max-width:620px){.modes{grid-template-columns:1fr;}}
+.mode{background:#fff;border:1.5px solid var(--lgray);border-radius:var(--rc);padding:18px;text-align:left;cursor:pointer;font-family:var(--fs);}
+.mode:hover{border-color:var(--gray);}
+.mode[aria-pressed="true"]{border-color:var(--red);box-shadow:0 0 0 2px rgba(194,52,16,.15);}
+.mode .t{font-family:var(--fd);font-size:23px;display:block;letter-spacing:.02em;}
+.mode .s{font-size:14px;color:var(--gray);}
+#stage{display:grid;place-items:center;margin:18px 0;}
+canvas{max-width:100%;height:auto;border-radius:var(--r);background:#000;touch-action:manipulation;}
+.quads{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:340px;margin:16px auto 0;}
+.quads button{padding:14px;font-family:var(--fm);font-size:14px;letter-spacing:.08em;text-transform:uppercase;background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;}
+.quads button:hover{border-color:var(--red);}
+.progress{font-family:var(--fm);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);text-align:center;}
+.result{font-family:var(--fd);font-size:clamp(34px,7vw,58px);line-height:1;margin:6px 0 10px;}
+.screen{display:none;}
+.screen.active{display:block;}
+.seo{background:var(--cream);border-top:1px solid var(--lgray);margin-top:40px;padding:38px 0 10px;}
+.seo h2{margin-top:0;}
+details{border-bottom:1px solid var(--lgray);padding:12px 0;}
+summary{cursor:pointer;font-weight:600;font-size:16px;}
+details p{margin:10px 0 0;color:var(--gray);font-size:15.5px;}
+.links a{display:block;padding:9px 0;text-decoration:none;border-bottom:1px solid var(--lgray);}
+.links a:hover{color:var(--red-text);}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+
+<!-- oq:nav -->
+<nav class="oq-nav" aria-label="Primary">
+  <a href="/" class="oq-nav__brand" aria-label="OpticQuiz home">
+    <img class="oq-nav__mark" src="/opticquiz_icon.png" alt="" width="27" height="27">
+    <span class="oq-nav__name">OPTIC<b>QUIZ</b></span>
+  </a>
+  <div class="oq-nav__links">
+    <a href="/#tests">Vision tests</a>
+    <a href="/#color">Color tools</a>
+    <a href="/platform/">Developers</a>
+    <a href="/research/">Research</a>
+    <a href="/setup/" class="oq-nav__cta">Set up</a>
+  </div>
+</nav>
+<!-- /oq:nav -->
+
+<main id="main" class="wrap" role="main">
+
+  <!-- intro -->
+  <section id="screen-intro" class="screen active">
+    <p class="kicker">Test 17 · Random-dot stereogram</p>
+    <h1>STEREO<br>DEPTH<br>TEST</h1>
+    <p class="lede">A shape hidden in random dots that only appears when both eyes work together. Nothing is visible to either eye alone — so it can't be passed by guessing.</p>
+
+    <div class="note">
+      <strong>A screen cannot show your eyes two different images on its own.</strong> Depth has to be
+      faked, either with red-cyan glasses or by free-fusing two panels. Without one of those, no
+      browser test can measure stereo vision at all. This is a screen for whether gross depth
+      perception is present — it is not a clinical stereoacuity measurement in arc seconds.
+    </div>
+
+    <h2>PICK A MODE</h2>
+    <div class="modes">
+      <button class="mode" id="mode-anaglyph" aria-pressed="true" type="button">
+        <span class="t">RED-CYAN GLASSES</span>
+        <span class="s">Standard 3D glasses, red over the left eye. The closer match to a clinical random-dot test.</span>
+      </button>
+      <button class="mode" id="mode-fusion" aria-pressed="false" type="button">
+        <span class="t">FREE-FUSION</span>
+        <span class="s">No glasses. Two panels you fuse by crossing your eyes. Harder — and failing it may just mean you can't free-fuse.</span>
+      </button>
+    </div>
+
+    <div class="card">
+      <h3>How it works</h3>
+      <p>You'll see a field of random dots divided into four quadrants. In one quadrant, a square
+      floats in front of the background. Say which quadrant it's in. Each time you're right the
+      depth shrinks; the test ends after two misses at the same depth.</p>
+      <p style="margin-bottom:0"><strong>Sit about an arm's length from the screen</strong> and keep
+      your head level — tilting breaks the effect.</p>
+    </div>
+
+    <p><button class="btn primary" id="btn-start" type="button">Start the test</button>
+    <a class="btn ghost" href="/#tests">All 16 other tests</a></p>
+  </section>
+
+  <!-- test -->
+  <section id="screen-test" class="screen" aria-labelledby="test-h">
+    <h1 id="test-h" class="sr-only">Stereo depth test in progress</h1>
+    <p class="progress" id="progress">Disparity 16 px · trial 1</p>
+    <div id="stage"><canvas id="cv" width="520" height="520" aria-label="Random-dot stereogram. Choose the quadrant containing the raised square."></canvas></div>
+    <p class="progress">Which quadrant is raised?</p>
+    <div class="quads">
+      <button type="button" data-q="0">Top left</button>
+      <button type="button" data-q="1">Top right</button>
+      <button type="button" data-q="2">Bottom left</button>
+      <button type="button" data-q="3">Bottom right</button>
+    </div>
+    <p style="text-align:center;margin-top:16px"><button class="btn ghost" id="btn-cant" type="button">I can't see any shape</button></p>
+  </section>
+
+  <!-- results -->
+  <section id="screen-results" class="screen" aria-labelledby="res-h">
+    <p class="kicker">Result</p>
+    <h1 id="res-h" class="sr-only">Your stereo depth result</h1>
+    <p class="result" id="res-headline">—</p>
+    <p class="lede" id="res-detail"></p>
+    <div class="note" id="res-caveat"></div>
+    <p><button class="btn primary" id="btn-again" type="button">Test again</button>
+    <a class="btn ghost" href="/#tests">Try another test</a></p>
+
+    <h2>WHAT NEXT</h2>
+    <div class="links">
+      <a href="/acuity/">Check each eye separately with the visual acuity test →</a>
+      <a href="/dominance/">Find your dominant eye →</a>
+      <a href="/vernier/">Try vernier acuity — alignment hyperacuity →</a>
+      <a href="/research/">Read the published method behind these tests →</a>
+    </div>
+  </section>
+
+</main>
+
+<section class="seo">
+  <div class="wrap">
+    <h2>ABOUT THIS TEST</h2>
+    <p>A random-dot stereogram contains no shape that either eye can see by itself. The dots are
+    random; a region of them is shifted sideways between the left and right images. Only when the
+    brain fuses the two views does the shape appear, floating in front of the noise. Béla Julesz
+    introduced the method in 1960 precisely to remove monocular cues — outline, shading, size —
+    so that what remains is stereopsis alone.</p>
+
+    <details><summary>Can a computer screen measure stereo vision?</summary>
+    <p>Only partly. A flat screen shows both eyes the same image, so depth has to be created
+    artificially — with red-cyan anaglyph glasses, or by free-fusing two side-by-side panels.
+    Without one of those, no browser test can measure stereopsis at all. This test screens for
+    whether gross stereopsis is present; it cannot produce a clinical stereoacuity value in arc
+    seconds the way a Titmus, TNO or Randot test can.</p></details>
+
+    <details><summary>What is a random-dot stereogram?</summary>
+    <p>A field of random dots that contains no visible shape to either eye alone. A region of the
+    dots is shifted horizontally between the left and right images, so the shape only appears when
+    the brain fuses the two views. It was introduced by Béla Julesz in 1960 and is the standard way
+    to test stereopsis without monocular cues — you cannot pass it by guessing from one eye.</p></details>
+
+    <details><summary>Why did I fail if my eyes are fine?</summary>
+    <p>Failing this screen does not necessarily mean absent stereopsis. In free-fusion mode, many
+    people simply cannot free-fuse, which is a learned skill, not a vision defect. In anaglyph mode,
+    poor-quality or wrongly-oriented red-cyan glasses, screen colour calibration, and low display
+    brightness all interfere. A real result requires a clinician with calibrated targets.</p></details>
+
+    <details><summary>Do I need red-cyan glasses?</summary>
+    <p>For the anaglyph mode, yes — standard red-left, cyan-right 3D glasses. If you do not have
+    them, the free-fusion mode shows two panels side by side that you can fuse by crossing or
+    diverging your eyes, though that mode is harder and its failures are less meaningful.</p></details>
+
+    <details><summary>What does the number mean?</summary>
+    <p>The result is the smallest horizontal disparity, in screen pixels, at which you could still
+    locate the shape. Converting pixels to arc seconds requires knowing your exact pixel pitch and
+    viewing distance, neither of which a web page can measure — so this test reports pixels and
+    stops there rather than inventing a precision it does not have.</p></details>
+
+    <p style="margin-top:20px"><strong>Not a diagnosis.</strong> If you have double vision, a turned
+    eye, or a sudden change in depth perception, see an optometrist or ophthalmologist. Children in
+    particular should be checked in person, since untreated amblyopia is time-sensitive.</p>
+  </div>
+</section>
+
+<!-- oq:footer -->
+<footer class="oq-footer" role="contentinfo">
+  <div class="oq-footer__grid">
+    <div>
+      <h2>Vision tests</h2>
+      <ul>
+        <li><a href="/color/">Color vision</a></li>
+        <li><a href="/d15/">Farnsworth D-15</a></li>
+        <li><a href="/acuity/">Visual acuity</a></li>
+        <li><a href="/flicker/">Flicker fusion</a></li>
+        <li><a href="/#tests">All 17 tests</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Color tools</h2>
+      <ul>
+        <li><a href="/checker/">Palette checker</a></li>
+        <li><a href="/contrast-checker/">Contrast checker</a></li>
+        <li><a href="/palettes/">Palette benchmark</a></li>
+        <li><a href="/widget/">One-line widget</a></li>
+        <li><a href="/extension/">Browser extension</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Developers</h2>
+      <ul>
+        <li><a href="/platform/">Platform &amp; API</a></li>
+        <li><a href="/setup/">Set up</a></li>
+        <li><a href="/live/">Live correction</a></li>
+        <li><a href="/use-cases/">Use cases</a></li>
+        <li><a href="/audit/">Color audits</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>OpticQuiz</h2>
+      <ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/research/">Research</a></li>
+        <li><a href="/impact/">Impact archive</a></li>
+        <li><a href="/support/">Support</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="oq-footer__base">
+    <span>© 2026 opticquiz.com</span>
+    <span>One published method — <a href="https://doi.org/10.5281/zenodo.21310578">DOI 10.5281/zenodo.21310578</a></span>
+    <span class="oq-footer__note">Educational &amp; accessibility use — not a medical device, diagnosis, or a legal ADA/WCAG audit.</span>
+  </div>
+</footer>
+<!-- /oq:footer -->
+
+<script src="/assets/oq-analytics.js" defer></script>
+<script>
+(function () {
+  "use strict";
+  var LEVELS = [16, 12, 9, 7, 5, 4, 3, 2];   // horizontal disparity in px
+  var CELL = 3;                               // dot size in px
+  var mode = "anaglyph";
+  var li = 0, misses = 0, trial = 0, best = null, answered = 0;
+  var cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+  var target = 0;
+
+  function say(m) { document.getElementById("a11y-live").textContent = m; }
+  function screenTo(id) {
+    ["intro", "test", "results"].forEach(function (s) {
+      document.getElementById("screen-" + s).classList.toggle("active", s === id);
+    });
+  }
+
+  // Build a random dot field with one quadrant's square shifted between eyes.
+  function draw(disparity, quad) {
+    var W = cv.width, H = cv.height;
+    var cols = Math.floor(W / CELL), rows = Math.floor(H / CELL);
+    var sh = Math.max(1, Math.round(disparity / CELL));   // shift in cells
+    var base = new Uint8Array(cols * rows);
+    for (var i = 0; i < base.length; i++) base[i] = Math.random() < 0.5 ? 1 : 0;
+
+    // target square: half a quadrant, centred in it
+    var qw = Math.floor(cols / 2), qh = Math.floor(rows / 2);
+    var sz = Math.floor(Math.min(qw, qh) * 0.62);
+    var qx = (quad % 2) * qw, qy = Math.floor(quad / 2) * qh;
+    var x0 = qx + Math.floor((qw - sz) / 2), y0 = qy + Math.floor((qh - sz) / 2);
+
+    function fieldFor(dir) {                 // dir -1 = left eye, +1 = right eye
+      var f = base.slice();
+      var off = dir * Math.round(sh / 2);
+      for (var y = y0; y < y0 + sz; y++) {
+        var row = [];
+        for (var x = x0; x < x0 + sz; x++) row.push(base[y * cols + x]);
+        for (var x2 = 0; x2 < sz; x2++) {
+          var tx = x0 + x2 + off;
+          if (tx >= 0 && tx < cols) f[y * cols + tx] = row[x2];
+        }
+        // refill the gap the shift opened, with fresh noise
+        for (var g = 0; g < Math.abs(off); g++) {
+          var gx = off > 0 ? x0 + g : x0 + sz - 1 - g;
+          if (gx >= 0 && gx < cols) f[y * cols + gx] = Math.random() < 0.5 ? 1 : 0;
+        }
+      }
+      return f;
+    }
+
+    var L = fieldFor(-1), R = fieldFor(1);
+    var img = ctx.createImageData(W, H);
+    var d = img.data;
+
+    for (var yy = 0; yy < rows; yy++) {
+      for (var xx = 0; xx < cols; xx++) {
+        var l = L[yy * cols + xx], r = R[yy * cols + xx];
+        var cr, cg, cb;
+        if (mode === "anaglyph") { cr = l ? 255 : 0; cg = r ? 255 : 0; cb = r ? 255 : 0; }
+        else { cr = cg = cb = 0; }             // fusion mode drawn below instead
+        for (var py = 0; py < CELL; py++) {
+          for (var px = 0; px < CELL; px++) {
+            var o = (((yy * CELL + py) * W) + (xx * CELL + px)) * 4;
+            d[o] = cr; d[o + 1] = cg; d[o + 2] = cb; d[o + 3] = 255;
+          }
+        }
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+
+    if (mode === "fusion") {                   // two grey panels side by side
+      var half = Math.floor(cols / 2) - 2;
+      ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H);
+      [L, R].forEach(function (F, pane) {
+        var ox = pane * (half + 4) * CELL;
+        for (var y = 0; y < rows; y++) {
+          for (var x = 0; x < half; x++) {
+            ctx.fillStyle = F[y * cols + x] ? "#fff" : "#000";
+            ctx.fillRect(ox + x * CELL, y * CELL, CELL, CELL);
+          }
+        }
+      });
+    }
+  }
+
+  function nextTrial() {
+    target = Math.floor(Math.random() * 4);
+    trial++;
+    document.getElementById("progress").textContent =
+      "Disparity " + LEVELS[li] + " px · trial " + trial;
+    draw(LEVELS[li], target);
+    say("New pattern. Which quadrant is raised?");
+  }
+
+  function answer(q) {
+    answered++;
+    if (q === target) {
+      best = LEVELS[li];
+      misses = 0;
+      if (li < LEVELS.length - 1) { li++; nextTrial(); }
+      else { finish(); }
+    } else {
+      misses++;
+      if (misses >= 2) finish();
+      else nextTrial();
+    }
+  }
+
+  function finish() {
+    screenTo("results");
+    var h = document.getElementById("res-headline");
+    var det = document.getElementById("res-detail");
+    var cav = document.getElementById("res-caveat");
+    if (best === null) {
+      h.textContent = "NO SHAPE SEEN";
+      det.textContent = "You didn't locate the square at the largest disparity offered (" +
+        LEVELS[0] + " px). That can mean reduced stereopsis — or, very commonly, that the mode " +
+        "didn't work for you.";
+      cav.innerHTML = "<strong>Before reading anything into this:</strong> in free-fusion mode most " +
+        "people who 'fail' simply haven't learned to free-fuse. In glasses mode, check the red lens " +
+        "is over your <em>left</em> eye, turn screen brightness up, and try again. Persistent " +
+        "difficulty, double vision or a turned eye is worth an in-person exam.";
+    } else {
+      h.textContent = best + " PX DISPARITY";
+      det.textContent = "You located the hidden square down to a horizontal disparity of " + best +
+        " pixels. That means your visual system fused two different images into depth — gross " +
+        "stereopsis is present.";
+      cav.innerHTML = "<strong>This is a screen, not a measurement.</strong> Pixels only become arc " +
+        "seconds if the page knows your pixel pitch and viewing distance, and it knows neither — so " +
+        "no arc-second figure is given here. A clinical stereoacuity value needs calibrated targets " +
+        "(Titmus, TNO, Randot) at a set distance.";
+    }
+    if (window.oqTrack) { oqTrack("test_complete", "stereo"); }
+  }
+
+  document.getElementById("mode-anaglyph").addEventListener("click", function () {
+    mode = "anaglyph";
+    this.setAttribute("aria-pressed", "true");
+    document.getElementById("mode-fusion").setAttribute("aria-pressed", "false");
+  });
+  document.getElementById("mode-fusion").addEventListener("click", function () {
+    mode = "fusion";
+    this.setAttribute("aria-pressed", "true");
+    document.getElementById("mode-anaglyph").setAttribute("aria-pressed", "false");
+  });
+
+  document.getElementById("btn-start").addEventListener("click", function () {
+    li = 0; misses = 0; trial = 0; best = null; answered = 0;
+    screenTo("test");
+    if (window.oqTrack) { oqTrack("test_start", "stereo"); }
+    nextTrial();
+  });
+  document.getElementById("btn-again").addEventListener("click", function () { screenTo("intro"); });
+  document.getElementById("btn-cant").addEventListener("click", function () { finish(); });
+  Array.prototype.forEach.call(document.querySelectorAll(".quads button"), function (b) {
+    b.addEventListener("click", function () { answer(parseInt(b.getAttribute("data-q"), 10)); });
+  });
+})();
+</script>
+</body>
+</html>
