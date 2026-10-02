@@ -33,33 +33,47 @@ const JSON_OUT = process.argv.includes("--json");
 
 const cvd = require(ENGINE);
 
-/* ---- load the real functions out of the shipped widget ---------------------------------- */
-// The widget is an IIFE that mounts itself into a page. Replace its final mount call with an
-// export of the internals, then run it with no DOM. Nothing else about the file is altered,
-// so what gets measured below is what gets served.
-function loadWidget() {
-  const src = fs.readFileSync(WIDGET, "utf8");
-  const harness = src.replace(
-    /if \(document\.readyState === "loading"\)[\s\S]*$/,
-    `module.exports = { correctGraphic, correctKeepLum, inkFor, worstRatio, blend, M, MODES,
-       parse, fmt, lum, ratio, stopsOf, extremes, browserTarget, STORE };\n})();\n`
-  );
-  if (harness === src) {
-    throw new Error("could not find the widget's mount call — has widget/eye.js been restructured?");
-  }
-  const mod = { exports: {} };
-  new Function("module", "window", "document", "navigator", harness)(
-    mod, { matchMedia: null }, {}, { userAgent: "" }
-  );
-  return mod.exports;
-}
-
-const W = loadWidget();
+/* ---- the engine every surface is built from --------------------------------------------- */
+// One engine, three artifacts. Measuring the engine measures all of them, provided the
+// artifacts are actually current — which gate 0 below is what enforces.
+const W = require(path.join(ROOT, "widget", "engine.js"));
 const hex = (a) => "#" + a.map((v) => ("0" + v.toString(16)).slice(-2)).join("");
 
 const gates = [];
 function gate(name, pass, detail) {
   gates.push({ name, pass: !!pass, detail: detail || "" });
+}
+
+/* ---- 0. every shipped artifact is built from this engine, and is current ----------------- */
+// Without this, the gates below would verify an engine that no shipped file actually contains.
+{
+  const { execFileSync } = require("child_process");
+  let current = true, detail = "";
+  try {
+    execFileSync(process.execPath, [path.join(ROOT, "tools", "build-widgets.js"), "--check"], { stdio: "pipe" });
+    detail = "widget/eye.js, packages/cvd-eye/index.js, browser-extension/content.js";
+  } catch (e) {
+    current = false;
+    detail = "run: node tools/build-widgets.js";
+  }
+  gate("every surface is rebuilt from widget/engine.js", current, detail);
+
+  // And each one really does carry the engine, rather than having drifted to its own copy.
+  const ARTIFACTS = [
+    ["widget/eye.js", path.join(ROOT, "widget", "eye.js")],
+    ["packages/cvd-eye/index.js", path.join(ROOT, "packages", "cvd-eye", "index.js")],
+    ["browser-extension/content.js", path.join(ROOT, "browser-extension", "content.js")],
+  ];
+  const missing = [];
+  for (const [name, p] of ARTIFACTS) {
+    const s = fs.existsSync(p) ? fs.readFileSync(p, "utf8") : "";
+    // The engine's defining line and the matrices it must carry verbatim.
+    if (s.indexOf("var OQ_ENGINE = (function () {") === -1) missing.push(name + " (no engine)");
+    else if (s.indexOf("0.60405, 0.07601, 0.31994") === -1) missing.push(name + " (matrices differ)");
+    else if (s.indexOf("feColorMatrix") !== -1) missing.push(name + " (still filters pixels)");
+  }
+  gate("no surface still filters pixels or carries its own matrices", missing.length === 0,
+    missing.length ? missing.join("; ") : ARTIFACTS.length + " artifacts carry the shared engine");
 }
 
 /* ---- 1. the headline claim: text is never below AA, for any backdrop -------------------- */

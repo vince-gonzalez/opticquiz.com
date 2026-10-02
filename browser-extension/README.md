@@ -16,17 +16,35 @@ and carries across the whole web.
 4. Open any page with red/green content, click the OpticQuiz toolbar icon, pick a mode
    (Recommended, Deuteranopia, Protanopia, Tritanopia, or Off).
 
-## Publish
-- **Chrome Web Store:** chrome.google.com/webstore/devconsole (one-time $5 developer fee).
-  Zip this folder's contents and upload; add screenshots + the store listing.
-- **Edge Add-ons:** partner.microsoft.com/dashboard/microsoftedge (free). Upload the same zip.
-- Swap `icon.png` for the crisp 128px eye mark (Desktop\opticquiz-brand) before publishing.
+## Where it is published
+All three listings are live:
+- **Chrome Web Store:** https://chromewebstore.google.com/detail/opticquiz-%E2%80%94-colorblind-co/cigfnaekhndlablojacfdhmgcdnnfieo
+- **Microsoft Edge Add-ons:** https://microsoftedge.microsoft.com/addons/detail/maalcjohefglpnenmfjjkacgmomhofeh
+- **Firefox Add-ons:** https://addons.mozilla.org/en-US/firefox/addon/opticquiz-colorblind-corrector/
+
+`node build.mjs` produces the store-ready zips in `dist/`. There is no Safari build: Safari
+web extensions are distributed through the App Store inside a containing app, which needs an
+Apple Developer account.
 
 ## Honest scope & limits
 Correction is an **aid, not a cure**, and strongly improves color separation but doesn't
-resolve every case. It applies one filter to the page, so on sites that rely on
-`position:fixed` / `sticky` elements the layout can shift while a mode is on — toggle **Off**
-to restore. Method: https://doi.org/10.5281/zenodo.21310578 · MIT.
+resolve every case.
+
+Since **1.3.0** the correction is applied to computed CSS styles rather than as a filter over
+the whole page. Photographs, video and canvas are untouched, and nothing is filtered, so
+`position:fixed` and `sticky` behave as the site's author wrote them. Text is forced to pure
+black or white against its corrected backdrop, which clears WCAG AA by construction (worst
+case 4.58:1). The 1.2.x filter moved lightness as well as hue and could push text below AA —
+on opticquiz.com's own twelve text/background pairs it pushed eight below, worst 3.22:1.
+
+What it still cannot do: where text sits on a `url()` bitmap the ratio cannot be proven, so it
+preserves the author's own ratio instead of guessing. Where the operating system's own
+contrast setting is active it stands down and leaves the OS in charge. On a very large DOM it
+stops rather than stalling the page.
+
+The engine lives in `widget/engine.js` and `content.js` is generated from it — edit the engine
+and run `node tools/build-widgets.js`. Verify with `node tools/verify-widget.js`.
+Method: https://doi.org/10.5281/zenodo.21310578 · MIT.
 
 ## Building the store packages
 
