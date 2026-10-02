@@ -14,7 +14,7 @@
 ===== END WORKFLOW STACK ===== -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="The OpticQuiz Impact Archive: a consented, citable, revocable public record of people the free colour-vision tools have helped — plus live adoption numbers from npm, PyPI and the VS Code Marketplace. Open data, CC BY 4.0.">
+<meta name="description" content="The OpticQuiz Impact Archive: a consented, citable, revocable public record of people the free color-vision tools have helped — plus live adoption numbers from npm, PyPI and the VS Code Marketplace. Open data, CC BY 4.0.">
 <meta name="theme-color" content="#F8F6F2">
 <meta property="og:title" content="The Impact Archive | OpticQuiz">
 <meta property="og:description" content="A consented, citable, revocable public record of who OpticQuiz has helped. Voluntary submissions only — no tracking, no analytics, no invented numbers.">
@@ -32,15 +32,15 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Dataset",
 "name":"OpticQuiz Impact Archive",
-"alternateName":"Consented reports of colour-accessibility benefit",
-"description":"A voluntary, consented, moderated and revocable collection of first-person reports from people who used OpticQuiz colour-vision tests and colour-correction tools, together with the surface used and the reporter's self-described colour vision. Self-reported and self-selected; not a random sample and not a clinical outcome measure.",
+"alternateName":"Consented reports of color-accessibility benefit",
+"description":"A voluntary, consented, moderated and revocable collection of first-person reports from people who used OpticQuiz color-vision tests and color-correction tools, together with the surface used and the reporter's self-described color vision. Self-reported and self-selected; not a random sample and not a clinical outcome measure.",
 "url":"https://opticquiz.com/impact/",
 "license":"https://creativecommons.org/licenses/by/4.0/",
 "isAccessibleForFree":true,
 "creator":{"@type":"Person","name":"Vince Gonzalez","identifier":"https://orcid.org/0009-0005-3640-014X"},
 "publisher":{"@type":"Organization","name":"OpticQuiz","url":"https://opticquiz.com/"},
 "citation":"https://doi.org/10.5281/zenodo.21310578",
-"keywords":["colour vision deficiency","colour blindness","accessibility","daltonization","self-reported outcomes","open data"],
+"keywords":["color vision deficiency","color blindness","accessibility","daltonization","self-reported outcomes","open data"],
 "distribution":[
 {"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://api.opticquiz.com/api/impact/stories"},
 {"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://api.opticquiz.com/api/impact/stories.csv"}]}
@@ -269,8 +269,8 @@ Retrieved &lt;date&gt;. Method: doi.org/10.5281/zenodo.21310578</code></pre>
     return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); };
 
   var TYPE_LABEL = { protan:"Protan", deutan:"Deutan", tritan:"Tritan", achroma:"Achromatopsia",
-    other:"Other type", unknown:"Type unknown", none:"Normal colour vision", undisclosed:"" };
-  var SURFACE_LABEL = { "vision-test":"Vision test","color-test":"Colour-vision test",checker:"Palette checker",
+    other:"Other type", unknown:"Type unknown", none:"Normal color vision", undisclosed:"" };
+  var SURFACE_LABEL = { "vision-test":"Vision test","color-test":"Color-vision test",checker:"Palette checker",
     palettes:"Palette benchmark","contrast-checker":"Contrast checker","live-camera":"Camera mode",
     widget:"Site widget",extension:"Browser extension","desktop-app":"Desktop app",vscode:"VS Code extension",
     api:"API",package:"Package",mcp:"MCP server","github-action":"GitHub Action",guide:"Guide",other:"OpticQuiz" };

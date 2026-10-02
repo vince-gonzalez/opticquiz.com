@@ -405,7 +405,7 @@ footer { font-family: var(--fm); font-size: 13px; color: var(--gray); letter-spa
 
 <!-- ══ TEST ════════════════════════════════════════════════ -->
 <div id="screen-test" class="screen" role="region" aria-label="D-15 hue sort test">
-  <h1 class="sr-only">Farnsworth D-15 — arrange the colour swatches</h1>
+  <h1 class="sr-only">Farnsworth D-15 — arrange the color swatches</h1>
   <div style="padding-top:24px">
     <div class="prog-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog-bar" aria-label="Test progress">
       <div class="prog-meta">
@@ -703,7 +703,7 @@ function scoreOrder(order) {
    *
    * With the old offset a flawless arrangement scored 14 rather than 0 - every cap contributed
    * one unit of phantom error - and 14 lands inside the "moderate" band (12-24). Someone who
-   * sorted every cap correctly was told they had a moderate colour vision deficiency, and the
+   * sorted every cap correctly was told they had a moderate color vision deficiency, and the
    * bottom of the scale was unreachable.
    */
   var totalError = 0;
@@ -851,7 +851,7 @@ function renderSortArea() {
       // Position only. CAPS[] is stored in correct hue order, so the cap id IS the answer -
       // naming it here handed the result to anyone using a screen reader. A real Farnsworth
       // D-15 prints the numbers on the BACK of the caps for exactly this reason.
-      'aria-label="Colour swatch, position ' + (i+1) + ' of ' + STATE.trayOrder.length + '. Press Space to select, then arrow keys to move." ' +
+      'aria-label="Color swatch, position ' + (i+1) + ' of ' + STATE.trayOrder.length + '. Press Space to select, then arrow keys to move." ' +
       'ondragstart="onDragStart(event,' + i + ')" ' +
       'ondragover="onDragOver(event,' + i + ')" ' +
       'ondrop="onDrop(event,' + i + ')" ' +
@@ -863,7 +863,7 @@ function renderSortArea() {
   }
 
   document.getElementById("sort-area").innerHTML =
-    '<div class="sort-instruction">Arrange the swatches in a <strong>smooth colour progression</strong> from the reference (left). Drag them, or use the keyboard — see below the tray.</div>' +
+    '<div class="sort-instruction">Arrange the swatches in a <strong>smooth color progression</strong> from the reference (left). Drag them, or use the keyboard — see below the tray.</div>' +
 
     '<div class="reference-row" role="group" aria-label="Reference swatch, fixed">' +
       '<span class="ref-label">Reference →</span>' +

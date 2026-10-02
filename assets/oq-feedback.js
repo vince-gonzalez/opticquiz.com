@@ -120,16 +120,16 @@
         '<label for="oqfb-ba">What could you not do before, that you can do now? <span style="font-weight:400;color:#6B6B6B">(optional)</span></label>' +
         '<textarea id="oqfb-ba" maxlength="1000" placeholder="Optional. This is the part researchers and standards people actually need."></textarea>' +
         '<div class="oqfb-grid">' +
-          '<div><label for="oqfb-type">Your colour vision <span style="font-weight:400;color:#6B6B6B">(optional)</span></label>' +
+          '<div><label for="oqfb-type">Your color vision <span style="font-weight:400;color:#6B6B6B">(optional)</span></label>' +
           '<select id="oqfb-type">' +
             '<option value="undisclosed">Rather not say</option>' +
             '<option value="deutan">Deuteranopia / deutan (green-weak)</option>' +
             '<option value="protan">Protanopia / protan (red-weak)</option>' +
             '<option value="tritan">Tritanopia / tritan (blue-yellow)</option>' +
-            '<option value="achroma">Achromatopsia (little or no colour)</option>' +
+            '<option value="achroma">Achromatopsia (little or no color)</option>' +
             '<option value="other">Other</option>' +
             '<option value="unknown">I don\'t know my type</option>' +
-            '<option value="none">Normal colour vision</option>' +
+            '<option value="none">Normal color vision</option>' +
           '</select></div>' +
           '<div><label for="oqfb-role">You are a… <span style="font-weight:400;color:#6B6B6B">(optional)</span></label>' +
           '<select id="oqfb-role">' +

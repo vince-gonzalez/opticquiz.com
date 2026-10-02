@@ -33,7 +33,7 @@ function showStrength(pct, profile) {
       profile.type + "). Adjust if it does not look right to you — you are the instrument.";
   } else {
     strNote.className = "strnote";
-    strNote.textContent = "Full strength suits complete colour blindness. If your deficiency " +
+    strNote.textContent = "Full strength suits complete color blindness. If your deficiency " +
       "is mild, less is usually better — and distorts far less.";
   }
 }

@@ -3,23 +3,23 @@
 <head>
 <!-- ===== WORKFLOW STACK =====
   File:    /setup/index.html
-  Purpose: Get colour correction working for YOU, on whichever surface you use.
+  Purpose: Get color correction working for YOU, on whichever surface you use.
   Not:     /platform/ is the developer hub - the toolkit, for people building things.
-           This page is organised around a person getting set up, and is honest about
+           This page is organized around a person getting set up, and is honest about
            which surfaces are one click and which are not.
 ===== END ===== -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Set up OpticQuiz colour correction: browser extension, one-line widget for your own site, whole-screen Windows app, and the npm and PyPI packages. Free, open source, nothing uploaded.">
+<meta name="description" content="Set up OpticQuiz color correction: browser extension, one-line widget for your own site, whole-screen Windows app, and the npm and PyPI packages. Free, open source, nothing uploaded.">
 <meta name="theme-color" content="#F8F6F2">
-<meta property="og:title" content="Set up colour correction — OpticQuiz">
+<meta property="og:title" content="Set up color correction — OpticQuiz">
 <meta property="og:description" content="Find your type, then get correction running in your browser, on your whole screen, on your own website, or in your own code.">
 <meta property="og:image" content="https://opticquiz.com/og-card.png">
 <meta property="og:url" content="https://opticquiz.com/setup/">
 <link rel="canonical" href="https://opticquiz.com/setup/">
 <link rel="icon" href="/opticquiz_icon.png" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<title>Set Up Colour Correction — Browser, Windows, Your Site | OpticQuiz</title>
+<title>Set Up Color Correction — Browser, Windows, Your Site | OpticQuiz</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
@@ -89,21 +89,21 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
 <main class="wrap">
   <nav class="crumbs"><a href="/">Home</a> › Set up</nav>
   <h1>SET IT UP</h1>
-  <p class="lede">Colour correction, on whichever surface you actually use. All of it is free
+  <p class="lede">Color correction, on whichever surface you actually use. All of it is free
     and open source, none of it needs an account, and nothing you do here is uploaded anywhere.</p>
 
   <h2>FIRST — HOW STRONG?</h2>
-  <p>Correction tuned for <em>complete</em> colour blindness is too strong for most people, and
-    at that setting it distorts far more than it helps. Most colour-vision deficiency is
+  <p>Correction tuned for <em>complete</em> color blindness is too strong for most people, and
+    at that setting it distorts far more than it helps. Most color-vision deficiency is
     partial. So the strength matters as much as the type, and the honest way to set it is to
     measure rather than guess.</p>
   <p><strong>And if you screen mild, correction may do nothing for you.</strong> We benchmarked
-    our own filters, the published daltonisation methods, and content-aware correction against
+    our own filters, the published daltonization methods, and content-aware correction against
     observers simulated at mild, moderate and complete deficiency. At mild severity
-    <em>none of them</em> separated a single colour pair that was previously confusable — while
-    still shifting every other colour by the same amount they always do. Benefit scales with
+    <em>none of them</em> separated a single color pair that was previously confusable — while
+    still shifting every other color by the same amount they always do. Benefit scales with
     how impaired you are. The distortion does not.</p>
-  <p>That is a measurement under a model of colour vision, not a study of people, so it cannot
+  <p>That is a measurement under a model of color vision, not a study of people, so it cannot
     tell you what <em>you</em> will experience — if a filter helps you read a particular chart,
     nothing here contradicts that. But it is the reason this page tells you to start low
     instead of selling you the strongest setting.
@@ -113,12 +113,13 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
 
   <h2>IN YOUR BROWSER</h2>
   <div class="card easy">
-    <div class="tag">One click · Chrome &amp; Edge</div>
+    <div class="tag">One click · Chrome, Edge &amp; Firefox</div>
     <h3>Colorblind Corrector extension</h3>
-    <p>Re-colours any page you visit. Pick a mode, set the strength, done. Makes no network
+    <p>Re-colors any page you visit. Pick a mode, set the strength, done. Makes no network
       requests and stores only your setting.</p>
     <p><a href="https://chromewebstore.google.com/detail/opticquiz-%E2%80%94-colorblind-co/cigfnaekhndlablojacfdhmgcdnnfieo" target="_blank" rel="noopener">Install from the Chrome Web Store →</a><br>
-       <a href="https://microsoftedge.microsoft.com/addons/detail/opticquiz-%E2%80%94-colorblind-co/maalcjohefglpnenmfjjkacgmomhofeh" target="_blank" rel="noopener">Install from Microsoft Edge Add-ons →</a></p>
+       <a href="https://microsoftedge.microsoft.com/addons/detail/maalcjohefglpnenmfjjkacgmomhofeh" target="_blank" rel="noopener">Install from Microsoft Edge Add-ons →</a><br>
+       <a href="https://addons.mozilla.org/en-US/firefox/addon/opticquiz-colorblind-corrector/" target="_blank" rel="noopener">Install from Firefox Add-ons →</a></p>
     <p class="note">If you have taken a test on this site, the extension reads that result and
       sets your strength for you the next time you visit — no typing, no account.</p>
   </div>
@@ -141,20 +142,20 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
     <p><a href="https://github.com/zengineco/opticquiz.com/releases/download/v1.1.0-desktop/OpticQuizCorrector.exe">
       <strong>Download OpticQuizCorrector.exe</strong></a> — 65&nbsp;MB, Windows 8 or later.</p>
     <p class="note">It is a single file. Nothing to install, no .NET runtime needed, no
-      administrator rights. Windows may warn that the publisher is unrecognised, because the
+      administrator rights. Windows may warn that the publisher is unrecognized, because the
       build is not code-signed — a certificate costs money this project does not spend. You can
-      <a href="https://github.com/zengineco/opticquiz.com/tree/main/desktop-app">read every line
+      <a href="https://github.com/vince-gonzalez/opticquiz.com/tree/main/desktop-app">read every line
       of its source</a> and build it yourself if you would rather not trust a binary.</p>
-    <p class="note">Its matrices are derived separately from the browser ones. Windows applies
-      colour transforms in a different colour space, and the same numbers there produce a
-      measurably worse correction — so it gets its own.</p>
+    <p class="note">Its matrices are derived separately from the browser ones, because the desktop
+      app applies its transform in a different color space than a browser does — the browser
+      numbers do not carry over unchanged, so it gets its own.</p>
   </div>
 
   <h2>ON A SITE YOU OWN</h2>
   <div class="card easy">
     <div class="tag">One line</div>
     <h3>The eye widget</h3>
-    <p>Gives every visitor to your site a colourblind mode with a strength control. No build
+    <p>Gives every visitor to your site a colorblind mode with a strength control. No build
       step, no dependency, no tracking.</p>
 <pre><code>&lt;script src="https://opticquiz.com/widget/eye.js" defer&gt;&lt;/script&gt;</code></pre>
     <p>Or from npm, if you bundle:</p>
@@ -165,7 +166,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <h2>IN YOUR OWN CODE</h2>
   <div class="card">
     <div class="tag">Same engine, four ways</div>
-    <p>Check whether a palette survives colour blindness, fix one that doesn't, or simulate
+    <p>Check whether a palette survives color blindness, fix one that doesn't, or simulate
       any of the three types. Byte-identical results across JavaScript and Python.</p>
 <pre><code>npm install opticquiz-cvd          # JavaScript / TypeScript
 pip install opticquiz-cvd          # Python (matplotlib-friendly)
@@ -178,9 +179,9 @@ pip install opticquiz-cvd          # Python (matplotlib-friendly)
   </div>
 
   <h2>WHAT NONE OF THIS IS</h2>
-  <p>These are aids, not a cure. They make colours easier to <em>tell apart</em>; they do not
-    give you colour vision you do not have, and they are not a medical device or a treatment.
-    Every correction here trades some colour accuracy for some separability, which is why the
+  <p>These are aids, not a cure. They make colors easier to <em>tell apart</em>; they do not
+    give you color vision you do not have, and they are not a medical device or a treatment.
+    Every correction here trades some color accuracy for some separability, which is why the
     strength control exists and why lower is often better.</p>
   <p>If you want to know what you actually have, <a href="/report/">print the notes page</a> and
     take it to an optometrist. It is written for them, and it says plainly what a home screen
@@ -192,7 +193,7 @@ pip install opticquiz-cvd          # Python (matplotlib-friendly)
     <h2>Reviewed &amp; listed by</h2>
     <ul>
       <li><a href="https://chromewebstore.google.com/detail/opticquiz-%E2%80%94-colorblind-co/cigfnaekhndlablojacfdhmgcdnnfieo" rel="noopener">Chrome Web Store</a></li>
-      <li><a href="https://microsoftedge.microsoft.com/addons/detail/opticquiz-%E2%80%94-colorblind-co/maalcjohefglpnenmfjjkacgmomhofeh" rel="noopener">Microsoft Edge Add-ons</a></li>
+      <li><a href="https://microsoftedge.microsoft.com/addons/detail/maalcjohefglpnenmfjjkacgmomhofeh" rel="noopener">Microsoft Edge Add-ons</a></li>
       <li><a href="https://addons.mozilla.org/en-US/firefox/addon/opticquiz-colorblind-corrector/" rel="noopener">Firefox Add-ons</a></li>
       <li><a href="https://marketplace.visualstudio.com/items?itemName=opticquiz.opticquiz-colorblind-check" rel="noopener">VS Code Marketplace</a></li>
       <li><a href="https://registry.modelcontextprotocol.io" rel="noopener">MCP Registry</a></li>
@@ -284,7 +285,7 @@ pip install opticquiz-cvd          # Python (matplotlib-friendly)
       '<div class="k">Not measured yet</div>'+
       '<div class="v">Take a test first</div>'+
       '<p class="note" style="margin:0;">The <a href="/d15/">Farnsworth D-15</a> grades finest '+
-      'and identifies which colours you confuse; the <a href="/color/">plate test</a> is faster. '+
+      'and identifies which colors you confuse; the <a href="/color/">plate test</a> is faster. '+
       'Either one sets your strength automatically. Results stay in this browser.</p></div>';
   }
 })();

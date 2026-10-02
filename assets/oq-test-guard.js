@@ -1,8 +1,11 @@
-/*! oq-test-guard.js — refuse to let a vision test report a result the filter produced.
-    The eye widget (/widget/eye.js) applies a daltonization filter to the whole page. That is
-    the point of it everywhere EXCEPT here: on a test page it recolors the stimulus before the
-    visitor sees it, so the test would be measuring the correction, not their vision.
+/*! oq-test-guard.js — refuse to let a vision test report a result the correction produced.
+    The eye widget (/widget/eye.js) daltonizes the page. That is the point of it everywhere
+    EXCEPT here: on a test page it recolors the stimulus before the visitor sees it, so the
+    test would be measuring the correction, not their vision.
     This shows a standing banner while any correction mode is active, with a one-click way off.
+
+    Two engines to detect. v2 recolors computed styles and exposes window.OQEye; v1 (and v2's
+    fallback path) applies an SVG filter to #oq-a11y-content. Either one invalidates a test.
     No network, no storage of its own. */
 (function () {
   "use strict";
@@ -13,11 +16,20 @@
 
   function wrapper() { return document.getElementById("oq-a11y-content"); }
 
-  function correctionOn() {
+  function filterOn() {
     var w = wrapper();
     if (!w) return false;
     var f = getComputedStyle(w).filter;
     return !!f && f !== "none";
+  }
+
+  function correctionOn() {
+    // v2: the widget reports its own state.
+    if (window.OQEye && typeof window.OQEye.get === "function" && window.OQEye.get()) return true;
+    // v2 CSSOM engine: a generated sheet is present.
+    if (document.getElementById("oq-eye-sheet")) return true;
+    // v1 / fallback: a filter on the wrapper.
+    return filterOn();
   }
 
   function build() {
@@ -31,7 +43,7 @@
       "display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;";
     var t = document.createElement("span");
     t.style.cssText = "flex:1 1 320px;min-width:260px;";
-    t.innerHTML = "<strong>Color correction is on.</strong> This test is measuring the filter, " +
+    t.innerHTML = "<strong>Color correction is on.</strong> This test is measuring the correction, " +
       "not your eyes — any result now is meaningless. Turn correction off before testing.";
     var btn = document.createElement("button");
     btn.type = "button";
@@ -40,9 +52,13 @@
       "background:#C23410;color:#fff;border:0;border-radius:6px;padding:9px 16px;" +
       "font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;flex:0 0 auto;";
     btn.addEventListener("click", function () {
-      try { localStorage.removeItem("oq-eye-mode"); } catch (e) {}
-      var w = wrapper();
-      if (w) w.style.filter = "none";
+      if (window.OQEye && typeof window.OQEye.set === "function") {
+        window.OQEye.set(null);            // v2: clears the sheet and the stored choice
+      } else {
+        try { localStorage.removeItem("oq-eye-mode"); } catch (e) {}
+        var w = wrapper();
+        if (w) w.style.filter = "none";
+      }
       sync();
     });
     b.appendChild(t);
@@ -63,13 +79,22 @@
 
   function start() {
     sync();
-    var w = wrapper();
-    if (w && window.MutationObserver) {
-      new MutationObserver(sync).observe(w, { attributes: true, attributeFilter: ["style", "class"] });
+    if (window.MutationObserver) {
+      // v2 writes and removes <style id="oq-eye-sheet"> in <head>.
+      new MutationObserver(sync).observe(document.head, { childList: true });
+      // v1 / fallback flips the filter on the wrapper, which may not exist yet.
+      var w = wrapper();
+      if (w) new MutationObserver(sync).observe(w, { attributes: true, attributeFilter: ["style", "class"] });
     }
     window.addEventListener("storage", sync);
     // the widget is deferred; catch the case where it mounts after us
-    setTimeout(sync, 1200);
+    setTimeout(function () {
+      sync();
+      var w = wrapper();
+      if (w && window.MutationObserver) {
+        new MutationObserver(sync).observe(w, { attributes: true, attributeFilter: ["style", "class"] });
+      }
+    }, 1200);
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);

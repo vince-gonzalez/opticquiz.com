@@ -19,7 +19,7 @@
  *     this catches em/rem/% chains that compute small)
  *   - contrast of every text run, recomputed under simulated protanopia, deuteranopia and
  *     tritanopia using our own shipped engine. axe cannot flag this and is not wrong not to:
- *     WCAG contrast is luminance-based and colour-vision-agnostic by design. We sell the
+ *     WCAG contrast is luminance-based and color-vision-agnostic by design. We sell the
  *     simulator, so we hold the site to it.
  *
  * Load state alone proves little on this site - pages swap screens, and the worst defects
@@ -112,10 +112,10 @@
     return Object.keys(out).map(function (k) { return k + " ×" + out[k]; });
   }
 
-  /* Contrast of rendered text, recomputed under simulated colour-vision deficiency.
+  /* Contrast of rendered text, recomputed under simulated color-vision deficiency.
    *
-   * WCAG 2.x contrast is luminance-based and deliberately colour-vision-agnostic, so axe will
-   * pass a colour that becomes hard to read for a deutan. That is a defensible position for
+   * WCAG 2.x contrast is luminance-based and deliberately color-vision-agnostic, so axe will
+   * pass a color that becomes hard to read for a deutan. That is a defensible position for
    * the standard and an indefensible one for us: we sell the simulator. So this holds the site
    * to its own product.
    *
@@ -123,7 +123,7 @@
    * thing being audited can never disagree.
    *
    * Reports only what it can actually determine. Text over an image, a gradient or a
-   * translucent stack has no single background colour, and guessing one would produce
+   * translucent stack has no single background color, and guessing one would produce
    * confident nonsense - those are counted as "undetermined" and named, not silently passed.
    */
   function cvdContrast(win, doc) {
@@ -177,7 +177,7 @@
     var toHex = function (s) {
       var c = rgba(s);
       if (!c) return null;
-      if (c.a < 0.999) return null;      // translucent TEXT genuinely has no single colour
+      if (c.a < 0.999) return null;      // translucent TEXT genuinely has no single color
       return hex(c);
     };
 

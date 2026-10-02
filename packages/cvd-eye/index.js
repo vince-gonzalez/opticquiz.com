@@ -21,7 +21,7 @@ var KEY = "oq-eye-mode";
 var SKEY = "oq-eye-strength";     // 0-100; 100 = full dichromacy correction
 
 // M(s) = I + s*(M - I). Full strength is tuned for complete dichromacy, which is the
-// MINORITY case - most colour-vision-deficient people are anomalous trichromats. On 10
+// MINORITY case - most color-vision-deficient people are anomalous trichromats. On 10
 // real palettes the full-strength matrices score negative net at severity 0.7 while the
 // scaled ones score positive, at half the distortion. A blend of two matrices is still a
 // matrix, so this stays one feColorMatrix.

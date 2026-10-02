@@ -15,7 +15,7 @@
 ===== END ===== -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Print a record of your OpticQuiz colour-vision screening results to take to an optometrist — raw observations, the published method, and a plain statement of what a screen cannot determine.">
+<meta name="description" content="Print a record of your OpticQuiz color-vision screening results to take to an optometrist — raw observations, the published method, and a plain statement of what a screen cannot determine.">
 <meta name="robots" content="noindex">
 <link rel="canonical" href="https://opticquiz.com/report/">
 <link rel="icon" href="/opticquiz_icon.png" type="image/png">
@@ -102,7 +102,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);border-top:1px sol
       <label>Who is this about<input id="f-who" placeholder="e.g. my son, age 9"></label>
       <label>Who is filling this in<input id="f-by" placeholder="e.g. his mother, at home"></label>
       <label>What made you wonder<textarea id="f-why" rows="3"
-        placeholder="e.g. he has been struggling to read the coloured lines on maps and mixes up the red and green counters in games"></textarea></label>
+        placeholder="e.g. he has been struggling to read the colored lines on maps and mixes up the red and green counters in games"></textarea></label>
       <p style="font-size:13px;color:#6B6B6B;margin:2px 0 0;">Typed here, printed below, stored
       only in this browser. Never uploaded.</p>
     </div>
@@ -131,7 +131,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);border-top:1px sol
         if(d.perEye) r.push(["Total error, per eye",
           "right "+(d.perEye.right==null?"—":d.perEye.right)+" · left "+(d.perEye.left==null?"—":d.perEye.left)]);
         return r;},
-      method:"15 colour caps arranged by hue against a fixed reference cap. Errors are scored as total transposition distance, and adjacent-cap transpositions are mapped onto the deutan, protan and tritan confusion axes. Reported figures are for the eye with the higher total error."},
+      method:"15 color caps arranged by hue against a fixed reference cap. Errors are scored as total transposition distance, and adjacent-cap transpositions are mapped onto the deutan, protan and tritan confusion axes. Reported figures are for the eye with the higher total error."},
     color:{name:"Pseudoisochromatic plates (procedurally generated)",
       rows:function(d){
         var rows=[["Red-green plates read correctly",d.rgCorrect+" of "+d.rgTotal]];
@@ -141,7 +141,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);border-top:1px sol
       method:"Plates are generated in the browser at load time; no stored or scanned plate images are used. The hidden figure differs from the background only in hue along a confusion axis, with dot size and lightness randomised so the figure cannot be read by brightness or shape. Scoring is a plain count. Reported figures are for the eye with more misses."},
     sat:{name:"Saturation threshold (adaptive staircase)",
       rows:function(d){return Object.keys(d).map(function(k){return [k,String(d[k])];});},
-      method:"An adaptive staircase measures the faintest colour distinguishable from grey along each of four hue axes."}
+      method:"An adaptive staircase measures the faintest color distinguishable from grey along each of four hue axes."}
   };
 
   var CKEY="oq-report-ctx-v1";
@@ -159,7 +159,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);border-top:1px sol
     if(!all.length){
       el.innerHTML='<div class="empty"><strong>No results stored on this device yet.</strong><br><br>'+
         'Take the <a href="/d15/">Farnsworth D-15</a> — it grades finer than a plate test and identifies '+
-        'a confusion axis — or the <a href="/color/">colour plate test</a>, then come back. Results are '+
+        'a confusion axis — or the <a href="/color/">color plate test</a>, then come back. Results are '+
         'saved only in this browser.</div>';
       return;
     }
@@ -169,7 +169,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);border-top:1px sol
     h+='<p class="meta">Done at home on an ordinary screen · '+esc(new Date().toISOString().slice(0,10))+'</p>';
 
     // Printed FIRST, above the numbers. A functional complaint - "he cannot read the
-    // coloured lines on maps" - is what an optometrist acts on. The counts are supporting
+    // colored lines on maps" - is what an optometrist acts on. The counts are supporting
     // evidence for it, not the other way round.
     var ctx=loadCtx();
     if(ctx.who||ctx.by||ctx.why){
@@ -205,7 +205,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);border-top:1px sol
       // this whole page exists to avoid.
       h+='<h2>What the answers have in common</h2>';
       h+='<div class="card"><table>'+
-         '<tr><th style="width:52%">Colours most often confused</th><td class="n">'+esc(prof.type)+'</td></tr>'+
+         '<tr><th style="width:52%">Colors most often confused</th><td class="n">'+esc(prof.type)+'</td></tr>'+
          '<tr><th>Observed as</th><td class="n">'+esc(prof.basis)+'</td></tr>'+
          '<tr><th>How much weight to give this</th><td class="n">'+esc(prof.confidence)+'</td></tr>'+
          '</table><p style="font-size:13px;color:#6B6B6B;margin:0;">This restates the counts '+
@@ -225,9 +225,9 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);border-top:1px sol
           'and grading it, requires an anomaloscope. The plate test above cannot distinguish them at all.</li>'
         : '<li><strong>It cannot separate protanopia from deuteranopia.</strong> That requires an anomaloscope.</li>')+
        '<li><strong>It cannot grade severity clinically.</strong> Any band shown by these tests comes from a small number of items on an uncalibrated display.</li>'+
-       '<li><strong>It cannot detect acquired colour-vision change</strong> or distinguish it from inherited deficiency.</li>'+
+       '<li><strong>It cannot detect acquired color-vision change</strong> or distinguish it from inherited deficiency.</li>'+
        '<li><strong>It cannot rule anything out.</strong> A normal result on a screening test is not a normal clinical examination.</li>'+
-       '<li>Display calibration, colour profile, ambient lighting and viewing distance all affect these results and none were controlled.</li>'+
+       '<li>Display calibration, color profile, ambient lighting and viewing distance all affect these results and none were controlled.</li>'+
        '</ul>';
 
     h+='<h2>How this was made</h2>'+

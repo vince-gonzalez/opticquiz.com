@@ -393,7 +393,7 @@ function renderResults(){
    * toward more red or more green. That is established and it is not in dispute.
    *
    * It does not reproduce here. Simulating this exact stimulus with our own engine, the match
-   * centre stays at 50 for protan AND deutan at every severity from 0.3 to 1.0. The instrument
+   * center stays at 50 for protan AND deutan at every severity from 0.3 to 1.0. The instrument
    * uses broadband sRGB primaries, not the monochromatic lights the clinical effect depends on,
    * and the shift does not survive the substitution.
    *
@@ -421,7 +421,7 @@ function renderResults(){
      '<div class="mini"><div class="mini-val">'+Math.round(mean)+'</div><div class="mini-lbl">Average match point (50 = balanced)</div></div></div>';
   h+='<div class="interp-card"><div class="interp-text">'+bandTxt+'</div></div>';
   h+='<div class="interp-card"><div class="interp-text">Your average match point '+leanTxt+
-     '. <strong>We do not read anything into that.</strong> A clinical anomaloscope mixes two single wavelengths, and there an anomalous match really does shift toward red or green. This one mixes your screen’s red and green primaries, which are broad bands of light — and simulating this exact stimulus with our own colour-vision engine puts the match centre at 50 for protan and deutan alike, at every severity. The shift does not survive the substitution, so the number is shown for interest and not scored.</div></div>';
+     '. <strong>We do not read anything into that.</strong> A clinical anomaloscope mixes two single wavelengths, and there an anomalous match really does shift toward red or green. This one mixes your screen’s red and green primaries, which are broad bands of light — and simulating this exact stimulus with our own color-vision engine puts the match center at 50 for protan and deutan alike, at every severity. The shift does not survive the substitution, so the number is shown for interest and not scored.</div></div>';
   document.getElementById("result-detail").innerHTML=h;
 }
 

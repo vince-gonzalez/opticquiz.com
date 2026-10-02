@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="OpticQuiz Colorblind Corrector is a Chrome and Edge extension that corrects the colors on any web page in real time for your type of color blindness. Free, private, published method.">
+<meta name="description" content="OpticQuiz Colorblind Corrector is a Chrome, Edge and Firefox extension that corrects the colors on any web page in real time for your type of color blindness. Free, private, published method.">
 <meta name="theme-color" content="#F8F6F2">
-<meta name="keywords" content="colorblind chrome extension, color blindness browser extension, colorblind corrector, color vision deficiency extension, chrome colorblind mode, edge colorblind extension">
-<meta property="og:title" content="OpticQuiz Colorblind Corrector — Chrome & Edge extension">
+<meta name="keywords" content="colorblind chrome extension, color blindness browser extension, colorblind corrector, color vision deficiency extension, chrome colorblind mode, edge colorblind extension, firefox colorblind addon, firefox color blindness extension">
+<meta property="og:title" content="OpticQuiz Colorblind Corrector — Chrome, Edge & Firefox extension">
 <meta property="og:description" content="Corrects the colors on any web page in real time for your type of color blindness. Free, private, published method.">
 <meta property="og:image" content="https://opticquiz.com/og-card.png">
 <meta property="og:url" content="https://opticquiz.com/extension/">
@@ -17,14 +17,14 @@
 <meta name="twitter:image" content="https://opticquiz.com/og-card.png">
 <link rel="canonical" href="https://opticquiz.com/extension/">
 <link rel="icon" href="/opticquiz_icon.png" type="image/png">
-<title>Colorblind Corrector — Chrome & Edge Extension | OpticQuiz</title>
+<title>Colorblind Corrector — Chrome, Edge & Firefox Extension | OpticQuiz</title>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareApplication","name":"OpticQuiz Colorblind Corrector","applicationCategory":"BrowserApplication","operatingSystem":"Chrome, Edge","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"url":"https://opticquiz.com/extension/","description":"A Chrome and Edge browser extension that corrects on-page colors in real time for color vision deficiency using a published method.","isBasedOn":{"@type":"ScholarlyArticle","identifier":"https://doi.org/10.5281/zenodo.21310578"},"author":{"@type":"Person","name":"Vince Gonzalez"}}
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"OpticQuiz Colorblind Corrector","applicationCategory":"BrowserApplication","operatingSystem":"Chrome, Edge, Firefox","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true,"url":"https://opticquiz.com/extension/","description":"A Chrome, Edge and Firefox browser extension that corrects on-page colors in real time for color vision deficiency using a published method.","isBasedOn":{"@type":"ScholarlyArticle","identifier":"https://doi.org/10.5281/zenodo.21310578"},"author":{"@type":"Person","name":"Vince Gonzalez"}}
 </script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -83,16 +83,43 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
 </header>
 <main class="wrap">
   <nav class="crumbs"><a href="/">Home</a> › Colorblind Corrector Extension</nav>
-  <span class="eyebrow">Chrome &amp; Edge · free · no tracking</span>
+  <span class="eyebrow">Chrome · Edge · Firefox · free · no tracking</span>
   <h1>CORRECT COLORS<br>ON EVERY SITE</h1>
   <p class="lede">A browser extension that re-colors any web page in real time so you can <strong>tell colors apart</strong> — maps, charts, dashboards, red warning text. Pick your type of color blindness once and it follows you across the whole web.</p>
 
-  <div class="btns">
-    <a class="btn" href="https://chromewebstore.google.com/search/opticquiz" target="_blank" rel="noopener">Add to Chrome</a>
-    <a class="btn ghost" href="https://microsoftedge.microsoft.com/addons/search/opticquiz" target="_blank" rel="noopener">Add to Edge</a>
-    <a class="btn ghost" href="/live">Try the camera version</a>
+  <div class="btns" id="oq-get">
+    <a class="btn" data-b="chrome" href="https://chromewebstore.google.com/detail/opticquiz-%E2%80%94-colorblind-co/cigfnaekhndlablojacfdhmgcdnnfieo" target="_blank" rel="noopener">Add to Chrome</a>
+    <a class="btn ghost" data-b="edge" href="https://microsoftedge.microsoft.com/addons/detail/maalcjohefglpnenmfjjkacgmomhofeh" target="_blank" rel="noopener">Add to Edge</a>
+    <a class="btn ghost" data-b="firefox" href="https://addons.mozilla.org/en-US/firefox/addon/opticquiz-colorblind-corrector/" target="_blank" rel="noopener">Add to Firefox</a>
   </div>
-  <p class="hint">In review on the stores now. Want it today? The <a href="/live">camera version</a> runs in your browser with nothing to install, and developers can load the extension unpacked from <a href="https://github.com/zengineco/opticquiz.com/tree/main/browser-extension">GitHub</a>.</p>
+  <p class="hint" id="oq-get-hint">All three listings are live. No account, nothing to configure. On a phone or tablet? <a href="#system">Your device has a built-in color filter</a> — browsers there mostly don't take extensions. Developers can also load it unpacked from <a href="https://github.com/vince-gonzalez/opticquiz.com/tree/main/browser-extension">GitHub</a>.</p>
+
+  <script>
+  /* Progressive enhancement only: all three stores are already in the markup and work with
+     JavaScript off. This just promotes the one the visitor can actually install. Edge, Opera,
+     Brave and Vivaldi all carry "Chrome/", so specific tokens are tested before the generic
+     one. Phones get sent to the system filter instead, because Chrome on Android supports no
+     extensions and iOS has no equivalent — pointing them at a store would waste their time. */
+  (function () {
+    var ua = navigator.userAgent || "", row = document.getElementById("oq-get");
+    var mobile = /Android|iPhone|iPad|iPod/.test(ua), pick;
+    if (/Firefox\//.test(ua) && !/Seamonkey\//.test(ua)) pick = "firefox";
+    else if (mobile) pick = null;
+    else if (/Edg\//.test(ua)) pick = "edge";
+    else if (/OPR\//.test(ua) || /Chrome\//.test(ua)) pick = "chrome";
+    if (mobile && !/Firefox\//.test(ua)) {
+      var h = document.getElementById("oq-get-hint");
+      if (h) h.innerHTML = "Browsers on phones and tablets mostly can’t run extensions — but " +
+        "<a href=\"#system\">your device has a built-in color filter</a> that works in every app. " +
+        "The buttons above are for a desktop browser.";
+    }
+    if (!pick || !row) return;
+    var btns = [].slice.call(row.querySelectorAll("a[data-b]"));
+    btns.forEach(function (a) { a.className = a.getAttribute("data-b") === pick ? "btn" : "btn ghost"; });
+    var first = row.querySelector('a[data-b="' + pick + '"]');
+    if (first) row.insertBefore(first, row.firstChild);
+  })();
+  </script>
 
   <h2>HOW IT WORKS</h2>
   <p>Click the toolbar eye and choose a mode. The page's colors are re-mapped so the differences your vision normally compresses become visible again (<strong>daltonization</strong>, via an in-browser color filter). Your choice is remembered as you browse.</p>
@@ -108,8 +135,38 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <h2>PRIVATE BY DESIGN</h2>
   <p><strong>No tracking. No network requests. No account.</strong> Everything happens in your browser; your chosen mode is stored only on your device. See the full <a href="/privacy/">privacy policy</a>.</p>
 
+  <h2 id="system">YOUR DEVICE HAS ONE BUILT IN</h2>
+  <p>An extension can only correct web pages. Every major operating system ships a color filter that
+  corrects <strong>everything</strong> — your desktop, your photo library, games, video, other people's
+  apps. If you need correction beyond the browser, start here. It costs nothing and installs nothing.</p>
+
+  <div class="modes">
+    <div class="m"><strong>Windows 11</strong><span>Settings &rsaquo; Accessibility &rsaquo; Color filters. Six filters, including red-green (green weak), red-green (red weak) and blue-yellow. <b>Win + Ctrl + C</b> toggles it.</span></div>
+    <div class="m"><strong>macOS</strong><span>System Settings &rsaquo; Accessibility &rsaquo; Display &rsaquo; Color Filters. Red/Green, Green/Red, Blue/Yellow and Grayscale, with an intensity slider.</span></div>
+    <div class="m"><strong>iPhone &amp; iPad</strong><span>Settings &rsaquo; Accessibility &rsaquo; Display &amp; Text Size &rsaquo; Color Filters. Same four presets, plus intensity.</span></div>
+    <div class="m"><strong>Android</strong><span>Settings &rsaquo; Accessibility &rsaquo; Color and motion &rsaquo; Color correction. Some phones put it under Accessibility &rsaquo; Color correction, and Google notes it isn't on every device.</span></div>
+    <div class="m"><strong>ChromeOS</strong><span>Settings &rsaquo; Accessibility &rsaquo; Display and magnification &rsaquo; Color correction, with adjustable intensity.</span></div>
+  </div>
+
+  <p>On a phone or tablet this is usually your <em>only</em> option — Chrome on Android supports no
+  extensions and iOS has no equivalent. Firefox for Android is the exception that does take add-ons.</p>
+
+  <p><strong>How good are they? Nobody outside the vendors can say, and we tried.</strong> None of
+  Microsoft, Apple or Google publishes the transform their filter applies. We attempted to measure the
+  Windows one so it could be compared against a published method, and found it is invisible to three
+  independent capture paths — ordinary screenshots, the desktop-duplication API that screen-sharing
+  uses, and the public color-effect API all return the unfiltered image while the screen is visibly
+  changed. We could not recover the transform, so <strong>we make no claim about how well it
+  works</strong> — only that it cannot currently be checked by anyone outside Microsoft.
+  <a href="/learn/how-accurate-are-windows-color-filters/">That measurement is written up here</a>, and
+  the method and data are <a href="https://github.com/vince-gonzalez/opticquiz.com/tree/main/research/windows-benchmark">in the repository</a>.</p>
+
+  <p class="hint">Practical consequence you can use today: because the filter sits below the screen-capture
+  layer, a screenshot you take with a system filter on will <em>not</em> show what you saw. If you are
+  reporting a color problem to a developer, say which filter you had on — the image won't carry it.</p>
+
   <div class="disclaimer" role="note">
-    <strong>Honest scope.</strong> Correction is a powerful <strong>aid, not a cure</strong> — it strongly improves color separation but won't resolve every case. Because it applies one filter to the page, sites that rely on <code>position:fixed</code>/<code>sticky</code> elements may shift while a mode is on; switch to Off to restore. Method: <a href="https://doi.org/10.5281/zenodo.21310578">published, open-access</a>.
+    <strong>Honest scope.</strong> Correction is a powerful <strong>aid, not a cure</strong> — it strongly improves color separation but won't resolve every case. The extension applies one correction to the whole page, so photographs are re-colored along with everything else, layouts built on <code>position:fixed</code> or <code>sticky</code> can shift, and because the transform moves lightness as well as hue a page's text contrast can change; switch to Off to restore. The <a href="/widget/">site widget</a> was rebuilt to remove all three, and that engine is being ported here next. Method: <a href="https://doi.org/10.5281/zenodo.21310578">published, open-access</a>.
   </div>
 
   <div class="related">
@@ -119,7 +176,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
     <a href="/support/">Support &amp; FAQ →</a>
   </div>
 
-  <div id="oq-feedback" data-surface="extension" data-version="1.0.1"></div>
+  <div id="oq-feedback" data-surface="extension" data-version="1.2.0"></div>
   <script src="/assets/oq-feedback.js" defer></script>
 
 <!-- oq:footer -->
@@ -128,7 +185,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
     <h2>Reviewed &amp; listed by</h2>
     <ul>
       <li><a href="https://chromewebstore.google.com/detail/opticquiz-%E2%80%94-colorblind-co/cigfnaekhndlablojacfdhmgcdnnfieo" rel="noopener">Chrome Web Store</a></li>
-      <li><a href="https://microsoftedge.microsoft.com/addons/detail/opticquiz-%E2%80%94-colorblind-co/maalcjohefglpnenmfjjkacgmomhofeh" rel="noopener">Microsoft Edge Add-ons</a></li>
+      <li><a href="https://microsoftedge.microsoft.com/addons/detail/maalcjohefglpnenmfjjkacgmomhofeh" rel="noopener">Microsoft Edge Add-ons</a></li>
       <li><a href="https://addons.mozilla.org/en-US/firefox/addon/opticquiz-colorblind-corrector/" rel="noopener">Firefox Add-ons</a></li>
       <li><a href="https://marketplace.visualstudio.com/items?itemName=opticquiz.opticquiz-colorblind-check" rel="noopener">VS Code Marketplace</a></li>
       <li><a href="https://registry.modelcontextprotocol.io" rel="noopener">MCP Registry</a></li>

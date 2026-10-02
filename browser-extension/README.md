@@ -1,4 +1,4 @@
-# OpticQuiz — Colorblind Corrector (Chrome / Edge extension)
+# OpticQuiz — Colorblind Corrector (Chrome / Edge / Firefox extension)
 
 A Manifest V3 browser extension that corrects the colors on **any web page** in real time
 for your type of color blindness. It runs the same published method as the rest of OpticQuiz

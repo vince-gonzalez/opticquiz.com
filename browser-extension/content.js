@@ -15,8 +15,8 @@
 
   // M(s) = I + s*(M - I).  Measured on 10 real palettes across 5 simulators: at severity
   // 0.7 the full-strength matrices score NEGATIVE net (protan -1, tritan -4) while the
-  // scaled ones score +3 and +6, at roughly half the colour distortion. Most people with
-  // a colour-vision deficiency are anomalous trichromats, not dichromats, so full strength
+  // scaled ones score +3 and +6, at roughly half the color distortion. Most people with
+  // a color-vision deficiency are anomalous trichromats, not dichromats, so full strength
   // is the wrong default for the majority of the people this is for.
   // A convex blend of two matrices is still a matrix, so this stays an feColorMatrix and
   // costs nothing architecturally.

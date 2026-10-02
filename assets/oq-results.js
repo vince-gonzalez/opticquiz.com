@@ -4,7 +4,7 @@
 
    One small store, two jobs:
      1. the printable clinician report at /report/ needs results from several tests
-     2. the colour corrector needs a MEASURED type + severity instead of a guess
+     2. the color corrector needs a MEASURED type + severity instead of a guess
 
    Both were previously impossible because no test on this site persisted anything.
 
@@ -40,7 +40,7 @@
 
      d15: 2 - until 2026-08-05 the swatches rendered their cap id on the face, and CAPS[] is
      stored in correct hue order, so the sequence could be reconstructed without perceiving
-     colour. Every result recorded before that is from an easier test. */
+     color. Every result recorded before that is from an easier test. */
   var MIN_INSTRUMENT = { d15: 3, color: 2 };
   // d15: 3 - until 2026-08-06 totalError used cap-1 as the correct index when the tray starts
   // at cap 2, so a FLAWLESS arrangement scored 14 and landed in the "moderate" band. Every
@@ -106,7 +106,7 @@
       if (typeof r.totalError !== "number") return null;
       var ax = r.dominantAxis;
       if (!ax || ax === "none") return null;
-      // Normalised against this test's own observed error range, NOT a clinical TES cut-off.
+      // Normalized against this test's own observed error range, NOT a clinical TES cut-off.
       // Inventing published thresholds would be exactly the fabrication this project forbids.
       var sev = Math.max(0, Math.min(1, (r.totalError - 12) / 60));
       return { type: ax, severity: sev, source: "d15", confidence: "moderate",

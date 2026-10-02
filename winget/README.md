@@ -48,7 +48,7 @@ runs from the tray. `InstallerType: portable` tells winget to place the binary a
 
 ## Known: the binary is unsigned
 
-Windows will warn about an unrecognised publisher. That is disclosed on
+Windows will warn about an unrecognized publisher. That is disclosed on
 https://opticquiz.com/setup/ alongside a link to the source. Signing is tracked separately —
 SignPath Foundation offers free OV certificates to qualifying open-source projects, and Azure
 Trusted Signing covers individual developers in the US and Canada.

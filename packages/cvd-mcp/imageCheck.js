@@ -56,8 +56,8 @@ async function loadRgba(opts) {
   throw new Error("Unsupported image format — checkImage reads PNG and JPEG only.");
 }
 
-// Quantise to 4 bits per channel, histogram, and return the most common colours as
-// [{ hex, share }], where share is the fraction of sampled opaque pixels that colour covers.
+// Quantise to 4 bits per channel, histogram, and return the most common colors as
+// [{ hex, share }], where share is the fraction of sampled opaque pixels that color covers.
 // Area share is what separates "these two collapse but they are 0.2% of the image" from
 // "these two collapse and they are 40% of it" — the same conflict, very different severity.
 function extractPalette(img, maxColors) {
@@ -77,7 +77,7 @@ function extractPalette(img, maxColors) {
       e.n++; e.r += r; e.g += g; e.b += b; sampled++;
     }
   }
-  if (!sampled) throw new Error("Image has no opaque pixels to analyse.");
+  if (!sampled) throw new Error("Image has no opaque pixels to analyze.");
   const top = [...bins.values()].sort((a, b) => b.n - a.n).slice(0, maxColors);
   return top.map((e) => ({
     hex: rgbToHex(Math.round(e.r / e.n), Math.round(e.g / e.n), Math.round(e.b / e.n)),
@@ -85,8 +85,8 @@ function extractPalette(img, maxColors) {
   }));
 }
 
-// Recolour the image as a given deficiency sees it, reusing cvd.simulate. Every distinct
-// 5-bit-binned colour is simulated once and cached in a lookup table, so the engine's
+// Recolor the image as a given deficiency sees it, reusing cvd.simulate. Every distinct
+// 5-bit-binned color is simulated once and cached in a lookup table, so the engine's
 // simulation runs a few hundred times rather than once per pixel, and the matrix still lives
 // only in opticquiz-cvd. Output is downscaled so the returned PNG stays a reasonable size.
 function simulateImagePng(img, type) {

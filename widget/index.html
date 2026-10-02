@@ -104,7 +104,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <div class="card">
     <div class="steps">
       <div class="step"><div class="n">1</div><p>A visitor clicks the eye and picks a mode — <strong>Recommended</strong> if they don't know their type, or a specific one.</p></div>
-      <div class="step"><div class="n">2</div><p>The page's colors are re-mapped so the differences their vision compresses become visible (<strong>daltonization</strong>, via an SVG color filter).</p></div>
+      <div class="step"><div class="n">2</div><p>The page's colors are re-mapped so the differences their vision compresses become visible (<strong>daltonization</strong>, applied to computed styles — not to pixels, so photographs are never touched).</p></div>
       <div class="step"><div class="n">3</div><p>Their choice is remembered in their browser. Nothing is sent anywhere.</p></div>
     </div>
   </div>
@@ -114,8 +114,13 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <p><strong>Zero tracking. No network requests. No identifiers.</strong> The visitor's chosen mode lives only in their own browser's storage. An accessibility tool should never be a surveillance vector.</p>
 
   <div class="disclaimer" role="note">
-    <strong>Honest scope.</strong> Correction is a powerful <strong>aid, not a guarantee</strong> — no single transform resolves every case, and it doesn't replace <a href="/checker/">designing with colorblind-safe colors</a> in the first place. <strong>Known v1 limits:</strong> it applies one filter to a wrapper, so pages that rely on <code>position:fixed</code>/<code>sticky</code> elements can shift while a mode is on, and it can't exempt individual images. Test on your site before production. A per-element strategy is the planned v2.
+    <strong>Honest scope.</strong> Correction is a powerful <strong>aid, not a guarantee</strong> — no single transform resolves every case, and it doesn't replace <a href="/checker/">designing with colorblind-safe colors</a> in the first place. <strong>What v2 does not do:</strong> where text sits on a bitmap background, the contrast ratio can't be proven, so the widget leaves the author's own ratio untouched rather than guessing; and where your operating system's own contrast setting is active, the widget stands down and leaves the OS in charge. Test on your site before production.
   </div>
+
+  <h2>WHAT IT GUARANTEES</h2>
+  <p>v2 separates two jobs, because they pull in opposite directions. <strong>Text</strong> is set to pure black or pure white — whichever reads better against the corrected background behind it. Choosing the better of the two is worst at a background luminance of 0.179, where both tie at <strong>4.58:1</strong>, so every run of text clears WCAG AA <em>by construction</em>, not by spot-check. Verified across 592,704 backdrop colors: worst observed 4.583:1.</p>
+  <p><strong>Everything else</strong> — backgrounds, borders, SVG fills and strokes — gets the full correction, because those surfaces carry the color-coded information and no text-contrast rule applies to them. On color pairs a dichromat genuinely cannot separate, correction lifts mean CIEDE2000 from <strong>1.9 to between 10.8 and 21.6</strong>, separating 97–100% of them.</p>
+  <p>Measured on this site's own home page: uncorrected, five text elements fall below AA, the worst at 1.17:1. With any correction mode on, <strong>all 171 text elements pass, worst case 5.10:1</strong>. Photographs, video and canvas are untouched by construction, and because nothing is filtered, <code>position:fixed</code> and <code>sticky</code> behave exactly as you wrote them.</p>
 
   <div class="related">
     <a href="/platform/">The developer platform — engine, API, widget, VS Code, MCP →</a>
@@ -130,7 +135,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <div class="faq-q">Does it simulate colorblindness or correct it?</div>
   <p class="faq-a">It corrects — re-coloring the page so colorblind visitors can distinguish colors that would otherwise collapse, rather than simulating the deficiency.</p>
   <div class="faq-q">Will it slow down or break my site?</div>
-  <p class="faq-a">It's tiny and does nothing until a visitor turns it on. Its one real caveat is fixed/sticky layouts (see the note above) — test before shipping.</p>
+  <p class="faq-a">It's tiny and does nothing until a visitor turns it on. Turning a mode on costs about 4&nbsp;ms on a 374-element page, and it adds no network requests at all. It doesn't filter the page, so fixed and sticky layouts are unaffected — test before shipping all the same.</p>
 
 <!-- oq:footer -->
 <footer class="oq-footer" role="contentinfo">
