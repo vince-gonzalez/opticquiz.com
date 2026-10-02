@@ -469,5 +469,7 @@ function showScreen(id){ var s=document.querySelectorAll(".screen"); for(var i=0
 function announce(msg){ var el=document.getElementById("a11y-live"); if(!el)return; el.textContent=""; setTimeout(function(){ el.textContent=msg; },60); }
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/widget/eye.js" defer></script>
+<script src="/assets/oq-test-guard.js" defer></script>
 </body>
 </html>
