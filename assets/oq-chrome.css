@@ -155,3 +155,12 @@
   border-bottom: 1px solid transparent; white-space: nowrap;
 }
 .oq-verified a:hover, .oq-verified a:focus-visible { color: #fff; border-bottom-color: var(--red-on-dark, #F1927A); }
+
+/* ---------- parent attribution ---------- */
+.oq-footer__parent {
+  display: inline-flex; align-items: center; gap: 7px;
+  color: #8d867c; text-decoration: none; border-bottom: 0;
+}
+.oq-footer__parent img { width: 17px; height: 17px; border-radius: 50%; display: block; opacity: .8; }
+.oq-footer__parent:hover, .oq-footer__parent:focus-visible { color: #cfc9c0; border-bottom: 0; }
+.oq-footer__parent:hover img { opacity: 1; }
