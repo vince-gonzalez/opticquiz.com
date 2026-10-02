@@ -219,34 +219,79 @@ console.log(`\n  version ${VERSION}\n`);
 if (process.argv.includes("--source")) {
   const SRC = ["manifest.json", "content.js", "popup.html", "popup.js",
                "icon16.png", "icon48.png", "icon128.png", "build.mjs", "README.md"];
+  // Since 1.3.0 content.js is GENERATED, so the archive must carry what it is generated from
+  // or a reviewer cannot reproduce it. These live in the wider repository, above this folder.
+  const GENERATED_FROM = [
+    ["../widget/engine.js", "src/widget/engine.js"],
+    ["../widget/shells/extension.js", "src/widget/shells/extension.js"],
+    ["../tools/build-widgets.js", "src/tools/build-widgets.js"],
+  ];
   const instructions = [
     "OpticQuiz - Colorblind Corrector: reproducing the reviewed package",
     "",
     "Requirements: Node.js 18 or later. No dependencies, no network access needed.",
     "",
-    "  node build.mjs",
+    "There are TWO generation steps. The first produces content.js; the second produces the",
+    "store packages. Running them in order reproduces the reviewed archive exactly.",
     "",
-    "That writes dist/opticquiz-extension-firefox-<version>.zip, which is the package under",
-    "review, and dist/opticquiz-extension-chrome-<version>.zip for the Chromium stores.",
+    "  1. Generate content.js",
     "",
-    "What the build actually does:",
-    "  1. Copies the source files listed in SHIP, unmodified.",
-    "  2. Derives the Firefox manifest from manifest.json by adding exactly one key,",
-    "     browser_specific_settings (gecko id, strict_min_version, data_collection_permissions,",
-    "     and gecko_android). Nothing else differs between the two packages.",
-    "  3. Writes the ZIP in-process with node:zlib.",
+    "       node src/tools/build-widgets.js",
     "",
-    "No minifier, no bundler, no transpiler, no template engine. content.js, popup.js and",
-    "popup.html in the reviewed package are byte-identical to the copies in this archive; you",
-    "can confirm that with any checksum tool.",
+    "     content.js is not written by hand. It is the concatenation of two source files,",
+    "     wrapped in one IIFE:",
     "",
-    "Public repository: https://github.com/zengineco/opticquiz.com/tree/main/browser-extension",
-    "Licence: MIT",
+    "       src/widget/engine.js             the colour-correction engine, shared by this",
+    "                                        extension, the opticquiz.com site widget and the",
+    "                                        opticquiz-eye npm package",
+    "       src/widget/shells/extension.js   the extension-specific part: chrome.storage glue,",
+    "                                        the popup contract, and the MutationObserver",
+    "",
+    "     The build concatenates them verbatim and indents the engine by two spaces. Nothing is",
+    "     minified, obfuscated, transpiled or otherwise transformed, and no template engine is",
+    "     involved. Every line of the shipped content.js appears in one of those two files, so",
+    "     a plain diff confirms it.",
+    "",
+    "     NOTE: build-widgets.js writes three artifacts and expects the full repository layout.",
+    "     Inside this archive only the extension target applies; to reproduce just content.js,",
+    "     concatenating the two sources as described above is equivalent and simpler.",
+    "",
+    "  2. Build the packages",
+    "",
+    "       node build.mjs",
+    "",
+    "     That writes dist/opticquiz-extension-firefox-<version>.zip, which is the package",
+    "     under review, and dist/opticquiz-extension-chrome-<version>.zip for the Chromium",
+    "     stores. This step:",
+    "       a. Copies the source files listed in SHIP, unmodified.",
+    "       b. Derives the Firefox manifest from manifest.json by adding exactly one key,",
+    "          browser_specific_settings (gecko id, strict_min_version,",
+    "          data_collection_permissions, gecko_android). Nothing else differs between the",
+    "          two packages.",
+    "       c. Writes the ZIP in-process with node:zlib.",
+    "",
+    "No minifier, no bundler, no transpiler, no template engine, no remote code and no eval.",
+    "popup.js and popup.html are byte-identical between this archive and the reviewed package;",
+    "content.js is byte-identical to the copy in this archive and is reproducible from the two",
+    "sources above. Any checksum tool will confirm both.",
+    "",
+    "Permissions: \"storage\" only, plus a content script matching <all_urls>. The content",
+    "script is what performs the correction, so it must run on whichever page the user chooses",
+    "to correct. No host permissions and no \"tabs\" permission. The extension makes no network",
+    "requests and stores only the selected mode and strength.",
+    "",
+    "Public repository: https://github.com/vince-gonzalez/opticquiz.com/tree/main/browser-extension",
+    "License: MIT",
     "",
   ].join("\n");
 
   const entries = SRC.filter((f) => existsSync(join(ROOT, f)))
     .map((f) => ({ name: f, data: readFileSync(join(ROOT, f)) }));
+  for (const [from, name] of GENERATED_FROM) {
+    const p = join(ROOT, from);
+    if (existsSync(p)) entries.push({ name, data: readFileSync(p) });
+    else throw new Error(`source archive is missing ${from} - a reviewer could not reproduce content.js`);
+  }
   entries.unshift({ name: "BUILD-INSTRUCTIONS.txt", data: Buffer.from(instructions, "utf8") });
 
   const out = join(DIST, `opticquiz-extension-source-${VERSION}.zip`);
