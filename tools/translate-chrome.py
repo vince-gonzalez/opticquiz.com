@@ -23,7 +23,10 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LANGS = ["de", "es", "fr", "hi", "it", "pt", "zh"]
-PAGES = ["color", "flicker"]
+# Every localized page, whether or not it exists yet. Missing ones are skipped silently, so a
+# new language or test can be added to these lists before the page is written.
+PAGES = ["color", "flicker", "acuity", "d15", "contrast", "astig", "amsler",
+         "blindspot", "anomal", "dominance", "stereo"]
 
 # English source string -> translation per language.
 T = {
