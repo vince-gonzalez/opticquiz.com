@@ -466,7 +466,7 @@
     strRow.appendChild(strLab); strRow.appendChild(strIn);
     menu.appendChild(strRow);
 
-    var note = el("div", "font-size:12.5px;line-height:1.45;opacity:.8;padding:2px 10px 6px;");
+    var note = el("div", "font-size:13px;line-height:1.45;opacity:.8;padding:2px 10px 6px;");
     menu.appendChild(note);
 
     function syncNote() {

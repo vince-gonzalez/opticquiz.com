@@ -486,7 +486,7 @@
     strRow.appendChild(strLab); strRow.appendChild(strIn);
     menu.appendChild(strRow);
 
-    var note = el("div", "font-size:12.5px;line-height:1.45;opacity:.8;padding:2px 10px 6px;");
+    var note = el("div", "font-size:13px;line-height:1.45;opacity:.8;padding:2px 10px 6px;");
     menu.appendChild(note);
 
     // This page is corrected; the rest of the web is not. Offer the extension for the browser
@@ -506,10 +506,10 @@
     menu.appendChild(getIt);
 
     var links = el("div", "display:flex;gap:14px;flex-wrap:wrap;padding:4px 10px 4px;");
-    var foot = el("a", "font-size:12.5px;color:#9cc4fb;text-decoration:none;",
+    var foot = el("a", "font-size:13px;color:#9cc4fb;text-decoration:none;",
       { href: "https://opticquiz.com/methodology/", target: "_blank", rel: "noopener" });
     foot.textContent = "How this works →";
-    var sysLink = el("a", "font-size:12.5px;color:#9cc4fb;text-decoration:none;",
+    var sysLink = el("a", "font-size:13px;color:#9cc4fb;text-decoration:none;",
       { href: STORE.all + "#system", target: "_blank", rel: "noopener" });
     sysLink.textContent = "System-wide →";
     links.appendChild(foot); links.appendChild(sysLink);
