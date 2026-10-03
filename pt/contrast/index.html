@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<!-- ============================================================
+  OPTICQUIZ — Contrast Sensitivity  v1.0.0
+  Read the letter as it fades toward the background. Staircase to threshold.
+  opticquiz.com
+  ============================================================
+  WORKFLOW STACK: CONFIG -> STATE -> letter 3AFC-ish (which letter / can't see)
+                  -> 1-up/2-down staircase on Weber contrast -> log CS -> RESULTS
+  ASSET MANIFEST: /opticquiz_icon.png ; Google Fonts ; GA4 ; AdSense (head)
+  BOOT ORDER: DOM -> startTest() -> trials -> converge contrast threshold
+  HONESTY: contrast sensitivity is a real, clinically meaningful axis distinct
+           from acuity (it degrades early in cataract, glaucoma, some optic-nerve
+           disease). BUT an uncalibrated screen has unknown gamma and brightness,
+           so the absolute log-CS here is NOT a Pelli-Robson score — it is a
+           relative measure on YOUR display. Compare against yourself over time.
+  ============================================================ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sensibilidade ao Contraste da OpticQuiz — leia a letra enquanto ela se dissolve no fundo. Encontra o contraste mais fraco que você consegue distinguir, um eixo diferente da nitidez das tabelas de letras.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Sensibilidade ao contraste">
+<meta property="og:description" content="Quão fraca uma letra pode ficar antes de você perdê-la? Teste o eixo de contraste da sua visão.">
+<meta property="og:image" content="https://opticquiz.com/og-card.png">
+<meta property="og:url" content="https://opticquiz.com/pt/contrast/">
+<link rel="canonical" href="https://opticquiz.com/pt/contrast/">
+<link rel="alternate" hreflang="x-default" href="https://opticquiz.com/contrast/">
+<link rel="alternate" hreflang="en" href="https://opticquiz.com/contrast/">
+<link rel="alternate" hreflang="es" href="https://opticquiz.com/es/contrast/">
+<link rel="alternate" hreflang="fr" href="https://opticquiz.com/fr/contrast/">
+<link rel="alternate" hreflang="pt" href="https://opticquiz.com/pt/contrast/">
+<link rel="alternate" hreflang="it" href="https://opticquiz.com/it/contrast/">
+<link rel="alternate" hreflang="zh" href="https://opticquiz.com/zh/contrast/">
+<link rel="alternate" hreflang="hi" href="https://opticquiz.com/hi/contrast/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Teste de sensibilidade ao contraste online — letras que desaparecem — OpticQuiz</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#C23410;--red-text:#9E2A0D;--redd:#9E2A0D;--green:#3F7836;--greend:#38692F;--redbg:#FDF1EE;--amber:#824F06;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:9999;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:12px;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:var(--r);}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.wrap{max-width:560px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:560px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red-text);}
+.ver-badge{font-family:var(--fm);font-size:13px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.screen{display:none;}
+.screen.active{display:block;animation:fadein .2s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+.eyebrow{font-family:var(--fm);font-size:13px;letter-spacing:.14em;color:var(--red-text);text-transform:uppercase;display:block;margin-bottom:10px;}
+h1{font-family:var(--fd);font-size:clamp(48px,12vw,72px);color:var(--black);line-height:.92;letter-spacing:.02em;margin-bottom:16px;}
+h2{font-family:var(--fd);font-size:clamp(32px,8vw,48px);color:var(--black);line-height:.94;letter-spacing:.02em;margin-bottom:16px;}
+h3{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+p{font-size:15px;color:var(--gray);line-height:1.7;}
+.btn{display:block;width:100%;padding:16px 20px;font-family:var(--fs);font-size:16px;font-weight:600;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;text-align:center;transition:border-color .12s,background .12s,transform .08s;min-height:52px;-webkit-tap-highlight-color:transparent;}
+.btn:hover{border-color:var(--black);background:var(--cream);}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--red);color:#fff;border-color:transparent;}
+.btn-primary:hover{background:var(--redd);}
+.btn-secondary{background:var(--green);color:#fff;border-color:transparent;}
+.btn-secondary:hover{background:var(--greend);}
+.btn+.btn{margin-top:10px;}
+.divider{height:1px;background:var(--lgray);margin:24px 0;}
+.instr{margin:18px 0;}
+.instr-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--lgray);}
+.instr-item:last-child{border-bottom:none;}
+.instr-n{font-family:var(--fd);font-size:20px;color:var(--red-text);min-width:22px;}
+.instr-t{font-size:14px;color:var(--black);font-weight:600;}
+.instr-s{font-size:13px;color:var(--gray);line-height:1.5;}
+.prog-wrap{margin-bottom:18px;}
+.prog-meta{display:flex;justify-content:space-between;margin-bottom:8px;}
+.prog-meta span{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;}
+.prog-track{height:3px;background:var(--lgray);border-radius:2px;}
+.prog-fill{height:100%;background:var(--red);border-radius:2px;transition:width .35s cubic-bezier(.4,0,.2,1);}
+.cs-stage{display:flex;justify-content:center;margin:16px 0;}
+.cs-frame{background:#fff;border:2px solid var(--lgray);border-radius:var(--rc);}
+.stage-hint{font-size:13px;color:var(--gray);line-height:1.6;text-align:center;margin:6px 0 10px;}
+.letters-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px;}
+.letter-btn{padding:16px 6px;font-family:var(--fs);font-weight:600;font-size:22px;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;min-height:56px;transition:border-color .12s,background .1s;}
+.letter-btn:hover{border-color:var(--red-text);background:var(--redbg);}
+.cant-btn{margin-top:8px;font-family:var(--fm);font-size:13px;color:var(--gray);}
+.big-stat{background:#fff;border:1.5px solid var(--lgray);border-top:4px solid var(--red);border-radius:var(--rc);padding:22px;margin-bottom:16px;text-align:center;}
+.big-stat-val{font-family:var(--fd);font-size:clamp(38px,11vw,60px);color:var(--black);line-height:1;}
+.big-stat-lbl{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.mini{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:14px;text-align:center;}
+.mini-val{font-family:var(--fd);font-size:26px;color:var(--black);}
+.mini-lbl{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;}
+.interp-card{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:16px 0;}
+.interp-text{font-size:14px;color:var(--gray);line-height:1.8;}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:18px 18px 18px 20px;margin-top:24px;}
+.disclaimer-title{font-family:var(--fm);font-size:13px;letter-spacing:.1em;color:var(--red-text);text-transform:uppercase;margin-bottom:8px;}
+.disclaimer-body{font-size:13px;color:var(--gray);line-height:1.8;}
+.disclaimer-body strong{color:var(--black);font-weight:600;}
+.share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+@media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
+</style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "O que é sensibilidade ao contraste?", "acceptedAnswer": {"@type": "Answer", "text": "Sua capacidade de detectar diferenças fracas de luminosidade entre um objeto e seu fundo — o eixo do 'quão fraco' da visão, em oposição ao 'quão pequeno' da acuidade."}}, {"@type": "Question", "name": "Posso ter visão 20/20 e sensibilidade ao contraste ruim?", "acceptedAnswer": {"@type": "Answer", "text": "Sim. São capacidades distintas. Você pode ler as letras mais nítidas e ainda assim ter dificuldade com rostos em luz baixa ou com o acostamento da estrada ao anoitecer."}}, {"@type": "Question", "name": "O número de contraste obtido online é clínico?", "acceptedAnswer": {"@type": "Answer", "text": "Não. Uma tela não calibrada significa que não é um valor Pelli-Robson. Use-o como uma referência pessoal e acompanhe-o em relação aos seus próprios resultados no mesmo monitor."}}, {"@type": "Question", "name": "O que reduz a sensibilidade ao contraste?", "acceptedAnswer": {"@type": "Answer", "text": "Idade, catarata, glaucoma, retinopatia diabética e degeneração macular, entre outros — e isso pode mudar antes da acuidade para letras."}}]}
+</script>
+<style>
+.seo{max-width:560px;margin:0 auto;padding:8px 20px 0;}
+.seo h2{font-family:"Bebas Neue",Impact,fantasy;font-size:clamp(24px,6vw,32px);color:#1A1A1A;line-height:1;letter-spacing:.02em;margin:26px 0 12px;}
+.seo p{font-size:15px;color:#6B6B6B;line-height:1.8;margin-bottom:14px;}
+.seo p strong{color:#1A1A1A;}
+.seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
+.seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
+.seo a{color:#9E2A0D;}
+.seo .learn-links{background:#fff;border:1px solid #D4D0C8;border-radius:8px;padding:14px 16px;margin:18px 0;}
+.seo .learn-links a{display:block;padding:5px 0;text-decoration:none;color:#1A1A1A;border-bottom:1px solid #D4D0C8;font-size:14px;}
+.seo .learn-links a:last-child{border-bottom:none;}
+.seo .learn-links a:hover{color:#9E2A0D;}
+</style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz — Sensibilidade ao contraste">
+<meta name="twitter:description" content="Quão fraca uma letra pode ficar antes de você perdê-la? Teste o eixo de contraste da sua visão.">
+<meta name="twitter:image" content="https://opticquiz.com/og-card.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Teste de sensibilidade ao contraste online — letras que desaparecem", "url": "https://opticquiz.com/pt/contrast/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "Sensibilidade ao Contraste da OpticQuiz — leia a letra enquanto ela se dissolve no fundo. Encontra o contraste mais fraco que você consegue distinguir, um eixo diferente da nitidez das tabelas de letras."}
+</script>
+<link rel="stylesheet" href="/assets/oq-chrome.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Ir para o conteúdo principal</a>
+
+<!-- oq:nav -->
+<nav class="oq-nav" aria-label="Primary">
+  <a href="/" class="oq-nav__brand" aria-label="OpticQuiz home">
+    <img class="oq-nav__mark" src="/opticquiz_icon.png" alt="" width="27" height="27">
+    <span class="oq-nav__name">OPTIC<b>QUIZ</b></span>
+  </a>
+  <div class="oq-nav__links">
+    <a href="/#tests">Testes de visão</a>
+    <a href="/#color">Ferramentas de cor</a>
+    <a href="/platform/">Desenvolvedores</a>
+    <a href="/research/">Pesquisa</a>
+    <a href="/setup/" class="oq-nav__cta">Configurar</a>
+  </div>
+</nav>
+<!-- /oq:nav -->
+
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">CONTRASTE</div>
+</header>
+<main id="main" class="wrap" role="main">
+
+<div id="screen-intro" class="screen active">
+  <div style="padding-top:32px">
+    <span class="eyebrow">O outro eixo</span>
+    <h1>TESTE DE<br>SENSIBILIDADE<br>AO CONTRASTE</h1>
+    <p>As tabelas optométricas testam a nitidez com letras preto no branco, de alto contraste. Mas a vida real é cheia de diferenças <em>fracas</em> — neblina, anoitecer, um rosto do outro lado de uma sala com pouca luz. Este teste dissolve uma letra no fundo até ela quase desaparecer e encontra a mais fraca que você ainda consegue ler. É um eixo da visão totalmente diferente, e muitas vezes o primeiro a ceder.</p>
+    <div class="divider"></div>
+    <h3>Como funciona</h3>
+    <div class="instr">
+      <div class="instr-item"><div class="instr-n">1</div><div><div class="instr-t">Diga qual é a letra</div><div class="instr-s">Uma de seis aparece fracamente. Toque em qual é — ou em "Não sei dizer" se ela desapareceu.</div></div></div>
+      <div class="instr-item"><div class="instr-n">2</div><div><div class="instr-t">Ela enfraquece conforme você acerta</div><div class="instr-s">Acerte e a próxima fica mais fraca; erre e ela fica mais forte. Isso encontra o seu limite.</div></div></div>
+      <div class="instr-item"><div class="instr-n">3</div><div><div class="instr-t">Afaste-se um pouco</div><div class="instr-s">À distância de um braço, com o brilho da tela alto. Cerca de 24 tentativas.</div></div></div>
+    </div>
+    <button class="btn btn-primary" onclick="startTest()">Começar</button>
+    <a href="/" class="backlink">← Todos os testes de visão gratuitos</a>
+  </div>
+</div>
+
+<div id="screen-test" class="screen">
+  <div style="padding-top:20px">
+    <div class="prog-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog-bar" aria-label="Progresso do teste">
+      <div class="prog-meta"><span id="prog-label">TENTATIVA 1 / 24</span><span id="prog-c">—</span></div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+    <p class="stage-hint">Qual letra você vê?</p>
+    <div class="cs-stage"><canvas id="cs-canvas" class="cs-frame" width="300" height="220" role="img" aria-label="Uma letra fraca sobre um fundo liso; identifique-a"></canvas></div>
+    <div class="letters-grid" id="letters-grid"></div>
+    <button class="btn cant-btn" onclick="answer(null)">Não sei dizer — desapareceu</button>
+    <a href="/" class="backlink">← Todos os testes de visão gratuitos</a>
+  </div>
+</div>
+
+<div id="screen-results" class="screen">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Resultados</span>
+    <h2>SEU<br>PISO DE<br>CONTRASTE</h2>
+    <div id="result-detail"></div>
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()">Compartilhar</button>
+      <button class="btn btn-secondary" onclick="retakeTest()">Refazer</button>
+    </div>
+    <a href="/" class="backlink">← Todos os testes de visão gratuitos</a>
+    <div class="disclaimer" role="note">
+      <div class="disclaimer-title">Observação</div>
+      <div class="disclaimer-body">A sensibilidade ao contraste é um eixo genuinamente útil — em algumas condições oculares ela cai antes da nitidez. Mas o brilho e o gama da sua tela são <strong>desconhecidos e não calibrados</strong>, então isto <strong>não é uma pontuação Pelli-Robson</strong> e não pode ser comparado entre dispositivos. Faz mais sentido quando acompanhado em relação aos <strong>seus próprios</strong> resultados na mesma tela. Há também um piso rígido: um monitor de 8 bits só consegue variar a luminância em passos finitos, e esse menor passo é de cerca de <strong>8% perto do preto e 0,9% perto do branco</strong>, então a letra mais fraca que esta página consegue desenhar depende de quão claro é o fundo dela. Este teste para nesse piso em vez de fingir que vai abaixo dele, e avisa quando o seu resultado caiu nele. Um teste de contraste de verdade é feito por uma clínica oftalmológica. Não é um diagnóstico.</div>
+    </div>
+  </div>
+</div>
+</main>
+<section class="seo" aria-label="Sobre este teste">
+  <h2>Sobre o teste de sensibilidade ao contraste</h2>
+  <p>As tabelas optométricas testam a nitidez com letras pretas e grossas. Este teste mede a ponta oposta — o <strong>fraco</strong>. Uma letra se dissolve no fundo até quase desaparecer, e uma <strong>escada adaptativa</strong> encontra o contraste mais baixo em que você ainda consegue lê-la. Essa é a sua sensibilidade ao contraste, um eixo da visão diferente da acuidade e que importa para neblina, ofuscamento, anoitecer e ambientes com pouca luz.</p>
+  <p>A sensibilidade ao contraste pode diminuir com a idade e cair cedo em condições como catarata e glaucoma, às vezes antes de a acuidade para letras mudar. O limite honesto: o brilho e o gama da sua tela são desconhecidos e não calibrados, então isto <strong>não é uma pontuação Pelli-Robson</strong> e não pode ser comparado entre dispositivos. É mais útil quando acompanhado em relação aos seus próprios resultados anteriores na mesma tela.</p>
+  <div class="learn-links">
+    <a href="/learn/contrast-sensitivity-vs-acuity/">/learn/contrast-sensitivity-vs-acuity/</a>
+    <a href="/acuity/">/acuity/</a>
+  </div>
+  <h2>Perguntas frequentes</h2>
+  <div class="faq-q">O que é sensibilidade ao contraste?</div>
+  <div class="faq-a">Sua capacidade de detectar diferenças fracas de luminosidade entre um objeto e seu fundo — o eixo do 'quão fraco' da visão, em oposição ao 'quão pequeno' da acuidade.</div>
+  <div class="faq-q">Posso ter visão 20/20 e sensibilidade ao contraste ruim?</div>
+  <div class="faq-a">Sim. São capacidades distintas. Você pode ler as letras mais nítidas e ainda assim ter dificuldade com rostos em luz baixa ou com o acostamento da estrada ao anoitecer.</div>
+  <div class="faq-q">O número de contraste obtido online é clínico?</div>
+  <div class="faq-a">Não. Uma tela não calibrada significa que não é um valor Pelli-Robson. Use-o como uma referência pessoal e acompanhe-o em relação aos seus próprios resultados no mesmo monitor.</div>
+  <div class="faq-q">O que reduz a sensibilidade ao contraste?</div>
+  <div class="faq-a">Idade, catarata, glaucoma, retinopatia diabética e degeneração macular, entre outros — e isso pode mudar antes da acuidade para letras.</div>
+</section>
+
+<!-- oq:footer -->
+<footer class="oq-footer" role="contentinfo">
+  <div class="oq-verified">
+    <h2>Avaliado e listado por</h2>
+    <ul>
+      <li><a href="https://chromewebstore.google.com/detail/opticquiz-%E2%80%94-colorblind-co/cigfnaekhndlablojacfdhmgcdnnfieo" rel="noopener">Chrome Web Store</a></li>
+      <li><a href="https://microsoftedge.microsoft.com/addons/detail/opticquiz-%E2%80%94-colorblind-co/maalcjohefglpnenmfjjkacgmomhofeh" rel="noopener">Microsoft Edge Add-ons</a></li>
+      <li><a href="https://addons.mozilla.org/en-US/firefox/addon/opticquiz-colorblind-corrector/" rel="noopener">Firefox Add-ons</a></li>
+      <li><a href="https://marketplace.visualstudio.com/items?itemName=opticquiz.opticquiz-colorblind-check" rel="noopener">VS Code Marketplace</a></li>
+      <li><a href="https://registry.modelcontextprotocol.io" rel="noopener">MCP Registry</a></li>
+      <li><a href="https://pypi.org/project/cvdsafe/" rel="noopener">PyPI</a></li>
+      <li><a href="https://www.npmjs.com/package/cvdsafe" rel="noopener">npm</a></li>
+    </ul>
+  </div>
+  <div class="oq-footer__grid">
+    <div>
+      <h2>Testes de visão</h2>
+      <ul>
+        <li><a href="/color/">Visão de cores</a></li>
+        <li><a href="/d15/">Farnsworth D-15</a></li>
+        <li><a href="/acuity/">Acuidade visual</a></li>
+        <li><a href="/flicker/">Fusão de cintilação</a></li>
+        <li><a href="/#tests">Todos os 17 testes</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Ferramentas de cor</h2>
+      <ul>
+        <li><a href="/checker/">Verificador de paletas</a></li>
+        <li><a href="/contrast-checker/">Verificador de contraste</a></li>
+        <li><a href="/palettes/">Comparativo de paletas</a></li>
+        <li><a href="/widget/">Widget de uma linha</a></li>
+        <li><a href="/extension/">Extensão do navegador</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Desenvolvedores</h2>
+      <ul>
+        <li><a href="/platform/">Plataforma e API</a></li>
+        <li><a href="/setup/">Configurar</a></li>
+        <li><a href="/live/">Correção ao vivo</a></li>
+        <li><a href="/use-cases/">Casos de uso</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>OpticQuiz</h2>
+      <ul>
+        <li><a href="/about/">Sobre</a></li>
+        <li><a href="/research/">Pesquisa</a></li>
+        <li><a href="/methodology/">Metodologia</a></li>
+        <li><a href="/impact/">Arquivo de impacto</a></li>
+        <li><a href="/support/">Suporte</a></li>
+        <li><a href="/privacy/">Privacidade</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="oq-footer__base">
+    <span>© 2026 opticquiz.com</span>
+    <span><a class="oq-footer__parent" href="https://f-keys.com" rel="noopener"><img src="/assets/brand/f-keys-creative.webp" alt="" width="17" height="17">Uma produção F-Keys Creative</a></span>
+    <span>Um método publicado — <a href="https://doi.org/10.5281/zenodo.21310578">DOI 10.5281/zenodo.21310578</a></span>
+    <span class="oq-footer__note">Uso educacional e de acessibilidade — não é um dispositivo médico, diagnóstico ou auditoria legal ADA/WCAG.</span>
+  </div>
+</footer>
+<!-- /oq:footer -->
+
+<script src="/assets/oq-psy.js"></script>
+<script>
+// ── CONFIG ──
+var MAX_TRIALS = 24;
+var LETTERS = ["C","D","H","K","N","O","R","S","V","Z"];
+var CHOICES_PER_TRIAL = 6;
+var START_C = 0.55;      // Weber contrast (letter vs bg), easy
+var MIN_C = 0.006;       // requested floor; the real floor is quantisation, see finestContrast()
+var STEP = 0.8;          // geometric staircase factor
+/* Background is a LIGHT field, not mid-grey, for two reasons.
+ *
+ * Pelli-Robson is black letters on white, so light is the standard arrangement. More
+ * importantly, 8-bit quantisation sets the finest contrast a screen can produce, and it gets
+ * finer as the field gets brighter. Measured against relative luminance:
+ *
+ *     BG 128  ->  finest Weber contrast 1.68%   ->  caps the score at logCS 1.77
+ *     BG 220  ->  finest Weber contrast 1.02%   ->  caps the score at logCS 1.99
+ *
+ * Typical contrast sensitivity is around logCS 1.8-2.0. At 128 this test could not measure a
+ * person with normal vision at all - it floored out below the normal range while the staircase
+ * happily kept requesting contrasts the display rendered as the identical pixel value.
+ */
+var BG = 220;            // light background, code value 0-255
+
+// ── STATE ──
+// Adaptive staircase lives in the shared OQ engine (assets/oq-psy.js).
+var STATE = { trial:0, contrast:START_C, target:"", choices:[], stair:null, done:false };
+
+// ── ENGINE ──
+function startTest(){
+  if (window.oqTrack) { oqTrack("test_start", "contrast"); }
+  STATE.trial=0; STATE.contrast=START_C; STATE.done=false;
+  // Never let the staircase descend below what the panel can render. Otherwise successive
+  // steps produce an identical pixel value, the observer keeps answering correctly because
+  // nothing changed, and the threshold reads far better than it is.
+  var floorC = Math.max(MIN_C, finestContrast());
+  STATE.floorC = floorC;
+  STATE.stair = OQ.Staircase({ value:START_C, min:floorC, max:START_C, factor:STEP });
+  showScreen("screen-test");
+  nextTrial();
+}
+
+function nextTrial(){
+  // READS: STATE  WRITES: STATE.target, choices, canvas
+  if(STATE.trial>=MAX_TRIALS){ finish(); return; }
+  STATE.trial++;
+  // pick target + distractor choices
+  var pool=LETTERS.slice();
+  shuffle(pool);
+  STATE.target=pool[0];
+  STATE.choices=pool.slice(0,CHOICES_PER_TRIAL);
+  shuffle(STATE.choices);
+  drawLetter(STATE.target, STATE.contrast);
+  renderChoices();
+  var pct=Math.round(((STATE.trial-1)/MAX_TRIALS)*100);
+  document.getElementById("prog-fill").style.width=pct+"%";
+  document.getElementById("prog-bar").setAttribute("aria-valuenow",pct);
+  document.getElementById("prog-label").textContent="TRIAL "+STATE.trial+" / "+MAX_TRIALS;
+  document.getElementById("prog-c").textContent=(STATE.contrast*100).toFixed(1)+"%";
+}
+
+/* sRGB code values are NOT luminance.
+ *
+ * This previously set the letter to BG*(1-contrast) in code values and called it Weber
+ * contrast. sRGB is gamma-encoded, so that overstated sensitivity by roughly a factor of two:
+ * a requested 10% rendered as 20.6% actual, 2% rendered as 5.0%. In score terms the reported
+ * logCS ran 0.23 to 0.40 too high - between one and a half and nearly three Pelli-Robson
+ * steps, on a page that prints a logCS number.
+ *
+ * Weber contrast is defined on LUMINANCE, so the target luminance is computed first and the
+ * code value is derived by inverting the transfer function.
+ */
+function srgbToLin(v){
+  v = v/255;
+  return v <= 0.04045 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4);
+}
+function linToSrgb(L){
+  L = Math.max(0, Math.min(1, L));
+  var v = L <= 0.0031308 ? L*12.92 : 1.055*Math.pow(L, 1/2.4) - 0.055;
+  return Math.round(v*255);
+}
+function letterCodeFor(contrast){
+  var Lbg = srgbToLin(BG);
+  return Math.max(0, Math.min(255, linToSrgb(Lbg*(1-contrast))));
+}
+/** Smallest Weber contrast this display can actually produce at BG - one code value. */
+function finestContrast(){
+  var Lbg = srgbToLin(BG);
+  return (Lbg - srgbToLin(BG-1)) / Lbg;
+}
+
+function drawLetter(letter, contrast){
+  // READS: letter,contrast  WRITES: canvas - letter darker than the field by Weber LUMINANCE contrast
+  try{
+    var cv=document.getElementById("cs-canvas");
+    var dpr=window.devicePixelRatio||1;
+    var cssW=300, cssH=220;
+    cv.width=cssW*dpr; cv.height=cssH*dpr;
+    cv.style.width=cssW+"px"; cv.style.height=cssH+"px";
+    var ctx=cv.getContext("2d");
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    // background = mid gray
+    ctx.fillStyle="rgb("+BG+","+BG+","+BG+")";
+    ctx.fillRect(0,0,cssW,cssH);
+    var lum=letterCodeFor(contrast);
+    ctx.fillStyle="rgb("+lum+","+lum+","+lum+")";
+    ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.font="600 120px 'Source Serif 4', Georgia, serif";
+    ctx.fillText(letter, cssW/2, cssH/2+4);
+  }catch(err){ console.error("drawLetter:",err); }
+}
+
+function renderChoices(){
+  var g=document.getElementById("letters-grid"); var h="";
+  for(var i=0;i<STATE.choices.length;i++){
+    var L=STATE.choices[i];
+    h+='<button class="letter-btn" onclick="answer(\''+L+'\')" aria-label="Letter '+L+'">'+L+'</button>';
+  }
+  g.innerHTML=h;
+}
+
+function answer(choice){
+  // READS: STATE.target  WRITES: STATE.stair, STATE.contrast
+  try{
+    var correct = choice!==null && choice===STATE.target;
+    STATE.contrast = STATE.stair.record(correct);  // 1-up/2-down handled by OQ engine
+    nextTrial();
+  }catch(err){ console.error("answer:",err); }
+}
+
+function finish(){ STATE.done=true; renderResults(); showScreen("screen-results"); if (window.oqTrack) { oqTrack("test_complete", "contrast"); }; }
+
+// ── RESULTS ──
+function renderResults(){
+  var thr = STATE.stair.threshold(4);      // mean of last 4 reversals (OQ engine)
+
+  var sensitivity = 1/thr;                 // contrast sensitivity (relative)
+  var logCS = Math.log(sensitivity)/Math.LN10;
+  var thrPct=(thr*100).toFixed(1);
+  var logTxt=logCS.toFixed(2);
+
+  // If the threshold landed on the panel's quantisation floor, the number is a CEILING on
+  // what this screen can measure, not a measurement of the person. Say so instead of printing
+  // it as a result.
+  var atFloor = STATE.floorC && thr <= STATE.floorC*1.02;
+
+  var band = logCS>2.0 ? "very sharp — you held on to extremely faint letters"
+           : logCS>1.6 ? "strong contrast sensitivity"
+           : logCS>1.2 ? "solid, everyday range"
+           : "coarser today — worth a retry with brightness up and sitting back";
+
+  var interp = atFloor
+    ? "You read the letter all the way down to <strong>"+thrPct+"% contrast</strong>, which is the "+
+      "faintest step this display can actually produce. An 8-bit screen can only change the "+
+      "letter by one code value at a time, and below that every step renders as the identical "+
+      "pixel. So this is a floor on the measurement, not a reading of your vision — your true "+
+      "contrast sensitivity is somewhere better than log "+logTxt+" and this screen cannot say "+
+      "how much better."
+    : "You could still read the letter down to about <strong>"+thrPct+"% contrast</strong> against the gray field — a relative contrast sensitivity of roughly <strong>"+sensitivity.toFixed(0)+"×</strong> (log "+logTxt+"). Lower percentage = fainter letter caught = better. This is the axis that fades in fog, glare, and dim light, and it can soften before letter-chart sharpness does. Because your display isn't calibrated, treat the number as a personal baseline on this screen, not a clinical Pelli-Robson value — your result is in the "+band.split("—")[0].trim()+" range.";
+
+  var h='<div class="big-stat"><div class="big-stat-val">log '+logTxt+'</div><div class="big-stat-lbl">contrast sensitivity (this screen)</div></div>';
+  h+='<div class="mini-row"><div class="mini"><div class="mini-val">'+thrPct+'%</div><div class="mini-lbl">Faintest letter read</div></div>'+
+     '<div class="mini"><div class="mini-val">'+sensitivity.toFixed(0)+'×</div><div class="mini-lbl">Sensitivity</div></div></div>';
+  h+='<div class="interp-card"><div class="interp-text">'+interp+'</div></div>';
+  document.getElementById("result-detail").innerHTML=h;
+  // Local history, opt-in only. logCS is the number comparable across sessions; atFloor means
+  // the screen ran out of steps, so it is a bound on the display and not worth storing.
+  if (window.oqHistory && !atFloor) { oqHistory.save("contrast", logCS, "logCS", band); }
+}
+
+function retakeTest(){ showScreen("screen-intro"); }
+
+function shareResults(){
+  try{
+    var thr = STATE.stair.threshold(4);
+    var logCS=(Math.log(1/thr)/Math.LN10).toFixed(2);
+    var text="My OpticQuiz contrast sensitivity — log "+logCS+" on my screen. Test yours: opticquiz.com/contrast/";
+    if(navigator.share){ navigator.share({title:"OpticQuiz Contrast Sensitivity",text:text,url:"https://opticquiz.com/contrast/"}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){announce("Copied");}); }
+    else { prompt("Copy your result:",text); }
+  }catch(err){ console.error("shareResults:",err); }
+}
+
+// ── UTIL ──
+function shuffle(a){
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function showScreen(id){
+  var s=document.querySelectorAll(".screen");
+  for(var i=0;i<s.length;i++) s[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+function announce(msg){
+  var el=document.getElementById("a11y-live"); if(!el)return;
+  el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
+}
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-analytics.js"></script>
+<script src="/assets/oq-history.js"></script>
+<script src="/widget/eye.js" defer></script>
+<script src="/assets/oq-test-guard.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<!-- ============================================================
+  OPTICQUIZ — Blind Spot Mapper  v1.0.0
+  Find and measure your eye's natural blind spot (optic disc).
+  opticquiz.com
+  ============================================================
+  WORKFLOW STACK: CONFIG -> STATE -> distance calibration -> sweep dot ->
+                  mark disappear/reappear -> compute angular position/size
+  ASSET MANIFEST: /opticquiz_icon.png ; Google Fonts ; GA4 ; AdSense (head)
+  BOOT ORDER: DOM -> pick eye -> calibrate viewing distance -> sweep -> results
+  HONESTY: everyone has a physiological blind spot where the optic nerve
+           exits the retina — it holds no photoreceptors. This tool LOCATES
+           and roughly SIZES yours; it is a demonstration + measurement, not
+           a disease screen. Angular numbers depend on the viewing distance
+           you enter and your screen's physical pixel size, so treat them as
+           approximate.
+  ============================================================ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz अंध-बिंदु मैपर — अपनी आँख का प्राकृतिक अंध-बिंदु खोजें और मोटे तौर पर नापें कि वह कहाँ है और कितना बड़ा है। निःशुल्क, आपके डिवाइस पर, शैक्षिक।">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — अंध-बिंदु मैपर">
+<meta property="og:description" content="हर किसी की आँख में वहाँ एक अंध-बिंदु होता है जहाँ से दृक् तंत्रिका बाहर निकलती है। अपना खोजें और नापें।">
+<meta property="og:image" content="https://opticquiz.com/og-card.png">
+<meta property="og:url" content="https://opticquiz.com/hi/blindspot/">
+<link rel="canonical" href="https://opticquiz.com/hi/blindspot/">
+<link rel="alternate" hreflang="x-default" href="https://opticquiz.com/blindspot/">
+<link rel="alternate" hreflang="en" href="https://opticquiz.com/blindspot/">
+<link rel="alternate" hreflang="es" href="https://opticquiz.com/es/blindspot/">
+<link rel="alternate" hreflang="fr" href="https://opticquiz.com/fr/blindspot/">
+<link rel="alternate" hreflang="pt" href="https://opticquiz.com/pt/blindspot/">
+<link rel="alternate" hreflang="it" href="https://opticquiz.com/it/blindspot/">
+<link rel="alternate" hreflang="zh" href="https://opticquiz.com/zh/blindspot/">
+<link rel="alternate" hreflang="hi" href="https://opticquiz.com/hi/blindspot/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>अंध-बिंदु परीक्षण — अपनी आँख का अंध-बिंदु खोजें — OpticQuiz</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"आँख का अंध-बिंदु क्या है?","acceptedAnswer":{"@type":"Answer","text":"अंध-बिंदु रेटिना का एक छोटा क्षेत्र है जहाँ से दृक् तंत्रिका आँख से बाहर निकलती है। वहाँ कोई प्रकाश-ग्राही कोशिका नहीं होती, इसलिए जिस चीज़ की छवि वहाँ पड़े वह दिखती नहीं। हर किसी की दोनों आँखों में एक-एक होता है; आपका मस्तिष्क इस अंतराल को इतनी सहजता से भर देता है कि रोज़मर्रा में आप इसे कभी नहीं जान पाते।"}},
+{"@type":"Question","name":"अंध-बिंदु परीक्षण में बिंदु क्यों गायब हो जाता है?","acceptedAnswer":{"@type":"Answer","text":"जब आप एक आँख ढककर क्रॉस पर दृष्टि टिकाते हैं, तो चलता बिंदु उस जगह से गुज़रता है जहाँ से आपकी दृक् तंत्रिका बाहर निकलती है। उस जगह कोई प्रकाश-ग्राही नहीं होता, इसलिए बिंदु की छवि वहाँ पड़ती है और वह पल भर के लिए गायब हो जाता है, फिर दूसरी ओर दिख जाता है।"}},
+{"@type":"Question","name":"अंध-बिंदु कहाँ स्थित है?","acceptedAnswer":{"@type":"Answer","text":"हर आँख में अंध-बिंदु, आप जहाँ देख रहे हैं उससे लगभग 12 से 15 डिग्री आपकी कनपटी (बाहरी ओर) की दिशा में होता है, और क्षैतिज रेखा से थोड़ा नीचे। यह रेटिना पर ऑप्टिक डिस्क के अनुरूप है, आँख की नासिका-ओर।"}},
+{"@type":"Question","name":"अंध-बिंदु होना सामान्य है?","acceptedAnswer":{"@type":"Answer","text":"हाँ, पूरी तरह। शारीरिक अंध-बिंदु हर स्वस्थ आँख में मौजूद सामान्य रचना है। यह कोई दोष नहीं है। यदि आपको अपनी केंद्रीय दृष्टि में कोई नया खाली या गायब क्षेत्र दिखे जो भरता नहीं, तो वह अलग बात है और नेत्र परीक्षण कराना चाहिए।"}}
+]}
+</script>
+<style>
+.seo{max-width:560px;margin:0 auto;padding:8px 20px 0;}
+.seo h2{font-family:"Bebas Neue",Impact,fantasy;font-size:clamp(24px,6vw,32px);color:#1A1A1A;line-height:1;letter-spacing:.02em;margin:26px 0 12px;}
+.seo p{font-size:15px;color:#6B6B6B;line-height:1.8;margin-bottom:14px;}
+.seo p strong{color:#1A1A1A;}
+.seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
+.seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
+.seo a{color:#9E2A0D;}
+.card-box{background:#fff;border:2px dashed var(--red);border-radius:6px;height:110px;margin:14px auto;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:8px;}
+.slider-row{display:flex;align-items:center;gap:12px;margin:14px 0;}
+.slider-row input[type=range]{flex:1;height:34px;accent-color:var(--red-text);}
+.slider-cap{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;}
+.cal-note{font-family:var(--fm);font-size:13px;color:var(--gray);text-align:center;letter-spacing:.04em;margin-bottom:10px;}
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#C23410;--red-text:#9E2A0D;--redd:#9E2A0D;--green:#3F7836;--greend:#38692F;--redbg:#FDF1EE;--amber:#824F06;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:9999;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:12px;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:var(--r);}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.wrap{max-width:560px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:560px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red-text);}
+.ver-badge{font-family:var(--fm);font-size:13px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.screen{display:none;}
+.screen.active{display:block;animation:fadein .2s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+.eyebrow{font-family:var(--fm);font-size:13px;letter-spacing:.14em;color:var(--red-text);text-transform:uppercase;display:block;margin-bottom:10px;}
+h1{font-family:var(--fd);font-size:clamp(48px,12vw,72px);color:var(--black);line-height:.92;letter-spacing:.02em;margin-bottom:16px;}
+h2{font-family:var(--fd);font-size:clamp(32px,8vw,48px);color:var(--black);line-height:.94;letter-spacing:.02em;margin-bottom:16px;}
+h3{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+p{font-size:15px;color:var(--gray);line-height:1.7;}
+.btn{display:block;width:100%;padding:16px 20px;font-family:var(--fs);font-size:16px;font-weight:600;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;text-align:center;transition:border-color .12s,background .12s,transform .08s;min-height:52px;-webkit-tap-highlight-color:transparent;}
+.btn:hover{border-color:var(--black);background:var(--cream);}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--red);color:#fff;border-color:transparent;}
+.btn-primary:hover{background:var(--redd);}
+.btn-secondary{background:var(--green);color:#fff;border-color:transparent;}
+.btn-secondary:hover{background:var(--greend);}
+.btn+.btn{margin-top:10px;}
+.divider{height:1px;background:var(--lgray);margin:24px 0;}
+.instr{margin:18px 0;}
+.instr-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--lgray);}
+.instr-item:last-child{border-bottom:none;}
+.instr-n{font-family:var(--fd);font-size:20px;color:var(--red-text);min-width:22px;}
+.instr-t{font-size:14px;color:var(--black);font-weight:600;}
+.instr-s{font-size:13px;color:var(--gray);line-height:1.5;}
+.eye-selector{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0;}
+.eye-btn{padding:18px 16px;border:2px solid var(--lgray);border-radius:var(--rc);background:#fff;cursor:pointer;text-align:center;transition:border-color .12s,background .12s;min-height:64px;}
+.eye-btn.selected{border-color:var(--red-text);background:var(--redbg);}
+.eye-btn-label{font-family:var(--fd);font-size:24px;color:var(--black);display:block;}
+.eye-btn-sub{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;}
+.field{margin:16px 0;}
+.field label{font-size:13px;color:var(--black);font-weight:600;display:block;margin-bottom:6px;}
+.field input{width:100%;padding:12px 14px;font-family:var(--fm);font-size:16px;border:1.5px solid var(--lgray);border-radius:var(--r);background:#fff;color:var(--black);}
+.field .sub{font-size:13px;color:var(--gray);margin-top:6px;line-height:1.5;}
+/* stage */
+.stage-wrap{position:relative;background:#fff;border:2px solid var(--lgray);border-radius:var(--rc);overflow:hidden;margin:12px 0;height:min(52vh,340px);}
+.fix-cross{position:absolute;top:50%;transform:translate(-50%,-50%);font-family:var(--fm);font-size:26px;color:var(--black);font-weight:700;user-select:none;}
+.sweep-dot{position:absolute;top:50%;width:20px;height:20px;border-radius:50%;background:var(--red);transform:translate(-50%,-50%);}
+.stage-hint{font-size:13px;color:var(--gray);line-height:1.6;text-align:center;margin:6px 0 12px;}
+.big-stat{background:#fff;border:1.5px solid var(--lgray);border-top:4px solid var(--red);border-radius:var(--rc);padding:22px;margin-bottom:16px;text-align:center;}
+.big-stat-val{font-family:var(--fd);font-size:clamp(38px,11vw,60px);color:var(--black);line-height:1;}
+.big-stat-lbl{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.mini{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:14px;text-align:center;}
+.mini-val{font-family:var(--fd);font-size:26px;color:var(--black);}
+.mini-lbl{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;}
+.interp-card{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:16px 0;}
+.interp-text{font-size:14px;color:var(--gray);line-height:1.8;}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:18px 18px 18px 20px;margin-top:24px;}
+.disclaimer-title{font-family:var(--fm);font-size:13px;letter-spacing:.1em;color:var(--red-text);text-transform:uppercase;margin-bottom:8px;}
+.disclaimer-body{font-size:13px;color:var(--gray);line-height:1.8;}
+.disclaimer-body strong{color:var(--black);font-weight:600;}
+.share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+@media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
+</style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz — अंध-बिंदु मैपर">
+<meta name="twitter:description" content="हर किसी की आँख में वहाँ एक अंध-बिंदु होता है जहाँ से दृक् तंत्रिका बाहर निकलती है। अपना खोजें और नापें।">
+<meta name="twitter:image" content="https://opticquiz.com/og-card.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "अंध-बिंदु परीक्षण — अपनी आँख का अंध-बिंदु खोजें", "url": "https://opticquiz.com/blindspot/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz अंध-बिंदु मैपर — अपनी आँख का प्राकृतिक अंध-बिंदु खोजें और मोटे तौर पर नापें कि वह कहाँ है और कितना बड़ा है। निःशुल्क, आपके डिवाइस पर, शैक्षिक।"}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "HowTo", "name": "अपनी आँख का अंध-बिंदु कैसे खोजें", "step": [{"@type": "HowToStep", "position": 1, "text": "एक आँख ढकें या बंद करें और स्थिर क्रॉस पर टिककर देखें — चलते बिंदु को सीधे कभी न देखें।"}, {"@type": "HowToStep", "position": 2, "text": "बिंदु को अपनी दृष्टि के किनारे पर देखते रहें जब वह स्क्रीन पर आगे बढ़े।"}, {"@type": "HowToStep", "position": 3, "text": "ध्यान दें कि बिंदु कहाँ गायब होता है और कहाँ फिर दिखता है; वही अंतराल आपका प्राकृतिक अंध-बिंदु है (ऑप्टिक डिस्क)।"}]}
+</script>
+<link rel="stylesheet" href="/assets/oq-chrome.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<!-- oq:nav -->
+<nav class="oq-nav" aria-label="Primary">
+  <a href="/" class="oq-nav__brand" aria-label="OpticQuiz home">
+    <img class="oq-nav__mark" src="/opticquiz_icon.png" alt="" width="27" height="27">
+    <span class="oq-nav__name">OPTIC<b>QUIZ</b></span>
+  </a>
+  <div class="oq-nav__links">
+    <a href="/#tests">दृष्टि परीक्षण</a>
+    <a href="/#color">रंग उपकरण</a>
+    <a href="/platform/">डेवलपर</a>
+    <a href="/research/">अनुसंधान</a>
+    <a href="/setup/" class="oq-nav__cta">सेट अप करें</a>
+  </div>
+</nav>
+<!-- /oq:nav -->
+
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="OpticQuiz home"><img src="/opticquiz_icon.png" alt="" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">अंध-बिंदु</div>
+</header>
+<main id="main" class="wrap" role="main">
+
+<div id="screen-intro" class="screen active">
+  <div style="padding-top:32px">
+    <span class="eyebrow">रेटिना की रचना</span>
+    <h1>अंध<br>बिंदु<br>परीक्षण</h1>
+    <p>जहाँ से आपकी दृक् तंत्रिका आँख से बाहर निकलती है, वहाँ रेटिना में कोई प्रकाश-संवेदक नहीं होता — आपकी दृष्टि में एक असली छेद, जिसे आपका मस्तिष्क चुपचाप भर देता है। एक आँख ढकें, क्रॉस पर टिककर देखें, और देखें कि बिंदु उस छेद से गुज़रते समय गायब हो जाता है। हम दर्ज करते हैं कि वह कहाँ गायब होता और कहाँ फिर दिखता है, जिससे आपके अंध-बिंदु की जगह और आकार पता चले।</p>
+    <div class="divider"></div>
+    <h3>आप कौन-सी आँख जाँच रहे हैं?</h3>
+    <div class="eye-selector" role="group" aria-label="Eye selection">
+      <div class="eye-btn selected" id="eye-right" role="radio" aria-checked="true" tabindex="0" onclick="selectEye('right')" onkeydown="if(event.key==='Enter'||event.key===' ')selectEye('right')">
+        <span class="eye-btn-label">दाईं</span><span class="eye-btn-sub">बाईं ढकें · क्रॉस देखें</span>
+      </div>
+      <div class="eye-btn" id="eye-left" role="radio" aria-checked="false" tabindex="0" onclick="selectEye('left')" onkeydown="if(event.key==='Enter'||event.key===' ')selectEye('left')">
+        <span class="eye-btn-label">बाईं</span><span class="eye-btn-sub">दाईं ढकें · क्रॉस देखें</span>
+      </div>
+    </div>
+    <div class="field">
+      <label for="cal-slider">स्क्रीन कैलिब्रेशन — कोई भी बैंक कार्ड स्क्रीन पर सपाट रखें</label>
+      <div class="card-box" id="card-box" style="width:320px">इस बॉक्स को<br>अपने कार्ड की चौड़ाई से मिलाएँ</div>
+      <div class="slider-row">
+        <span class="slider-cap">छोटा</span>
+        <input type="range" id="cal-slider" min="150" max="520" step="1" value="320" aria-label="अपने कार्ड से मिलाने के लिए बॉक्स की चौड़ाई समायोजित करें" oninput="onCal(this.value)">
+        <span class="slider-cap">बड़ा</span>
+      </div>
+      <div class="cal-note" id="cal-note">कैलिब्रेट नहीं — 96 dpi डेस्कटॉप स्क्रीन मानी जा रही है</div>
+      <div class="sub">दुनिया का हर कार्ड 85.6 mm चौड़ा होता है। इसके बिना परिणाम केवल बिना स्केल वाले डेस्कटॉप मॉनिटर पर ही सही होता है — फ़ोन पर यह आधे से अधिक बढ़ाकर बताता है।</div>
+    </div>
+    <div class="field">
+      <label for="dist-input">आप स्क्रीन से कितनी दूर हैं? (cm)</label>
+      <input type="number" id="dist-input" value="50" min="20" max="120" inputmode="numeric">
+      <div class="sub">आरामदायक एक हाथ की दूरी लगभग 50 cm होती है। इससे कोण की गणना तय होती है — मोटा अंदाज़ा ठीक है।</div>
+    </div>
+    <button class="btn btn-primary" onclick="startTest()">शुरू करें</button>
+    <a href="/" class="backlink">← सभी निःशुल्क दृष्टि परीक्षण</a>
+  </div>
+</div>
+
+<div id="screen-test" class="screen">
+  <div style="padding-top:16px">
+    <p class="stage-hint" id="stage-hint">अपनी दूसरी आँख ढकें। क्रॉस पर कसकर टिककर देखें — बिंदु को कभी न देखें। जिस पल बिंदु गायब हो, बटन दबाएँ।</p>
+    <div class="stage-wrap" id="stage">
+      <div class="fix-cross" id="fix-cross">+</div>
+      <div class="sweep-dot" id="sweep-dot"></div>
+    </div>
+    <button class="btn btn-primary" id="mark-btn" onclick="markEvent()">बिंदु अभी गायब हुआ</button>
+    <button class="btn" onclick="restartSweep()">यह चक्र दोबारा शुरू करें</button>
+    <a href="/" class="backlink">← सभी निःशुल्क दृष्टि परीक्षण</a>
+  </div>
+</div>
+
+<div id="screen-results" class="screen">
+  <div style="padding-top:28px">
+    <span class="eyebrow">परिणाम</span>
+    <h2>आपका<br>अंध-बिंदु</h2>
+    <div id="result-detail"></div>
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()">साझा करें</button>
+      <button class="btn btn-secondary" onclick="retakeTest()">दोबारा परीक्षण करें</button>
+    </div>
+    <a href="/" class="backlink">← सभी निःशुल्क दृष्टि परीक्षण</a>
+    <div class="disclaimer" role="note">
+      <div class="disclaimer-title">ध्यान दें</div>
+      <div class="disclaimer-body">यह अंध-बिंदु हर किसी में होता है — यह <strong>सामान्य शारीरिक रचना</strong> है, कोई दोष नहीं। यह उपकरण मनोरंजन और जिज्ञासा के लिए उसकी जगह और मोटा आकार बताता है। कोण के आँकड़े आपने जो देखने की दूरी दर्ज की और आपकी स्क्रीन के pixel आकार पर निर्भर करते हैं, इसलिए वे <strong>अनुमानित हैं, नैदानिक नहीं</strong>। असली अंध-बिंदु या दृष्टि-क्षेत्र परीक्षण (पेरिमेट्री) नेत्र चिकित्सालय में होता है। यदि आपकी केंद्रीय दृष्टि का कोई हिस्सा वास्तव में गायब या खाली है, तो ऑप्टोमेट्रिस्ट से मिलें।</div>
+    </div>
+  </div>
+</div>
+</main>
+
+<section class="seo" aria-label="About the blind spot test">
+  <h2>अंध-बिंदु परीक्षण के बारे में</h2>
+  <p>हर स्वस्थ आँख में एक <strong>अंध-बिंदु</strong> होता है — रेटिना का एक छोटा टुकड़ा जहाँ से दृक् तंत्रिका आँख से बाहर निकलती है और जिसमें कोई प्रकाश-संवेदी कोशिका नहीं होती। जिस चीज़ की छवि वहाँ पड़े वह दिखती ही नहीं, फिर भी रोज़मर्रा में आप इसे कभी नहीं जान पाते क्योंकि आपका मस्तिष्क इस अंतराल को आसपास के पैटर्न और आपकी दूसरी आँख से भर देता है। यह परीक्षण आपको अपना अंध-बिंदु <strong>खोजने और मोटे तौर पर नापने</strong> देता है: एक आँख ढकें, क्रॉस पर दृष्टि टिकाएँ, और एक चलता बिंदु उस अंतराल से गुज़रते समय गायब होकर फिर दिख जाता है।</p>
+  <p>आपने जो देखने की दूरी दर्ज की और आपकी स्क्रीन के pixel आकार से हम अनुमान लगाते हैं कि आपका अंध-बिंदु कहाँ है (आम तौर पर लगभग <strong>कनपटी की ओर 12–15°</strong>) और वह कितना चौड़ा दिखता है। ये कोण अनुमानित हैं — ये आपकी दूरी के साथ बदलते हैं — इसलिए इसे अपनी ही शारीरिक रचना का एक रोचक प्रदर्शन मानें, नैदानिक दृष्टि-क्षेत्र परीक्षण नहीं। आपकी केंद्रीय दृष्टि में वास्तव में कोई नया खाली क्षेत्र अलग बात है और नेत्र परीक्षण कराने योग्य है।</p>
+  <h2>अक्सर पूछे जाने वाले प्रश्न</h2>
+  <div class="faq-q">आँख का अंध-बिंदु क्या है?</div>
+  <div class="faq-a">वह बिंदु जहाँ से दृक् तंत्रिका रेटिना से बाहर निकलती है — वहाँ कोई प्रकाश-ग्राही नहीं होता, इसलिए वहाँ पड़ने वाली छवियाँ दिखती नहीं। हर किसी की हर आँख में एक होता है।</div>
+  <div class="faq-q">बिंदु क्यों गायब हो जाता है?</div>
+  <div class="faq-a">जब आप क्रॉस पर दृष्टि टिकाए हुए हैं और वह ऑप्टिक डिस्क के अंतराल से गुज़रता है, तो उसकी छवि ग्राही-रहित रेटिना पर पड़ती है और वह पल भर गायब होकर दूसरी ओर लौट आता है।</div>
+  <div class="faq-q">अंध-बिंदु कहाँ स्थित है?</div>
+  <div class="faq-a">हर आँख में, आप जहाँ देखते हैं उससे लगभग कनपटी की ओर 12–15°, क्षैतिज रेखा से थोड़ा नीचे।</div>
+  <div class="faq-q">अंध-बिंदु होना सामान्य है?</div>
+  <div class="faq-a">पूरी तरह — यह हर आँख में सामान्य शारीरिक रचना है। केंद्रीय दृष्टि में कोई नया, बना रहने वाला खाली क्षेत्र अलग बात है और उसकी जाँच करानी चाहिए।</div>
+</section>
+
+<!-- oq:footer -->
+<footer class="oq-footer" role="contentinfo">
+  <div class="oq-verified">
+    <h2>समीक्षित और सूचीबद्ध</h2>
+    <ul>
+      <li><a href="https://chromewebstore.google.com/detail/opticquiz-%E2%80%94-colorblind-co/cigfnaekhndlablojacfdhmgcdnnfieo" rel="noopener">Chrome Web Store</a></li>
+      <li><a href="https://microsoftedge.microsoft.com/addons/detail/opticquiz-%E2%80%94-colorblind-co/maalcjohefglpnenmfjjkacgmomhofeh" rel="noopener">Microsoft Edge Add-ons</a></li>
+      <li><a href="https://addons.mozilla.org/en-US/firefox/addon/opticquiz-colorblind-corrector/" rel="noopener">Firefox Add-ons</a></li>
+      <li><a href="https://marketplace.visualstudio.com/items?itemName=opticquiz.opticquiz-colorblind-check" rel="noopener">VS Code Marketplace</a></li>
+      <li><a href="https://registry.modelcontextprotocol.io" rel="noopener">MCP Registry</a></li>
+      <li><a href="https://pypi.org/project/cvdsafe/" rel="noopener">PyPI</a></li>
+      <li><a href="https://www.npmjs.com/package/cvdsafe" rel="noopener">npm</a></li>
+    </ul>
+  </div>
+  <div class="oq-footer__grid">
+    <div>
+      <h2>दृष्टि परीक्षण</h2>
+      <ul>
+        <li><a href="/color/">रंग दृष्टि</a></li>
+        <li><a href="/d15/">Farnsworth D-15</a></li>
+        <li><a href="/acuity/">दृश्य तीक्ष्णता</a></li>
+        <li><a href="/flicker/">फ्लिकर फ्यूजन</a></li>
+        <li><a href="/#tests">सभी 17 परीक्षण</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>रंग उपकरण</h2>
+      <ul>
+        <li><a href="/checker/">पैलेट चेकर</a></li>
+        <li><a href="/contrast-checker/">कंट्रास्ट चेकर</a></li>
+        <li><a href="/palettes/">पैलेट बेंचमार्क</a></li>
+        <li><a href="/widget/">एक-पंक्ति विजेट</a></li>
+        <li><a href="/extension/">ब्राउज़र एक्सटेंशन</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>डेवलपर</h2>
+      <ul>
+        <li><a href="/platform/">प्लेटफ़ॉर्म और API</a></li>
+        <li><a href="/setup/">सेट अप करें</a></li>
+        <li><a href="/live/">लाइव सुधार</a></li>
+        <li><a href="/use-cases/">उपयोग के मामले</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>OpticQuiz</h2>
+      <ul>
+        <li><a href="/about/">परिचय</a></li>
+        <li><a href="/research/">अनुसंधान</a></li>
+        <li><a href="/methodology/">कार्यप्रणाली</a></li>
+        <li><a href="/impact/">प्रभाव संग्रह</a></li>
+        <li><a href="/support/">सहायता</a></li>
+        <li><a href="/privacy/">गोपनीयता</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="oq-footer__base">
+    <span>© 2026 opticquiz.com</span>
+    <span><a class="oq-footer__parent" href="https://f-keys.com" rel="noopener"><img src="/assets/brand/f-keys-creative.webp" alt="" width="17" height="17">F-Keys Creative की प्रस्तुति</a></span>
+    <span>एक प्रकाशित विधि — <a href="https://doi.org/10.5281/zenodo.21310578">DOI 10.5281/zenodo.21310578</a></span>
+    <span class="oq-footer__note">शैक्षिक और सुगम्यता उपयोग के लिए — यह चिकित्सा उपकरण, निदान या कानूनी ADA/WCAG ऑडिट नहीं है।</span>
+  </div>
+</footer>
+<!-- /oq:footer -->
+
+<script>
+// ── CONFIG ──
+// The blind spot sits ~15° temporal to fixation. For the tested eye, "temporal"
+// means the dot sweeps from the cross toward the SAME side as the eye:
+//   right eye -> cross on left, dot sweeps rightward (temporal = right)
+//   left eye  -> cross on right, dot sweeps leftward  (temporal = left)
+var SWEEP_MS = 9000;           // one pass duration
+var CSS_PX_PER_CM = 37.8;      // ~96 CSS px/inch; disclosed approximation
+
+/* SCREEN SCALE MUST BE MEASURED, NOT ASSUMED.
+ *
+ * This page reports an ANGLE, which requires knowing how big a pixel physically is. It used a
+ * hardcoded 37.8 CSS px/cm, i.e. the assumption that one CSS pixel is 1/96 inch. That holds on
+ * an unscaled desktop monitor and almost nowhere else:
+ *
+ *     Windows @150% scaling   ~25.2 px/cm   result reported ~33% WORSE than reality
+ *     iPhone 15               ~60.4 px/cm   result reported ~60% BETTER than reality
+ *     Pixel 8                 ~64.8 px/cm   result reported ~71% BETTER than reality
+ *
+ * /acuity/ already solves this with a credit-card ruler and the shared OQ.Calib module. This
+ * page now uses the same one. Uncalibrated it falls back to 37.8 and says so, rather than
+ * printing an angle as if it were measured.
+ */
+var CAL = { pxPerCm: CSS_PX_PER_CM, calibrated: false };
+
+function onCal(v){
+  var px = parseInt(v, 10);
+  var box = document.getElementById("card-box");
+  if (box) box.style.width = px + "px";
+  var pxPerMm = (window.OQ && OQ.Calib) ? OQ.Calib.pxPerMm(px) : px / 85.6;
+  CAL.pxPerCm = pxPerMm * 10;
+  CAL.calibrated = true;
+  var n = document.getElementById("cal-note");
+  if (n) n.textContent = "Box " + px + " px = 85.6 mm → " + CAL.pxPerCm.toFixed(1) + " px/cm";
+}
+
+// ── STATE ──
+var STATE = { eye:"right", distCm:50, pass:0, edges:[], sweepStart:0, rafId:null,
+              dotX:0, crossX:0, dir:1, stageW:0, marks:[] };
+
+// ── ENGINE ──
+function selectEye(eye){
+  STATE.eye=eye;
+  document.getElementById("eye-right").classList.toggle("selected",eye==="right");
+  document.getElementById("eye-right").setAttribute("aria-checked",eye==="right"?"true":"false");
+  document.getElementById("eye-left").classList.toggle("selected",eye==="left");
+  document.getElementById("eye-left").setAttribute("aria-checked",eye==="left"?"true":"false");
+}
+
+function startTest(){
+  if (window.oqTrack) { oqTrack("test_start", "blindspot"); }
+  // READS: dist input  WRITES: STATE
+  var d=parseFloat(document.getElementById("dist-input").value);
+  STATE.distCm = (isFinite(d)&&d>=20&&d<=120) ? d : 50;
+  STATE.pass=0; STATE.marks=[]; STATE.edges=[];
+  showScreen("screen-test");
+  setTimeout(setupStage,40); // let layout settle so we can read width
+}
+
+function setupStage(){
+  var stage=document.getElementById("stage");
+  STATE.stageW = stage.clientWidth;
+  var cross=document.getElementById("fix-cross");
+  if(STATE.eye==="right"){
+    // cross near left edge, dot sweeps left->right (maximize angular reach to the blind spot)
+    STATE.crossX = STATE.stageW*0.07;
+    STATE.dir = 1;
+  } else {
+    // cross near right edge, dot sweeps right->left
+    STATE.crossX = STATE.stageW*0.93;
+    STATE.dir = -1;
+  }
+  cross.style.left = STATE.crossX+"px";
+  document.getElementById("stage-hint").textContent =
+    "Testing "+STATE.eye+" eye. Cover your "+(STATE.eye==="right"?"left":"right")+
+    " eye. Stare at the +, never at the dot. Tap the instant the dot disappears — then again when it returns. If it never vanishes, lean a little closer to the screen and restart.";
+  beginSweep();
+}
+
+function beginSweep(){
+  // WRITES: STATE.dotX, STATE.sweepStart, STATE.marks
+  STATE.marks=[];
+  document.getElementById("mark-btn").textContent="The Dot Just Vanished";
+  var startX = STATE.dir===1 ? STATE.crossX+40 : STATE.crossX-40;
+  var endX   = STATE.dir===1 ? STATE.stageW-20 : 20;
+  STATE.dotX=startX;
+  STATE.sweepStart=performance.now();
+  var dot=document.getElementById("sweep-dot");
+  function loop(t){
+    var p=(t-STATE.sweepStart)/SWEEP_MS;
+    if(p>=1){ // reached end without full pair -> restart pass
+      dot.style.left=endX+"px";
+      restartSweep();
+      return;
+    }
+    STATE.dotX = startX + (endX-startX)*p;
+    dot.style.left = STATE.dotX+"px";
+    STATE.rafId=requestAnimationFrame(loop);
+  }
+  STATE.rafId=requestAnimationFrame(loop);
+}
+
+function restartSweep(){
+  if(STATE.rafId){ cancelAnimationFrame(STATE.rafId); STATE.rafId=null; }
+  beginSweep();
+}
+
+function markEvent(){
+  // READS: STATE.dotX  WRITES: STATE.marks -> STATE.edges
+  try{
+    STATE.marks.push(STATE.dotX);
+    if(STATE.marks.length===1){
+      document.getElementById("mark-btn").textContent="…And Now It's Back";
+      announce("Disappearance marked. Tap again when the dot returns.");
+      return;
+    }
+    // second mark = reappearance -> we have one edge pair
+    if(STATE.rafId){ cancelAnimationFrame(STATE.rafId); STATE.rafId=null; }
+    var a=STATE.marks[0], b=STATE.marks[1];
+    STATE.edges.push({ start:Math.min(a,b), end:Math.max(a,b) });
+    STATE.pass++;
+    if(STATE.pass>=2){ finish(); return; }
+    announce("Pass "+STATE.pass+" done. One more pass to confirm.");
+    beginSweep();
+  }catch(err){ console.error("markEvent:",err); }
+}
+
+function finish(){
+  if(STATE.rafId){ cancelAnimationFrame(STATE.rafId); STATE.rafId=null; }
+  renderResults();
+  showScreen("screen-results"); if (window.oqTrack) { oqTrack("test_complete", "blindspot"); };
+}
+
+// ── RESULTS ──
+function pxToDeg(px){
+  // angle subtended by px at viewing distance; disclosed approximation
+  var cm = px / CAL.pxPerCm;
+  return Math.atan2(cm, STATE.distCm) * 180/Math.PI;
+}
+
+function renderResults(){
+  // average the two passes
+  var centers=[], widths=[];
+  for(var i=0;i<STATE.edges.length;i++){
+    var e=STATE.edges[i];
+    centers.push((e.start+e.end)/2);
+    widths.push(Math.abs(e.end-e.start));
+  }
+  var centerX = centers.reduce(function(s,x){return s+x;},0)/centers.length;
+  var widthPx = widths.reduce(function(s,x){return s+x;},0)/widths.length;
+
+  var eccPx = Math.abs(centerX - STATE.crossX);
+  var eccDeg = pxToDeg(eccPx);
+  var widthDeg = pxToDeg(widthPx);
+
+  var eccTxt = eccDeg.toFixed(1);
+  var widthTxt = widthDeg.toFixed(1);
+  var typical = (eccDeg>=10 && eccDeg<=20) ? "right in the textbook range (about 12–15° from center)"
+              : (eccDeg<10) ? "a bit closer to center than the textbook 12–15° — usually a viewing-distance estimate being off"
+              : "a bit farther out than the textbook 12–15° — usually a viewing-distance estimate being off";
+
+  var h='<div class="big-stat"><div class="big-stat-val">'+eccTxt+'°</div><div class="big-stat-lbl">'+STATE.eye+' eye — blind spot offset from center</div></div>';
+  h+='<div class="mini-row"><div class="mini"><div class="mini-val">'+widthTxt+'°</div><div class="mini-lbl">Apparent width</div></div>'+
+     '<div class="mini"><div class="mini-val">'+STATE.distCm+' cm</div><div class="mini-lbl">Your distance</div></div></div>';
+  h+='<div class="interp-card"><div class="interp-text">Your '+STATE.eye+' eye\'s blind spot measured about <strong>'+eccTxt+'° to the side of where you were looking</strong>, roughly '+widthTxt+'° wide. That is '+typical+'. The blind spot is where your optic nerve exits — no photoreceptors live there, so anything landing on it simply isn\'t seen, and your brain fills the gap so convincingly you never notice in daily life. Figures scale with the distance you entered ('+STATE.distCm+' cm), so they\'re approximate.</div></div>';
+  document.getElementById("result-detail").innerHTML=h;
+}
+
+function retakeTest(){ showScreen("screen-intro"); }
+
+function shareResults(){
+  try{
+    var text="I mapped my eye's blind spot on OpticQuiz — try the demo, it's wild: opticquiz.com/blindspot/";
+    if(navigator.share){ navigator.share({title:"OpticQuiz Blind Spot",text:text,url:"https://opticquiz.com/blindspot/"}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){announce("Copied");}); }
+    else { prompt("Copy:",text); }
+  }catch(err){ console.error("shareResults:",err); }
+}
+
+// ── UTIL ──
+function showScreen(id){
+  var s=document.querySelectorAll(".screen");
+  for(var i=0;i<s.length;i++) s[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+function announce(msg){
+  var el=document.getElementById("a11y-live"); if(!el)return;
+  el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
+}
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-calib.js"></script>
+<script src="/assets/oq-analytics.js"></script>
+<script src="/widget/eye.js" defer></script>
+<script src="/assets/oq-test-guard.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- ============================================================
+  OPTICQUIZ — Dominant Eye Test  v1.0.0
+  Guided Miles test: which eye does your brain aim with?
+  opticquiz.com
+  ============================================================
+  WORKFLOW STACK: CONFIG -> STATE -> guided physical steps (triangle,
+                  cover each eye) -> answers -> dominance verdict
+  ASSET MANIFEST: /opticquiz_icon.png ; Google Fonts ; GA4 ; AdSense (head)
+  BOOT ORDER: DOM -> step-through -> two cover questions -> verdict
+  HONESTY: eye dominance is real and the Miles test is the standard quick
+           procedure — but it's a PHYSICAL test. The page guides you through
+           it and interprets your answers; the screen can't observe you, so
+           the result is only as good as your honest report. Ambiguous
+           answers get an honest "unclear — retry with a smaller triangle,"
+           not a forced verdict.
+  ============================================================ -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OpticQuiz Prueba del ojo dominante: descubra qué ojo es el dominante con el test del triángulo de Miles, guiado paso a paso. Útil para fotografía, tiro con arco y tiro deportivo. Gratis, se hace en un minuto.">
+<meta name="theme-color" content="#F8F6F2">
+<meta property="og:title" content="OpticQuiz — Prueba del ojo dominante">
+<meta property="og:description" content="¿Con qué ojo apunta su cerebro? Descúbralo en un minuto con el test del triángulo guiado.">
+<meta property="og:image" content="https://opticquiz.com/og-card.png">
+<meta property="og:url" content="https://opticquiz.com/es/dominance/">
+<link rel="canonical" href="https://opticquiz.com/es/dominance/">
+<link rel="alternate" hreflang="x-default" href="https://opticquiz.com/dominance/">
+<link rel="alternate" hreflang="en" href="https://opticquiz.com/dominance/">
+<link rel="alternate" hreflang="es" href="https://opticquiz.com/es/dominance/">
+<link rel="alternate" hreflang="fr" href="https://opticquiz.com/fr/dominance/">
+<link rel="alternate" hreflang="pt" href="https://opticquiz.com/pt/dominance/">
+<link rel="alternate" hreflang="it" href="https://opticquiz.com/it/dominance/">
+<link rel="alternate" hreflang="zh" href="https://opticquiz.com/zh/dominance/">
+<link rel="alternate" hreflang="hi" href="https://opticquiz.com/hi/dominance/">
+<link rel="icon" href="/opticquiz_icon.png" type="image/png">
+<title>Prueba del ojo dominante — ¿qué ojo es el dominante? — OpticQuiz</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Cómo encuentro mi ojo dominante?","acceptedAnswer":{"@type":"Answer","text":"Extienda ambos brazos y forme un pequeño triángulo con las manos. Con los dos ojos abiertos, centre dentro un objeto lejano. Cierre un ojo y después el otro. El ojo que mantiene el objeto encuadrado es su ojo dominante (de puntería). Este es el test de Miles y se hace en menos de un minuto."}},
+{"@type":"Question","name":"¿Qué significa tener un ojo dominante?","acceptedAnswer":{"@type":"Answer","text":"Su ojo dominante es el que su cerebro prefiere para apuntar y juzgar la dirección, algo similar a ser diestro o zurdo. No dice nada sobre la salud ocular ni sobre qué ojo ve con más nitidez. Alrededor de dos tercios de las personas tienen dominancia del ojo derecho."}},
+{"@type":"Question","name":"¿Por qué importa la dominancia ocular?","acceptedAnswer":{"@type":"Answer","text":"Importa sobre todo para apuntar y alinear: fotografía (qué ojo poner en el visor), tiro con arco, tiro con rifle y pistola, dardos y putt en golf. Conocer el suyo ayuda a colocar la postura y el equipo en el lado correcto."}},
+{"@type":"Question","name":"¿Puede cambiar el ojo dominante?","acceptedAnswer":{"@type":"Answer","text":"La dominancia de puntería suele ser estable, pero en algunas personas puede parecer que varía según la dirección de la mirada, y una minoría presenta dominancia débil o mixta. Si su resultado no es claro, inténtelo de nuevo con un triángulo más pequeño y un objetivo más lejano."}}
+]}
+</script>
+<style>
+.seo{max-width:560px;margin:0 auto;padding:8px 20px 0;}
+.seo h2{font-family:"Bebas Neue",Impact,fantasy;font-size:clamp(24px,6vw,32px);color:#1A1A1A;line-height:1;letter-spacing:.02em;margin:26px 0 12px;}
+.seo p{font-size:15px;color:#6B6B6B;line-height:1.8;margin-bottom:14px;}
+.seo p strong{color:#1A1A1A;}
+.seo .faq-q{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:15px;color:#1A1A1A;margin:16px 0 4px;}
+.seo .faq-a{font-size:14px;color:#6B6B6B;line-height:1.8;}
+.seo a{color:#9E2A0D;}
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T6CF42RKT4"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-T6CF42RKT4');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box;margin:0;padding:0; }
+:root{--white:#FFFFFF;--bg:#F8F6F2;--cream:#F0EDE6;--lgray:#D4D0C8;--gray:#6B6B6B;--black:#1A1A1A;--red:#C23410;--red-text:#9E2A0D;--redd:#9E2A0D;--green:#3F7836;--greend:#38692F;--redbg:#FDF1EE;--amber:#824F06;--fd:"Bebas Neue",Impact,fantasy;--fs:"Source Serif 4",Georgia,serif;--fm:"Courier New",monospace;--r:4px;--rc:8px;}
+html{background:var(--bg);}
+body{font-family:var(--fs);background:var(--bg);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.skip-link{position:absolute;top:-48px;left:16px;z-index:9999;background:var(--red);color:#fff;padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:600;text-decoration:none;transition:top .15s;}
+.skip-link:focus{top:12px;}
+*:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:var(--r);}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.wrap{max-width:560px;margin:0 auto;padding:0 20px 80px;}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;max-width:560px;margin:0 auto;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--lgray);}
+.logo-name{font-family:var(--fd);font-size:22px;color:var(--black);letter-spacing:.03em;}
+.logo-name span{color:var(--red-text);}
+.ver-badge{font-family:var(--fm);font-size:13px;color:var(--gray);border:1px solid var(--lgray);padding:3px 8px;border-radius:20px;letter-spacing:.1em;}
+.screen{display:none;}
+.screen.active{display:block;animation:fadein .2s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+.eyebrow{font-family:var(--fm);font-size:13px;letter-spacing:.14em;color:var(--red-text);text-transform:uppercase;display:block;margin-bottom:10px;}
+h1{font-family:var(--fd);font-size:clamp(48px,12vw,72px);color:var(--black);line-height:.92;letter-spacing:.02em;margin-bottom:16px;}
+h2{font-family:var(--fd);font-size:clamp(32px,8vw,48px);color:var(--black);line-height:.94;letter-spacing:.02em;margin-bottom:16px;}
+h3{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+p{font-size:15px;color:var(--gray);line-height:1.7;}
+.btn{display:block;width:100%;padding:16px 20px;font-family:var(--fs);font-size:16px;font-weight:600;color:var(--black);background:#fff;border:1.5px solid var(--lgray);border-radius:var(--r);cursor:pointer;text-align:center;transition:border-color .12s,background .12s,transform .08s;min-height:52px;-webkit-tap-highlight-color:transparent;}
+.btn:hover{border-color:var(--black);background:var(--cream);}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--red);color:#fff;border-color:transparent;}
+.btn-primary:hover{background:var(--redd);}
+.btn-secondary{background:var(--green);color:#fff;border-color:transparent;}
+.btn-secondary:hover{background:var(--greend);}
+.btn+.btn{margin-top:10px;}
+.divider{height:1px;background:var(--lgray);margin:24px 0;}
+.step-illus{display:flex;justify-content:center;margin:18px 0;}
+.step-illus svg{width:min(70vw,260px);height:auto;}
+.step-num{font-family:var(--fm);font-size:13px;letter-spacing:.12em;color:var(--red-text);text-transform:uppercase;display:block;margin-bottom:8px;text-align:center;}
+.step-title{font-family:var(--fd);font-size:clamp(28px,7vw,40px);color:var(--black);line-height:1;text-align:center;margin-bottom:10px;}
+.step-body{font-size:15px;color:var(--gray);line-height:1.7;text-align:center;max-width:420px;margin:0 auto 20px;}
+.step-body strong{color:var(--black);}
+.big-stat{background:#fff;border:1.5px solid var(--lgray);border-top:4px solid var(--red);border-radius:var(--rc);padding:22px;margin-bottom:16px;text-align:center;}
+.big-stat-val{font-family:var(--fd);font-size:clamp(34px,9vw,52px);color:var(--black);line-height:1.05;}
+.big-stat-lbl{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+.interp-card{background:var(--cream);border:1px solid var(--lgray);border-radius:var(--rc);padding:18px;margin:16px 0;}
+.interp-text{font-size:14px;color:var(--gray);line-height:1.8;}
+.disclaimer{background:var(--cream);border:1.5px solid var(--lgray);border-left:4px solid var(--red);border-radius:var(--rc);padding:18px 18px 18px 20px;margin-top:24px;}
+.disclaimer-title{font-family:var(--fm);font-size:13px;letter-spacing:.1em;color:var(--red-text);text-transform:uppercase;margin-bottom:8px;}
+.disclaimer-body{font-size:13px;color:var(--gray);line-height:1.8;}
+.disclaimer-body strong{color:var(--black);font-weight:600;}
+.share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06em;text-align:center;padding:24px 0 8px;border-top:1px solid var(--lgray);margin-top:32px;}
+.backlink{display:block;text-align:center;margin-top:16px;font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;}
+.instr{margin:18px 0;}
+.instr-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--lgray);}
+.instr-item:last-child{border-bottom:none;}
+.instr-n{font-family:var(--fd);font-size:20px;color:var(--red-text);min-width:22px;}
+.instr-t{font-size:14px;color:var(--black);font-weight:600;}
+.instr-s{font-size:13px;color:var(--gray);line-height:1.5;}
+@media (prefers-reduced-motion:reduce){.screen.active{animation:none;}}
+</style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpticQuiz — Prueba del ojo dominante">
+<meta name="twitter:description" content="¿Con qué ojo apunta su cerebro? Descúbralo en un minuto con el test del triángulo guiado.">
+<meta name="twitter:image" content="https://opticquiz.com/og-card.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="OpticQuiz Learn" href="/feed.xml">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Prueba del ojo dominante — ¿qué ojo es el dominante?", "url": "https://opticquiz.com/dominance/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "publisher": {"@type": "Organization", "name": "OpticQuiz"}, "description": "OpticQuiz Prueba del ojo dominante: descubra qué ojo es el dominante con el test del triángulo de Miles, guiado paso a paso. Útil para fotografía, tiro con arco y tiro deportivo. Gratis, se hace en un minuto."}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "HowTo", "name": "Cómo encontrar su ojo dominante", "step": [{"@type": "HowToStep", "position": 1, "text": "Extienda ambos brazos y superponga las manos para formar un pequeño triángulo entre los pulgares y los índices."}, {"@type": "HowToStep", "position": 2, "text": "Con los dos ojos abiertos, centre dentro del triángulo un objeto lejano (a 3 m o más)."}, {"@type": "HowToStep", "position": 3, "text": "Cierre un ojo y después el otro. El ojo que mantiene el objeto encuadrado es su ojo dominante (de puntería)."}]}
+</script>
+<link rel="stylesheet" href="/assets/oq-chrome.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Saltar al contenido principal</a>
+
+<!-- oq:nav -->
+<nav class="oq-nav" aria-label="Primary">
+  <a href="/" class="oq-nav__brand" aria-label="OpticQuiz home">
+    <img class="oq-nav__mark" src="/opticquiz_icon.png" alt="" width="27" height="27">
+    <span class="oq-nav__name">OPTIC<b>QUIZ</b></span>
+  </a>
+  <div class="oq-nav__links">
+    <a href="/#tests">Pruebas de visión</a>
+    <a href="/#color">Herramientas de color</a>
+    <a href="/platform/">Desarrolladores</a>
+    <a href="/research/">Investigación</a>
+    <a href="/setup/" class="oq-nav__cta">Configurar</a>
+  </div>
+</nav>
+<!-- /oq:nav -->
+
+<div role="status" aria-live="polite" aria-atomic="true" class="sr-only" id="a11y-live"></div>
+<header class="site-header" role="banner">
+  <a href="/" class="logo-wrap" aria-label="Inicio de OpticQuiz"><img src="/opticquiz_icon.png" alt="" width="38" height="38"><div class="logo-name">OPTIC<span>QUIZ</span></div></a>
+  <div class="ver-badge">DOMINANCIA</div>
+</header>
+<main id="main" class="wrap" role="main">
+
+<div id="screen-intro" class="screen active">
+  <div style="padding-top:32px">
+    <span class="eyebrow">Puntería y alineación</span>
+    <h1>PRUEBA<br>DEL OJO<br>DOMINANTE</h1>
+    <p>Uno de sus ojos es el que su cerebro usa para <em>apuntar</em>: es el que fija dónde están las cosas, mientras el otro lo acompaña. Saber cuál es importa para la fotografía, el tiro con arco, el tiro deportivo, los dardos e incluso el putt en golf. Este es el clásico <strong>test del triángulo de Miles</strong>, guiado paso a paso. Se hace en un minuto y sin equipo.</p>
+    <div class="divider"></div>
+    <h3>Qué va a hacer</h3>
+    <div class="instr">
+      <div class="instr-item"><div class="instr-n">1</div><div><div class="instr-t">Forme un pequeño triángulo con las manos</div><div class="instr-s">Brazos totalmente extendidos, con los pulgares y los índices superpuestos.</div></div></div>
+      <div class="instr-item"><div class="instr-n">2</div><div><div class="instr-t">Encuadre a través de él un objeto lejano</div><div class="instr-s">El pomo de una puerta, un interruptor: algo a 3 m o más. Con los dos ojos abiertos.</div></div></div>
+      <div class="instr-item"><div class="instr-n">3</div><div><div class="instr-t">Cierre un ojo y después el otro</div><div class="instr-s">El ojo que mantenga el objeto encuadrado es su ojo dominante.</div></div></div>
+    </div>
+    <button class="btn btn-primary" onclick="startTest()">Empezar</button>
+    <a href="/" class="backlink">← Todos los test de visión gratuitos</a>
+  </div>
+</div>
+
+<!-- STEP 1: setup -->
+<div id="screen-step1" class="screen">
+  <div style="padding-top:28px">
+    <span class="step-num">Paso 1 de 3</span>
+    <div class="step-title">ENCUADRE EL OBJETIVO</div>
+    <div class="step-illus" aria-hidden="true">
+      <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+        <rect width="260" height="160" fill="#FFFFFF" rx="8"/>
+        <!-- two hands forming a triangle (stylized) -->
+        <path d="M70,150 L118,70 L142,70 L190,150 Z" fill="none" stroke="#1A1A1A" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M118,70 L130,52 L142,70" fill="none" stroke="#1A1A1A" stroke-width="5" stroke-linejoin="round"/>
+        <!-- target seen through the triangle -->
+        <circle cx="130" cy="100" r="10" fill="#C23410"/>
+        <circle cx="130" cy="100" r="17" fill="none" stroke="#C23410" stroke-width="2" opacity="0.4"/>
+        <text x="130" y="146" text-anchor="middle" font-family="Courier New, monospace" font-size="9" fill="#6B6B6B" letter-spacing="1">AMBOS ABIERTOS</text>
+      </svg>
+    </div>
+    <p class="step-body">Extienda ambos brazos. Superponga las manos para formar un <strong>pequeño triángulo</strong> entre los pulgares y los índices. Con <strong>los dos ojos abiertos</strong>, centre un objeto lejano dentro del triángulo; elija algo pequeño, a 3 m o más. Mantenga los brazos exactamente donde están durante los dos pasos siguientes.</p>
+    <button class="btn btn-primary" onclick="showScreen('screen-step2')">Está centrado: siguiente</button>
+    <a href="/" class="backlink">← Todos los test de visión gratuitos</a>
+  </div>
+</div>
+
+<!-- STEP 2: cover left -->
+<div id="screen-step2" class="screen">
+  <div style="padding-top:28px">
+    <span class="step-num">Paso 2 de 3</span>
+    <div class="step-title">CIERRE EL OJO IZQUIERDO</div>
+    <div class="step-illus" aria-hidden="true">
+      <svg viewBox="0 0 260 120" xmlns="http://www.w3.org/2000/svg">
+        <rect width="260" height="120" fill="#FFFFFF" rx="8"/>
+        <!-- left eye closed, right open -->
+        <path d="M55,60 q25,-8 50,0" fill="none" stroke="#1A1A1A" stroke-width="4" stroke-linecap="round"/>
+        <ellipse cx="180" cy="60" rx="26" ry="15" fill="none" stroke="#1A1A1A" stroke-width="4"/>
+        <circle cx="180" cy="60" r="7" fill="#1A1A1A"/>
+        <text x="80" y="95" text-anchor="middle" font-family="Courier New, monospace" font-size="9" fill="#6B6B6B" letter-spacing="1">IZQ. CERRADO</text>
+        <text x="180" y="95" text-anchor="middle" font-family="Courier New, monospace" font-size="9" fill="#6B6B6B" letter-spacing="1">DER. ABIERTO</text>
+      </svg>
+    </div>
+    <p class="step-body">Mantenga los brazos quietos. Cierre (o cubra) el ojo <strong>izquierdo</strong> y mire solo con el <strong>ojo derecho</strong>. ¿Sigue el objeto centrado en el triángulo o se salió del encuadre?</p>
+    <button class="btn btn-primary" onclick="answerStep('right', true)">Sigue centrado</button>
+    <button class="btn" onclick="answerStep('right', false)">Se salió del encuadre</button>
+    <a href="/" class="backlink">← Todos los test de visión gratuitos</a>
+  </div>
+</div>
+
+<!-- STEP 3: cover right -->
+<div id="screen-step3" class="screen">
+  <div style="padding-top:28px">
+    <span class="step-num">Paso 3 de 3</span>
+    <div class="step-title">AHORA EL OJO DERECHO</div>
+    <div class="step-illus" aria-hidden="true">
+      <svg viewBox="0 0 260 120" xmlns="http://www.w3.org/2000/svg">
+        <rect width="260" height="120" fill="#FFFFFF" rx="8"/>
+        <ellipse cx="80" cy="60" rx="26" ry="15" fill="none" stroke="#1A1A1A" stroke-width="4"/>
+        <circle cx="80" cy="60" r="7" fill="#1A1A1A"/>
+        <path d="M155,60 q25,-8 50,0" fill="none" stroke="#1A1A1A" stroke-width="4" stroke-linecap="round"/>
+        <text x="80" y="95" text-anchor="middle" font-family="Courier New, monospace" font-size="9" fill="#6B6B6B" letter-spacing="1">IZQ. ABIERTO</text>
+        <text x="180" y="95" text-anchor="middle" font-family="Courier New, monospace" font-size="9" fill="#6B6B6B" letter-spacing="1">DER. CERRADO</text>
+      </svg>
+    </div>
+    <p class="step-body">Si lo necesita, vuelva a centrar el objeto con los dos ojos abiertos. Ahora cierre (o cubra) el ojo <strong>derecho</strong> y mire solo con el <strong>ojo izquierdo</strong>. ¿Sigue centrado o se movió?</p>
+    <button class="btn btn-primary" onclick="answerStep('left', true)">Sigue centrado</button>
+    <button class="btn" onclick="answerStep('left', false)">Se salió del encuadre</button>
+    <a href="/" class="backlink">← Todos los test de visión gratuitos</a>
+  </div>
+</div>
+
+<div id="screen-results" class="screen">
+  <div style="padding-top:28px">
+    <span class="eyebrow">Resultado</span>
+    <h2>SU<br>OJO<br>DOMINANTE</h2>
+    <div id="result-detail"></div>
+    <div class="share-row">
+      <button class="btn btn-primary" onclick="shareResults()">Compartir</button>
+      <button class="btn btn-secondary" onclick="retakeTest()">Volver a evaluar</button>
+    </div>
+    <a href="/" class="backlink">← Todos los test de visión gratuitos</a>
+    <div class="disclaimer" role="note">
+      <div class="disclaimer-title">Nota</div>
+      <div class="disclaimer-body">La dominancia ocular es normal — todo el mundo la tiene, igual que ser diestro o zurdo — y <strong>no dice nada sobre la salud ocular ni sobre la calidad de la visión</strong>. El test de Miles mide la dominancia de <em>puntería</em>, que en ocasiones puede diferir de otras formas de dominancia y que en algunas personas varía según la dirección de la mirada. Si su resultado no fue claro, inténtelo de nuevo con un triángulo más pequeño y un objetivo más lejano.</div>
+    </div>
+  </div>
+</div>
+</main>
+
+<section class="seo" aria-label="Sobre la prueba del ojo dominante">
+  <h2>Sobre la prueba del ojo dominante</h2>
+  <p>Igual que tiene una mano dominante, tiene un <strong>ojo dominante</strong>: el que su cerebro usa para apuntar y juzgar la dirección. Esta prueba usa el <strong>test de Miles</strong>, el procedimiento rápido habitual: se encuadra un objeto lejano a través de un pequeño triángulo formado con las dos manos y luego se cierra cada ojo por turno. El ojo que mantenga el objeto centrado es su ojo <strong>dominante de puntería</strong>. Alrededor de dos tercios de las personas tienen dominancia del ojo derecho, y la dominancia no tiene que coincidir con la mano dominante: la «dominancia cruzada» es frecuente.</p>
+  <p>Conocer el suyo resulta realmente útil para cualquier cosa que implique apuntar: ponga el ojo dominante en el <strong>visor de la cámara</strong> y, en <strong>tiro con arco, tiro con rifle y pistola, dardos o putt en golf</strong>, coloque la postura hacia el lado del ojo dominante. No dice nada sobre la salud ocular ni sobre qué ojo ve con más nitidez: se trata de alineación, no de agudeza.</p>
+  <h2>Preguntas frecuentes</h2>
+  <div class="faq-q">¿Cómo encuentro mi ojo dominante?</div>
+  <div class="faq-a">Forme un pequeño triángulo con las dos manos, encuadre un objeto lejano con los dos ojos abiertos y luego cierre cada ojo. El ojo que lo mantenga encuadrado es el dominante: ese es el test de Miles que esta página le guía a hacer.</div>
+  <div class="faq-q">¿Qué significa tener un ojo dominante?</div>
+  <div class="faq-a">Es el ojo que su cerebro prefiere para apuntar, igual que la mano dominante. No indica salud ocular ni nitidez. Aproximadamente dos tercios de las personas tienen dominancia del ojo derecho.</div>
+  <div class="faq-q">¿Por qué importa la dominancia ocular?</div>
+  <div class="faq-a">Sobre todo para los deportes de puntería y la fotografía: indica con qué ojo apuntar y hacia qué lado colocar la postura.</div>
+  <div class="faq-q">¿Puede cambiar el ojo dominante?</div>
+  <div class="faq-a">Suele ser estable, aunque puede parecer que cambia según la dirección de la mirada, y algunas personas tienen dominancia débil o mixta. ¿Resultado poco claro? Inténtelo de nuevo con un triángulo más pequeño y un objetivo más lejano.</div>
+</section>
+
+<!-- oq:footer -->
+<footer class="oq-footer" role="contentinfo">
+  <div class="oq-verified">
+    <h2>Revisado y publicado por</h2>
+    <ul>
+      <li><a href="https://chromewebstore.google.com/detail/opticquiz-%E2%80%94-colorblind-co/cigfnaekhndlablojacfdhmgcdnnfieo" rel="noopener">Chrome Web Store</a></li>
+      <li><a href="https://microsoftedge.microsoft.com/addons/detail/opticquiz-%E2%80%94-colorblind-co/maalcjohefglpnenmfjjkacgmomhofeh" rel="noopener">Microsoft Edge Add-ons</a></li>
+      <li><a href="https://addons.mozilla.org/en-US/firefox/addon/opticquiz-colorblind-corrector/" rel="noopener">Firefox Add-ons</a></li>
+      <li><a href="https://marketplace.visualstudio.com/items?itemName=opticquiz.opticquiz-colorblind-check" rel="noopener">VS Code Marketplace</a></li>
+      <li><a href="https://registry.modelcontextprotocol.io" rel="noopener">MCP Registry</a></li>
+      <li><a href="https://pypi.org/project/cvdsafe/" rel="noopener">PyPI</a></li>
+      <li><a href="https://www.npmjs.com/package/cvdsafe" rel="noopener">npm</a></li>
+    </ul>
+  </div>
+  <div class="oq-footer__grid">
+    <div>
+      <h2>Pruebas de visión</h2>
+      <ul>
+        <li><a href="/color/">Visión del color</a></li>
+        <li><a href="/d15/">Farnsworth D-15</a></li>
+        <li><a href="/acuity/">Agudeza visual</a></li>
+        <li><a href="/flicker/">Fusión de parpadeo</a></li>
+        <li><a href="/#tests">Las 17 pruebas</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Herramientas de color</h2>
+      <ul>
+        <li><a href="/checker/">Verificador de paletas</a></li>
+        <li><a href="/contrast-checker/">Verificador de contraste</a></li>
+        <li><a href="/palettes/">Comparativa de paletas</a></li>
+        <li><a href="/widget/">Widget de una línea</a></li>
+        <li><a href="/extension/">Extensión del navegador</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Desarrolladores</h2>
+      <ul>
+        <li><a href="/platform/">Plataforma y API</a></li>
+        <li><a href="/setup/">Configurar</a></li>
+        <li><a href="/live/">Corrección en vivo</a></li>
+        <li><a href="/use-cases/">Casos de uso</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>OpticQuiz</h2>
+      <ul>
+        <li><a href="/about/">Acerca de</a></li>
+        <li><a href="/research/">Investigación</a></li>
+        <li><a href="/methodology/">Metodología</a></li>
+        <li><a href="/impact/">Archivo de impacto</a></li>
+        <li><a href="/support/">Soporte</a></li>
+        <li><a href="/privacy/">Privacidad</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="oq-footer__base">
+    <span>© 2026 opticquiz.com</span>
+    <span><a class="oq-footer__parent" href="https://f-keys.com" rel="noopener"><img src="/assets/brand/f-keys-creative.webp" alt="" width="17" height="17">Una producción de F-Keys Creative</a></span>
+    <span>Un método publicado — <a href="https://doi.org/10.5281/zenodo.21310578">DOI 10.5281/zenodo.21310578</a></span>
+    <span class="oq-footer__note">Uso educativo y de accesibilidad: no es un dispositivo médico, ni un diagnóstico, ni una auditoría legal ADA/WCAG.</span>
+  </div>
+</footer>
+<!-- /oq:footer -->
+
+<script>
+// ── STATE ──
+var STATE = { rightKept:null, leftKept:null };
+
+// ── ENGINE ──
+function startTest(){
+  if (window.oqTrack) { oqTrack("test_start", "dominance"); }
+  STATE.rightKept=null; STATE.leftKept=null;
+  showScreen("screen-step1");
+}
+
+function answerStep(eye, kept){
+  // READS: eye ('right'|'left' = eye still OPEN), kept  WRITES: STATE
+  try{
+    if(eye==="right"){ STATE.rightKept=kept; showScreen("screen-step3"); return; }
+    STATE.leftKept=kept;
+    renderResults();
+    showScreen("screen-results"); if (window.oqTrack) { oqTrack("test_complete", "dominance"); };
+  }catch(err){ console.error("answerStep:",err); }
+}
+
+function verdict(){
+  // The eye that keeps the target centered when viewing alone is dominant.
+  if(STATE.rightKept && !STATE.leftKept) return "right";
+  if(STATE.leftKept && !STATE.rightKept) return "left";
+  if(STATE.rightKept && STATE.leftKept) return "both";
+  return "neither";
+}
+
+function renderResults(){
+  var v=verdict();
+  var headline, interp;
+  if(v==="right"||v==="left"){
+    headline = v==="right" ? "RIGHT EYE DOMINANT" : "LEFT EYE DOMINANT";
+    var pct = v==="right" ? "about two-thirds of people" : "roughly a third of people";
+    var cross = "If you're "+(v==="right"?"left":"right")+"-handed, you're \"cross-dominant\" — common, and mostly relevant in aiming sports, where coaches often adapt stance or teach shooting from the dominant-eye side.";
+    interp="Your "+v+" eye kept the target framed when it looked alone — it's the eye your brain uses to anchor direction, shared by "+pct+". Practical upshots: put your "+v+" eye to the camera viewfinder; in archery or shooting, aim with the "+v+" side. "+cross;
+  } else if(v==="both"){
+    headline="UNCLEAR — TRY A SMALLER TRIANGLE";
+    interp="The target stayed framed for both eyes, which usually means the triangle was too large (both lines of sight fit through it) or the target too close. Make the gap between your hands smaller — barely bigger than the target — pick something farther away, and run it again. A small minority of people show weak or mixed dominance, but rule out the big-triangle problem first.";
+  } else {
+    headline="HMM — THE ARMS MOVED";
+    interp="The target jumped out of frame for both eyes, which usually means your hands drifted between steps, or the object wasn't centered with both eyes open to start. Re-run it: frame the target with both eyes open, freeze your arms completely, and only then start closing eyes.";
+  }
+  var h='<div class="big-stat"><div class="big-stat-val">'+headline+'</div><div class="big-stat-lbl">Miles sighting test</div></div>';
+  h+='<div class="interp-card"><div class="interp-text">'+interp+'</div></div>';
+  document.getElementById("result-detail").innerHTML=h;
+  announce(headline);
+}
+
+function retakeTest(){ showScreen("screen-intro"); }
+
+function shareResults(){
+  try{
+    var v=verdict();
+    var label = v==="right"?"right-eye dominant":v==="left"?"left-eye dominant":"still figuring out my dominant eye";
+    var text="I'm "+label+" — found out in a minute on OpticQuiz: opticquiz.com/dominance/";
+    if(navigator.share){ navigator.share({title:"OpticQuiz Dominant Eye",text:text,url:"https://opticquiz.com/dominance/"}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(function(){announce("Copied");}); }
+    else { prompt("Copy:",text); }
+  }catch(err){ console.error("shareResults:",err); }
+}
+
+// ── UTIL ──
+function showScreen(id){
+  var s=document.querySelectorAll(".screen");
+  for(var i=0;i<s.length;i++) s[i].classList.remove("active");
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+function announce(msg){
+  var el=document.getElementById("a11y-live"); if(!el)return;
+  el.textContent=""; setTimeout(function(){ el.textContent=msg; },60);
+}
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>
+<script src="/assets/oq-analytics.js"></script>
+<script src="/widget/eye.js" defer></script>
+<script src="/assets/oq-test-guard.js" defer></script>
+</body>
+</html>
