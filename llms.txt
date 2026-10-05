@@ -12,7 +12,7 @@ Every line below links to a source that a reader can check.
 - **Scope:** 17 browser vision tests, each computed on the user's device. Eleven of them are also available in Spanish, French, German, Italian, Portuguese, Hindi and Chinese (interface and instructions; some result text is still English).
 - **Browser extension** (recolors any web page for colorblind users), published in all three major stores: [Chrome Web Store](https://chromewebstore.google.com/detail/cigfnaekhndlablojacfdhmgcdnnfieo), [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/maalcjohefglpnenmfjjkacgmomhofeh), [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/opticquiz-colorblind-corrector/).
 - **Engine packages:** `opticquiz-cvd` on [npm](https://www.npmjs.com/package/opticquiz-cvd) and [PyPI](https://pypi.org/project/opticquiz-cvd/); `cvdsafe` on [PyPI](https://pypi.org/project/cvdsafe/).
-- **Privacy:** no cookies of its own, no Google Analytics, no accounts; test answers and scores never leave the device. Aggregate visits are counted with Cloudflare Web Analytics, which sets no cookies. The homepage carries one Google AdSense unit.
+- **Privacy:** no cookies of its own, no Google Analytics, no accounts; test answers and scores never leave the device. Aggregate visits are counted with Cloudflare Web Analytics, which sets no cookies. There are no ads.
 - **What it is not:** not a medical device, not a diagnosis, not a legal ADA/WCAG audit. Independent validation by vision scientists has not happened yet.
 
 ## Start here — the loop nobody else on the open web closes
