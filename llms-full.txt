@@ -1,13 +1,28 @@
 # OpticQuiz — Full Text
 
-> Complete text of opticquiz.com for language-model ingestion. Fourteen free, honest, browser-based vision and perception tests plus plain-English guides. No paywall, no account; test results are computed on-device and never uploaded. Educational only, never a diagnosis. Source: https://github.com/zengineco/opticquiz.com
+> Complete text of opticquiz.com for language-model ingestion. Seventeen free, honest, browser-based vision and perception tests plus plain-English guides. No paywall, no account; test results are computed on-device and never uploaded. Educational only, never a diagnosis. Source: https://github.com/vince-gonzalez/opticquiz.com
+
+
+## Status, verifiable (updated 2026-10-05)
+Every line below links to a source that a reader can check.
+- **Publisher:** F-Keys Creative LLC, Punta Gorda, Florida (Vince Gonzalez). Source code: https://github.com/vince-gonzalez/opticquiz.com (MIT).
+- **Published method:** "A Procedural Method for Generating Pseudoisochromatic Plates in the Browser, and the Calibration Limits of Screen-Based Color-Vision Screening", open access, DOI https://doi.org/10.5281/zenodo.21310578; companion source code DOI https://doi.org/10.5281/zenodo.21311369.
+- **Under peer review:** "Pseudoisochromatic plate design type is recoverable from delivered colour and dot geometry alone", submitted to *Color Research and Application* (Wiley) and under peer review; preprint DOI https://doi.org/10.5281/zenodo.21876791 (August 2026). Not yet accepted; cite the preprint.
+- **Scope:** 17 browser vision tests, each computed on the user's device. Eleven of them are also available in Spanish, French, German, Italian, Portuguese, Hindi and Chinese (interface and instructions; some result text is still English).
+- **Browser extension** (recolors any web page for colorblind users), published in all three major stores: [Chrome Web Store](https://chromewebstore.google.com/detail/cigfnaekhndlablojacfdhmgcdnnfieo), [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/maalcjohefglpnenmfjjkacgmomhofeh), [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/opticquiz-colorblind-corrector/).
+- **Engine packages:** `opticquiz-cvd` on [npm](https://www.npmjs.com/package/opticquiz-cvd) and [PyPI](https://pypi.org/project/opticquiz-cvd/); `cvdsafe` on [PyPI](https://pypi.org/project/cvdsafe/).
+- **Privacy:** no cookies of its own, no Google Analytics, no accounts; test answers and scores never leave the device. Aggregate visits are counted with Cloudflare Web Analytics, which sets no cookies. The homepage carries one Google AdSense unit.
+- **What it is not:** not a medical device, not a diagnosis, not a legal ADA/WCAG audit. Independent validation by vision scientists has not happened yet.
+
+> Freshness: the page text below is a July 2026 snapshot of opticquiz.com. Where it disagrees with the status block or with https://opticquiz.com/llms.txt, those are current. Tests added since the snapshot include the Stereo Depth Test (https://opticquiz.com/stereo/), a random-dot stereogram depth-perception screen.
+
 
 ---
 
 # OpticQuiz — Eye Wellness Screening
 URL: https://opticquiz.com/
 
-OpticQuiz — 14 free browser-based eye and vision tests. Visual acuity (eye chart), color blindness, dominant eye, contrast sensitivity, anomaloscope, blind spot, Amsler grid, astigmatism, and more. Educational, on-device, no account.
+OpticQuiz — 17 free browser-based eye and vision tests. Visual acuity (eye chart), color blindness, dominant eye, contrast sensitivity, anomaloscope, blind spot, Amsler grid, astigmatism, and more. Educational, on-device, no account.
 
 Eye & Vision Tests
 CAN
@@ -15,7 +30,7 @@ YOU
 SEE
 THIS?
 
-Fourteen free browser-based tests for color, sharpness, speed, and the eye itself — plus plain-English guides to how it all works. No account. Your test answers and scores are computed in your browser and never uploaded. Educational use only — not a medical diagnostic.
+Seventeen free browser-based tests for color, sharpness, speed, and the eye itself — plus plain-English guides to how it all works. No account. Your test answers and scores are computed in your browser and never uploaded. Educational use only — not a medical diagnostic.
 
 14Vision tests
 
@@ -695,7 +710,7 @@ Concretely, that means: the color plates are generated fresh from real confusion
 
 Educational screening and honest curiosity tools. Some map to real clinical procedures (the tumbling-E chart, the Amsler grid, the D-15 arrangement, the Rayleigh anomaloscope match); others measure genuine perceptual thresholds that are simply interesting (flicker fusion, vernier hyperacuity, your blind spot). All of them run entirely in your browser — no account, and your test answers and scores are never uploaded or stored anywhere.
 
-One honest footnote so this claim stays true: the site itself uses Google Analytics and Google AdSense, which — like most of the web — set cookies and see standard visit data (page, device, rough location). That's separate from your test results, which are computed on your device and never sent to me or anyone else. If you'd rather block even that, any content blocker or private window handles it.
+One honest footnote so this claim stays true: the site carries Google AdSense, which, like most of the web, can set cookies and see standard visit data (page, device, rough location). Visits are counted with Cloudflare Web Analytics, which sets no cookies and cannot identify you. There is no Google Analytics. That's separate from your test results, which are computed on your device and never sent to me or anyone else. If you'd rather block even that, any content blocker or private window handles it.
 
 ## WHAT THEY ARE NOT
 
