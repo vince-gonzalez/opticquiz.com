@@ -33,7 +33,7 @@ wingetcreate submit --token <github-pat> winget\manifests\o\OpticQuiz\Corrector\
 
 ```
 wingetcreate update OpticQuiz.Corrector --version 1.2.0 ^
-  --urls https://github.com/zengineco/opticquiz.com/releases/download/<tag>/OpticQuizCorrector.exe ^
+  --urls https://github.com/vince-gonzalez/opticquiz.com/releases/download/<tag>/OpticQuizCorrector.exe ^
   --submit --token <github-pat>
 ```
 

@@ -4,13 +4,13 @@ PackageVersion: 1.1.0
 PackageLocale: en-US
 Publisher: OpticQuiz
 PublisherUrl: https://opticquiz.com
-PublisherSupportUrl: https://github.com/zengineco/opticquiz.com/issues
+PublisherSupportUrl: https://github.com/vince-gonzalez/opticquiz.com/issues
 PrivacyUrl: https://opticquiz.com/privacy/
 Author: Vince Gonzalez
 PackageName: OpticQuiz Corrector
 PackageUrl: https://opticquiz.com/setup/
 License: MIT
-LicenseUrl: https://github.com/zengineco/opticquiz.com/blob/main/LICENSE
+LicenseUrl: https://github.com/vince-gonzalez/opticquiz.com/blob/main/LICENSE
 Copyright: Copyright (c) Vince Gonzalez
 ShortDescription: Color-blindness correction for the entire Windows screen.
 Description: |-
@@ -41,7 +41,7 @@ Tags:
   - protanopia
   - tritanopia
   - vision
-ReleaseNotesUrl: https://github.com/zengineco/opticquiz.com/releases/tag/v1.1.0-desktop
+ReleaseNotesUrl: https://github.com/vince-gonzalez/opticquiz.com/releases/tag/v1.1.0-desktop
 Documentations:
   - DocumentLabel: Set-up guide
     DocumentUrl: https://opticquiz.com/setup/

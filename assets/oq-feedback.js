@@ -207,7 +207,7 @@
         .catch(function (e) {
           btns.forEach(function (b) { b.disabled = false; });
           status.innerHTML = '<p class="oqfb-note" style="color:#C23410">' + esc(e.message || "Something went wrong.") +
-            ' Nothing was saved. You can also just <a href="https://github.com/zengineco/opticquiz.com/issues">open an issue</a>.</p>';
+            ' Nothing was saved. You can also just <a href="https://github.com/vince-gonzalez/opticquiz.com/issues">open an issue</a>.</p>';
         });
     }
   }

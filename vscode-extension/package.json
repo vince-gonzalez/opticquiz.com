@@ -10,8 +10,8 @@
   "categories": ["Linters", "Formatters", "Other"],
   "keywords": ["colorblind", "color blindness", "accessibility", "a11y", "color", "cvd", "wcag", "palette", "deuteranopia"],
   "homepage": "https://opticquiz.com/checker/",
-  "repository": { "type": "git", "url": "https://github.com/zengineco/opticquiz.com" },
-  "bugs": { "url": "https://github.com/zengineco/opticquiz.com/issues" },
+  "repository": { "type": "git", "url": "https://github.com/vince-gonzalez/opticquiz.com" },
+  "bugs": { "url": "https://github.com/vince-gonzalez/opticquiz.com/issues" },
   "galleryBanner": { "color": "#1A1A1A", "theme": "dark" },
   "activationEvents": [
     "onStartupFinished"

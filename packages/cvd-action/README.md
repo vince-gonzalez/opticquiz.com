@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: zengineco/opticquiz.com/packages/cvd-action@main
+      - uses: vince-gonzalez/opticquiz.com/packages/cvd-action@main
         with:
           path: ./src          # directory to scan (default: .)
           fail-on: conflict     # or "borderline" to also fail on tight pairs

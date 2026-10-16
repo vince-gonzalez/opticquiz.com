@@ -4,7 +4,7 @@
 
 ## The blocker
 
-**JOSS reviews a software repository.** A reviewer opening `github.com/zengineco/opticquiz.com`
+**JOSS reviews a software repository.** A reviewer opening `github.com/vince-gonzalez/opticquiz.com`
 finds 74 HTML pages and a `tools/` directory. The submission would be returned — not because the
 software is weak, but because the repository is a website.
 

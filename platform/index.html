@@ -92,7 +92,7 @@ footer{font-family:var(--fm);font-size:13px;color:var(--gray);letter-spacing:.06
   <p class="sub">Check whether colors stay distinguishable under color blindness, fix them if not, and correct pages for the people looking at them — all from a method that's <a href="/research/">published and open-access</a>, so it can be verified rather than trusted.</p>
 
   <div class="gate">
-    <strong>The gate:</strong> the whole thing rests on one open-access paper — <a href="https://doi.org/10.5281/zenodo.21310578">DOI 10.5281/zenodo.21310578</a> — Machado (2009) color-vision simulation + CIEDE2000 perceptual difference. Everything below runs that exact method. MIT-licensed, on <a href="https://github.com/zengineco/opticquiz.com">GitHub</a>.
+    <strong>The gate:</strong> the whole thing rests on one open-access paper — <a href="https://doi.org/10.5281/zenodo.21310578">DOI 10.5281/zenodo.21310578</a> — Machado (2009) color-vision simulation + CIEDE2000 perceptual difference. Everything below runs that exact method. MIT-licensed, on <a href="https://github.com/vince-gonzalez/opticquiz.com">GitHub</a>.
   </div>
 
   <h2>THE ENGINE</h2>
@@ -132,7 +132,7 @@ cvd.checkContrast("#767676", "#ffffff").AA;      // true</pre>
   <h2>IN YOUR CI</h2>
   <div class="tool"><span class="tag">GitHub Action</span>
     <p>Fail a pull request when a stylesheet's colors collapse for colorblind viewers.</p>
-<pre>- uses: zengineco/opticquiz.com/packages/cvd-action@main
+<pre>- uses: vince-gonzalez/opticquiz.com/packages/cvd-action@main
   with:
     path: ./src</pre>
   </div>

@@ -27,7 +27,7 @@ echo   Ready:  %CD%\dist\OpticQuizCorrector.exe   (%MB% MB)
 echo.
 echo   Release it with:
 echo     gh release create v1.1.0-desktop "%CD%\dist\OpticQuizCorrector.exe" ^
---repo zengineco/opticquiz.com --title "OpticQuiz Corrector 1.1.0 (Windows)"
+--repo vince-gonzalez/opticquiz.com --title "OpticQuiz Corrector 1.1.0 (Windows)"
 echo.
 goto :eof
 
