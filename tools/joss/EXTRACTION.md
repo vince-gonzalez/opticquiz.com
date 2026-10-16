@@ -56,3 +56,46 @@ Do not submit with the tools still inside the website repository. Do not describ
 novel colorimetry — the colorimetry is Dain's procedure and Smith & Pokorny's fundamentals, and
 the paper says so. The contribution is that the chain is executable and checkable, which is a
 true claim and a sufficient one.
+
+---
+
+# DONE 2026-10-16: extracted to `Desktop\plateaudit`
+
+Local git repo, first commit `9f31744`. **Not yet on GitHub and not yet pushed.**
+
+| # | checklist item | state |
+|---|---|---|
+| 1 | New repository, not a fork | DONE, `plateaudit` |
+| 2 | `src/plateaudit/`, imports by name | DONE, relative imports; the `sys.path` inserts are gone |
+| 3 | `pyproject.toml`, loose pins | DONE, numpy + matplotlib + pillow; `scipy` is the `fast` extra |
+| 4 | README with a worked example | DONE, `audit_delivered_plates` runs end to end on the bundled data |
+| 5 | **Test suite, one command** | DONE, `python -m pytest tests/` gives 15 passed, 1 skipped |
+| 6 | Example data | DONE, the three deposited files in `data/` |
+| 7 | CONTRIBUTING + issue templates | DONE |
+| 8 | Zenodo release, DOI in the submission | **OUTSTANDING, needs his action** |
+
+## Corrections to this document, found by doing it
+
+- It says **12 tools, 3,528 lines**. The real figure is **11 modules, 3,379 lines**.
+  Membership was decided by the import graph, not by filename.
+- **`confusion_axis.py` was left here deliberately.** 205 of its 304 lines scan the site's
+  `index.html` files, read `/hue/` and `/sat/`, and import `packages/cvd-py` from this tree.
+  That is site maintenance rather than instrumentation, and **nothing in the chain imports
+  it**, so dropping it costs the package nothing. Shipping code to a JOSS reviewer that
+  reaches for files which do not exist is exactly what makes a submission read as a script
+  collection.
+- Three modules pointed `DATA` at `research/plate-audit/`. They now resolve to the package's
+  own `data/` directory and honour `PLATEAUDIT_DATA_DIR`.
+- Item 5 was correctly identified as the real work. The self-tests were promoted from
+  `--self-test` flags into pytest, so the positive controls run on every commit. One test
+  **guards the guard**: it asserts the deliberately broken pre-fix palette is still present
+  and still measured off axis. That test was itself verified by sabotaging the control and
+  confirming it fails.
+
+## What is left
+
+1. Create `github.com/vince-gonzalez/plateaudit` and push. **His call.**
+2. Tag a release and archive it on Zenodo for the DOI.
+3. Submit to JOSS with that DOI.
+
+The honest-odds assessment above still stands and is unchanged by the extraction.
