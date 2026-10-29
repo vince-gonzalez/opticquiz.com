@@ -74,8 +74,29 @@ cvd.contrast_ratio("#000000", "#ffffff")   # 21.0
 cvd.simulate("#d7191c", "deutan")               # '#8a7b0c'  (Machado, full)
 cvd.simulate("#d7191c", "deutan", 0.5)          # milder
 cvd.simulate("#d7191c", "deutan", 1.0, "brettel")
+cvd.simulate("#d7191c", "protanopia")           # ValueError — not an alias; use "protan"
 cvd.delta_e("#d7191c", "#1a9641")               # 70.6
 ```
+
+`cvd_type` is one of `protan`, `deutan`, `tritan`, or `normal` (any case, trimmed). An
+unrecognized type or model **raises `ValueError`** rather than returning the color
+unchanged — a typo must never look like a result. The long clinical names are not aliases;
+the error names the short form to use. Anomalous trichromacy (`deuteranomaly` and friends)
+is `severity` below 1 on the matching type, not a type of its own, and is refused with that
+pointer. For a user-supplied value, validate with `cvd.normalize_type(value)` or catch the
+exception.
+
+Colors are a hex string (`#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa` — `#` optional, any case,
+trimmed, alpha discarded) or an `(r, g, b[, a])` sequence in 0-1 or 0-255. An invalid color
+**raises** rather than being silently clamped or misread, in every function:
+
+```python
+cvd.delta_e("#fff", "nope")   # ValueError: opticquiz-cvd: invalid color 'nope'. ...
+cvd.to_hex((300, 0, 0))       # ValueError — used to clamp silently to '#ff0000'
+```
+
+numpy scalars and `uint8` arrays still work. See [CHANGELOG.md](CHANGELOG.md) — all of this
+arrived in 1.2.0.
 
 ## Command line
 ```

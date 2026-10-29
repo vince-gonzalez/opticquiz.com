@@ -13,9 +13,11 @@ Honest scope: simulates a MODEL of color vision, not any individual's; NOT a leg
 accessibility (ADA/WCAG) audit. MIT licensed.
 """
 import math
+import re
 
-__version__ = "1.1.3"
+__version__ = "1.2.0"
 TYPES = ["protan", "deutan", "tritan"]
+MODELS = ["machado", "brettel"]
 
 _M = {
     "protan": [[0.152286, 1.052583, -0.204868], [0.114503, 0.786281, 0.099216], [-0.003882, -0.048116, 1.051998]],
@@ -43,17 +45,59 @@ def _clamp01(x):
     return 0.0 if x < 0 else 1.0 if x > 1 else x
 
 
+# Color parsing is strict. A malformed hex used to reach int(h, 16) and raise something
+# opaque ("invalid literal for int() with base 16"), an 8-digit #rrggbbaa had its bytes
+# shifted a channel over and silently became the wrong color, a short tuple raised
+# IndexError, and an out-of-range component like 300 was silently clamped to 255.
+#
+# Accepted: a hex string (#rgb, #rgba, #rrggbb, #rrggbbaa — "#" optional, any case,
+# alpha parsed and discarded), or an (r, g, b[, a]) sequence in 0-1 or 0-255. The 0-1
+# vs 0-255 reading is decided by whether the largest component exceeds 1, which is the
+# documented matplotlib-friendly behavior and is unchanged.
+_HEX_RE = re.compile(r"^(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$")
+_COLOR_FORMS = ("Expected a hex color (#rgb, #rgba, #rrggbb, #rrggbbaa) or an"
+                " (r, g, b) sequence in 0-1 or 0-255.")
+
+
 def _to_rgb255(color):
     if isinstance(color, str):
-        h = color.strip().lstrip("#")
-        if len(h) == 3:
-            h = "".join(c * 2 for c in h)
-        n = int(h, 16)
-        return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
-    r, g, b = color[0], color[1], color[2]
-    if max(r, g, b) <= 1.0:
-        return [r * 255.0, g * 255.0, b * 255.0]
-    return [float(r), float(g), float(b)]
+        h = color.strip().lower()
+        if h.startswith("#"):
+            h = h[1:]
+        if not _HEX_RE.match(h):
+            raise ValueError("opticquiz-cvd: invalid color %r. Expected a hex color:"
+                             " #rgb, #rgba, #rrggbb or #rrggbbaa." % color)
+        if len(h) <= 4:
+            h = h[0] * 2 + h[1] * 2 + h[2] * 2
+        return [int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)]
+
+    try:
+        n = len(color)
+    except TypeError:
+        raise TypeError("opticquiz-cvd: invalid color %r. %s" % (color, _COLOR_FORMS))
+    if n not in (3, 4):
+        raise ValueError("opticquiz-cvd: invalid color %r: expected 3 or 4 components,"
+                         " got %d. %s" % (color, n, _COLOR_FORMS))
+    # float() rather than an isinstance check, so numpy scalars, Decimal and anything
+    # else numeric from a plotting workflow still work.
+    try:
+        vals = [float(c) for c in color[:3]]
+    except (TypeError, ValueError):
+        raise TypeError("opticquiz-cvd: invalid color %r: components must be numbers."
+                        % (color,))
+    for v in vals:
+        if math.isnan(v) or math.isinf(v):
+            raise ValueError("opticquiz-cvd: invalid color %r: components must be"
+                             " finite." % (color,))
+    if min(vals) < 0:
+        raise ValueError("opticquiz-cvd: invalid color %r: components must not be"
+                         " negative." % (color,))
+    if max(vals) <= 1.0:
+        return [v * 255.0 for v in vals]
+    if max(vals) > 255.0:
+        raise ValueError("opticquiz-cvd: invalid color %r: components above 1 are read"
+                         " as 0-255 and must not exceed 255." % (color,))
+    return vals
 
 
 def _rgb_to_hex(rgb):
@@ -75,6 +119,60 @@ def to_hex(color):
     return _rgb_to_hex(_to_rgb255(color))
 
 
+# An unrecognized `cvd_type` used to fall through to the color unchanged, so a typo
+# ("protanopia" for "protan") was a silent no-op that still looked like a result — an
+# entire measurement run can be wrong before anyone notices. A typo'd `model` fell back
+# to machado just as quietly. Both now raise.
+#
+# The canonical short names are the ONLY accepted values, matching every wrapper in this
+# family (dichromacy, trichromacy, cvdsim, daltoscope). Long clinical forms are
+# deliberately NOT aliased — the error names the short form to use instead, which
+# corrects a wrong guess in one try without giving the family two vocabularies.
+_LONG_FORM = {"protanopia": "protan", "deuteranopia": "deutan", "tritanopia": "tritan"}
+# Anomalous trichromacy is a PARTIAL deficiency — `severity` below 1 on the matching
+# type, not a type of its own. Aliasing it onto a severity-1 matrix would silently
+# overstate the deficiency, so it is refused and pointed at the real control.
+_ANOMALOUS = {"protanomaly": "protan", "deuteranomaly": "deutan", "tritanomaly": "tritan"}
+
+
+def normalize_type(cvd_type, where="simulate"):
+    """Return the canonical type name, or raise.
+
+    `where` only labels the message for callers that wrap simulate; it does not change
+    what is accepted. Raises TypeError if `cvd_type` is not a string, ValueError if it
+    is a string that names no known type.
+    """
+    if not isinstance(cvd_type, str):
+        raise TypeError("%s: type must be a string, got %s."
+                        % (where, type(cvd_type).__name__))
+    t = cvd_type.strip().lower()
+    if t == "normal" or t in TYPES:
+        return t
+    if t in _LONG_FORM:
+        hint = ' Use "%s".' % _LONG_FORM[t]
+    elif t in _ANOMALOUS:
+        hint = (' Anomalous trichromacy is a severity, not a type: use "%s" with'
+                " severity < 1." % _ANOMALOUS[t])
+    else:
+        hint = ""
+    raise ValueError("%s: unknown type %r.%s Expected one of: %s, normal."
+                     % (where, cvd_type, hint, ", ".join(TYPES)))
+
+
+def normalize_model(model, where="simulate"):
+    """Return the canonical model name, or raise. None means the machado default."""
+    if model is None:
+        return "machado"
+    if not isinstance(model, str):
+        raise TypeError("%s: model must be a string, got %s."
+                        % (where, type(model).__name__))
+    m = model.strip().lower()
+    if m in MODELS:
+        return m
+    raise ValueError("%s: unknown model %r. Expected one of: %s."
+                     % (where, model, ", ".join(MODELS)))
+
+
 def simulate(color, cvd_type, severity=1.0, model="machado"):
     """Return the hex color as seen under `cvd_type` ('protan'|'deutan'|'tritan'|'normal').
 
@@ -82,17 +180,22 @@ def simulate(color, cvd_type, severity=1.0, model="machado"):
     blend toward the original in linear light to approximate anomalous trichromacy
     (mild/moderate CVD) — a disclosed approximation, not Machado's per-severity matrices.
     model: 'machado' (default) or 'brettel' — a second, independent dichromat model.
+
+    Raises ValueError on an unrecognized `cvd_type` or `model` (a typo is never a
+    silent pass-through), TypeError if either is not a string.
     """
+    t = normalize_type(cvd_type)
+    mdl = normalize_model(model)
     rgb = _to_rgb255(color)
-    if cvd_type == "normal" or cvd_type not in _M:
+    if t == "normal":
         return _rgb_to_hex(rgb)
     lin = [_s2l(rgb[0]), _s2l(rgb[1]), _s2l(rgb[2])]
-    if model == "brettel":
-        b = _B[cvd_type]
+    if mdl == "brettel":
+        b = _B[t]
         dot = lin[0] * b["n"][0] + lin[1] * b["n"][1] + lin[2] * b["n"][2]
         m = b["p1"] if dot >= 0 else b["p2"]
     else:
-        m = _M[cvd_type]
+        m = _M[t]
     o = [_clamp01(m[i][0] * lin[0] + m[i][1] * lin[1] + m[i][2] * lin[2]) for i in range(3)]
     if severity < 1:
         o = [lin[k] * (1 - severity) + o[k] * severity for k in range(3)]

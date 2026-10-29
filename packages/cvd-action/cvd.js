@@ -17,6 +17,7 @@ var M = {
   tritan: [[1.255528, -0.076749, -0.178779], [-0.078411, 0.930809, 0.147602], [0.004733, 0.691367, 0.303900]]
 };
 var TYPES = ["protan", "deutan", "tritan"];
+var MODELS = ["machado", "brettel"];
 
 // Brettel, Viénot & Mollon (1997), operating on linear RGB. Two projection planes
 // per type; the sign of (rgb · normal) selects which. Values transcribed verbatim
@@ -42,11 +43,23 @@ var B = {
 };
 
 function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+
+// Hex parsing is strict. A malformed color used to reach parseInt as NaN and come back
+// as #000000, so "red" or a typo'd hex silently measured as black; an 8-digit
+// #rrggbbaa had its bytes shifted a channel over and silently measured as the wrong
+// color. Accepts #rgb, #rgba, #rrggbb and #rrggbbaa, the "#" optional and any case.
+// Alpha is parsed and discarded, matching the RGBA-tuple path in the Python twin — the
+// check is on the color channels. Anything else throws.
+var HEX_RE = /^(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/;
 function hexToRgb(h) {
-  h = String(h).trim().replace(/^#/, "");
-  if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
-  var n = parseInt(h, 16);
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  var s = String(h).trim().toLowerCase();
+  if (s.charAt(0) === "#") s = s.slice(1);
+  if (!HEX_RE.test(s)) {
+    throw new TypeError("opticquiz-cvd: invalid color " + JSON.stringify(h) +
+      ". Expected a hex color: #rgb, #rgba, #rrggbb or #rrggbbaa.");
+  }
+  if (s.length <= 4) s = s[0] + s[0] + s[1] + s[1] + s[2] + s[2];
+  return [parseInt(s.slice(0, 2), 16), parseInt(s.slice(2, 4), 16), parseInt(s.slice(4, 6), 16)];
 }
 function rgbToHex(r) {
   return "#" + r.map(function (v) { v = Math.round(clamp01(v / 255) * 255); return (v < 16 ? "0" : "") + v.toString(16); }).join("");
@@ -58,15 +71,67 @@ function linToS(c) { c = c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.
 // below 1 blend toward the original in linear light to approximate anomalous
 // trichromacy (mild/moderate CVD). A disclosed approximation, not Machado's
 // per-severity matrices — but far more realistic than assuming everyone is a dichromat.
+// --- Argument validation ------------------------------------------------------
+// An unrecognized `type` used to fall through to the color unchanged, so a typo
+// ("protanopia" for "protan") was a silent no-op that still looked like a result —
+// an entire measurement run can be wrong before anyone notices. A typo'd `model`
+// fell back to machado just as quietly. Both now throw.
+//
+// The canonical short names are the ONLY accepted values, matching every wrapper in
+// this family (dichromacy, trichromacy, cvdsim, cvdplate, the MCP servers). Long
+// clinical forms are deliberately NOT aliased — the error names the short form to
+// use instead, which corrects a wrong guess in one try without giving the family two
+// vocabularies to keep in sync.
+var LONG_FORM = { protanopia: "protan", deuteranopia: "deutan", tritanopia: "tritan" };
+// Anomalous trichromacy is a PARTIAL deficiency — `severity` below 1 on the matching
+// type, not a type of its own. Aliasing it onto a severity-1 matrix would silently
+// overstate the deficiency, so it is refused and pointed at the real control.
+var ANOMALOUS = { protanomaly: "protan", deuteranomaly: "deutan", tritanomaly: "tritan" };
+
+// Own properties only: M["constructor"] is truthy on a plain object, so the old
+// `!M[type]` test let inherited keys through into the matrix math as NaN.
+function has(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
+function lower(v) { return typeof v === "string" ? v.trim().toLowerCase() : v; }
+
+// Canonical type name, or throw. `where` only labels the message for callers that
+// wrap simulate; it does not change what is accepted.
+function normalizeType(type, where) {
+  var t = lower(type);
+  if (t === "normal" || TYPES.indexOf(t) !== -1) return t;
+  var hint = "";
+  if (typeof t === "string" && has(LONG_FORM, t)) {
+    hint = ' Use "' + LONG_FORM[t] + '".';
+  } else if (typeof t === "string" && has(ANOMALOUS, t)) {
+    hint = ' Anomalous trichromacy is a severity, not a type: use "' + ANOMALOUS[t] + '" with severity < 1.';
+  }
+  throw new TypeError((where || "simulate") + ": unknown type " + JSON.stringify(type) + "." +
+    hint + " Expected one of: " + TYPES.join(", ") + ", normal.");
+}
+
+// Canonical model name, or throw. Absent means the machado default.
+function normalizeModel(model, where) {
+  if (model == null) return "machado";
+  var m = lower(model);
+  if (MODELS.indexOf(m) !== -1) return m;
+  throw new TypeError((where || "simulate") + ": unknown model " + JSON.stringify(model) +
+    ". Expected one of: " + MODELS.join(", ") + ".");
+}
+
 function simulate(hex, type, severity, model) {
-  if (type === "normal" || !M[type]) return String(hex).trim().toLowerCase();
+  var t = normalizeType(type), mdl = normalizeModel(model);
+  var rgb = hexToRgb(hex);
+  // "normal" returns the color canonicalized to #rrggbb, the same shape every other
+  // type returns — so simulate(c, "normal") can be compared with simulate(c, "deutan")
+  // directly. It used to return the raw input lowercased, which made "#abc" compare
+  // unequal to its own 6-digit simulation and diverged from the Python twin.
+  if (t === "normal") return rgbToHex(rgb);
   if (severity == null) severity = 1;
-  var rgb = hexToRgb(hex), lin = [sToLin(rgb[0]), sToLin(rgb[1]), sToLin(rgb[2])], o = [0, 0, 0], i, m;
-  if (model === "brettel") {
-    var b = B[type], dot = lin[0] * b.n[0] + lin[1] * b.n[1] + lin[2] * b.n[2];
+  var lin = [sToLin(rgb[0]), sToLin(rgb[1]), sToLin(rgb[2])], o = [0, 0, 0], i, m;
+  if (mdl === "brettel") {
+    var b = B[t], dot = lin[0] * b.n[0] + lin[1] * b.n[1] + lin[2] * b.n[2];
     m = dot >= 0 ? b.p1 : b.p2;
   } else {
-    m = M[type];
+    m = M[t];
   }
   for (i = 0; i < 3; i++) o[i] = clamp01(m[i][0] * lin[0] + m[i][1] * lin[1] + m[i][2] * lin[2]);
   if (severity < 1) for (var k = 0; k < 3; k++) o[k] = lin[k] * (1 - severity) + o[k] * severity;
@@ -226,5 +291,8 @@ module.exports = {
   simulate: simulate, deltaE: deltaE, checkPalette: checkPalette, fixPalette: fixPalette,
   hexToLab: hexToLab, labToHex: labToHex,
   relLuminance: relLuminance, contrastRatio: contrastRatio, checkContrast: checkContrast,
-  TYPES: TYPES
+  // Exported so wrappers can validate against the same vocabulary instead of
+  // keeping their own copy of the accepted names.
+  normalizeType: normalizeType, normalizeModel: normalizeModel,
+  TYPES: TYPES, MODELS: MODELS
 };

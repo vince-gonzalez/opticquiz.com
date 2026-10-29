@@ -10,12 +10,37 @@ function inp(name, def) {
 }
 const root = inp("path", ".");
 const filesInput = inp("files", "");
-const failOn = inp("fail-on", "conflict");
-const severity = parseFloat(inp("severity", "1")) || 1;
-const model = inp("model", "machado");
+const failOn = inp("fail-on", "conflict").trim().toLowerCase();
+const severityRaw = inp("severity", "1");
+const severity = parseFloat(severityRaw);
+const modelRaw = inp("model", "machado");
+const model = modelRaw.trim().toLowerCase();
+
+// Input guards. A typo'd `model` used to fall through to machado, a non-numeric
+// `severity` to 1, and a typo'd `fail-on` to "conflict" — so a misconfigured workflow
+// produced a clean-looking pass against settings nobody chose, and `fail-on:
+// borderlines` silently stopped gating on borderline pairs. Fail fast instead.
+const FAIL_ON = ["conflict", "borderline"];
+function configError(msg) {
+  console.log(`::error::OpticQuiz: ${msg}`);
+  process.exit(1);
+}
+if (!cvd.MODELS.includes(model)) {
+  configError(`unknown model ${JSON.stringify(modelRaw)}. Expected one of: ${cvd.MODELS.join(", ")}.`);
+}
+if (!(severity >= 0 && severity <= 1)) {
+  configError(`severity must be a number from 0 to 1, got ${JSON.stringify(severityRaw)}.`);
+}
+if (!FAIL_ON.includes(failOn)) {
+  configError(`unknown fail-on ${JSON.stringify(inp("fail-on", "conflict"))}. Expected one of: ${FAIL_ON.join(", ")}.`);
+}
 
 const EXT = [".css", ".scss", ".less"];
-const HEX = /#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g;
+// Longest alternative first, so #rrggbbaa is not truncated to #rrggbb with the trailing
+// \b then failing. 4- and 8-digit alpha hex used to match nothing at all, so modern CSS
+// colors were skipped silently and their conflicts never reported; the engine reads them
+// now (alpha discarded), so they are scanned.
+const HEX = /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})\b/g;
 
 function walk(dir, out) {
   var entries;
@@ -28,7 +53,10 @@ function walk(dir, out) {
   }
   return out;
 }
-function norm(h) { h = h.toLowerCase(); if (h.length === 4) h = "#" + h[1] + h[1] + h[2] + h[2] + h[3] + h[3]; return h; }
+// Canonicalize through the engine, which is now exactly what simulate(h, "normal") is:
+// every accepted length collapses to one #rrggbb spelling, so the Set below dedupes
+// #ABC, #aabbcc and #aabbccff into a single color instead of checking it three times.
+function norm(h) { return cvd.simulate(h, "normal"); }
 
 const files = filesInput
   ? filesInput.split(",").map((s) => s.trim()).filter(Boolean)

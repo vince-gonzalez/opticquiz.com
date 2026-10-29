@@ -372,7 +372,7 @@ async function adoption(env) {
     sources["vscode-marketplace"] = { installs: null, error: String(e.message || e), source: vsSrc };
   }
 
-  const ghSrc = "https://api.github.com/repos/zengineco/opticquiz.com";
+  const ghSrc = "https://api.github.com/repos/vince-gonzalez/opticquiz.com";
   try {
     const d = await getJSON(ghSrc);
     sources["github"] = { stars: d.stargazers_count, forks: d.forks_count, watchers: d.subscribers_count, source: ghSrc };
@@ -446,6 +446,20 @@ export default {
     let body;
     try { body = await request.json(); } catch { return json({ error: "Invalid JSON body." }, 400); }
 
+    // The engine throws a TypeError on a malformed color or an unknown type/model. Every
+    // value these routes hand it comes from the request, so that is a client error:
+    // answer 400 with the engine's own message instead of letting it surface as a 500.
+    // A malformed color used to be read as #000000 and scored as if it were black.
+    try {
+      return engine(path, body);
+    } catch (e) {
+      if (e instanceof TypeError) return json({ error: e.message }, 400);
+      throw e;
+    }
+  }
+};
+
+function engine(path, body) {
     if (path.endsWith("/check")) {
       if (!Array.isArray(body.colors)) return json({ error: 'Expected { "colors": ["#hex", ...] }.' }, 400);
       return json(cvd.checkPalette(body.colors));
@@ -456,7 +470,17 @@ export default {
     }
     if (path.endsWith("/simulate")) {
       if (!body.color) return json({ error: 'Expected { "color": "#hex", "type"?: "protan|deutan|tritan" }.' }, 400);
-      if (body.type) return json({ color: body.color, type: body.type, result: cvd.simulate(body.color, body.type) });
+      if (body.type) {
+        // An unknown type used to be echoed back with the color unchanged — a 200 that
+        // read like a simulation but was a no-op. The engine now throws on one; at the
+        // HTTP boundary a bad value is a client error, so answer 400. Checked against
+        // the engine's own TYPES so this route cannot drift from the accepted names.
+        const t = String(body.type).trim().toLowerCase();
+        if (t !== "normal" && !cvd.TYPES.includes(t)) {
+          return json({ error: `Unknown type ${JSON.stringify(body.type)}. Expected one of: ${cvd.TYPES.join(", ")}, normal.` }, 400);
+        }
+        return json({ color: body.color, type: t, result: cvd.simulate(body.color, t) });
+      }
       return json({
         color: body.color,
         protan: cvd.simulate(body.color, "protan"),
@@ -469,5 +493,4 @@ export default {
       return json(cvd.checkContrast(body.foreground, body.background, { large: !!body.large }));
     }
     return json({ error: "Unknown endpoint.", endpoints: ["/api/check", "/api/fix", "/api/simulate", "/api/contrast", "/api/impact"] }, 404);
-  }
-};
+}
